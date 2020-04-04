@@ -1,24 +1,18 @@
 # The Peer Rewards and Recognition System 
 
-Peerly is peer-rewarding system! Every employee gets a 'star' and a 'high-5' every week that they can use. 
-You use it or lose it i.e. if you don't use it to appreciate someone, you lose it.
+Peerly is peer-recognision and rewarding system! Every employee gets and gives 'high-5' (henceforth called hi5)
+Give a hi5 to someone who you want to appreciate for something they did.
+**Every week you get 2 hi5 that you can give to others - use it or lose it.**
 
-A 'star' is what you give to someone who you want to appreciate. 
-A 'high-5' is an add-on to another person's appreciation i.e. if Person-1 gives a 'star' to Person-2 for an action, Person-3 can give a 'high-5' for that action. 
-Since you have only 1 star and 1 high-5 a week, you need to use it prudently! 
+# Giving a hi5
 
-# Giving a 'star'
-
-A star can be given to anyone in the company if you want to appreciate his/her actions.
+A hi5 can be given to anyone in the company if you want to appreciate his/her actions.
 The action must be one of the Core Values of the company. 
 Obviously, you must choose a person.
-There must be a reason for the peer reward
+There must be a mandatory reason for this hi5 which must explain why you are appreciating the person.
 
-# Giving a 'high-5'
-
-You can give your high-5 on any other rewards given. 
-You have only 1 high-5 a week and once you give a high-5, you cannot take it back or change it!
-Any reward can receive **at most 3** high-5's. 
+All your hi5 are publicly visible to all. Others can give additional hi5 to the same person for the same activity. 
+You can also flag someone else's recognition if you think it's not correct. (see Moderation below).
 
 # Core Values 
 
@@ -44,9 +38,29 @@ Each company has it's core values!
 
 All these "Core Values" are configurable! 
 
+# Badges and Rewards
+
+As you collect hi5, you are also automatically collecting badges for consistency, activeness, in-activeness, giving and getting! 
+Examples:
+
+* Person-1 gets 25 hi5 in the month-1 and is the leader for the month! This person gets a "Leader" badge with a counter in it which says 1.
+* Person-2 gets more than 5 hi5 in consecutive 6 weeks. This person collects a "Consistency" badge to his/her name.
+* If you get hi5 with "Blogger" core value for 3 weeks in a row, you get a "Writer" badge.
+* If a person gets a "Qualtity" core value for 4 weeks in a row, you get a "Quality" badge
+
+Over time, we may see something like this:
+
+* Person-1 - Leader badge with number "3" in it, a "Guru" badge and a "Sharp Shooter" badge
+* Person-2 - "Quality" badge, "Red Beret" badge, "Party" badge!
+
+(Note: We can use ideas from the Indian Army ribbons and insignia and also from various games for badges, ribbons etc.)
+
+At the end of the month, ALL badges awarded can get an optional monetary reward from the company! 
+This could be a gift voucher or cash or a gift. 
+
 # Moderation
 
-Periodically, a moderator can review the rewards given and flag them as "Fraud", "Not Relevant", "Incorrect".
+A moderator views all the hi5 flagged as "Fraud", "Not Relevant", "Incorrect" and either deletes these recognitions or asks for clarification.
 These can be reviewed later via reports. 
 
 # Reports
@@ -55,31 +69,20 @@ Collection of data is critical. This tells us the pulse of the company!
 
 * Number of stars received over a period
 * Number of stars given over a period
-* Number of high-5's received for rewards over a period
+* Number of high-5's received  over a period
 * How many people have only given stars but have received very few?
 * How many people have received a lot of stars but given very few?
 * Which day of the week are stars and high-5s given the most? 
-* Flagged Rewards report (Later, we can add some machine-learning flow to auto-flag rewards or prevent fraud)
+* Flagged Recognition report (Later, we can add some machine-learning flow to auto-flag recognition or prevent fraud)
 
 ...
 
-# Leaderboard 
+# Leaderboard and Profiles
 
-You get an overall leaderboard i.e. till date and this months leader board. This will be the landing page along with important notices.
+This is the current month's leaderboards with the count of hi5 received in this month (and probably the daily delta). 
 
-# Microservice Architecture
+Each Persons Profile will be with the badges they have earned. So, over a year, we have a good set of badges and ribbons!
 
-### RewardsManager 
+# Contributing
 
-The core service that decides who plays and how to play!
-
-### ReportsManager 
-
- The analysis manager that generates different types of reports and the leader board.
-
-### Common
-* All communication between services would be via gRPC
-* The services share a common database.
-* Front-end will be API drive with API versioning.
-* Authentication will be via Google Auth and JWT
-
+Please raise Github issues as you find them. If you wish to contribute, please fork and raise a PR.
