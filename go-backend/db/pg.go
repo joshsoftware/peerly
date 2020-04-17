@@ -11,10 +11,21 @@ import (
 // Create your schema here (sample provided below)
 // If this schema is too big, put it in a schema.go file
 var schema = `
-CREATE TABLE IF NOT EXISTS users (
-	name text,
-	age integer
-);`
+CREATE TABLE IF NOT EXISTS organizations (
+	id serial PRIMARY KEY,
+	name varchar(50),
+	contact_email varchar(50),
+	domain_name varchar(45),
+	subscription_status integer,
+	subscription_valid_upto TIMESTAMP,
+	hi5_limit integer,
+	hi5_quota_renewal_frequency varchar(50),
+	timezone varchar(100),
+	created_by integer,
+	updated_by integer,
+	updated_on TIMESTAMP
+);
+`
 
 type pgStore struct {
 	db *sqlx.DB
