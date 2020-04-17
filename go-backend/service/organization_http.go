@@ -38,13 +38,13 @@ func listOrganizationsHandler(deps Dependencies) http.HandlerFunc {
 func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		var organization db.Organization
-		err := json.Unmarshal(req.Body, &organization)
+		err := json.Unmarshal([]byte(req.Body), &organization)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
 			logger.WithField("err", err.Error()).Error("Error while unmarshaling request body")
 			return
 		}
-		organization, err = deps.Store.createOrganization(req.Context(), organization)
+		organization, err = deps.Store.CreateOrganization(req.Context(), organization)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error creating organization")
 			rw.WriteHeader(http.StatusInternalServerError)
