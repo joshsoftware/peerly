@@ -1,11 +1,11 @@
 package db
 
 import (
-	"joshsoftware/peerly/config"
+    "joshsoftware/peerly/config"
 
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
-	logger "github.com/sirupsen/logrus"
+    "github.com/jmoiron/sqlx"
+    _ "github.com/lib/pq"
+    logger "github.com/sirupsen/logrus"
 )
 
 // Create your schema here (sample provided below)
@@ -18,31 +18,31 @@ CREATE TABLE IF NOT EXISTS roles(
   role varchar(15)
 );
 
-CREATE INDEX IF NOT EXISTS roles_index ON roles (lower(role));
-
+CREATE INDEX IF NOT EXISTS roles_id_index ON roles (id);
+CREATE INDEX IF NOT EXISTS roles__role_index ON roles (lower(role));
 
 `
 
 type pgStore struct {
-	db *sqlx.DB
+    db *sqlx.DB
 }
 
 func Init() (s Storer, err error) {
-	uri := config.ReadEnvString("DB_URI")
+    uri := config.ReadEnvString("DB_URI")
 
-	conn, err := sqlx.Connect("postgres", uri)
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Cannot initialize database")
-		return
-	}
+    conn, err := sqlx.Connect("postgres", uri)
+    if err != nil {
+        logger.WithField("err", err.Error()).Error("Cannot initialize database")
+        return
+    }
 
-	pgstore := &pgStore{conn}
+    pgstore := &pgStore{conn}
 
-	// exec the schema or fail; multi-statement Exec behavior varies between
-	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
-	conn.MustExec(schema)
+    // exec the schema or fail; multi-statement Exec behavior varies between
+    // database drivers;  pq will exec them all, sqlite3 won't, ymmv
+    conn.MustExec(schema)
 
-	logger.WithField("uri", uri).Info("Connected to pg database")
+    logger.WithField("uri", uri).Info("Connected to pg database")
 
-	return pgstore, nil
+    return pgstore, nil
 }
