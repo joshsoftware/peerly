@@ -1,5 +1,5 @@
 copy-config:
-	cp application.yml.sample application.yml
+	cp application.yml.default application.yml
 
 test:
 	go test -v ./...
