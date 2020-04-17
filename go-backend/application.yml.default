@@ -1,0 +1,9 @@
+APP_NAME: "samplemgr"
+APP_PORT: "33001"
+
+# MongoDB URI
+#DB_URI: "mongodb://user:password@localhost:27017/dbname?authMechanism=SCRAM-SHA-1"
+#DB_NAME: "dbname"
+
+# Postgres
+DB_URI: "postgresql://user:password@localhost:5432/dbname?sslmode=disable"
