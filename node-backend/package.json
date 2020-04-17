@@ -1,0 +1,19 @@
+{
+  "name": "peerly-node-graphql",
+  "version": "1.0.0",
+  "description": "Node GraphQl API For Peerly",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshsoftware/peerly.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshsoftware/peerly/issues"
+  },
+  "homepage": "https://github.com/joshsoftware/peerly#readme"
+}
