@@ -24,7 +24,7 @@ func listRolesHandler(deps Dependencies) http.HandlerFunc {
 
 		respBytes, err := json.Marshal(users)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling users data")
+			logger.WithField("err", err.Error()).Error("Error marshaling roles data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
