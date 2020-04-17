@@ -1,0 +1,37 @@
+{
+  "env": {
+    "browser": false,
+    "commonjs": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "error",
+    "no-alert": "error",
+    "no-debugger": "error",
+    "no-empty-function": "error",
+    "no-eq-null": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-extend-native": "error",
+    "no-multiple-empty-lines": "error",
+    "no-multi-spaces": "error",
+    "no-return-assign": "error",
+    "no-script-url": "error",
+    "no-self-compare": "error"
+  }
+}
