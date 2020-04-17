@@ -8,4 +8,4 @@
 
 ## Steps to run the server:
 1. run npm install  (This will install all required dependencies)
-2. run SERVER_PORT_ = <port_number> npm start (This will start server on speified port)
+2. run SERVER_PORT=<port_number> npm start (This will start server on speified port)
