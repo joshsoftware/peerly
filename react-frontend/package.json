@@ -2,6 +2,8 @@
   "name": "Peerly",
   "version": "0.1.0",
   "private": true,
+  "license" : "BSD-3-Clause",
+  "description": "Peerly - Rewards and recognition system",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -57,5 +59,9 @@
     "src/**/*.{js,jsx}": [
       "eslint ."
     ]
+  },
+  "engines" : { 
+    "node" : ">=12.13.0"
   }
+   
 }
