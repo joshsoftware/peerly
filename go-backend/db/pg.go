@@ -10,11 +10,18 @@ import (
 
 // Create your schema here (sample provided below)
 // If this schema is too big, put it in a schema.go file
+
 var schema = `
-CREATE TABLE IF NOT EXISTS users (
-	name text,
-	age integer
-);`
+
+CREATE TABLE IF NOT EXISTS roles(
+  id SERIAL not null primary key,
+  role varchar(15)
+);
+
+CREATE INDEX IF NOT EXISTS roles_index ON roles (lower(role));
+
+
+`
 
 type pgStore struct {
 	db *sqlx.DB
@@ -29,11 +36,13 @@ func Init() (s Storer, err error) {
 		return
 	}
 
+	pgstore := &pgStore{conn}
+
 	// exec the schema or fail; multi-statement Exec behavior varies between
 	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
 	conn.MustExec(schema)
 
 	logger.WithField("uri", uri).Info("Connected to pg database")
 
-	return &pgStore{conn}, nil
+	return pgstore, nil
 }
