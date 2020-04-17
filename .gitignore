@@ -15,3 +15,6 @@ peerly
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Ignore personal editor config (editorconfig.org)
+.editorconfig
