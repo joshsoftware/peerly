@@ -1,14 +1,17 @@
 const graphql = require("graphql");
 const joinMonster = require("join-monster");
-const { Recognitions } = require("../schema//recognitions");
-
+const Recognitions = require("../schema/recognitions");
+const HOST = process.env.HOST; // eslint-disable-line no-undef
+const USER = process.env.USER; // eslint-disable-line no-undef
+const PASSWORD = process.env.PASSWORD; // eslint-disable-line no-undef
+const DATABASE = process.env.DATABASE; // eslint-disable-line no-undef
 const { Client } = require("pg");
 
 const client = new Client({
-  host: "localhost",
-  user: "jitendra",
-  password: "jitu2121",
-  database: "temp",
+  host: HOST,
+  user: USER,
+  password: PASSWORD,
+  database: DATABASE,
 });
 client.connect();
 

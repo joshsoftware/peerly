@@ -1,7 +1,7 @@
 const graphql = require("graphql");
 const Core_values = require("./coreValues");
 const Users = require("./user");
-const DateTime = require("./dataTime");
+const DateTime = require("./dateTime");
 const Recognitions = new graphql.GraphQLObjectType({
   name: "Recognitions",
   fields: () => ({
