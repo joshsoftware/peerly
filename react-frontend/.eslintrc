@@ -1,0 +1,50 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest/globals": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:jest/recommended",
+    "plugin:jest/style",
+    "plugin:jest-formatting/recommended"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "jest", "jest-formatting"],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "^16.13.1"
+    }
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "error",
+    "no-alert": "error",
+    "no-debugger": "error",
+    "no-empty-function": "error",
+    "no-eq-null": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-extend-native": "error",
+    "no-multiple-empty-lines": "error",
+    "no-multi-spaces": "error",
+    "no-return-assign": "error",
+    "no-script-url": "error",
+    "no-self-compare": "error"
+  }
+}
