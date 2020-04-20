@@ -1,5 +1,3 @@
-// ignore
-
 package db
 
 import (
@@ -73,5 +71,29 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (org
 		return
 	}
 
+	return
+}
+
+func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (ok bool, err error) {
+	ok = false
+	deleteOrganizationQuery := `DELETE FROM organizations WHERE id = $1`
+
+	result, err := s.db.Exec(
+		deleteOrganizationQuery,
+		organizationID,
+	)
+
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error deleting organization")
+		return
+	}
+
+	_, err = result.RowsAffected()
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error deleting organization")
+		return
+	}
+
+	ok = true
 	return
 }
