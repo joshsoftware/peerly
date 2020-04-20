@@ -14,6 +14,19 @@ var schema = `
 CREATE TABLE IF NOT EXISTS users (
 	name text,
 	age integer
+);
+
+CREATE TABLE IF NOT EXISTS roles (
+	role text
+);
+
+CREATE TABLE IF NOT EXISTS core_values (
+	role text,
+	organisation_id integer,
+	core_value_text text,
+	description text,
+	created_at time,
+	updated_at time
 );`
 
 type pgStore struct {
