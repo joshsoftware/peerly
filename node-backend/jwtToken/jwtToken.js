@@ -5,7 +5,7 @@ var createToken = function(auth) {
             id: auth.id
         }, 'my-secret',
         {
-            expiresIn: 60 * 120
+            expiresIn: process.env.JWT_expire_time
         });
 };
 

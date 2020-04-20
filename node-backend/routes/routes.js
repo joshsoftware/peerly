@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 require('../google_auth/google_auth')();
 router.use(bodyParser.urlencoded({ extended: true }))
 
-router.route('/auth/google')
+router.route('/google')
 .post(passport.authenticate('google-token', {session: false}), function(req, res,next) {
 	console.log("in passport auth function");
         if (!req.user) {

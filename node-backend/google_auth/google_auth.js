@@ -12,6 +12,6 @@ module.exports = function () {
 			console.log("in google token");
 			console.log(profile.emails[0].value);
 			return done(null, profile);
- 
+
        }));
 };

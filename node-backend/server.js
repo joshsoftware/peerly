@@ -5,5 +5,5 @@ const google_login = require('./routes/routes');
 
 var app = express();
 app.use("/v1/graphql", graphqlHTTP({}));
-app.use('/',google_login);
+app.use('/v1/login',google_login);
 app.listen(process.env.SERVER_PORT); // eslint-disable-line no-undef
