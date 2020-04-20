@@ -30,7 +30,11 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
-    "graphql": "^15.0.0"
+    "graphql": "^15.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "passport-google-token": "^0.1.2",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
