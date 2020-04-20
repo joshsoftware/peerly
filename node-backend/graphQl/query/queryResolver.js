@@ -1,6 +1,6 @@
 const graphql = require("graphql");
 const joinMonster = require("join-monster");
-const { Recognitions } = require("./tableSchema");
+const { Recognitions } = require("../schema//recognitions");
 
 const { Client } = require("pg");
 
@@ -15,10 +15,6 @@ client.connect();
 const queryRoot = new graphql.GraphQLObjectType({
   name: "Query",
   fields: () => ({
-    hello: {
-      type: graphql.GraphQLString,
-      resolve: () => "Hello world!",
-    },
     recognitions: {
       type: new graphql.GraphQLList(Recognitions),
       resolve: (parent, args, context, resolveInfo) => {

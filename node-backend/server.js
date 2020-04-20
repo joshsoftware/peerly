@@ -1,8 +1,8 @@
 var express = require("express");
 var graphqlHTTP = require("express-graphql");
-var { buildSchema } = require("graphql"); // eslint-disable-line no-unused-vars
+var graphql = require("graphql"); // eslint-disable-line no-unused-vars
 var queryRoot = require("./graphQl/query/queryResolver");
-const schema = new buildSchema.GraphQLSchema({
+const schema = new graphql.GraphQLSchema({
   query: queryRoot,
 });
 
