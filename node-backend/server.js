@@ -9,5 +9,8 @@ var http = require("http");
 var httpServer = http.createServer(app);
 app.use(bodyParser.json());
 app.use("/v1/graphql", graphqlHTTP({}));
+app.listen(process.env.SERVER_PORT /* eslint-disable-line no-undef*/);
 app.use("/v1/login", googleLogin);
-httpServer.listen(process.env.SERVER_PORT /* eslint-disable-line  no-undef*/);
+httpServer.listen(
+  process.env.HTTP_SERVER_PORT //eslint-disable-line  no-undef
+);
