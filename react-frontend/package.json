@@ -2,7 +2,7 @@
   "name": "Peerly",
   "version": "0.1.0",
   "private": true,
-  "license" : "MIT",
+  "license": "MIT",
   "description": "Peerly - Rewards and recognition system",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -12,6 +12,7 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-google-login": "^5.1.3",
     "react-scripts": "3.4.1",
     "styled-components": "^5.1.0"
   },
@@ -60,8 +61,7 @@
       "eslint ."
     ]
   },
-  "engines" : { 
-    "node" : ">=12.13.0"
+  "engines": {
+    "node": ">=12.13.0"
   }
-   
 }
