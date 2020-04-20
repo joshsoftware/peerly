@@ -1,15 +1,16 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import { LoginContext } from "login/LoginContext";
+import LoginForm from "login/LoginForm";
 
 function App() {
+  const { state } = React.useContext(LoginContext);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        {/* Code to be removed */}
+        <LoginForm />
+        <p>{state.authToken}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
