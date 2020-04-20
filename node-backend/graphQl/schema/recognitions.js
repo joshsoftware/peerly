@@ -22,13 +22,7 @@ const Recognitions = new graphql.GraphQLObjectType({
       sqlJoin: (recognitionsTable, usersTable) =>
         `${recognitionsTable}.recognition_by = ${usersTable}.id`,
     },
-    created_on: { type: DateTime },
-    updated_by: {
-      type: Users,
-      sqlJoin: (recognitionsTable, usersTable) =>
-        `${recognitionsTable}.updated_by = ${usersTable}.id`,
-    },
-    updated_on: { type: DateTime },
+    recognition_on: { type: DateTime },
   }),
 });
 
