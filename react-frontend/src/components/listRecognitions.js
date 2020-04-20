@@ -1,6 +1,4 @@
 
-
-
 import React from "react";
 import { Row, Col, Label, Button, Container } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -75,3 +73,5 @@ const ListRecognition = () => {
   );
 };
 export default ListRecognition;
+
+
