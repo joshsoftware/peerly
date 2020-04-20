@@ -1,37 +1,35 @@
-'use strict';
+"use strict";
 
 var dbm;
-var type;
-var seed;
-
-
-exports.setup = function(options, seedLink) {
+var type; // eslint-disable-line no-unused-vars
+var seed; // eslint-disable-line no-unused-vars
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
-
-
-exports.up = function(db, callback) {
-	
-  db.createTable('roles', {
-    id: {
-      type: 'int',
-      notNull: true,
-      primaryKey: true,
-      autoIncrement: true
-    },	
-    role: {
-      type: 'string',
-      length: 15,
-	  notNull: true,
+exports.up = function (db, callback) {
+  db.createTable(
+    "roles",
+    {
+      id: {
+        type: "int",
+        notNull: true,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      role: {
+        type: "string",
+        length: 15,
+        notNull: true,
+      },
     },
-   
-  }, function(err) {
-    if (err) return callback(err);
-    return callback();
-  });
+    function (err) {
+      if (err) return callback(err);
+      return callback();
+    }
+  );
 };
-exports.down = function(db, callback) {
-  db.dropTable('roles', callback);
+exports.down = function (db, callback) {
+  db.dropTable("roles", callback);
 };
