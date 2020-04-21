@@ -147,3 +147,18 @@ func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (o
 	ok = true
 	return
 }
+
+func (s *pgStore) GetOrganization(ctx context.Context, organizationID int) (organization Organization, err error) {
+	// organizationQuery := `SELECT * FROM organizations WHERE id = $1`
+	err = s.db.Get(&organization, "SELECT * FROM organizations WHERE id=$1", organizationID)
+	// organization, err = s.db.GE(
+	// 	organizationQuery,
+	// 	organizationID,
+	// )
+
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error fetching organization")
+		return
+	}
+	return
+}

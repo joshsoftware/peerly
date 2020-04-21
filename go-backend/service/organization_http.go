@@ -153,3 +153,28 @@ func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 		rw.Write(respBytes)
 	})
 }
+
+func getOrganizationHandler(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
+    id, err := strconv.Atoi(vars["id"])
+
+		if err != nil {
+			logger.Error("Error missing key id in query params")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		organization, err := deps.Store.GetOrganization(req.Context(), id)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		respBytes, _ := json.Marshal(organization)
+
+		rw.Header().Add("Content-Type", "application/json")
+		rw.Write(respBytes)
+	})
+}
