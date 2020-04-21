@@ -1,7 +1,8 @@
-
 import React from "react";
 import { Row, Col, Label, Button, Container } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   MenuButton,
   MenuList,
@@ -16,22 +17,25 @@ const ListRecognition = () => {
       hi5: "1",
       name: "avinash",
       time: "1 min ago",
-      text: "recognition text",
-      core: "core value",
+      text:
+        "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
+      core: "welcome to bonusly",
     },
     {
       hi5: "2",
       name: "jitu",
       time: "2 min ago",
-      text: "recognition text2",
-      core: "core value",
+      text:
+        "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
+      core: "welcome to bonusly",
     },
     {
       hi5: "3",
       name: "onkar",
       time: "3 min ago",
-      text: " recognition text3",
-      core: "core value",
+      text:
+        "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
+      core: "welcome to bonusly",
     },
   ];
   return (
@@ -40,28 +44,36 @@ const ListRecognition = () => {
         <Col xs="3"></Col>
         <Col>
           {persons.map((person) => (
-            <Row className="border mt-5 bg-info" key={person.id}>
+            <Row
+              className="border border-primary mt-5 bg-light grey"
+              key={person.id}
+            >
               <Col>
                 <Row className="mt-2 d-flex justify-content-around mt-2">
-                  <Button className="bg-success">+{person.hi5}</Button>
-                  <Label>{person.name}</Label>
-                  <Label>{person.time}</Label>
+                  <Button className="bg-success">
+                    <h6>+{person.hi5}</h6>
+                  </Button>
+                  <Button>
+                    <h6>{person.name}</h6>
+                  </Button>
+                  <Label className="text-muted">{person.time}</Label>
                   <Menu>
                     <MenuButton className="btn bg-light grey">
-                      options
+                      <FontAwesomeIcon icon={faEllipsisV} />
                     </MenuButton>
                     <MenuList>
-                      <MenuItem>downlode</MenuItem>
-                      <MenuLink to="view">view</MenuLink>
+                      <MenuItem></MenuItem>
+                      <MenuLink to="view"></MenuLink>
                     </MenuList>
                   </Menu>
                 </Row>
-                <Row className="h-50 p-3 border ml-5 mr-5 mt-2 ">
-                  <p>{person.text}</p>
+                <Row className="h-50 p-3 border border-success ml-5 mr-5 mt-2 font-italic text-left">
+                  <h5>{person.text}</h5>
                 </Row>
-                <Row className="d-flex justify-content-around mt-2 mb-5">
-                  <Label>{person.core}</Label>
-                  <Button className="bg-danger">comment</Button>
+                <Row className="ml-5 mt-2 mb-2">
+                  <Label className="text-primary font-weight-lighter">
+                    <h5>#{person.core}</h5>
+                  </Label>
                 </Row>
               </Col>
             </Row>
@@ -73,6 +85,3 @@ const ListRecognition = () => {
   );
 };
 export default ListRecognition;
-
-
-

@@ -5,6 +5,9 @@
   "license": "MIT",
   "description": "Peerly - Rewards and recognition system",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "@reach/menu-button": "^0.10.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -13,6 +16,7 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-fontawesome": "^1.7.1",
     "react-scripts": "3.4.1",
     "reactstrap": "^8.4.1",
     "styled-components": "^5.1.0"

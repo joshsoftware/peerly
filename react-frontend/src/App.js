@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import ListRecognition from "component/listRecognitions";
+import ListRecognition from "components/listRecognitions";
 
 function App() {
   return (
