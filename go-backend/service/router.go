@@ -26,6 +26,6 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organizations", listOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations", deleteOrganizationHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
-
+	router.HandleFunc("/organizations", updateOrganizationHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
 	return
 }

@@ -74,6 +74,49 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (org
 	return
 }
 
+func (s *pgStore) UpdateOrganization(ctx context.Context, org Organization, organizationID int) (ok bool, err error) {
+	ok = false
+	UpdateOrganizationQuery := `UPDATE organizations SET (
+		name,
+		contact_email,
+		domain_name,
+		subscription_status,
+		subscription_valid_upto,
+		hi5_limit,
+		hi5_quota_renewal_frequency,
+		timezone,
+		created_by,
+		created_on,
+		updated_by,
+		updated_on) = 
+		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) where id = $13`
+
+		result, err := s.db.Exec(
+			UpdateOrganizationQuery,
+			org.Name,
+			org.ContactEmail,
+			org.DomainName,
+			org.SubscriptionStatus,
+			org.SubscriptionValidUpto,
+			org.Hi5Limit,
+			org.Hi5QuotaRenewalFrequency,
+			org.Timezone,
+			org.CreatedBy,
+			org.CreatedOn,
+			org.UpdatedBy,
+			time.Now(),
+			organizationID,
+		)
+
+		_, err = result.RowsAffected()
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error updating organization")
+			return
+		}
+	
+		return
+}
+
 func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (ok bool, err error) {
 	ok = false
 	deleteOrganizationQuery := `DELETE FROM organizations WHERE id = $1`

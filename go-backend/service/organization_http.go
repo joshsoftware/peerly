@@ -73,9 +73,58 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	})
 }
 
+// @Title updateOrganizationHandler
+// @Description Update Organizations
+// @Router /organizations [put]
+// @Accept  json
+// @Success 200 {object}
+// @Failure 400 {object}	
+func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		keys, ok := req.URL.Query()["id"]
+
+		if ok == false {
+			logger.Error("Error missing key id in query params")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		organizationID, err := strconv.Atoi(keys[0])		
+		
+		var organization db.Organization
+		err = json.NewDecoder(req.Body).Decode(&organization)
+		
+		if err != nil {
+			rw.WriteHeader(http.StatusInternalServerError)
+			logger.WithField("err", err.Error()).Error("Error while decoding organizations data")
+			return
+		}
+
+		_, err = deps.Store.UpdateOrganization(req.Context(), organization, organizationID)
+
+		if err != nil {
+			rw.WriteHeader(http.StatusInternalServerError)
+			logger.WithField("err", err.Error()).Error("Error update organization")
+			return
+		}
+
+		respBytes, err := json.Marshal("Organization Updated successfully")
+
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		rw.Header().Add("Content-Type", "application/json")
+		rw.Write(respBytes)
+		
+	})
+}
+
 // @Title deleteOrganizationHandler
 // @Description Delete Organizations
-// @Router /organizations [post]
+// @Router /organizations [delete]
 // @Accept  json
 // @Success 200 {object}
 // @Failure 400 {object}
