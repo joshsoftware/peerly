@@ -1,5 +1,5 @@
 ## Peerly - Rewards and Recognition system
-## Graphql APIs
+## REST APIs
 
 ## Setup and tools:
 

@@ -1,7 +1,10 @@
-var express = require("express");
-var graphqlHTTP = require("express-graphql");
-var { buildSchema } = require("graphql"); // eslint-disable-line no-unused-vars
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
+const http = require("http");
 
-var app = express();
-app.use("v1/graphql", graphqlHTTP({}));
-app.listen(process.env.SERVER_PORT); // eslint-disable-line no-undef
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+const httpServer = http.createServer(app);
+httpServer.listen(process.env.PORT); // eslint-disable-line no-undef
