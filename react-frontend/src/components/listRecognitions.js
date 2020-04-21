@@ -15,7 +15,7 @@ const ListRecognition = () => {
   const persons = [
     {
       hi5: "1",
-      name: "avinash",
+      name: "AM",
       time: "1 min ago",
       text:
         "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
@@ -23,7 +23,7 @@ const ListRecognition = () => {
     },
     {
       hi5: "2",
-      name: "jitu",
+      name: "JB",
       time: "2 min ago",
       text:
         "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
@@ -31,7 +31,7 @@ const ListRecognition = () => {
     },
     {
       hi5: "3",
-      name: "onkar",
+      name: "OH",
       time: "3 min ago",
       text:
         "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
