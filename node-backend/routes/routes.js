@@ -6,7 +6,10 @@ require("../google_auth/google_auth")();
 router.use(bodyParser.urlencoded({ extended: true }));
 router
   .route("/")
-  .post(passport.authenticate("google-token", { session: false }), function (req, res)/*eslint-disable-line prettier/prettier  */ {
+  .post(passport.authenticate("google-token", { session: false }), function (
+    req,
+    res
+  ) {
     if (!req.user) {
       return res.send(401, "User Not Authenticated by google");
     }
