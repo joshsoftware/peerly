@@ -5,7 +5,7 @@ import (
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
-
+	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -81,15 +81,16 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}	
 func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		keys, ok := req.URL.Query()["id"]
 
-		if ok == false {
+		vars := mux.Vars(req)
+		id, err := strconv.Atoi(vars["id"])
+
+
+		if err != nil {
 			logger.Error("Error missing key id in query params")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
-		}
-
-		organizationID, err := strconv.Atoi(keys[0])		
+		}	
 		
 		var organization db.Organization
 		err = json.NewDecoder(req.Body).Decode(&organization)
@@ -100,7 +101,7 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			return
 		}
 
-		_, err = deps.Store.UpdateOrganization(req.Context(), organization, organizationID)
+		_, err = deps.Store.UpdateOrganization(req.Context(), organization, id)
 
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
@@ -130,17 +131,16 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 // @Failure 400 {object}
 func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		keys, ok := req.URL.Query()["id"]
+		vars := mux.Vars(req)
+    id, err := strconv.Atoi(vars["id"])
 
-		if ok == false {
+		if err != nil {
 			logger.Error("Error missing key id in query params")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
-		organizationID, err := strconv.Atoi(keys[0])
-
-		_, err = deps.Store.DeleteOrganization(req.Context(), organizationID)
+		_, err = deps.Store.DeleteOrganization(req.Context(), id)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
 			rw.WriteHeader(http.StatusInternalServerError)

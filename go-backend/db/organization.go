@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"time"
-
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -107,8 +106,14 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, org Organization, orga
 			time.Now(),
 			organizationID,
 		)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("id not found")
+			return
+		}
 
-		_, err = result.RowsAffected()
+		var rowCount int64
+		rowCount, err = result.RowsAffected()
+		logger.WithField("rowCount", rowCount).Info("Number of rows affected")
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error updating organization")
 			return
@@ -131,11 +136,13 @@ func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (o
 		return
 	}
 
-	_, err = result.RowsAffected()
+	var rowCount int64
+	rowCount, err = result.RowsAffected()
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error deleting organization")
 		return
 	}
+	logger.WithField("rowCount", rowCount).Info("Number of rows affected")
 
 	ok = true
 	return
