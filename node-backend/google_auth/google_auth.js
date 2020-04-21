@@ -46,7 +46,7 @@ module.exports = function () {
           });
           if (domain_result.rowCount) {
             let domain_id = domain_result.rows[0].id;
-            await pool.query("insert into users (org_id,name,email,display_name,soft_delete,role_id,hi5_quota_balance) values('"+domain_id+"','"+user_name+"','"+email+"','"+display_name+"',false,1,2);" /*eslint-disable-line prettier/prettier */,
+            await pool.query("insert into users (org_id,name,email,display_name,soft_delete,role_id,hi5_quota_balance) values('"+domain_id+"','"+user_name+"','"+email+"','"+display_name+"',false,1,5);" /*eslint-disable-line prettier/prettier */,
             );
             let user_retrive = await pool.query("select roles.role,users.email,organizations.name from users,roles,organizations where users.email = '"+ email +"'"/*eslint-disable-line prettier/prettier */,
             );
