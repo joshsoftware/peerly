@@ -28,5 +28,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", deleteOrganizationHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", updateOrganizationHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", createRecognitionHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}", getRecognitionHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	return
 }
