@@ -1,23 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { generateToken, sendToken } = require("../jwtToken/jwtToken");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 require("../google_auth/google_auth")();
 router.use(bodyParser.urlencoded({ extended: true }));
-router.route("/google").post(
-  passport.authenticate("google-token", { session: false }),
-  function (req, res, next) {
+router
+  .route("/")
+  .post(passport.authenticate("google-token", { session: false }), function (req, res)/*eslint-disable-line prettier/prettier  */ {
     if (!req.user) {
       return res.send(401, "User Not Authenticated by google");
     }
-    req.auth = {
-      id: req.user.id,
-    };
-    next();
-  },
-  generateToken,
-  sendToken
-);
+    res.send(req.user);
+  });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 {
-  "name": "peerly-node-graphql",
+  "name": "peerly-node-rest",
   "version": "1.0.0",
-  "description": "Node GraphQl API For Peerly",
+  "description": "Node REST APIs For Peerly",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -28,13 +28,11 @@
   },
   "homepage": "https://github.com/joshsoftware/peerly#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-graphql": "^0.9.0",
-    "graphql": "^15.0.0",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
-    "passport-google-token": "^0.1.2",
-    "request": "^2.88.2"
+    "passport-google-token": "^0.1.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
