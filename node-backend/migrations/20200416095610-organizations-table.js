@@ -51,7 +51,6 @@ exports.up = function (db, callback) {
       },
       timezone: {
         type: "text",
-        length: 100,
         notNull: true,
       },
     },
