@@ -1,15 +1,14 @@
 import React from "react";
-import LoginComponent from "./LoginComponent";
-import SignInComponent from "./SignInComponent";
-import CopyrightComponent from "../core-components/CopyrightComponent";
+import SignInComponent from "components/SignInComponent";
+import HomeComponent from "./HomeComponent";
 const MainComponent = () => {
   return (
     <div>
-      <LoginComponent />
+      <HomeComponent />
+      <br></br>
       <br></br>
       <SignInComponent />
       <br></br>
-      <CopyrightComponent />
     </div>
   );
 };

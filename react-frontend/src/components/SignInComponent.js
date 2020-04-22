@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import GoogleLogin from "react-google-login";
-import DisplayDetailsComponent from "./DisplayDetailsComponent";
+import DisplayDetailsComponent from "components/DisplayDetailsComponent";
 const Login = () => {
+  //console.log(process.env.REACT_APP_CLIENTID);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [url, setUrl] = useState("");
@@ -11,6 +12,7 @@ const Login = () => {
     setName(response.profileObj.name);
     setEmail(response.profileObj.email);
     setUrl(response.profileObj.imageUrl);
+    //console.log(response);
     if (response.tokenObj.access_token !== undefined) {
       setNext(true);
       setToken(response.tokenObj.access_token);
@@ -26,14 +28,18 @@ const Login = () => {
       />
     );
   }
+
   return (
-    <GoogleLogin
-      clientId="270417110073-i9o1p7pf9isq4e9g2mrve1ofrvlaa7hh.apps.googleusercontent.com"
-      buttonText="sign in with google"
-      onSuccess={responseGoogle}
-      onFailure={responseGoogle}
-      cookiePolicy={"single_host_origin"}
-    />
+    <div>
+      <GoogleLogin
+        class="btn btn-block btn-social btn-google"
+        clientId={process.env.REACT_APP_GOOGLECLIENTID} // eslint-disable-line no-unused-vars
+        buttonText="sign in with google"
+        onSuccess={responseGoogle}
+        onFailure={responseGoogle}
+        cookiePolicy={"single_host_origin"}
+      />
+    </div>
   );
 };
 export default Login;
