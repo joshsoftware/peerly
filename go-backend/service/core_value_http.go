@@ -151,3 +151,48 @@ func deleteCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		rw.Write(respBytes)
 	})
 }
+
+func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
+		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
+		if err != nil {
+			logger.Error("Error missing key organisation_id in url")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			logger.Error("Error missing key id in url")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		var coreValue db.CoreValue
+		err = json.NewDecoder(req.Body).Decode(&coreValue)
+		if err != nil {
+			rw.WriteHeader(http.StatusInternalServerError)
+			logger.WithField("err", err.Error()).Error("Error while decoding request data")
+			return
+		}
+
+		err = deps.Store.UpdateCoreValue(req.Context(), organisationID, coreValueID, coreValue)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error updating core value")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		respBytes, err := json.Marshal("Core value Updated successfully")
+
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling core value data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		rw.Header().Add("Content-Type", "application/json")
+		rw.Write(respBytes)
+	})
+}

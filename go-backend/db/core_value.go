@@ -68,15 +68,40 @@ func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, cor
 	return
 }
 
-func (s *pgStore) DeleteCoreValue(ctx context.Context, organizationID, coreValueID int64) (err error) {
+func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValueID int64) (err error) {
 	deleteCoreValueQuery := `DELETE FROM core_values WHERE org_id = $1 and id = $2`
-	result, err := s.db.Exec(
+	_, err = s.db.ExecContext(
+		ctx,
 		deleteCoreValueQuery,
-		organizationID,
+		organisationID,
 		coreValueID,
 	)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error deleting core value")
+		return
+	}
+
+	return
+}
+
+func (s *pgStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (err error) {
+	updateCoreValueQuery := `UPDATE core_values SET (
+		core_value_text,
+		description,
+		parent_core_value_id) =
+		($1, $2, $3) where id = $4 and org_id = $5`
+
+	_, err = s.db.ExecContext(
+		ctx,
+		updateCoreValueQuery,
+		coreValue.CoreValueText,
+		coreValue.Description,
+		coreValue.ParentCoreValueID,
+		coreValueID,
+		organisationID,
+	)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while updating core value")
 		return
 	}
 

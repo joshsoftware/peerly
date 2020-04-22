@@ -13,6 +13,7 @@ type Storer interface {
 	// Core values
 	ListCoreValues(context.Context, int64) ([]CoreValue, error)
 	GetCoreValue(context.Context, int64, int64) (CoreValue, error)
-	CreateCoreValue(ctx context.Context, organisationID int64, coreValue CoreValue) (coreValueID string, err error)
-	DeleteCoreValue(ctx context.Context, organizationID, coreValueID int64) (err error)
+	CreateCoreValue(context.Context, int64, CoreValue) (string, error)
+	DeleteCoreValue(context.Context, int64, int64) error
+	UpdateCoreValue(context.Context, int64, int64, CoreValue) error
 }
