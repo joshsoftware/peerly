@@ -14,8 +14,19 @@ type CoreValue struct {
 	ParentCoreValueID *int64 `db:"parent_core_value_id" json:"parent_core_value_id"`
 }
 
+const (
+	listCoreValuesQuery  = `SELECT * FROM core_values WHERE org_id = $1`
+	getCoreValueQuery    = `SELECT * FROM core_values WHERE org_id = $1 and id = $2`
+	createCoreValueQuery = `INSERT INTO core_values (org_id, core_value_text,
+		description, parent_core_value_id) VALUES ($1, $2, $3, $4) RETURNING id`
+	deleteSubCoreValueQuery = `DELETE FROM core_values WHERE org_id = $1 and parent_core_value_id = $2`
+	deleteCoreValueQuery    = `DELETE FROM core_values WHERE org_id = $1 and id = $2`
+	updateCoreValueQuery    = `UPDATE core_values SET (core_value_text, description) =
+		($1, $2) where id = $3 and org_id = $4`
+)
+
 func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (coreValues []CoreValue, err error) {
-	listCoreValuesQuery := `SELECT * FROM core_values WHERE org_id = $1`
+	coreValues = make([]CoreValue, 0)
 	err = s.db.SelectContext(
 		ctx,
 		&coreValues,
@@ -23,7 +34,7 @@ func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (cor
 		organisationID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error listing core values")
+		logger.WithField("err", err.Error()).Error("Error while getting core values")
 		return
 	}
 
@@ -31,7 +42,6 @@ func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (cor
 }
 
 func (s *pgStore) GetCoreValue(ctx context.Context, organisationID, coreValueID int64) (coreValue CoreValue, err error) {
-	getCoreValueQuery := `SELECT * FROM core_values WHERE org_id = $1 and id = $2`
 	err = s.db.GetContext(
 		ctx,
 		&coreValue,
@@ -48,9 +58,6 @@ func (s *pgStore) GetCoreValue(ctx context.Context, organisationID, coreValueID 
 }
 
 func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, coreValue CoreValue) (coreValueID string, err error) {
-	createCoreValueQuery := `INSERT INTO core_values (org_id, core_value_text, description, parent_core_value_id)
-        VALUES($1, $2, $3, $4) RETURNING id`
-
 	err = s.db.GetContext(
 		ctx,
 		&coreValueID,
@@ -61,7 +68,7 @@ func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, cor
 		coreValue.ParentCoreValueID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting core value")
+		logger.WithField("err", err.Error()).Error("Error while creating core value")
 		return
 	}
 
@@ -69,7 +76,17 @@ func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, cor
 }
 
 func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValueID int64) (err error) {
-	deleteCoreValueQuery := `DELETE FROM core_values WHERE org_id = $1 and id = $2`
+	_, err = s.db.ExecContext(
+		ctx,
+		deleteSubCoreValueQuery,
+		organisationID,
+		coreValueID,
+	)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while deleting sub core value")
+		return
+	}
+
 	_, err = s.db.ExecContext(
 		ctx,
 		deleteCoreValueQuery,
@@ -77,7 +94,7 @@ func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValue
 		coreValueID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error deleting core value")
+		logger.WithField("err", err.Error()).Error("Error while deleting core value")
 		return
 	}
 
@@ -85,18 +102,11 @@ func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValue
 }
 
 func (s *pgStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (err error) {
-	updateCoreValueQuery := `UPDATE core_values SET (
-		core_value_text,
-		description,
-		parent_core_value_id) =
-		($1, $2, $3) where id = $4 and org_id = $5`
-
 	_, err = s.db.ExecContext(
 		ctx,
 		updateCoreValueQuery,
 		coreValue.CoreValueText,
 		coreValue.Description,
-		coreValue.ParentCoreValueID,
 		coreValueID,
 		organisationID,
 	)

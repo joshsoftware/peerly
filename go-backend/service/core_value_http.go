@@ -22,7 +22,6 @@ func listCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 		}
 
 		coreValues, err := deps.Store.ListCoreValues(req.Context(), organisationID)
-		fmt.Println(coreValues)
 
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching data")
@@ -59,7 +58,6 @@ func getCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		}
 
 		coreValue, err := deps.Store.GetCoreValue(req.Context(), organisationID, coreValueID)
-		fmt.Println(coreValue)
 
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching data")
