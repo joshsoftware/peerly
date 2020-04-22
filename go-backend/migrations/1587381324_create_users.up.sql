@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
   soft_delete_on TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS users_id_idx ON users(id);
 CREATE INDEX IF NOT EXISTS users_email_idx ON users(email);
 CREATE INDEX IF NOT EXISTS users_soft_delete_idx ON users(soft_delete);
 CREATE INDEX IF NOT EXISTS users_soft_delete_by_idx ON users(soft_delete_by);

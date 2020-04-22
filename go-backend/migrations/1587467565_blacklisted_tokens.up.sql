@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS user_blacklisted_tokens(
   expiration_date TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS user_blacklisted_tokens_id_idx ON user_blacklisted_tokens(id);
 CREATE INDEX IF NOT EXISTS user_blacklisted_tokens_user_id_idx ON user_blacklisted_tokens(user_id);
 CREATE INDEX IF NOT EXISTS user_blacklisted_tokens_token_idx ON user_blacklisted_tokens(token);
 CREATE INDEX IF NOT EXISTS user_blacklisted_tokens_expiration_date_idx ON user_blacklisted_tokens(expiration_date);
