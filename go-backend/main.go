@@ -4,6 +4,7 @@ package main
 // @APIDescription Main API for Microservices in Go!
 
 import (
+	"errors"
 	"fmt"
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
@@ -50,9 +51,13 @@ func main() {
 			},
 		},
 		{
-			Name:  "rollback",
-			Usage: "rollback migrations",
+			Name:      "rollback",
+			Usage:     "rollback migrations",
+			ArgsUsage: "[step (int)]",
 			Action: func(c *cli.Context) error {
+				if c.NArg() == 0 {
+					return errors.New("migration step is required")
+				}
 				return db.RollbackMigrations(c.Args().Get(0))
 			},
 		},
