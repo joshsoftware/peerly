@@ -8,4 +8,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/v1/login", routes);
 const httpServer = http.createServer(app);
-httpServer.listen(process.env.HTTP_PORT); // eslint-disable-line no-undef
+httpServer.listen(process.env.HTTP_PORT || 8080); // eslint-disable-line no-undef
