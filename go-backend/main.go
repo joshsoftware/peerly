@@ -8,7 +8,7 @@ import (
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
 	"joshsoftware/peerly/service"
-  "joshsoftware/peerly/tasks"
+	"joshsoftware/peerly/tasks"
 	"os"
 	"strconv"
 
@@ -75,13 +75,8 @@ func startApp() (err error) {
 		Store: store,
 	}
 
-  // Start up all the background tasks Peerly depends upon
-  tasks.Init(deps)
-  // if err != nil {
-  //   // TODO: What happens when background tasks fail to start? Should we
-  //   // abort the server, or continue?
-  //   panic(err)
-  // }
+	// Start up all the background tasks Peerly depends upon
+	tasks.Init(deps)
 
 	// mux router
 	router := service.InitRouter(deps)
