@@ -3,6 +3,7 @@ import { Form, Button, Col, Row, Card } from "react-bootstrap";
 import reducer from "components/reducers/createRecognitionReducer";
 import { setDetails } from "components/actions/createRecognitionAction";
 import { string, object } from "yup";
+import PropTypes from "prop-types";
 
 const initialState = {
   user: "",
@@ -11,40 +12,49 @@ const initialState = {
 };
 
 const CreateRecognition = (props) => {
-  const { userPlaceholder, textareaPlaceholder, coreValuePlaceholder } = props; // eslint-disable-line react/prop-types
+  const {
+    userPlaceholder, // eslint-disable-line react/prop-types
+    users, // eslint-disable-line react/prop-types
+    coreValue, // eslint-disable-line react/prop-types
+    textareaPlaceholder, // eslint-disable-line react/prop-types
+    coreValuePlaceholder, // eslint-disable-line react/prop-types
+  } = props; // eslint-disable-line react/prop-types
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setIsLoading] = useState(false);
+  const [validated, setValidated] = useState(false);
 
   useEffect(() => {
     console.log("Loading the page  " + isLoading); // eslint-disable-line no-console
   });
 
-  const handleOnSubmit = (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    console.log("in submit"); // eslint-disable-line no-console
-
-    let schema = object().shape({
-      user: string().required(),
-      coreValue: string().required(),
-      description: string().required(),
-    });
-
-    schema
-      .isValid({
-        user: state.user,
-        coreValue: state.coreValue,
-        description: state.description,
-      })
-      .then(function (valid) {
-        if (valid) {
-          alert("Information is sended"); // eslint-disable-line no-alert
-          setIsLoading(false);
-        } else {
-          alert("information is not in correct formate"); // eslint-disable-line no-alert
-          setIsLoading(false);
-        }
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      event.preventDefault();
+      setIsLoading(true);
+      let schema = object().shape({
+        user: string().required(),
+        coreValue: string().required(),
+        description: string().required(),
       });
+      schema
+        .isValid({
+          user: state.user,
+          coreValue: state.coreValue,
+          description: state.description,
+        })
+        .then(function (valid) {
+          if (valid) {
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+          }
+        });
+    }
+    setValidated(false);
   };
 
   const handleOnChange = (e) => {
@@ -58,65 +68,98 @@ const CreateRecognition = (props) => {
     <Row className="mt-5">
       <Col xs="3"></Col>
       <Col xs="6">
-        <Card border="success">
-          <Form onSubmit={handleOnSubmit} id="my-form">
+        <Card>
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Card.Header>
-              <Row className="mt-2 mr-4">
-                <Col></Col>
-                <Col>
+              <Form.Row className="mt-1">
+                <Form.Group className="font-italic text-info" as={Col}>
+                  Recognition
+                </Form.Group>
+                <Form.Group as={Col} controlId="validationCustom01">
                   <Form.Control
-                    className="font-italic h-6"
-                    size="sm"
-                    list="users"
+                    list="userList"
                     name="user"
-                    placeholder={userPlaceholder}
-                    onChange={(event) => {
-                      handleOnChange(event);
-                    }}
-                    value={state.user}
-                  />
-                </Col>
-                <Col>
-                  <Form.Control
-                    className="font-italic h-6"
                     size="sm"
-                    list="coreValues"
-                    name="coreValue"
+                    placeholder={userPlaceholder}
+                    value={state.user}
                     onChange={(event) => {
                       handleOnChange(event);
                     }}
-                    placeholder={coreValuePlaceholder}
-                    value={state.coreValue}
+                    required
                   />
-                </Col>
-              </Row>
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a user.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <datalist id="userList">
+                  {users.map((person) => (
+                    <option key="1">{person.name}</option>
+                  ))}
+                </datalist>
+                <Form.Group as={Col} controlId="validationCustom02">
+                  <Form.Control
+                    list="coreValueList"
+                    size="sm"
+                    name="coreValue"
+                    placeholder={coreValuePlaceholder}
+                    aria-describedby="inputGroupPrepend"
+                    onChange={(event) => {
+                      handleOnChange(event);
+                    }}
+                    value={state.coreValue}
+                    required
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please choose a core value.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <datalist id="coreValueList">
+                  {coreValue.map((sample) => (
+                    <option key="1">{sample.value}</option> // eslint-disable-line no-unused-expressions
+                  ))}
+                </datalist>
+              </Form.Row>
             </Card.Header>
             <Card.Body>
-              <Row className="mt-2 mb-2">
-                <Col>
+              <Form.Row>
+                <Form.Group as={Col} controlId="validationCustom03">
+                  <Form.Label className="font-italic text-info">
+                    * Description
+                  </Form.Label>
                   <Form.Control
-                    className="font-italic"
-                    border="dark"
                     as="textarea"
-                    placeholder={textareaPlaceholder}
                     name="description"
                     rows="3"
+                    placeholder={textareaPlaceholder}
                     onChange={(event) => {
                       handleOnChange(event);
                     }}
                     value={state.description}
+                    required
                   />
-                </Col>
-              </Row>
+                  <Form.Control.Feedback type="invalid">
+                    Please write a description.
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Form.Row>
             </Card.Body>
-            <Card.Footer className="bg-light">
-              <Button
-                type="submit"
-                className="float-right mb-2 mr-4 btn btn-lg btn-info"
-                size="sm"
-              >
-                Give Hi5
-              </Button>
+            <Card.Footer>
+              <Form.Row>
+                <Col className="font-italic text-danger">Message</Col>
+                <Col></Col>
+                <Col>
+                  <div className={isLoading ? "d-none" : "error"}>
+                    <Button className="float-right" type="submit">
+                      Give Hi5
+                    </Button>
+                  </div>
+                  <div
+                    className={
+                      isLoading ? "spinner-border float-right" : "d-none"
+                    }
+                  ></div>
+                </Col>
+              </Form.Row>
             </Card.Footer>
           </Form>
         </Card>
@@ -125,9 +168,16 @@ const CreateRecognition = (props) => {
     </Row>
   );
 };
+CreateRecognition.propTypes = {
+  users: PropTypes.array,
+  coreValue: PropTypes.array,
+};
+
 CreateRecognition.defaultProps = {
   errorMesage: null,
-  userPlaceholder: "select user",
+  users: [{ name: "ajay" }, { name: "rahul" }, { name: "amol" }],
+  coreValue: [{ value: "abcd" }, { value: "pqrs" }, { value: "xyz" }],
+  userPlaceholder: "Select user",
   coreValuePlaceholder: "Select core values",
   textareaPlaceholder: "Write a description",
 };
