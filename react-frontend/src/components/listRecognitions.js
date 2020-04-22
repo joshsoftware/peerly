@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Row, Col, Button, Container } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, CardHeader, CardFooter, CardBody, CardText } from "reactstrap";

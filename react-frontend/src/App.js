@@ -5,7 +5,7 @@ import ListRecognition from "components/listRecognitions";
 function App() {
   return (
     <div className="App">
-      <ListRecognition></ListRecognition>
+      <ListRecognition />
     </div>
   );
 }
