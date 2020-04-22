@@ -14,8 +14,8 @@ module.exports = function () {
       },
       async function (accessToken, refreshToken, profile, done) {
         let email = profile.emails[0].value;
-        let user_name = profile.name.givenName;
-        let display_name = profile.displayName;
+        let userName = profile.name.givenName;
+        let displayName = profile.displayName;
         let result;
         await db.sequelize
           .query(
@@ -30,87 +30,87 @@ module.exports = function () {
             done(err);
           });
         if (result[1].rowCount) {
-          let token_email = result[0][0].email;
+          let tokenEmail = result[0][0].email;
           let role = result[0][0].role;
-          let organization_data = result[0][0].name;
-          var exp_time = {
+          let organizationData = result[0][0].name;
+          var expTime = {
             expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
           };
           const token = jwt.sign(
             {
-              email: token_email,
+              email: tokenEmail,
             },
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
-            exp_time
+            expTime
           );
           return done(null, {
             token: token,
             role: role,
-            organization: organization_data,
+            organization: organizationData,
           });
         } else {
-          let domain_name = profile.emails[0].value.split("@").pop();
-          let domain_result;
+          let domainName = profile.emails[0].value.split("@").pop();
+          let domainResult;
           await db.sequelize
             .query(
               " SELECT * FROM organizations WHERE domain_name = '" +
-                domain_name +
+                domainName +
                 "'"
             )
-            .then(function (organization_data) {
-              domain_result = organization_data;
+            .then(function (organizationData) {
+              domainResult = organizationData;
             })
             .catch((err) => {
               done(err);
             });
-          if (domain_result[1].rowCount) {
-            let domain_id = domain_result[0][0].id;
+          if (domainResult[1].rowCount) {
+            let domainId = domainResult[0][0].id;
             await db.sequelize
               .query(
                 "insert into users (org_id,name,email,display_name,soft_delete,role_id,hi5_quota_balance) values('" +
-                  domain_id +
+                  domainId +
                   "','" +
-                  user_name +
+                  userName +
                   "','" +
                   email +
                   "','" +
-                  display_name +
+                  displayName +
                   "',false,1,5);"
               )
               .catch((err) => {
                 done(err);
               });
-            let user_retrive;
+            let getUser;
             await db.sequelize
               .query(
                 "select roles.role,users.email,organizations.name from users,roles,organizations where users.email = '" +
                   email +
                   "'"
               )
-              .then(function (user_data) {
-                user_retrive = user_data;
+              .then(function (userData) {
+                getUser = userData;
               })
               .catch((err) => {
                 done(err);
               });
-            if (user_retrive[1].rowCount) {
-              let token_email = user_retrive[0][0].email;
-              let role = user_retrive[0][0].role;
-              let organization_data = user_retrive[0][0].name;
-              var exp_time /*eslint-disable-line no-redeclare*/ = {
+            if (getUser[1].rowCount) {
+              let tokenEmail = getUser[0][0].email;
+              let role = getUser[0][0].role;
+              let organizationData = getUser[0][0].name;
+              var expTime /*eslint-disable-line no-redeclare*/ = {
                 expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
               };
               const token = jwt.sign(
                 {
-                  email: token_email,
+                  email: tokenEmail,
                 },
                 process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
-                exp_time
+                expTime
               );
               return done(null, {
                 token: token,
                 role: role,
-                organization: organization_data,
+                organization: organizationData,
               });
             } else {
               done(null);
