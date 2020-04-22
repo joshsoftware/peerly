@@ -13,7 +13,7 @@ router
     if (!req.user) {
       return res.send(401, "User Not Authenticated by google");
     }
-    res.send(req.user);
+    res.status(200).send(req.user);
   });
 
 module.exports = router;
