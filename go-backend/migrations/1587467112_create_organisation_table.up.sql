@@ -9,7 +9,7 @@ CREATE TABLE organizations (
 	hi5_quota_renewal_frequency varchar(50),
 	timezone varchar(100),
 	created_by integer,
-	created_on timestamp,
+	created_on timestamp DEFAULT CURRENT_TIMESTAMP,
 	updated_by integer,
-	updated_on timestamp
+	updated_on timestamp DEFAULT CURRENT_TIMESTAMP
 );

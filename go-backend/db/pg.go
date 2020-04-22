@@ -24,23 +24,6 @@ const (
 
 var errFindingDriver = errors.New("no migrate driver instance found")
 
-var oragnizationSchema = `
-CREATE TABLE IF NOT EXISTS organizations (
-	id serial PRIMARY KEY,
-	name varchar(50),
-	contact_email varchar(50),
-	domain_name varchar(45),
-	subscription_status integer,
-	subscription_valid_upto timestamp,
-	hi5_limit integer,
-	hi5_quota_renewal_frequency varchar(50),
-	timezone varchar(100),
-	created_by integer,
-	created_on timestamp,
-	updated_by integer,
-	updated_on timestamp
-);`
-
 type pgStore struct {
 	db *sqlx.DB
 }
@@ -53,11 +36,6 @@ func Init() (s Storer, err error) {
 		logger.WithField("err", err.Error()).Error("Cannot initialize database")
 		return
 	}
-
-	// exec the schema or fail; multi-statement Exec behavior varies between
-	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
-
-	conn.MustExec(oragnizationSchema)
 
 	logger.WithField("uri", uri).Info("Connected to pg database")
 	return &pgStore{conn}, nil
