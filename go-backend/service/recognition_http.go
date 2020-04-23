@@ -73,3 +73,34 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 		rw.Write(respBytes)
 	})
 }
+
+// @Title listRecognitionsHandler
+// @Description get recognitions
+// @Router /organisations/{id:[0-9]+}/recognitions
+// @Accept  json
+// @Success 200 {object}
+// @Failure 400 {object}
+func listRecognitionsHandler(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+
+		// userId := req.URL.Query().Get("user_id")
+		// coreValueId := req.URL.Query().Get("core_value_id")
+
+		recognitions, err := deps.Store.ListRecognitions(req.Context())
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error fetching recognitions")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		respBytes, err := json.Marshal(recognitions)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling recognition data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		rw.Header().Add("Content-Type", "application/json")
+		rw.Write(respBytes)
+	})
+}
