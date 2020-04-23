@@ -14,11 +14,10 @@ import {
 } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 
-const ListRecognition = (props) => {
+const ListRecognitionComponent = (props) => {
   TimeAgo.addLocale(en);
   const timeAgo = new TimeAgo("en-US");
   const { list } = props;
-
   const displayName = (name) => {
     let shortName = name.toUpperCase();
     return shortName.match(/\b(\w)/g);
@@ -41,13 +40,13 @@ const ListRecognition = (props) => {
             >
               <Card.Header className="d-flex justify-content-around">
                 <Button className="bg-success btn-sm">
-                  <h5>+{object.hi5}</h5>
+                  <h5>+{object.hi5_quota_balance}</h5>
                 </Button>
                 <Button className="btn-sm bg-primary">
                   <h5>{displayName(object.name)}</h5>
                 </Button>
                 <Card.Text className="text-muted">
-                  {showTime(object.time)} ago
+                  {showTime(object.recognistion_on)} ago
                 </Card.Text>
                 <Menu>
                   <MenuButton className="btn bg-light grey">
@@ -61,10 +60,10 @@ const ListRecognition = (props) => {
               </Card.Header>
               <Card.Body className="h-50 p-3 ml-5 mr-5 font-italic text-left">
                 <Card.Text>
-                  <h5>{object.text}</h5>
+                  <h5>{object.recognistion_text}</h5>
                 </Card.Text>
                 <Card.Text className="text-primary font-weight-lighter">
-                  <h5>#{object.core}</h5>
+                  <h5>#{object.core_value_text}</h5>
                 </Card.Text>
               </Card.Body>
               <Card.Footer className="d-flex content-left"></Card.Footer>
@@ -76,35 +75,7 @@ const ListRecognition = (props) => {
     </Container>
   );
 };
-ListRecognition.defaultProps = {
-  list: [
-    {
-      hi5: "1",
-      name: "avinash",
-      time: "2020-4-22 10:10:10",
-      text:
-        "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
-      core: "welcome to peerly",
-    },
-    {
-      hi5: "2",
-      name: "jitu bunde",
-      time: "2019-2-4 12:00:00",
-      text:
-        "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
-      core: "welcome to peerly",
-    },
-    {
-      hi5: "3",
-      name: "onkar hasabe",
-      time: "2018-3-4",
-      text:
-        "recognition text:welcome to bonusly @sahil+bonasuly ! we are recognistion you with +25",
-      core: "welcome to peerly",
-    },
-  ],
-};
-ListRecognition.propTypes = {
+ListRecognitionComponent.propTypes = {
   list: PropTypes.array,
 };
-export default ListRecognition;
+export default ListRecognitionComponent;
