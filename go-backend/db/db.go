@@ -8,6 +8,7 @@ type Storer interface {
 	ListUsers(context.Context) ([]User, error)
 	CreateRecognition(context.Context, Recognition) error
 	ShowRecognition(context.Context, string) (Recognition, error)
+	ListRecognitions(context.Context) ([]Recognition, error)
 	//Create(context.Context, User) error
 	//GetUser(context.Context) (User, error)
 	//Delete(context.Context, string) error

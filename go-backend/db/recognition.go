@@ -61,3 +61,13 @@ func (s *pgStore) ShowRecognition(ctx context.Context, recognition_id string) (r
 
 	return
 }
+func (s *pgStore) ListRecognitions(ctx context.Context) (recognitions []Recognition, err error) {
+
+	err = s.db.Select(&recognitions, "SELECT * FROM recognitions ORDER BY recognition_on ASC")
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error listing recognitions")
+		return
+	}
+
+	return
+}
