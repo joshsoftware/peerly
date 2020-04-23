@@ -2,10 +2,23 @@ package db
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
+)
+
+const (
+	createRecognitionQuery = `
+		INSERT INTO recognitions (
+			core_values_id,
+			recognition_text,
+			recognition_for,
+			recognition_by
+		)
+		VALUES ($1, $2, $3, $4)
+	`
+	showRecognitionQuery = "SELECT * FROM recognitions WHERE id=$1"
 )
 
 type Recognition struct {
@@ -17,47 +30,49 @@ type Recognition struct {
 	RecognitionOn   time.Time `db:"recognition_on" json:"recognition_on"`
 }
 
+func (recognition Recognition) ValidateRecognition() (err error) {
+	if recognition.CoreValuesID == 0 {
+		return errors.New("core_values_id must be present in request")
+	}
+
+	if recognition.RecognitionText == "" {
+		return errors.New("core_values_id must be present in request")
+	}
+
+	if recognition.RecognitionFor == 0 {
+		return errors.New("core_values_id must be present in request")
+	}
+
+	if recognition.RecognitionBy == 0 {
+		return errors.New("core_values_id must be present in request")
+	}
+	return
+}
+
 func (s *pgStore) CreateRecognition(ctx context.Context, recognition Recognition) (err error) {
-	createRecognitionQuery := `
-		INSERT INTO recognitions (
-			core_values_id,
-			recognition_text,
-			recognition_for,
-			recognition_by,
-			recognition_on
-		)
-		VALUES ($1, $2, $3, $4, $5)
-	`
 	_, err = s.db.Exec(
 		createRecognitionQuery,
 		recognition.CoreValuesID,
 		recognition.RecognitionText,
 		recognition.RecognitionFor,
 		recognition.RecognitionBy,
-		time.Now(),
 	)
-
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error creating recognition")
 		return
 	}
-
 	return
 }
 
-func (s *pgStore) ShowRecognition(ctx context.Context, recognition_id string) (recognition Recognition, err error) {
-	showRecognitionQuery := "SELECT * FROM recognitions WHERE id=$1"
-	fmt.Println(recognition_id)
+func (s *pgStore) ShowRecognition(ctx context.Context, recognitionID string) (recognition Recognition, err error) {
 	err = s.db.Get(
 		&recognition,
 		showRecognitionQuery,
-		recognition_id,
+		recognitionID,
 	)
-
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing recognitions")
 		return
 	}
-
 	return
 }

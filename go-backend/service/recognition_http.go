@@ -17,34 +17,30 @@ import (
 // @Failure 400 {object}
 func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		// acccept recognition
 		var recognition db.Recognition
 		err := json.NewDecoder(req.Body).Decode(&recognition)
-
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusBadRequest)
 			logger.WithField("err", err.Error()).Error("Error while decoding recognition data")
 			return
 		}
 
-		err = deps.Store.CreateRecognition(req.Context(), recognition)
-
+		err = recognition.ValidateRecognition()
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusBadRequest)
 			logger.WithField("err", err.Error()).Error("Error while creating recognition")
 			return
 		}
 
-		respBytes, err := json.Marshal("Recognition created successfully")
+		err = deps.Store.CreateRecognition(req.Context(), recognition)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
-			rw.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusBadRequest)
+			logger.WithField("err", err.Error()).Error("Error while creating recognition")
 			return
 		}
 
 		rw.Header().Add("Content-Type", "application/json")
 		rw.WriteHeader(http.StatusCreated)
-		rw.Write(respBytes)
 	})
 }
 
@@ -62,7 +58,7 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 		recognition, err := deps.Store.ShowRecognition(req.Context(), recognitionID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching recognition")
-			rw.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
