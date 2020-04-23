@@ -69,9 +69,13 @@ func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func makeHTTPCall(method, path, requestUrl, body string, handlerFunc http.HandlerFunc) (recorder *httptest.ResponseRecorder) {
+// Use path variable for configure our test router with given handler and requestURL variable for serve the http request
+// Example: For serving the request - "/users/123":
+// 		path 	   = "users/{id}"
+// 		requestURL = "/users/123"
+func makeHTTPCall(method, path, requestURL, body string, handlerFunc http.HandlerFunc) (recorder *httptest.ResponseRecorder) {
 	// create a http request using the given parameters
-	req, _ := http.NewRequest(method, requestUrl, strings.NewReader(body))
+	req, _ := http.NewRequest(method, requestURL, strings.NewReader(body))
 
 	// test recorder created for capturing api responses
 	recorder = httptest.NewRecorder()
