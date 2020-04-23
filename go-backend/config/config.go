@@ -11,6 +11,7 @@ import (
 var (
 	appName string
 	appPort int
+	jwtKey  string
 )
 
 func Load() {
@@ -38,6 +39,13 @@ func AppPort() int {
 		appPort = ReadEnvInt("APP_PORT")
 	}
 	return appPort
+}
+
+func JwtKey() []byte {
+	if jwtKey == "" {
+		jwtKey = ReadEnvString("JWT_SECRET")
+	}
+	return []byte(jwtKey)
 }
 
 func ReadEnvInt(key string) int {
