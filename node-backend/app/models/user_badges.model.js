@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-  const Badges = sequelize.define(
-    "badges",
+  const User_Badges = sequelize.define(
+    "user_badges",
     {
       id: {
         type: Sequelize.INTEGER,
@@ -8,22 +8,16 @@ module.exports = (sequelize, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
-      },
-      org_id: {
+      badge_id: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      hi5_count_required: {
+      user_id: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      hi5_frequency: {
-        type: Sequelize.STRING,
-        length: 45,
+      obtained_on: {
+        type: "TIMESTAMP",
         notNull: true,
       },
     },
@@ -33,5 +27,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return Badges;
+  return User_Badges;
 };
