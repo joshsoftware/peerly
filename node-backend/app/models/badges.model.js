@@ -34,5 +34,5 @@ module.exports = (sequelize, Sequelize) => {
       }
     );
     return Badges;
-  };
+};
   
