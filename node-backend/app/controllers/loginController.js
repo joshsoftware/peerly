@@ -1,5 +1,6 @@
-const db = require("../models");
+const db = require("../models/sequelize");
 const jwt = require("jsonwebtoken");
+const Users = db.users;
 exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
@@ -9,7 +10,7 @@ exports.login = async (req, res) => {
   if (result == "error") {
     res.status(500).send({ message: "internal server error" });
   } else if (result[1].rowCount) {
-    let tokenEmail = result[0][0].email;
+    let emailId = result[0][0].email;
     let role = result[0][0].role;
     let organizationData = result[0][0].name;
     var expTime = {
@@ -17,7 +18,7 @@ exports.login = async (req, res) => {
     };
     const token = jwt.sign(
       {
-        email: tokenEmail,
+        email: emailId,
       },
       process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
       expTime
@@ -40,7 +41,7 @@ exports.login = async (req, res) => {
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
-          let tokenEmail = getUserResult[0][0].email;
+          let emailId = getUserResult[0][0].email;
           let role = getUserResult[0][0].role;
           let organizationData = getUserResult[0][0].name;
           var expTime /*eslint-disable-line no-redeclare*/ = {
@@ -48,7 +49,7 @@ exports.login = async (req, res) => {
           };
           const token = jwt.sign(
             {
-              email: tokenEmail,
+              email: emailId,
             },
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
             expTime
@@ -100,22 +101,19 @@ const getOrganization = async (domainName) => {
   return domainResult;
 };
 
-const insertData = (domainId, userName, email, displayName) => {
+const insertData = async (domainId, userName, email, displayName) => {
   let errorCheck;
-  db.sequelize
-    .query(
-      "insert into users (org_id,name,email,display_name,soft_delete,role_id,hi5_quota_balance) values('" +
-        domainId +
-        "','" +
-        userName +
-        "','" +
-        email +
-        "','" +
-        displayName +
-        "',false,1,5);"
-    )
-    .catch(() => {
-      errorCheck = "error";
-    });
+  const user = {
+    org_id: domainId,
+    name: userName,
+    email: email,
+    display_name: displayName,
+    soft_delete: false,
+    role_id: 1,
+    hi5_quota_balance: 5,
+  };
+  await Users.create(user).catch(() => {
+    errorCheck = "error";
+  });
   return errorCheck;
 };
