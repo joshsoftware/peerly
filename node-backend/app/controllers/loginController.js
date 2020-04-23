@@ -6,14 +6,18 @@ exports.login = async (req, res) => {
   let email = profile.emails[0].value;
   let userName = profile.name.givenName;
   let displayName = profile.displayName;
+  let emailId;
+  let role;
+  let organizationData;
+  let expTime;
   let result = await getUser(email);
   if (result == "error") {
     res.status(500).send({ message: "internal server error" });
   } else if (result[1].rowCount) {
-    let emailId = result[0][0].email;
-    let role = result[0][0].role;
-    let organizationData = result[0][0].name;
-    var expTime = {
+    emailId = result[0][0].email;
+    role = result[0][0].role;
+    organizationData = result[0][0].name;
+    expTime = {
       expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
     };
     const token = jwt.sign(
@@ -41,10 +45,10 @@ exports.login = async (req, res) => {
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
-          let emailId = getUserResult[0][0].email;
-          let role = getUserResult[0][0].role;
-          let organizationData = getUserResult[0][0].name;
-          var expTime /*eslint-disable-line no-redeclare*/ = {
+          emailId = getUserResult[0][0].email;
+          role = getUserResult[0][0].role;
+          organizationData = getUserResult[0][0].name;
+          expTime /*eslint-disable-line no-redeclare*/ = {
             expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
           };
           const token = jwt.sign(
