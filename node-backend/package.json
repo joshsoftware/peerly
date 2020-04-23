@@ -4,6 +4,7 @@
   "description": "Node REST APIs For Peerly",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "lint-staged"
   },

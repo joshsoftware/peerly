@@ -10,4 +10,4 @@ app.use(bodyParser.json());
 dbConn.sequelize;
 app.use("/v1/login", routes);
 const httpServer = http.createServer(app);
-httpServer.listen(process.env.HTTP_PORT || 8080); // eslint-disable-line no-undef
+httpServer.listen(8080); // eslint-disable-line no-undef
