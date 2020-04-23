@@ -31,14 +31,16 @@ const Login = () => {
 
   return (
     <div>
-      <GoogleLogin
-        class="btn btn-block btn-social btn-google"
-        clientId={process.env.REACT_APP_GOOGLECLIENTID} // eslint-disable-line no-unused-vars
-        buttonText="sign in with google"
-        onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        cookiePolicy={"single_host_origin"}
-      />
+      <centre>
+        <GoogleLogin
+          class="btn btn-block btn-social btn-google"
+          clientId={process.env.REACT_APP_GOOGLECLIENTID} // eslint-disable-line no-unused-vars
+          buttonText="Sign in with Google"
+          onSuccess={responseGoogle}
+          onFailure={responseGoogle}
+          cookiePolicy={"single_host_origin"}
+        />
+      </centre>
     </div>
   );
 };

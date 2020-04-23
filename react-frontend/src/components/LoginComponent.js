@@ -17,33 +17,33 @@ const LoginForm = () => {
       })
       .then(function (valid) {
         if (valid) {
-          // try {
-          //   fetch("https://reqres.in/api/login", {
-          //     method: "POST",
-          //     credentials: "same-origin",
-          //     withCredentials: true,
-          //     headers: new Headers({
-          //       "Content-Type": "application/json",
-          //     }),
-          //     body: JSON.stringify({
-          //       email: email,
-          //       password: password,
-          //     }),
-          //   })
-          //     .then((response) => {
-          //       return response.json();
-          //     })
-          //     .then((jsonresponse) => {
-          //       //console.log("JSON RESPONSE:->  ", jsonresponse);
-          //       if (jsonresponse.token) {
-          //         //console.log();
-          //       } else {
-          //         //console.log(jsonresponse.message);
-          //       }
-          //     });
-          // } catch (ex) {
-          //   //console.log(ex)
-          // }
+          try {
+            fetch("https://reqres.in/api/login", {
+              method: "POST",
+              credentials: "same-origin",
+              withCredentials: true,
+              headers: new Headers({
+                "Content-Type": "application/json",
+              }),
+              body: JSON.stringify({
+                email: email,
+                password: password,
+              }),
+            })
+              .then((response) => {
+                return response.json();
+              })
+              .then((jsonresponse) => {
+                //console.log("JSON RESPONSE:->  ", jsonresponse);
+                if (jsonresponse.token) {
+                  //console.log();
+                } else {
+                  //console.log(jsonresponse.message);
+                }
+              });
+          } catch (ex) {
+            //console.log(ex)
+          }
         } else {
           //alert("Please give in right format");
         }
