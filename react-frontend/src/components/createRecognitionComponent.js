@@ -33,7 +33,6 @@ const CreateRecognition = (props) => {
       event.preventDefault();
       event.stopPropagation();
     } else {
-      event.preventDefault();
       setIsLoading(true);
       let schema = object().shape({
         user: string().required(),
@@ -54,7 +53,7 @@ const CreateRecognition = (props) => {
           }
         });
     }
-    setValidated(false);
+    setValidated(true);
   };
 
   const handleOnChange = (e) => {
@@ -71,10 +70,12 @@ const CreateRecognition = (props) => {
         <Card>
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Card.Header>
-              <Form.Row className="mt-1">
-                <Form.Group className="font-italic text-info" as={Col}>
-                  Recognition
+              <Form.Row>
+                <Form.Group className="font-italic text-info " as={Col}>
+                  <center> Give Recognition </center>
                 </Form.Group>
+              </Form.Row>
+              <Form.Row>
                 <Form.Group as={Col} controlId="validationCustom01">
                   <Form.Control
                     list="userList"
@@ -88,12 +89,12 @@ const CreateRecognition = (props) => {
                     required
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please choose a user.
+                    Please select a user.
                   </Form.Control.Feedback>
                 </Form.Group>
                 <datalist id="userList">
                   {users.map((person) => (
-                    <option key="1">{person.name}</option>
+                    <option>{person.name}</option> // eslint-disable-line react/jsx-key
                   ))}
                 </datalist>
                 <Form.Group as={Col} controlId="validationCustom02">
@@ -110,12 +111,12 @@ const CreateRecognition = (props) => {
                     required
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please choose a core value.
+                    Please select a core value.
                   </Form.Control.Feedback>
                 </Form.Group>
                 <datalist id="coreValueList">
                   {coreValue.map((sample) => (
-                    <option key="1">{sample.value}</option> // eslint-disable-line no-unused-expressions
+                    <option>{sample.value}</option> // eslint-disable-line react/jsx-key
                   ))}
                 </datalist>
               </Form.Row>
@@ -145,7 +146,7 @@ const CreateRecognition = (props) => {
             </Card.Body>
             <Card.Footer>
               <Form.Row>
-                <Col className="font-italic text-danger">Message</Col>
+                <Col className="font-italic text-danger"></Col>
                 <Col></Col>
                 <Col>
                   <div className={isLoading ? "d-none" : "error"}>
@@ -175,10 +176,18 @@ CreateRecognition.propTypes = {
 
 CreateRecognition.defaultProps = {
   errorMesage: null,
-  users: [{ name: "ajay" }, { name: "rahul" }, { name: "amol" }],
-  coreValue: [{ value: "abcd" }, { value: "pqrs" }, { value: "xyz" }],
+  users: [
+    { name: "ajay", key: 1 },
+    { name: "rahul", key: 2 },
+    { name: "amol", key: 3 },
+  ],
+  coreValue: [
+    { value: "abcd", key: 4 },
+    { value: "pqrs", key: 5 },
+    { value: "xyz", key: 6 },
+  ],
   userPlaceholder: "Select user",
-  coreValuePlaceholder: "Select core values",
+  coreValuePlaceholder: "Select core value",
   textareaPlaceholder: "Write a description",
 };
 export default CreateRecognition;
