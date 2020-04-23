@@ -1,10 +1,11 @@
 const express = require("express");
-require("dotenv").config("./.env");
+const http = require("http");
 const bodyParser = require("body-parser");
+
 const routes = require("./app/routes/routes");
 const dbConn = require("./app/models/sequelize");
+require("dotenv").config("./.env");
 const app = express();
-const http = require("http");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 dbConn.sequelize;
