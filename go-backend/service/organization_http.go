@@ -91,6 +91,21 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			return
 		}
 
+		//TODO: use this validation while creating too
+		errorMessages, valid := organization.ValidForUpdate()
+		if valid == false {
+			respBytes, err := json.Marshal(errorMessages)
+			if err != nil {
+				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+				rw.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+	
+			rw.Header().Add("Content-Type", "application/json")
+			rw.WriteHeader(http.StatusBadRequest)
+			rw.Write(respBytes)
+			return
+		}
 		err = deps.Store.UpdateOrganization(req.Context(), organization, id)
 		if err != nil {
 			rw.WriteHeader(http.StatusNotFound)
@@ -100,6 +115,7 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 
 		rw.WriteHeader(http.StatusOK)
 		rw.Header().Add("Content-Type", "application/json")
+		return
 	})
 }
 

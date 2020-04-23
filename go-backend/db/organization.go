@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	_ "fmt"
 	"time"
 	logger "github.com/sirupsen/logrus"
 )
@@ -36,7 +37,7 @@ const DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
 const GetOrganizationQuery = `SELECT * FROM organizations WHERE id=$1`
 
 type Organization struct {
-	ID                       int       `db:"id" json:"id"`
+	ID                       int       `db:"id" json:"id" `
 	Name                     string    `db:"name" json:"name"`
 	ContactEmail             string    `db:"contact_email" json:"email"`
 	DomainName               string    `db:"domain_name" json:"domain_name"`
@@ -49,6 +50,39 @@ type Organization struct {
 	CreatedOn                time.Time `db:"created_on" json:"_"`
 	UpdatedBy                int    `db:"updated_by" json:"_"`
 	UpdatedOn                time.Time `db:"updated_on" json:"_"`
+}
+
+type FieldErrors struct {
+	Field	string
+	Messages []string
+}
+
+func updateFieldErrors (errors []FieldErrors, errorMessages []string, key string) ([]FieldErrors) {
+	if len(errorMessages) != 0 {
+		errors = append(errors, FieldErrors{
+			Field: key,
+			Messages: errorMessages,
+		})
+	}
+	return errors
+}
+
+func (org *Organization) ValidForUpdate() (fieldErrors []FieldErrors, valid bool) {
+	valid = true
+	emailErrors:=[]string{}
+	nameErrors:=[]string{}
+	if org.Name == "" {
+		nameErrors = append(nameErrors, "Can't be blank")
+		valid=false
+	}
+	//TODO: add required field validations and add email regex
+	if org.ContactEmail == "abcd" || org.ContactEmail == ""{
+		emailErrors = append(emailErrors, "Please enter a valid email")
+		valid = false
+	}
+	fieldErrors = updateFieldErrors(fieldErrors, emailErrors, "email")
+	fieldErrors = updateFieldErrors(fieldErrors, nameErrors, "name")
+	return
 }
 
 func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organization, err error) {
@@ -85,19 +119,24 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err
 	return
 }
 
-func (s *pgStore) UpdateOrganization(ctx context.Context, org Organization, organizationID int) (err error) {
+func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organization, organizationID int) (err error) {
+		var dbOrganization Organization
+		err = s.db.Get(&dbOrganization, GetOrganizationQuery, organizationID)
+
+		reqOrganization.CreatedOn = dbOrganization.CreatedOn
+		reqOrganization.CreatedBy = dbOrganization.CreatedBy
 
 		_, err = s.db.Exec(
 			UpdateOrganizationQuery,
-			org.Name,
-			org.ContactEmail,
-			org.DomainName,
-			org.SubscriptionStatus,
-			org.SubscriptionValidUpto,
-			org.Hi5Limit,
-			org.Hi5QuotaRenewalFrequency,
-			org.Timezone,
-			org.UpdatedBy,
+			reqOrganization.Name,
+			reqOrganization.ContactEmail,
+			reqOrganization.DomainName,
+			reqOrganization.SubscriptionStatus,
+			reqOrganization.SubscriptionValidUpto,
+			reqOrganization.Hi5Limit,
+			reqOrganization.Hi5QuotaRenewalFrequency,
+			reqOrganization.Timezone,
+			reqOrganization.UpdatedBy,
 			time.Now(),
 			organizationID,
 		)
