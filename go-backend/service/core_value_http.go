@@ -14,7 +14,7 @@ import (
 func validateParentCoreValue(ctx context.Context, deps Dependencies, organisationID, coreValueID int64) (ok bool) {
 	coreValue, err := deps.Store.GetCoreValue(ctx, organisationID, coreValueID)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Invalid parent core value id")
+		logger.WithField("err", err.Error()).Error("Parent core value not present")
 		return
 	}
 
@@ -71,7 +71,7 @@ func listSubCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		if validateParentCoreValue(req.Context(), deps, organisationID, coreValueID) {
+		if !validateParentCoreValue(req.Context(), deps, organisationID, coreValueID) {
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -148,7 +148,7 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		}
 
 		if coreValue.ParentCoreValueID != nil {
-			if validateParentCoreValue(req.Context(), deps, organisationID, *coreValue.ParentCoreValueID) {
+			if !validateParentCoreValue(req.Context(), deps, organisationID, *coreValue.ParentCoreValueID) {
 				rw.WriteHeader(http.StatusBadRequest)
 				return
 			}
