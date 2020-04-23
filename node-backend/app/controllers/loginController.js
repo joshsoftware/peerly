@@ -34,8 +34,8 @@ exports.login = async (req, res) => {
     if (domainResult == "error") {
       res.status(500).send({ message: "internal server error" });
     } else if (domainResult[1].rowCount) {
-      let domainId = domainResult[0][0].id;
-      let checkerror = await insertData(domainId, userName, email, displayName);
+      let orgId = domainResult[0][0].id;
+      let checkerror = await insertData(orgId, userName, email, displayName);
       if (checkerror == "error") {
         res.status(500).send({ message: "internal server error" });
       } else {
@@ -101,10 +101,10 @@ const getOrganization = async (domainName) => {
   return domainResult;
 };
 
-const insertData = async (domainId, userName, email, displayName) => {
+const insertData = async (orgId, userName, email, displayName) => {
   let errorCheck;
   const user = {
-    org_id: domainId,
+    org_id: orgId,
     name: userName,
     email: email,
     display_name: displayName,
