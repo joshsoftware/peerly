@@ -211,8 +211,8 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		var coreValue db.CoreValue
 		err = json.NewDecoder(req.Body).Decode(&coreValue)
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
 			logger.WithField("err", err.Error()).Error("Error while decoding request data")
+			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 

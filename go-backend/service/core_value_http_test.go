@@ -222,6 +222,24 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenDBFailure() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
+func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidJSONFormat() {
+	body := `{
+		"core_value_text": "Mentoring"
+		"description": "Investing time and effort to mentor others"
+	}`
+
+	recorder := makeHTTPCall(
+		http.MethodPost,
+		"/organisations/{organisation_id:[0-9]+}/core_values",
+		"/organisations/1/core_values",
+		body,
+		createCoreValueHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
 func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueWhenDBFailure() {
 	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
 		db.CoreValue{
@@ -292,5 +310,24 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenDBFailure() {
 	)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidJSONFormat() {
+	body := `{
+		"core_value_text": "Mentoring",
+		"description": "Investing time and effort to mentor others"
+		"parent_core_value_id": 1
+	}`
+
+	recorder := makeHTTPCall(
+		http.MethodPut,
+		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
+		"/organisations/1/core_values/2",
+		body,
+		updateCoreValueHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
 	suite.dbMock.AssertExpectations(suite.T())
 }
