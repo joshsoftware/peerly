@@ -55,7 +55,7 @@ func (s *pgStore) ListSubCoreValues(ctx context.Context, organisationID, coreVal
 		coreValueID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting core values")
+		logger.WithField("err", err.Error()).Error("Error while getting sub core values")
 		return
 	}
 

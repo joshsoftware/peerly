@@ -14,7 +14,7 @@ import (
 func validateParentCoreValue(ctx context.Context, deps Dependencies, organisationID, coreValueID int64) (ok bool) {
 	coreValue, err := deps.Store.GetCoreValue(ctx, organisationID, coreValueID)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Parent core value not present")
+		logger.WithField("err", err.Error()).Error("Parent core value id not present")
 		return
 	}
 
@@ -31,21 +31,21 @@ func listCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key organisation_id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		coreValues, err := deps.Store.ListCoreValues(req.Context(), organisationID)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error fetching data")
+			logger.WithField("err", err.Error()).Error("Error while fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		respBytes, err := json.Marshal(coreValues)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling core values data")
+			logger.WithField("err", err.Error()).Error("Error while marshaling core values data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -60,13 +60,13 @@ func listSubCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key organisation_id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		coreValueID, err := strconv.ParseInt(vars["core_value_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key core value id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing core value id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -78,14 +78,14 @@ func listSubCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 
 		coreValues, err := deps.Store.ListSubCoreValues(req.Context(), organisationID, coreValueID)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error fetching data")
+			logger.WithField("err", err.Error()).Error("Error while fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		respBytes, err := json.Marshal(coreValues)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling core values data")
+			logger.WithField("err", err.Error()).Error("Error while marshaling core values data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -100,27 +100,27 @@ func getCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key organisation_id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key core value id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing core value id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		coreValue, err := deps.Store.GetCoreValue(req.Context(), organisationID, coreValueID)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error fetching data")
+			logger.WithField("err", err.Error()).Error("Error while fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		respBytes, err := json.Marshal(coreValue)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling core values data")
+			logger.WithField("err", err.Error()).Error("Error while marshaling core values data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -135,7 +135,7 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key organisation_id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -156,7 +156,7 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 		err = deps.Store.CreateCoreValue(req.Context(), organisationID, coreValue)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error creating core value")
+			logger.WithField("err", err.Error()).Error("Error while creating core value")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -171,20 +171,20 @@ func deleteCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key organisation_id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key core value id in url")
+			logger.WithField("err", err.Error()).Error("Error while parsing core value id from url")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		err = deps.Store.DeleteCoreValue(req.Context(), organisationID, coreValueID)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error deleting core value")
+			logger.WithField("err", err.Error()).Error("Error while deleting core value")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -198,14 +198,14 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key organisation_id in url")
-			rw.WriteHeader(http.StatusInternalServerError)
+			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
+			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error missing key core value id in url")
-			rw.WriteHeader(http.StatusInternalServerError)
+			logger.WithField("err", err.Error()).Error("Error while parsing core value id from url")
+			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 		var coreValue db.CoreValue
@@ -218,7 +218,7 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 		err = deps.Store.UpdateCoreValue(req.Context(), organisationID, coreValueID, coreValue)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error updating core value")
+			logger.WithField("err", err.Error()).Error("Error while updating core value")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
