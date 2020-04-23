@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect } from "react";
-import { Form, Button, Col, Row, Card } from "react-bootstrap";
+import { Form, Button, Col, Row, Card, InputGroup } from "react-bootstrap";
 import reducer from "components/reducers/createRecognitionReducer";
 import { setDetails } from "components/actions/createRecognitionAction";
 import { string, object } from "yup";
@@ -77,20 +77,26 @@ const CreateRecognition = (props) => {
               </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="validationCustom01">
-                  <Form.Control
-                    list="userList"
-                    name="user"
-                    size="sm"
-                    placeholder={userPlaceholder}
-                    value={state.user}
-                    onChange={(event) => {
-                      handleOnChange(event);
-                    }}
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please select a user.
-                  </Form.Control.Feedback>
+                  <InputGroup>
+                    <InputGroup.Prepend size="sm">
+                      <InputGroup.Text id="inputGroupPrepend">
+                        @
+                      </InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <Form.Control
+                      list="userList"
+                      name="user"
+                      placeholder={userPlaceholder}
+                      value={state.user}
+                      onChange={(event) => {
+                        handleOnChange(event);
+                      }}
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please select a user.
+                    </Form.Control.Feedback>
+                  </InputGroup>
                 </Form.Group>
                 <datalist id="userList">
                   {users.map((person) => (
@@ -98,21 +104,27 @@ const CreateRecognition = (props) => {
                   ))}
                 </datalist>
                 <Form.Group as={Col} controlId="validationCustom02">
-                  <Form.Control
-                    list="coreValueList"
-                    size="sm"
-                    name="coreValue"
-                    placeholder={coreValuePlaceholder}
-                    aria-describedby="inputGroupPrepend"
-                    onChange={(event) => {
-                      handleOnChange(event);
-                    }}
-                    value={state.coreValue}
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please select a core value.
-                  </Form.Control.Feedback>
+                  <InputGroup>
+                    <InputGroup.Prepend size="sm">
+                      <InputGroup.Text id="inputGroupPrepend">
+                        #
+                      </InputGroup.Text>
+                    </InputGroup.Prepend>
+                    <Form.Control
+                      list="coreValueList"
+                      name="coreValue"
+                      placeholder={coreValuePlaceholder}
+                      aria-describedby="inputGroupPrepend"
+                      onChange={(event) => {
+                        handleOnChange(event);
+                      }}
+                      value={state.coreValue}
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please select a core value.
+                    </Form.Control.Feedback>
+                  </InputGroup>
                 </Form.Group>
                 <datalist id="coreValueList">
                   {coreValue.map((sample) => (
