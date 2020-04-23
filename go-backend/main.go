@@ -52,7 +52,7 @@ func main() {
 		},
 		{
 			Name:      "rollback",
-			Usage:     "rollback migrations",
+			Usage:     "rollback migrations [step (int)]",
 			ArgsUsage: "[step (int)]",
 			Action: func(c *cli.Context) error {
 				if c.NArg() == 0 {
