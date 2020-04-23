@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
-import ListRecognitionContainers from "components/listRecognitionsContainers";
+import ListRecognitionsContainer from "containers/listRecognitionContainers";
 
 function App() {
   return (
     <div className="App">
-      <ListRecognitionContainers />
+      <ListRecognitionsContainer />
     </div>
   );
 }
