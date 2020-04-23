@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -35,7 +36,8 @@ func (s *pgStore) CreateUserBlacklistedToken(ctx context.Context, blacklistedTok
 	_, err = s.db.Exec(insertBlacklistedToken, blacklistedToken.UserID, blacklistedToken.Token, blacklistedToken.ExpirationDate)
 
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error inserting the blacklisted token")
+		errMsg := fmt.Sprintf("Error inserting the blacklisted token for user with id %d", blacklistedToken.UserID)
+		logger.WithField("err", err.Error()).Error(errMsg)
 		return
 	}
 	return

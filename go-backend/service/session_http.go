@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
@@ -29,6 +30,10 @@ func getClaims(token string) (claims *Claims, err error) {
 		return config.JwtKey(), nil
 	})
 
+	if err != nil {
+		return
+	}
+
 	if !newTkn.Valid {
 		err = errInvalidToken
 		return
@@ -55,6 +60,7 @@ func handleLogout(deps Dependencies) http.HandlerFunc {
 				return
 			}
 			rw.WriteHeader(http.StatusBadRequest)
+			return
 		}
 
 		userBlackListedToken := db.UserBlacklistedToken{
@@ -66,7 +72,17 @@ func handleLogout(deps Dependencies) http.HandlerFunc {
 
 		err = deps.Store.CreateUserBlacklistedToken(req.Context(), userBlackListedToken)
 		if err != nil {
+			respBytes, _ := json.Marshal(struct {
+				status  int
+				message string
+			}{
+				status:  http.StatusInternalServerError,
+				message: "Internal server error inserting token into blacklisted tokens table",
+			})
+
 			rw.WriteHeader(http.StatusInternalServerError)
+			rw.Header().Add("Content-Type", "application/json")
+			rw.Write(respBytes)
 			return
 		}
 
