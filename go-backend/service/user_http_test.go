@@ -28,6 +28,7 @@ func (suite *UsersHandlerTestSuite) SetupTest() {
 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(UsersHandlerTestSuite))
+	suite.Run(t, new(CoreValueHandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
@@ -40,6 +41,7 @@ func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
+		"/users",
 		"/users",
 		"",
 		listUsersHandler(Dependencies{Store: suite.dbMock}),
@@ -59,6 +61,7 @@ func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 	recorder := makeHTTPCall(
 		http.MethodGet,
 		"/users",
+		"/users",
 		"",
 		listUsersHandler(Dependencies{Store: suite.dbMock}),
 	)
@@ -67,9 +70,9 @@ func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func makeHTTPCall(method, path, body string, handlerFunc http.HandlerFunc) (recorder *httptest.ResponseRecorder) {
+func makeHTTPCall(method, path, requestUrl, body string, handlerFunc http.HandlerFunc) (recorder *httptest.ResponseRecorder) {
 	// create a http request using the given parameters
-	req, _ := http.NewRequest(method, path, strings.NewReader(body))
+	req, _ := http.NewRequest(method, requestUrl, strings.NewReader(body))
 
 	// test recorder created for capturing api responses
 	recorder = httptest.NewRecorder()
