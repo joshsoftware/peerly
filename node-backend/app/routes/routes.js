@@ -1,9 +1,9 @@
 const express = require("express");
-const router = express.Router();
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const loginController = require("../controllers/loginController");
 require("../google_auth/google_auth")();
+const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router
   .route("/login")

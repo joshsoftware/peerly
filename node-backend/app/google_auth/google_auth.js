@@ -1,8 +1,8 @@
 "use strict";
 const passport = require("passport");
 const GoogleTokenStrategy = require("passport-google-token").Strategy;
-const config = require("../config/google.config");
 
+const config = require("../config/google.config");
 module.exports = function () {
   passport.use(
     new GoogleTokenStrategy(

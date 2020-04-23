@@ -1,6 +1,6 @@
 /*eslint-disable  no-undef*/
 module.exports = {
-  HOST: process.env.HOST,
+  HOST: process.env.DATABASE_URL,
   USER: process.env.DB_USER_NAME,
   PASSWORD: process.env.DB_PASSWORD,
   DB: process.env.DB_DATABASE_NAME,
