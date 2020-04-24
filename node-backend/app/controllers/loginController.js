@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const db = require("../models/sequelize");
 const Users = db.users;
-async function login(req, res) {
+module.exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
   let userName = profile.name.givenName;
@@ -72,7 +72,7 @@ async function login(req, res) {
       res.status(403).send({ message: "Unauthorized user" });
     }
   }
-}
+};
 
 const getUser = async (email) => {
   let result;
@@ -122,5 +122,3 @@ const insertData = async (orgId, userName, email, displayName) => {
   });
   return errorCheck;
 };
-
-module.exports = login;
