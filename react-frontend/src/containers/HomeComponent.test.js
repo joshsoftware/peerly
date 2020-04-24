@@ -1,9 +1,10 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
-import App from "App";
+import Home from "components/HomeComponent";
 
-test("renders learn react link", () => {
-  const { getByText } = render(<App />);
+test("home component rendered", () => {
+  const { getByText } = render(<Home />);
   const linkElement = getByText(/WELCOME TO PEERLY/i);
   expect(linkElement).toBeInTheDocument();
 });

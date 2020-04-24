@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar, Alert, Col, Row, Container } from "react-bootstrap";
-import SignInComponent from "./SignInComponent";
+import SignInComponent from "components/SignInComponent";
 
 const HomeComponent = () => {
   return (
@@ -16,9 +16,7 @@ const HomeComponent = () => {
             >
               <Navbar.Collapse className="justify-content-center">
                 <Navbar.Brand>
-                  <centre>
-                    <h1> WELCOME TO PEERLY</h1>
-                  </centre>
+                  <h1> WELCOME TO PEERLY</h1>
                 </Navbar.Brand>
               </Navbar.Collapse>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
