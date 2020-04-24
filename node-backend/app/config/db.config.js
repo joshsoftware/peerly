@@ -4,7 +4,7 @@ module.exports = {
   USER: process.env.DB_USER_NAME,
   PASSWORD: process.env.DB_PASSWORD,
   DB: process.env.DB_DATABASE_NAME,
-  dialect: process.env.DB_DIALECT,
+  dialect: "postgres",
   pool: {
     max: parseInt(process.env.SEQUELIZE_CONN_MAX),
     min: parseInt(process.env.SEQUELIZE_CONN_MIN),

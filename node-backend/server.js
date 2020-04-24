@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
 
-const routes = require("./app/routes/routes");
+const routes = require("./app/routes/logout.routes");
 const dbConn = require("./app/models/sequelize");
 require("dotenv").config("./.env");
 const app = express();
