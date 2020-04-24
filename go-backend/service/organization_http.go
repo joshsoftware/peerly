@@ -54,6 +54,21 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
+		errorMessages, valid := organization.ValidateOrganization()
+		if valid == false {
+			respBytes, err := json.Marshal(errorMessages)
+			if err != nil {
+				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+				rw.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+	
+			rw.Header().Add("Content-Type", "application/json")
+			rw.WriteHeader(http.StatusBadRequest)
+			rw.Write(respBytes)
+			return
+		}
+
 		err = deps.Store.CreateOrganization(req.Context(), organization)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
@@ -78,7 +93,7 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 		vars := mux.Vars(req)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
-			logger.Error("Error id key is missing")
+			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}	
@@ -91,7 +106,6 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			return
 		}
 
-		//TODO: use this validation while creating too
 		errorMessages, valid := organization.ValidateOrganization()
 		if valid == false {
 			respBytes, err := json.Marshal(errorMessages)
@@ -131,7 +145,7 @@ func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
-			logger.Error("Error id key is missing")
+			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -160,7 +174,7 @@ func getOrganizationHandler(deps Dependencies) http.HandlerFunc {
 		vars := mux.Vars(req)
     id, err := strconv.Atoi(vars["id"])
 		if err != nil {
-			logger.Error("Error id key is missing")
+			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}

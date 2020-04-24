@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	_ "fmt"
 	"time"
 	"regexp"
 	logger "github.com/sirupsen/logrus"
@@ -36,7 +35,7 @@ const UpdateOrganizationQuery = `UPDATE organizations SET (
 
 const DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
 const GetOrganizationQuery = `SELECT * FROM organizations WHERE id=$1`
-const emailRegex = `\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b`
+const emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 const domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 
 type Organization struct {
@@ -55,79 +54,30 @@ type Organization struct {
 	UpdatedOn                time.Time `db:"updated_on" json:"_"`
 }
 
-type FieldErrors struct {
-	Field	string
-	Messages []string
-}
+func (org *Organization) ValidateOrganization() (fieldErrors map[string][]string, valid bool) {
 
-func updateFieldErrors (errors []FieldErrors, errorMessages []string, key string) ([]FieldErrors) {
-	if len(errorMessages) != 0 {
-		errors = append(errors, FieldErrors{
-			Field: key,
-			Messages: errorMessages,
-		})
-	}
-	return errors
-}
-
-func (org *Organization) ValidateOrganization() (fieldErrors []FieldErrors, valid bool) {
 	valid = true
-	emailErrors := []string{}
-	nameErrors := []string{}
-	domainNameErrors := []string{}
-	createdByErrors := []string{}
-	createdOnErrors := []string{}
-	updatedByErrors := []string{}
-	updatedOnErrors := []string{}
-
+	fieldErrors = make(map[string][]string)
 	var validEmail, _ = regexp.Compile(emailRegex)
 	var validDomain, _ = regexp.Compile(domainRegex)
 	
 	if org.Name == "" {
-		nameErrors = append(nameErrors, "Can't be blank")
 		valid = false
-		fieldErrors = updateFieldErrors(fieldErrors, nameErrors, "name")
+		fieldErrors["name"] = append(fieldErrors["name"], "Can't be blank")
 	}
 
-	if validEmail.MatchString(org.ContactEmail) {
-		emailErrors = append(emailErrors, "Please enter a valid email")
+	if !validEmail.MatchString(org.ContactEmail) {
 		valid = false
-		fieldErrors = updateFieldErrors(fieldErrors, emailErrors, "email")
+		fieldErrors["email"] = append(fieldErrors["email"], "Please enter a valid email")
 	}
 
-	if validDomain.MatchString(org.DomainName) {
-		domainNameErrors = append(domainNameErrors, "Please enter valid domain")
-		valid = false
-	}
-
-	if org.CreatedBy == 0 {
-		createdByErrors = append(createdByErrors, "Can't be blank")
-		valid = false
-	}
-
-	if org.CreatedOn == (time.Time{}) {
-		createdOnErrors = append(createdOnErrors, "Can't be blank")
-		valid = false
-	}
-
-	if org.UpdatedBy == 0 {
-		updatedByErrors = append(updatedByErrors, "Can't be blank")
-		valid = false
-	}
-
-	if org.UpdatedOn == (time.Time{}) {
-		updatedOnErrors = append(updatedOnErrors, "Can't be blank")
+	if !validDomain.MatchString(org.DomainName) {
+		fieldErrors["domain_name"] = append(fieldErrors["domain_name"], "Please enter valid domain") 
 		valid = false
 	}
 
 	//TODO: Ask what other validations are expected
 	
-	fieldErrors = updateFieldErrors(fieldErrors, emailErrors, "email")
-	fieldErrors = updateFieldErrors(fieldErrors, domainNameErrors, "domain_name")
-	fieldErrors = updateFieldErrors(fieldErrors, createdByErrors, "created_by")
-	fieldErrors = updateFieldErrors(fieldErrors, createdOnErrors, "created_on")
-	fieldErrors = updateFieldErrors(fieldErrors, updatedByErrors, "updated_by")
-	fieldErrors = updateFieldErrors(fieldErrors, updatedOnErrors, "updated_on")
 	return
 }
 
@@ -166,6 +116,7 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err
 }
 
 func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organization, organizationID int) (err error) {
+
 		var dbOrganization Organization
 		err = s.db.Get(&dbOrganization, GetOrganizationQuery, organizationID)
 
@@ -190,6 +141,7 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			logger.WithField("err", err.Error()).Error("Error updating organization")
 			return
 		}
+		
 		return
 }
 
@@ -203,6 +155,7 @@ func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (e
 		logger.WithField("err", err.Error()).Error("Error deleting organization")
 		return
 	}
+
 	return
 }
 
