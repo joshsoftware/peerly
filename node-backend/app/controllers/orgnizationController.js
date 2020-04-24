@@ -2,6 +2,17 @@ const db = require("../models/sequelize");
 const Organizations = db.organizations;
 const yup = require("yup");
 
+const schema = yup.object().shape({
+  name: yup.string().required(),
+  contact_email: yup.string().email(),
+  domain_name: yup.string().required(),
+  subscription_status: yup.number().required(),
+  subscription_valid_upto: yup.string().required(),
+  hi5_limit: yup.number().required(),
+  hi5_quota_renewal_frequency: yup.string().required(),
+  timezone: yup.string().required(),
+});
+
 exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
   // Create a Organization
   const organizations = {
@@ -16,17 +27,6 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
   };
 
   // Validate request
-  const schema = yup.object().shape({
-    name: yup.string().required(),
-    contact_email: yup.string().email(),
-    domain_name: yup.string().required(),
-    subscription_status: yup.number().required(),
-    subscription_valid_upto: yup.string().required(),
-    hi5_limit: yup.number().required(),
-    hi5_quota_renewal_frequency: yup.string().required(),
-    timezone: yup.string().required(),
-  });
-
   schema.isValid(organizations).then(function (valid) {
     if (valid) {
       // Save Organization in the database
@@ -100,4 +100,65 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
       });
     }
   });
+};
+
+exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
+  const id = req.params.id;
+  const idSchema = yup.object().shape({
+    id: yup.number().required(),
+  });
+  idSchema
+    .isValid({
+      id: req.params.id,
+    })
+    .then((valid) => {
+      if (!valid) {
+        res.send({
+          status: 422,
+          message: "id not be in correct format ",
+        });
+      } else {
+        const organizations = {
+          name: req.body.name,
+          contact_email: req.body.contact_email,
+          domain_name: req.body.domain_name,
+          subscription_status: req.body.subscription_status,
+          subscription_valid_upto: req.body.subscription_valid_upto,
+          hi5_limit: req.body.hi5_limit,
+          hi5_quota_renewal_frequency: req.body.hi5_quota_renewal_frequency,
+          timezone: req.body.timezone,
+        };
+        schema.isValid(organizations).then((valid) => {
+          if (valid) {
+            Organizations.update(organizations, {
+              where: { id: id },
+            })
+              .then((num) => {
+                if (num == 1) {
+                  res.send({
+                    status: 202,
+                    message: "Organization was updated successfully.",
+                  });
+                } else {
+                  res.send({
+                    status: 404,
+                    message: `Cannot update Organization. Maybe Organization was not found`,
+                  });
+                }
+              })
+              .catch((err /*eslint-disable-line no-unused-vars*/) => {
+                res.send({
+                  status: 500,
+                  message: "Error updating Organization ",
+                });
+              });
+          } else {
+            res.send({
+              status: 422,
+              message: "Contents not be in correct format ",
+            });
+          }
+        });
+      }
+    });
 };

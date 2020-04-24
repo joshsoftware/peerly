@@ -10,4 +10,6 @@ router.get("/organisations", organisationController.findAll);
 
 router.get("/organisations/:id", organisationController.findOne);
 
+router.put("/organisations/:id", organisationController.update);
+
 module.exports = router;
