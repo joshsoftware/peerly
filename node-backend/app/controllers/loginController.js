@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 
 const db = require("../models/sequelize");
 const Users = db.users;
-async function login(req, res) {
+module.exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
   let userName = profile.name.givenName;
   let displayName = profile.displayName;
-  let emailId;
+  let userId;
   let role;
   let organizationData;
   let expTime;
@@ -15,7 +15,7 @@ async function login(req, res) {
   if (result == "error") {
     res.status(500).send({ message: "Internal server error" });
   } else if (result[1].rowCount) {
-    emailId = result[0][0].email;
+    userId = result[0][0].id;
     role = result[0][0].role;
     organizationData = result[0][0].name;
     expTime = {
@@ -23,10 +23,15 @@ async function login(req, res) {
     };
     const token = jwt.sign(
       {
-        email: emailId,
+        iss: "node.peerly.com",
+        sub: userId,
+        aud: "peerly.com",
       },
       process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
-      expTime
+      expTime,
+      {
+        expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
+      }
     );
     res.send({
       token: token,
@@ -46,7 +51,7 @@ async function login(req, res) {
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
-          emailId = getUserResult[0][0].email;
+          userId = getUserResult[0][0].id;
           role = getUserResult[0][0].role;
           organizationData = getUserResult[0][0].name;
           expTime = {
@@ -54,7 +59,9 @@ async function login(req, res) {
           };
           const token = jwt.sign(
             {
-              email: emailId,
+              iss: "node.peerly.com",
+              sub: userId,
+              aud: "peerly.com",
             },
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
             expTime
@@ -65,20 +72,20 @@ async function login(req, res) {
             organization: organizationData,
           });
         } else {
-          res.status(403).send({ message: "Unauthorized user" });
+          res.status(401).send({ message: "Unauthorized user" });
         }
       }
     } else {
-      res.status(403).send({ message: "Unauthorized user" });
+      res.status(401).send({ message: "Unauthorized user" });
     }
   }
-}
+};
 
 const getUser = async (email) => {
   let result;
   await db.sequelize
     .query(
-      "select roles.role,users.email,organizations.name from users,roles,organizations where users.email = '" +
+      "select roles.role,users.id,organizations.name from users,roles,organizations where users.email = '" +
         email +
         "'"
     )
@@ -122,5 +129,3 @@ const insertData = async (orgId, userName, email, displayName) => {
   });
   return errorCheck;
 };
-
-module.exports = login;
