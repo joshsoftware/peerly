@@ -18,14 +18,8 @@ db.sequelize = sequelize;
 db.roles = require("./roles.model.js")(sequelize, Sequelize);
 db.organizations = require("./organizations.model.js")(sequelize, Sequelize);
 db.users = require("./users.model.js")(sequelize, Sequelize);
-db.userBlacklistedToken = require("./user_blacklisted_tokens.model.js")(
+db.user_blacklisted_tokens = require("./user_blacklisted_tokens.model.js")(
   sequelize,
   Sequelize
 );
 module.exports = db;
-/*dialect: "postgres",
-  protocol: "postgres",
-  port: 5432,
-  host: "https://mypeerlyapp.herokuapp.com/",
-
-  logging: true //false */

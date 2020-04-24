@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const User_blacklisted_tokens = sequelize.define(
+  const user_blacklisted_tokens = sequelize.define(
     "user_blacklisted_tokens",
     {
       id: {
@@ -27,5 +27,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return User_blacklisted_tokens;
+  return user_blacklisted_tokens;
 };

@@ -6,12 +6,11 @@ module.exports.autheticateToken = (req, res, next) => {
     return res.status(401).send({
       message: "Token not provided",
     });
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
     if (err)
-      return res.status(403).send({
+      return res.status(401).send({
         message: "Not a valid token",
       });
-    req.user = user;
     next();
   });
 };
