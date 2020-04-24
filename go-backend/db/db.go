@@ -12,8 +12,9 @@ type Storer interface {
 	DeleteOrganization(context.Context, int) error
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
 	CreateRecognition(context.Context, Recognition) error
-	ShowRecognition(context.Context, string) (Recognition, error)
+	ShowRecognition(context.Context, int) (Recognition, error)
 	ListRecognitions(context.Context) ([]Recognition, error)
+	ListRecognitionsWithFilter(context.Context, map[string]int) ([]Recognition, error)
 	//Create(context.Context, User) error
 	//GetUser(context.Context) (User, error)
 	//Delete(context.Context, string) error

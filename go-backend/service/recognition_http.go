@@ -4,10 +4,38 @@ import (
 	"encoding/json"
 	"joshsoftware/peerly/db"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	logger "github.com/sirupsen/logrus"
 )
+
+type FilterParam struct {
+	RecognitionFor int `schema:"recognition_for"`
+	RecognitionBy  int `schema:"recognition_by"`
+	CoreValuesID   int `schema:"core_values_id"`
+}
+
+func (f FilterParam) isEmpty() bool {
+	return f.RecognitionBy == 0 && f.RecognitionFor == 0 && f.CoreValuesID == 0
+}
+
+func (f FilterParam) applicableFilters() (res map[string]int) {
+	res = make(map[string]int)
+	if f.RecognitionFor != 0 {
+		res["recognition_for"] = f.RecognitionFor
+	}
+	if f.RecognitionBy != 0 {
+		res["recognition_by"] = f.RecognitionBy
+	}
+	if f.CoreValuesID != 0 {
+		res["core_values_id"] = f.CoreValuesID
+	}
+	return
+}
+
+var decoder = schema.NewDecoder()
 
 // @Title createRecognitionHandler
 // @Description create recognition
@@ -53,7 +81,13 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		recognitionID := vars["recognition_id"]
+
+		recognitionID, err := strconv.Atoi(vars["recognition_id"])
+		if err != nil {
+			logger.Error("Error id key is missing")
+			rw.WriteHeader(http.StatusBadRequest)
+			return
+		}
 
 		recognition, err := deps.Store.ShowRecognition(req.Context(), recognitionID)
 		if err != nil {
@@ -82,11 +116,17 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func listRecognitionsHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		var filterParam FilterParam
+		err := decoder.Decode(&filterParam, req.URL.Query())
+		var recognitions []db.Recognition
 
-		// userId := req.URL.Query().Get("user_id")
-		// coreValueId := req.URL.Query().Get("core_value_id")
+		if filterParam.isEmpty() {
+			recognitions, err = deps.Store.ListRecognitions(req.Context())
+		} else {
+			filters := filterParam.applicableFilters()
+			recognitions, err = deps.Store.ListRecognitionsWithFilter(req.Context(), filters)
+		}
 
-		recognitions, err := deps.Store.ListRecognitions(req.Context())
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching recognitions")
 			rw.WriteHeader(http.StatusInternalServerError)
