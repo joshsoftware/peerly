@@ -66,3 +66,38 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
       });
     });
 };
+
+exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
+  const schema = yup.object().shape({
+    id: yup.number().required(),
+  });
+  schema.isValid({ id: req.params.id }).then((valid) => {
+    if (valid) {
+      const id = req.params.id;
+      Organizations.findByPk(id)
+        .then((info) => {
+          if (info !== null) {
+            res.send({
+              status: 200,
+              data: info,
+            });
+          } else {
+            res.send({
+              status: 404,
+              message: "Entity not found in database ",
+            });
+          }
+        })
+        .catch((err /*eslint-disable-line no-unused-vars*/) => {
+          res.status(500).send({
+            message: "Error retrieving organizations",
+          });
+        });
+    } else {
+      res.send({
+        status: 422,
+        message: "id not be in correct format ",
+      });
+    }
+  });
+};

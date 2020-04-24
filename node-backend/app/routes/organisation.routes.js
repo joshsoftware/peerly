@@ -8,4 +8,6 @@ router.post("/organisations", organisationController.create);
 
 router.get("/organisations", organisationController.findAll);
 
+router.get("/organisations/:id", organisationController.findOne);
+
 module.exports = router;
