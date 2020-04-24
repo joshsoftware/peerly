@@ -7,36 +7,38 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
-const CreateOrganisationQuery = `INSERT INTO organizations (
-	name,
-	contact_email,
-	domain_name,
-	subscription_status,
-	subscription_valid_upto,
-	hi5_limit,
-	hi5_quota_renewal_frequency,
-	timezone,
-	created_by,
-	updated_by)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+const (
+	CreateOrganizationQuery = `INSERT INTO organizations (
+		name,
+		contact_email,
+		domain_name,
+		subscription_status,
+		subscription_valid_upto,
+		hi5_limit,
+		hi5_quota_renewal_frequency,
+		timezone,
+		created_by,
+		updated_by)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
-const UpdateOrganizationQuery = `UPDATE organizations SET (
-	name,
-	contact_email,
-	domain_name,
-	subscription_status,
-	subscription_valid_upto,
-	hi5_limit,
-	hi5_quota_renewal_frequency,
-	timezone,
-	updated_by,
-	updated_on) = 
-	($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) where id = $11`
+	UpdateOrganizationQuery = `UPDATE organizations SET (
+		name,
+		contact_email,
+		domain_name,
+		subscription_status,
+		subscription_valid_upto,
+		hi5_limit,
+		hi5_quota_renewal_frequency,
+		timezone,
+		updated_by,
+		updated_on) = 
+		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) where id = $11`
 
-const DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
-const GetOrganizationQuery = `SELECT * FROM organizations WHERE id=$1`
-const emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-const domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
+	DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
+	GetOrganizationQuery = `SELECT * FROM organizations WHERE id=$1`
+	emailRegex = 	"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+	domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
+)
 
 type Organization struct {
 	ID                       int       `db:"id" json:"id" `
@@ -95,7 +97,7 @@ func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organi
 func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err error) {
 
 	_, err = s.db.Exec(
-		CreateOrganisationQuery,
+		CreateOrganizationQuery,
 		org.Name,
 		org.ContactEmail,
 		org.DomainName,
@@ -141,7 +143,7 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			logger.WithField("err", err.Error()).Error("Error updating organization")
 			return
 		}
-		
+
 		return
 }
 
