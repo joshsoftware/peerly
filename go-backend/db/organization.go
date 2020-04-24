@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "fmt"
 	"time"
+	"regexp"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -35,6 +36,8 @@ const UpdateOrganizationQuery = `UPDATE organizations SET (
 
 const DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
 const GetOrganizationQuery = `SELECT * FROM organizations WHERE id=$1`
+const emailRegex = `\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b`
+const domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 
 type Organization struct {
 	ID                       int       `db:"id" json:"id" `
@@ -67,21 +70,64 @@ func updateFieldErrors (errors []FieldErrors, errorMessages []string, key string
 	return errors
 }
 
-func (org *Organization) ValidForUpdate() (fieldErrors []FieldErrors, valid bool) {
+func (org *Organization) ValidateOrganization() (fieldErrors []FieldErrors, valid bool) {
 	valid = true
-	emailErrors:=[]string{}
-	nameErrors:=[]string{}
+	emailErrors := []string{}
+	nameErrors := []string{}
+	domainNameErrors := []string{}
+	createdByErrors := []string{}
+	createdOnErrors := []string{}
+	updatedByErrors := []string{}
+	updatedOnErrors := []string{}
+
+	var validEmail, _ = regexp.Compile(emailRegex)
+	var validDomain, _ = regexp.Compile(domainRegex)
+	
 	if org.Name == "" {
 		nameErrors = append(nameErrors, "Can't be blank")
-		valid=false
+		valid = false
+		fieldErrors = updateFieldErrors(fieldErrors, nameErrors, "name")
 	}
-	//TODO: add required field validations and add email regex
-	if org.ContactEmail == "abcd" || org.ContactEmail == ""{
+
+	if validEmail.MatchString(org.ContactEmail) {
 		emailErrors = append(emailErrors, "Please enter a valid email")
 		valid = false
+		fieldErrors = updateFieldErrors(fieldErrors, emailErrors, "email")
 	}
+
+	if validDomain.MatchString(org.DomainName) {
+		domainNameErrors = append(domainNameErrors, "Please enter valid domain")
+		valid = false
+	}
+
+	if org.CreatedBy == 0 {
+		createdByErrors = append(createdByErrors, "Can't be blank")
+		valid = false
+	}
+
+	if org.CreatedOn == (time.Time{}) {
+		createdOnErrors = append(createdOnErrors, "Can't be blank")
+		valid = false
+	}
+
+	if org.UpdatedBy == 0 {
+		updatedByErrors = append(updatedByErrors, "Can't be blank")
+		valid = false
+	}
+
+	if org.UpdatedOn == (time.Time{}) {
+		updatedOnErrors = append(updatedOnErrors, "Can't be blank")
+		valid = false
+	}
+
+	//TODO: Ask what other validations are expected
+	
 	fieldErrors = updateFieldErrors(fieldErrors, emailErrors, "email")
-	fieldErrors = updateFieldErrors(fieldErrors, nameErrors, "name")
+	fieldErrors = updateFieldErrors(fieldErrors, domainNameErrors, "domain_name")
+	fieldErrors = updateFieldErrors(fieldErrors, createdByErrors, "created_by")
+	fieldErrors = updateFieldErrors(fieldErrors, createdOnErrors, "created_on")
+	fieldErrors = updateFieldErrors(fieldErrors, updatedByErrors, "updated_by")
+	fieldErrors = updateFieldErrors(fieldErrors, updatedOnErrors, "updated_on")
 	return
 }
 

@@ -92,7 +92,7 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 		}
 
 		//TODO: use this validation while creating too
-		errorMessages, valid := organization.ValidForUpdate()
+		errorMessages, valid := organization.ValidateOrganization()
 		if valid == false {
 			respBytes, err := json.Marshal(errorMessages)
 			if err != nil {
