@@ -37,7 +37,8 @@
     "passport-google-token": "^0.1.2",
     "pg": "^8.0.2",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.21.6"
+    "sequelize": "^5.21.6",
+    "yup": "^0.28.4"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
