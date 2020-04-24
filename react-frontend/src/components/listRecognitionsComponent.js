@@ -22,9 +22,10 @@ const ListRecognitionComponent = (props) => {
     let shortName = name.toUpperCase();
     return shortName.match(/\b(\w)/g);
   };
-  const showTime = (time) => {
-    var date = new Date(time);
-    var milliseconds = Date.now() - date.getTime();
+  const showTime = (timestamp) => {
+    let time = timestamp.split(".")[0];
+    let date = new Date(time);
+    let milliseconds = Date.now() - date.getTime();
     return timeAgo.format(Date.now() - milliseconds, "time");
   };
 
