@@ -6,4 +6,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/organisations", organisationController.create);
 
+router.get("/organisations", organisationController.findAll);
+
 module.exports = router;

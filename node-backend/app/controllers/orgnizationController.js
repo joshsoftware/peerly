@@ -50,3 +50,19 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
     }
   });
 };
+
+exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
+  Organizations.findAll()
+    .then((info) => {
+      res.send({
+        status: 200,
+        data: info,
+      });
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.send({
+        status: 500,
+        message: "Some error occurred while retrieving organizations.",
+      });
+    });
+};
