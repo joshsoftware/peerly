@@ -17,8 +17,8 @@ import (
 // @Failure 400 {object}
 func listOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		organizations, err := deps.Store.ListOrganizations(req.Context())
 
+		organizations, err := deps.Store.ListOrganizations(req.Context())
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
