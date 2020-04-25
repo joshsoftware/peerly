@@ -13,11 +13,15 @@ module.exports.logout = (req, res) => {
   };
   userBlacklistedTokens
     .create(user)
-    .then(function (user_blacklisted_tokens) {
+    .then((user_blacklisted_tokens) => {
       let domainResult = user_blacklisted_tokens;
       res.status(200).send({ data: domainResult });
     })
     .catch(() => {
-      res.status(500).send({ message: "internal server error" });
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
     });
 };
