@@ -7,7 +7,18 @@ require("../google_auth/google_auth")();
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.post(
-  "/login",
+  "/oauth/google",
+  (req, res, next) => {
+    if (req.body.access_token) {
+      next();
+    } else {
+      res.status(404).send({
+        error: {
+          message: "undefined access token",
+        },
+      });
+    }
+  },
   passport.authenticate("google-token", { session: false }),
   loginController.login
 );
