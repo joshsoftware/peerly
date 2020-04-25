@@ -7,7 +7,7 @@ const schema = yup.object().shape({
   contact_email: yup.string().email(),
   domain_name: yup.string().required(),
   subscription_status: yup.number().required(),
-  subscription_valid_upto: yup.string().required(),
+  subscription_valid_upto: yup.number().required(),
   hi5_limit: yup.number().required(),
   hi5_quota_renewal_frequency: yup.string().required(),
   timezone: yup.string().required(),
@@ -38,13 +38,14 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
           });
         })
         .catch((err /*eslint-disable-line no-unused-vars*/) => {
-          res.status(500).send({
+          res.send({
+            status: 500,
             message: "Some error occurred while creating the Organization.",
           });
         });
     } else {
       res.send({
-        status: 422,
+        status: 400,
         message: "Contents not be correct format",
       });
     }
@@ -54,7 +55,7 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
 exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
   Organizations.findAll()
     .then((info) => {
-      res.send({
+      res.json({
         status: 200,
         data: info,
       });
@@ -95,7 +96,7 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
         });
     } else {
       res.send({
-        status: 422,
+        status: 400,
         message: "id not be in correct format ",
       });
     }
@@ -114,7 +115,7 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
     .then((valid) => {
       if (!valid) {
         res.send({
-          status: 422,
+          status: 400,
           message: "id not be in correct format ",
         });
       } else {
@@ -136,8 +137,8 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
               .then((num) => {
                 if (num == 1) {
                   res.send({
-                    status: 202,
-                    message: "Organization was updated successfully.",
+                    status: 200,
+                    message: "Organization is updated successfully.",
                   });
                 } else {
                   res.send({
@@ -154,7 +155,7 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
               });
           } else {
             res.send({
-              status: 422,
+              status: 400,
               message: "Contents not be in correct format ",
             });
           }
