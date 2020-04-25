@@ -40,6 +40,7 @@ func (m *DBMockStore) UpdateOrganization(ctx context.Context, org Organization, 
 	return args.Get(0).(Organization), args.Error(1)
 }
 func (m *DBMockStore) ShowRecognition(ctx context.Context, recognitionID string) (recognition Recognition, err error) {
+func (m *DBMockStore) ShowRecognition(ctx context.Context, recognitionID int) (recognition Recognition, err error) {
 	args := m.Called(ctx)
 	return args.Get(0).(Recognition), args.Error(1)
 }
@@ -47,4 +48,14 @@ func (m *DBMockStore) ShowRecognition(ctx context.Context, recognitionID string)
 func (m *DBMockStore) CreateRecognition(ctx context.Context, recognition Recognition) (err error) {
 	args := m.Called(ctx)
 	return args.Error(0)
+}
+
+func (m *DBMockStore) ListRecognitions(ctx context.Context) (users []Recognition, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).([]Recognition), args.Error(1)
+}
+
+func (m *DBMockStore) ListRecognitionsWithFilter(ctx context.Context, filters map[string]int) (users []Recognition, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).([]Recognition), args.Error(1)
 }
