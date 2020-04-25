@@ -1,4 +1,4 @@
-export const actionGenerator = (entityName) => {
+export default (entityName) => {
   entityName = entityName.toUpperCase();
 
   return {
