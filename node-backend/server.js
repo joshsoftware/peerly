@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 
 require("dotenv").config("./.env");
 const routes = require("./app/routes/logout.routes");
+require("./app/jwtTokenValidation/deleteExpiredToken");
 const dbConn = require("./app/models/sequelize");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
