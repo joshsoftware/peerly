@@ -12,8 +12,8 @@ module.exports.login = async (req, res) => {
   let orgName;
   let orgId;
   let expTime;
-  var date = new Date();
-  var seconds = Math.round(date.getTime() / 1000);
+  const date = new Date();
+  const seconds = Math.round(date.getTime() / 1000);
   let result = await getUser(email);
   if (result == "error") {
     res.status(500).send({
