@@ -18,9 +18,9 @@ const schema = yup.object().shape({
     .number()
     .required("Subscription valid upto is required"),
   hi5_limit: yup.number().required("Hi5 limit is required"),
-  hi5_quota_renewal_frequency: yup.string(
-    "Hi5 quota renewal frequency is empty"
-  ),
+  hi5_quota_renewal_frequency: yup
+    .string("Hi5 quota renewal frequency is required")
+    .required(),
   timezone: yup.string().required("Timezone is required"),
 });
 
@@ -98,7 +98,7 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
           } else {
             res.status(404).send({
               error: {
-                message: "Not Found",
+                message: "Organisation with specified id not found",
               },
             });
           }
@@ -114,7 +114,7 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
     .catch((err /*eslint-disable-line no-unused-vars*/) => {
       res.status(400).send({
         error: {
-          message: ["Invalid Id"],
+          message: ["Invalid value for parameter id"],
         },
       });
     });
@@ -133,7 +133,7 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
       if (!valid) {
         res.status(400).send({
           error: {
-            message: ["Invalid Id"],
+            message: ["Invalid value for parameter id"],
           },
         });
       } else {
@@ -159,15 +159,16 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
                     message: "Organization is updated successfully.",
                   });
                 } else {
-                  res.send({
-                    status: 404,
-                    message: `Cannot update Organization. Maybe Organization was not found`,
+                  res.status(404).send({
+                    error: {
+                      message: "Organisation with specified id is not found",
+                    },
                   });
                 }
               })
               .catch((err /*eslint-disable-line no-unused-vars*/) => {
                 res.status(500).send({
-                  erroe: {
+                  error: {
                     message: "internal server error",
                   },
                 });
