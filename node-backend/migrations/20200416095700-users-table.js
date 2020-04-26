@@ -3,12 +3,15 @@
 var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType; // eslint-disable-line no-unused-vars
   seed = seedLink; // eslint-disable-line no-unused-vars
 };
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
     "users",
     {
@@ -73,7 +76,7 @@ exports.up = function (db, callback) {
         type: "int",
       },
       soft_delete_on: {
-        type: "timestamp",
+        type: "bigint",
       },
     },
     function (err) {
@@ -82,10 +85,10 @@ exports.up = function (db, callback) {
     }
   );
 };
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("users", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   "version": 1 // eslint-disable-line prettier/prettier
 };
