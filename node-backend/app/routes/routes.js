@@ -10,19 +10,19 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.post(
   "/oauth/google",
   (req, res, next) => {
-    const access_token = {
+    const accessToken = {
       token: req.body.access_token,
     };
     const schema = yup.object().shape({
       token: yup.string().required(),
     });
-    schema.isValid(access_token).then(function (valid) {
+    schema.isValid(accessToken).then(function (valid) {
       if (valid) {
         next();
       } else {
         res.status(400).send({
           error: {
-            message: "undefined access token",
+            message: "invalid access token",
           },
         });
       }
