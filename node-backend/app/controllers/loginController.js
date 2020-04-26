@@ -12,8 +12,8 @@ module.exports.login = async (req, res) => {
   let orgName;
   let orgId;
   let expTime;
-  var d = new Date();
-  var seconds = Math.round(d.getTime() / 1000);
+  var date = new Date();
+  var seconds = Math.round(date.getTime() / 1000);
   let result = await getUser(email);
   if (result == "error") {
     res.status(500).send({
@@ -34,7 +34,7 @@ module.exports.login = async (req, res) => {
         iss: "node.peerly.com",
         sub: userId,
         aud: "peerly.com",
-        nbf: seconds + parseInt(process.env.JWT_nbf), //eslint-disable-line  no-undef
+        nbf: seconds,
         "https://peerly.com": {
           roleId: roleId,
           orgId: orgId,
@@ -82,7 +82,7 @@ module.exports.login = async (req, res) => {
               iss: "node.peerly.com",
               sub: userId,
               aud: "peerly.com",
-              nbf: seconds + parseInt(process.env.JWT_nbf), //eslint-disable-line  no-undef
+              nbf: seconds,
               "https://peerly.com": {
                 roleId: roleId,
                 orgId: orgId,
