@@ -3,7 +3,7 @@ const should = require("should" /*eslint-disable-line node/no-unpublished-requir
 
 // This agent refers to PORT where program is runninng.
 
-const server = supertest.agent("http://localhost:3120");
+const server = supertest.agent(process.env.URL);
 
 // UNIT test begin
 
@@ -16,7 +16,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(200) // THis is HTTP response
       .end(function (err, res) {
         // HTTP status should be 200
-        res.body.status.should.equal(200);
+        res.status.should.equal(200);
         done();
       });
   });
@@ -29,7 +29,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(200) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
-        res.body.status.should.equal(200);
+        res.status.should.equal(200);
         done();
       });
   });
@@ -42,7 +42,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 404
-        res.body.status.should.equal(404);
+        res.status.should.equal(404);
         done();
       });
   });
@@ -55,7 +55,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
-        res.body.status.should.equal(400);
+        res.status.should.equal(400);
         // Error key should be false.
         done();
       });
@@ -79,7 +79,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(201) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
-        res.body.status.should.equal(201);
+        res.status.should.equal(201);
         // Error key should be false.
         done();
       });
@@ -103,7 +103,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 400
-        res.body.status.should.equal(400);
+        res.status.should.equal(400);
         done();
       });
   });
@@ -149,8 +149,77 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(200) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
-        res.body.status.should.equal(200);
+        res.status.should.equal(200);
         // Error key should be false.
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong Contents", function (done) {
+    // post request for create orgnisation with wrong Contents
+    server
+      .put("/v2/organisations/1")
+      .send({
+        name: "Tata",
+        contact_email: "KGFgmail.com",
+        domain_name: "@kgf.com",
+        subscription_status: 1,
+        subscription_valid_upto: "1587731342",
+        hi5_limit: 5000,
+        hi5_quota_renewal_frequency: "renew",
+        timezone: "india",
+      })
+      .expect("Content-type", /json/)
+      .expect(400) // THis is HTTP response
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        // HTTP status should be 400
+        res.status.should.equal(400);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with Invalid Id", function (done) {
+    // post request for create orgnisation with wrong Contents
+    server
+      .put("/v2/organisations/udc")
+      .send({
+        name: "Tata",
+        contact_email: "KGFgmail.com",
+        domain_name: "@kgf.com",
+        subscription_status: 1,
+        subscription_valid_upto: "1587731342",
+        hi5_limit: 5000,
+        hi5_quota_renewal_frequency: "renew",
+        timezone: "india",
+      })
+      .expect("Content-type", /json/)
+      .expect(400) // THis is HTTP response
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        // HTTP status should be 400
+        res.status.should.equal(400);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong url", function (done) {
+    // calling post request for create orgnisation with wrong url
+    server
+      .put("/v2/organisations/dec/dd")
+      .send({
+        name: "Tata",
+        contact_email: "KGFgmail.com",
+        domain_name: "@kgf.com",
+        subscription_status: 1,
+        subscription_valid_upto: "1587731342",
+        hi5_limit: 5000,
+        hi5_quota_renewal_frequency: "renew",
+        timezone: "india",
+      })
+      .expect("Content-type", /json/)
+      .expect(404) // THis is HTTP response
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        // HTTP status should be 404
+        res.status.should.equal(404);
         done();
       });
   });
