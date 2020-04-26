@@ -6,10 +6,10 @@ const blacklistedToken = require("../jwtTokenValidation/blacklistedToken");
 const logoutController = require("../controllers/logoutController");
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
-router.get(
+router.post(
   "/logout",
-  blacklistedToken.userBlacklistedToken,
   token.autheticateToken,
+  blacklistedToken.userBlacklistedToken,
   logoutController.logout
 );
 
