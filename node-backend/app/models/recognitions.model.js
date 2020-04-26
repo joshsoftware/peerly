@@ -25,7 +25,7 @@ module.exports = (sequelize, Sequelize) => {
         notNull: true,
       },
       recognition_on: {
-        type: "TIMESTAMP",
+        type: Sequelize.BIGINT,
         notNull: true,
       },
     },

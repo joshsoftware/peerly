@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const CoreValues = sequelize.define(
+  const Core_values = sequelize.define(
     "core_values",
     {
       id: {
@@ -30,5 +30,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return CoreValues;
+  return Core_values;
 };

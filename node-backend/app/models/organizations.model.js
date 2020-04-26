@@ -28,7 +28,7 @@ module.exports = (sequelize, Sequelize) => {
         notNull: true,
       },
       subscription_valid_upto: {
-        type: "TIMESTAMP",
+        type: Sequelize.BIGINT,
         notNull: true,
       },
       hi5_limit: {

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const RecognitionHi5 = sequelize.define(
+  const Recognition_hi5 = sequelize.define(
     "recognition_hi5",
     {
       id: {
@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
         notNull: true,
       },
       hi5_given_on_date: {
-        type: "TIMESTAMP",
+        type: Sequelize.BIGINT,
         notNull: true,
       },
     },
@@ -27,5 +27,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return RecognitionHi5;
+  return Recognition_hi5;
 };

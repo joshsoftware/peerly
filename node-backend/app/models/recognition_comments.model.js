@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const RecognitionComments = sequelize.define(
+  const Recognition_comments = sequelize.define(
     "recognition_comments",
     {
       id: {
@@ -21,7 +21,7 @@ module.exports = (sequelize, Sequelize) => {
         notNull: true,
       },
       commented_on: {
-        type: "TIMESTAMP",
+        type: Sequelize.BIGINT,
         notNull: true,
       },
     },
@@ -31,5 +31,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return RecognitionComments;
+  return Recognition_comments;
 };
