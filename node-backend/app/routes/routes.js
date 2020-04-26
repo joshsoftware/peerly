@@ -12,9 +12,9 @@ router.post(
     if (req.body.access_token) {
       next();
     } else {
-      res.status(404).send({
+      res.status(400).send({
         error: {
-          message: "undefined access token",
+          message: "invalid access token",
         },
       });
     }
