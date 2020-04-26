@@ -1,20 +1,20 @@
 /*eslint-disable  no-unused-vars */
-var supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
-var should = require("should"); //eslint-disable-line node/no-unpublished-require
-var server = supertest.agent("http://localhost:3120");
+const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const should = require("should"); //eslint-disable-line node/no-unpublished-require
+const server = supertest.agent(process.env.TEST_URL);
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
-describe("SAMPLE unit test", function () {
-  it("should give undefined token", function (done) {
+describe("test cases for login", function () {
+  it("invalid access token", function (done) {
     server
       .post("/v1/oauth/google")
       .send({
         access_token: "",
       })
       .expect("Content-type", /json/)
-      .expect(404)
+      .expect(400)
       .end(function (err, res) {
-        res.body.error.message.should.equal("undefined access token");
+        res.body.error.message.should.equal("invalid access token");
         done();
       });
   });
