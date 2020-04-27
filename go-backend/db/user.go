@@ -7,10 +7,10 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+// User - basic struct representing a User
 type User struct {
 	ID              int64     `db:"id" json:"id"`
 	Name            string    `db:"name" json:"full_name"`
-	Age             int       `db:"age" json:"age"`
 	OrgID           int64     `db:"org_id" json:"org_id"`
 	Email           string    `db:"email" json:"email"`
 	DisplayName     string    `db:"display_name" json:"display_name"`
