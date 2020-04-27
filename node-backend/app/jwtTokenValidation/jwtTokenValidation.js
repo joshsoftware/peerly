@@ -3,9 +3,9 @@ module.exports.autheticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token === null)
-    res.status(400).send({
+    res.status(401).send({
       error: {
-        message: "undefined token",
+        message: "invalid token",
       },
     });
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
