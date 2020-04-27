@@ -19,11 +19,11 @@ import (
 type UsersHandlerTestSuite struct {
 	suite.Suite
 
-	dbMock *db.DBMockStore
+	dbMock *db.MockStore
 }
 
 func (suite *UsersHandlerTestSuite) SetupTest() {
-	suite.dbMock = &db.DBMockStore{}
+	suite.dbMock = &db.MockStore{}
 }
 
 func TestExampleTestSuite(t *testing.T) {

@@ -6,11 +6,23 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type DBMockStore struct {
+// MockStore - test mock struct
+type MockStore struct {
 	mock.Mock
 }
 
-func (m *DBMockStore) ListUsers(ctx context.Context) (users []User, err error) {
+// ListUsers - test mock
+func (m *MockStore) ListUsers(ctx context.Context) (users []User, err error) {
 	args := m.Called(ctx)
 	return args.Get(0).([]User), args.Error(1)
+}
+
+// CleanBlacklistedTokens - test mock
+func (m *MockStore) CleanBlacklistedTokens() (err error) {
+	return
+}
+
+// CreateUserBlacklistedToken - Mock for testing
+func (m *MockStore) CreateUserBlacklistedToken(ctx context.Context, blacklistedToken UserBlacklistedToken) (err error) {
+	return
 }
