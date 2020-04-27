@@ -53,10 +53,9 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 			logger.WithField("err", err.Error()).Error("Error while decoding organizations data")
 			return
 		}
-
-		errorMessages, valid := organization.ValidateOrganization()
+		errorResponse, valid := organization.ValidateOrganization()
 		if valid == false {
-			respBytes, err := json.Marshal(errorMessages)
+			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
 				rw.WriteHeader(http.StatusInternalServerError)
@@ -64,7 +63,7 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 			}
 	
 			rw.Header().Add("Content-Type", "application/json")
-			rw.WriteHeader(http.StatusBadRequest)
+			rw.WriteHeader(http.StatusPreconditionFailed)
 			rw.Write(respBytes)
 			return
 		}
@@ -106,9 +105,9 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			return
 		}
 
-		errorMessages, valid := organization.ValidateOrganization()
+		errorResponse, valid := organization.ValidateOrganization()
 		if valid == false {
-			respBytes, err := json.Marshal(errorMessages)
+			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
 				rw.WriteHeader(http.StatusInternalServerError)
@@ -116,13 +115,13 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			}
 	
 			rw.Header().Add("Content-Type", "application/json")
-			rw.WriteHeader(http.StatusBadRequest)
+			rw.WriteHeader(http.StatusPreconditionFailed)
 			rw.Write(respBytes)
 			return
 		}
 		err = deps.Store.UpdateOrganization(req.Context(), organization, id)
 		if err != nil {
-			rw.WriteHeader(http.StatusNotFound)
+			rw.WriteHeader(http.StatusInternalServerError)
 			logger.WithField("err", err.Error()).Error("Error while updating organization")
 			return
 		}

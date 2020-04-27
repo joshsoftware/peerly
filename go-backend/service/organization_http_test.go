@@ -8,7 +8,6 @@ import (
 	_"strings"
 	_ "testing"
 	"time"
-	"fmt"
 	_"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -126,10 +125,8 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationValidationFailu
 		createOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
-	fmt.Println(recorder.Body.String(), "validation json")
-
-	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
-	assert.Equal(suite.T(), `{"domain_name":["Please enter valid domain"],"email":["Please enter a valid email"],"name":["Can't be blank"]}`, recorder.Body.String())
+	assert.Equal(suite.T(), http.StatusPreconditionFailed, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"code":"invalid_data","message":"Please provide valid organization data","fields":{"domain_name":"Please enter valid domain","email":"Please enter a valid email","name":"Can't be blank"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -162,7 +159,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationDbFailure() {
 		updateOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
-	assert.Equal(suite.T(), http.StatusNotFound, recorder.Code)
+	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -177,10 +174,8 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationValidationFailu
 		updateOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
-	fmt.Println(recorder.Body.String(), "validation json")
-
-	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
-	assert.Equal(suite.T(), `{"domain_name":["Please enter valid domain"],"email":["Please enter a valid email"]}`, recorder.Body.String())
+	assert.Equal(suite.T(), http.StatusPreconditionFailed, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"code":"invalid_data","message":"Please provide valid organization data","fields":{"domain_name":"Please enter valid domain","email":"Please enter a valid email"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 

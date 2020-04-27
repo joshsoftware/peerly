@@ -56,27 +56,41 @@ type Organization struct {
 	UpdatedOn                time.Time `db:"updated_on" json:"_"`
 }
 
-func (org *Organization) ValidateOrganization() (fieldErrors map[string][]string, valid bool) {
+//TODO how to declare this as reusable
+type ErrorResponse struct {
+	Code 	string `json:"code"`
+	Message	string `json:"message"`
+	Fields map[string]string `json:"fields"`
+}
+
+func (org *Organization) ValidateOrganization() (errorResponse map[string]ErrorResponse, valid bool) {
 
 	valid = true
-	fieldErrors = make(map[string][]string)
+	fieldErrors := make(map[string]string)
 	var validEmail, _ = regexp.Compile(emailRegex)
 	var validDomain, _ = regexp.Compile(domainRegex)
 	
 	if org.Name == "" {
 		valid = false
-		fieldErrors["name"] = append(fieldErrors["name"], "Can't be blank")
+		fieldErrors["name"] = "Can't be blank"
 	}
 
 	if !validEmail.MatchString(org.ContactEmail) {
 		valid = false
-		fieldErrors["email"] = append(fieldErrors["email"], "Please enter a valid email")
+		fieldErrors["email"] = "Please enter a valid email"
 	}
 
 	if !validDomain.MatchString(org.DomainName) {
-		fieldErrors["domain_name"] = append(fieldErrors["domain_name"], "Please enter valid domain") 
+		fieldErrors["domain_name"] = "Please enter valid domain"
 		valid = false
 	}
+
+	errorResponse = map[string]ErrorResponse{"error": ErrorResponse{
+		Code: "invalid_data",
+		Message: "Please provide valid organization data",
+		Fields: fieldErrors,
+	},
+}
 
 	//TODO: Ask what other validations are expected
 	
