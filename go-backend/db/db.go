@@ -4,6 +4,7 @@ import (
 	"context"
 )
 
+// Storer - an interface we use to expose methods that do stuff to the underlying database
 type Storer interface {
 	ListUsers(context.Context) ([]User, error)
 	CleanBlacklistedTokens() error
