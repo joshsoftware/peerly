@@ -7,15 +7,13 @@ module.exports.create = (req, res) => {
   //validation schema
   const schema = yup.object().shape({
     org_id: yup
-      .number({ org_id: "Id should be a number" })
-      .required({ org_id: "organisation id required" }),
-    name: yup.string().required({ name: "name required" }),
+      .number({ org_id: "should be a number" })
+      .required({ org_id: "required" }),
+    name: yup.string().required({ name: "required" }),
     hi5_count_required: yup
-      .number({ hi5_count_required: "hi5 count is in nummber" })
-      .required({ hi5_count_required: "description required" }),
-    hi5_frequency: yup
-      .string()
-      .required({ hi5_frequency: "hi5 frequency required" }),
+      .number({ hi5_count_required: "should be a number" })
+      .required({ hi5_count_required: "required" }),
+    hi5_frequency: yup.string().required({ hi5_frequency: "required" }),
   });
   // Create a badges object
   const badges = {
@@ -46,7 +44,9 @@ module.exports.create = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          message: err.errors,
+          code: "invalid-core-value",
+          message: "Invalid core value data",
+          fields: err.errors,
         },
       });
     });
@@ -56,8 +56,8 @@ module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     org_id: yup
-      .number({ org_id: "organisation id should be number" })
-      .required({ org_id: "organisation id required" }),
+      .number({ org_id: "should be a number" })
+      .required({ org_id: "required" }),
   });
   idSchema
     .validate({ org_id }, { abortEarly: false })
@@ -79,7 +79,9 @@ module.exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          message: err.errors,
+          code: "invalid-core-value",
+          message: "Invalid core value data",
+          fields: err.errors,
         },
       });
     });
@@ -90,12 +92,10 @@ module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
-    id: yup
-      .number({ id: "Id should be number" })
-      .required({ id: "id is required" }),
+    id: yup.number({ id: "should be a number" }).required({ id: "required" }),
     org_id: yup
-      .number({ org_id: "organisation id should be number" })
-      .required({ org_id: "organisation id required" }),
+      .number({ org_id: "should be a number" })
+      .required({ org_id: "required" }),
   });
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
@@ -125,7 +125,9 @@ module.exports.findOne = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          message: err.errors,
+          code: "invalid-core-value",
+          message: "Invalid core value data",
+          fields: err.errors,
         },
       });
     });
@@ -139,16 +141,14 @@ module.exports.update = (req, res) => {
   const hi5_count_required = req.body.hi5_count_required;
   const hi5_frequency = req.body.hi5_frequency;
   const schema = yup.object().shape({
-    id: yup
-      .number({ id: "Id should be number" })
-      .required({ id: "id is required" }),
+    id: yup.number({ id: "should be a number" }).required({ id: "required" }),
     org_id: yup
-      .number({ org_id: "organisation id should be number" })
-      .required({ org_id: "organisation id required" }),
+      .number({ org_id: "should be a number" })
+      .required({ org_id: "required" }),
     name: yup.string(),
     hi5_frequency: yup.string(),
     hi5_count_required: yup.number({
-      hi5_count_required: "hi5 count required ahould be number",
+      hi5_count_required: "Should be a number",
     }),
   });
   const badges = {
@@ -190,7 +190,9 @@ module.exports.update = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          message: err.errors,
+          code: "invalid-core-value",
+          message: "Invalid core value data",
+          fields: err.errors,
         },
       });
     });
