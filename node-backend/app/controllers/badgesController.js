@@ -7,13 +7,15 @@ module.exports.create = (req, res) => {
   //validation schema
   const schema = yup.object().shape({
     org_id: yup
-      .number("Id should be number")
-      .required("organisation id required"),
-    name: yup.string().required("name required"),
+      .number({ org_id: "Id should be a number" })
+      .required({ org_id: "organisation id required" }),
+    name: yup.string().required({ name: "name required" }),
     hi5_count_required: yup
-      .number("hi5 count is in nummber")
-      .required("description required"),
-    hi5_frequency: yup.string().required("hi5 frequency required"),
+      .number({ hi5_count_required: "hi5 count is in nummber" })
+      .required({ hi5_count_required: "description required" }),
+    hi5_frequency: yup
+      .string()
+      .required({ hi5_frequency: "hi5 frequency required" }),
   });
   // Create a badges object
   const badges = {
@@ -54,8 +56,8 @@ module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     org_id: yup
-      .number(" organisation id should be number")
-      .required("organisation id required"),
+      .number({ org_id: "organisation id should be number" })
+      .required({ org_id: "organisation id required" }),
   });
   idSchema
     .validate({ org_id }, { abortEarly: false })
@@ -88,10 +90,12 @@ module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
-    id: yup.number("Id should be number").required("id is required"),
+    id: yup
+      .number({ id: "Id should be number" })
+      .required({ id: "id is required" }),
     org_id: yup
-      .number("organisation id should be number")
-      .required("organisation id required"),
+      .number({ org_id: "organisation id should be number" })
+      .required({ org_id: "organisation id required" }),
   });
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
@@ -105,7 +109,7 @@ module.exports.findOne = (req, res) => {
           } else {
             res.status(404).send({
               error: {
-                message: "badges with specified id is not found",
+                message: "Badge not found for specified id",
               },
             });
           }
@@ -135,13 +139,17 @@ module.exports.update = (req, res) => {
   const hi5_count_required = req.body.hi5_count_required;
   const hi5_frequency = req.body.hi5_frequency;
   const schema = yup.object().shape({
-    id: yup.number("Id should be number").required("id required"),
+    id: yup
+      .number({ id: "Id should be number" })
+      .required({ id: "id is required" }),
     org_id: yup
-      .number("organisation id should be number")
-      .required("organisation id required"),
+      .number({ org_id: "organisation id should be number" })
+      .required({ org_id: "organisation id required" }),
     name: yup.string(),
     hi5_frequency: yup.string(),
-    hi5_count_required: yup.number("hi5 count required ahould be number"),
+    hi5_count_required: yup.number({
+      hi5_count_required: "hi5 count required ahould be number",
+    }),
   });
   const badges = {
     name: req.body.name,
@@ -155,17 +163,18 @@ module.exports.update = (req, res) => {
     )
     .then(() => {
       Badges.update(badges, {
+        returning: true,
         where: { id: id, org_id: org_id },
       })
-        .then((num) => {
-          if (num == 1) {
+        .then(([rowsUpdate, [updatedBadges]]) => {
+          if (rowsUpdate == 1) {
             res.status(200).send({
-              message: "badges is updated successfully.",
+              data: updatedBadges,
             });
           } else {
             res.status(404).send({
               error: {
-                message: `Cannot update badges with id=${id}. Maybe badges was not found`,
+                message: "Badge not found for specified id",
               },
             });
           }
