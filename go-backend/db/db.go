@@ -10,7 +10,7 @@ type Storer interface {
 	GetOrganization(context.Context, int) (Organization, error)
 	CreateOrganization(context.Context, Organization) (error)
 	DeleteOrganization(context.Context, int) (error)
-	UpdateOrganization(context.Context, Organization, int) (error)
+	UpdateOrganization(context.Context, Organization, int) (Organization, error)
 	//Create(context.Context, User) error
 	//GetUser(context.Context) (User, error)
 	//Delete(context.Context, string) error

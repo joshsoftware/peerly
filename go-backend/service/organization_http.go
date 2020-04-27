@@ -17,7 +17,6 @@ import (
 // @Failure 400 {object}
 func listOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
 		organizations, err := deps.Store.ListOrganizations(req.Context())
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching data")
@@ -45,7 +44,6 @@ func listOrganizationHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
 		var organization db.Organization
 		err := json.NewDecoder(req.Body).Decode(&organization)
 		if err != nil {
@@ -88,7 +86,6 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}	
 func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
 		vars := mux.Vars(req)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -119,14 +116,24 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			rw.Write(respBytes)
 			return
 		}
-		err = deps.Store.UpdateOrganization(req.Context(), organization, id)
+
+		var updatedOrganization db.Organization
+		updatedOrganization, err = deps.Store.UpdateOrganization(req.Context(), organization, id)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
 			logger.WithField("err", err.Error()).Error("Error while updating organization")
 			return
 		}
 
+		respBytes, err := json.Marshal(updatedOrganization)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
 		rw.WriteHeader(http.StatusOK)
+		rw.Write(respBytes)
 		rw.Header().Add("Content-Type", "application/json")
 		return
 	})
@@ -140,7 +147,6 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 // @Failure 400 {object}
 func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
 		vars := mux.Vars(req)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -169,7 +175,6 @@ func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func getOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
 		vars := mux.Vars(req)
     id, err := strconv.Atoi(vars["id"])
 		if err != nil {

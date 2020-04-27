@@ -35,7 +35,7 @@ func (m *DBMockStore) DeleteOrganization(ctx context.Context, id int) (err error
 	return args.Error(0)
 }
 
-func (m *DBMockStore) UpdateOrganization(ctx context.Context, org Organization, id int) (err error) {
+func (m *DBMockStore) UpdateOrganization(ctx context.Context, org Organization, id int) (updatedOrg Organization, err error) {
 	args := m.Called(ctx, org, id)
-	return args.Error(0)
+	return args.Get(0).(Organization), args.Error(1)
 }

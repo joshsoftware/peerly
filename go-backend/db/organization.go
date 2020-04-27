@@ -35,7 +35,33 @@ const (
 		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) where id = $11`
 
 	DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
-	GetOrganizationQuery = `SELECT * FROM organizations WHERE id=$1`
+	GetOrganizationQuery = `SELECT id,
+		name,
+		contact_email,
+		domain_name,
+		subscription_status,
+		subscription_valid_upto,
+		hi5_limit,
+		hi5_quota_renewal_frequency,
+		timezone,
+		created_by,
+		created_on,
+		updated_by,
+		updated_on FROM organizations WHERE id=$1`
+	
+	ListOrganizationsQuery =`SELECT id,
+		name,
+		contact_email,
+		domain_name,
+		subscription_status,
+		subscription_valid_upto,
+		hi5_limit,
+		hi5_quota_renewal_frequency,
+		timezone,
+		created_by,
+		created_on,
+		updated_by,
+		updated_on FROM organizations ORDER BY name ASC`
 	emailRegex = 	"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 	domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 )
@@ -99,7 +125,7 @@ func (org *Organization) ValidateOrganization() (errorResponse map[string]ErrorR
 
 func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organization, err error) {
 
-	err = s.db.Select(&organizations, "SELECT * FROM organizations ORDER BY name ASC")
+	err = s.db.Select(&organizations, ListOrganizationsQuery)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing organizations")
 		return
@@ -131,7 +157,7 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err
 	return
 }
 
-func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organization, organizationID int) (err error) {
+func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organization, organizationID int) (updatedOrganization Organization, err error) {
 
 		var dbOrganization Organization
 		err = s.db.Get(&dbOrganization, GetOrganizationQuery, organizationID)
@@ -157,6 +183,9 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			logger.WithField("err", err.Error()).Error("Error updating organization")
 			return
 		}
+		
+		updatedOrganization = reqOrganization
+		updatedOrganization.ID = dbOrganization.ID
 
 		return
 }

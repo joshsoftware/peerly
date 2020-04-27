@@ -4,11 +4,7 @@ import (
 	"errors"
 	"joshsoftware/peerly/db"
 	"net/http"
-	_"net/http/httptest"
-	_"strings"
-	_ "testing"
 	"time"
-	_"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -131,8 +127,19 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationValidationFailu
 }
 
 func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
+	testTime, _ := time.Parse(testForm, testValue)
 
-	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{
+				ID:1,
+				Name:"test organization",
+				ContactEmail: "test@gmail.com",
+				DomainName: "www.testdomain.com",
+				SubscriptionStatus: 1,
+				SubscriptionValidUpto: testTime,
+				Hi5Limit: 5,
+				Hi5QuotaRenewalFrequency: "2",
+				Timezone: "IST",
+			},nil)
 
 	body:=`{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":"2015-01-28T00:00:00Z","hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
@@ -148,7 +155,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 }
 
 func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationDbFailure() {
-	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("Error while updating organization"))
+	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{}, errors.New("Error while updating organization"))
 
 	body:=`{"name":"test update organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":"2015-01-28T00:00:00Z","hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
