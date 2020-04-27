@@ -6,7 +6,12 @@ import (
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
 	"net/http"
+	"os"
 	"time"
+
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/google"
 
 	"github.com/dgrijalva/jwt-go"
 	logger "github.com/sirupsen/logrus"
@@ -24,7 +29,16 @@ var errMissingAuthHeader = errors.New("Missing Auth header")
 
 func handleAuthCallback(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		fmt.Printf("TODO: Handle /auth callback from Google")
+		goth.UseProviders(
+			google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:330001/auth/google/callback"),
+		)
+
+		user, err := gothic.CompleteUserAuth(rw, req)
+		if err != nil {
+			fmt.Fprintln(rw, err)
+			return
+		}
+		fmt.Printf("%+v\n", user)
 		return
 	})
 }

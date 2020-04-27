@@ -26,5 +26,6 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/logout", handleLogout(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+	router.HandleFunc("/auth/google/callback", handleAuthCallback(deps)).Methods(http.MethodGet) // Not specifying headers here because I'm not yet sure what Google will pass for the callback
 	return
 }
