@@ -17,7 +17,7 @@ module.exports.userBlacklistedToken = async (req, res, next) => {
       });
     });
   if (result) {
-    res.status(401).send({
+    res.status(412).send({
       error: {
         message: "unauthorized user",
       },
