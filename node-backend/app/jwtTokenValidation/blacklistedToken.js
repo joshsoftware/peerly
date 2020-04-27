@@ -1,14 +1,13 @@
 const db = require("../models/sequelize");
+const user_blacklisted_tokens = db.user_blacklisted_tokens;
 module.exports.userBlacklistedToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   let result;
-  await db.sequelize
-    .query(
-      "select id from user_blacklisted_tokens where token = '" + token + "'"
-    )
+  await user_blacklisted_tokens
+    .findOne({ where: { token: token } })
     .then((data) => {
-      result = data[1].rowCount;
+      result = data;
     })
     .catch(() => {
       res.status(500).send({
