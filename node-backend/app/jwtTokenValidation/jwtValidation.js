@@ -15,7 +15,7 @@ module.exports.autheticateToken = (req, res, next) => {
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
     if (err) {
       res.status(401).send({
-        message: "Not a valid token",
+        message: "unauthorised user",
       });
     } else {
       UserBlacklistedTokens.findOne({ where: { token: token } }).then(
@@ -24,7 +24,7 @@ module.exports.autheticateToken = (req, res, next) => {
             next();
           } else {
             res.status(401).send({
-              message: "Not a valid token",
+              message: "unauthorised user",
             });
           }
         }
@@ -38,9 +38,9 @@ module.exports.getData = (req, res /*eslint-disable-line no-unused-vars*/) => {
   const token = authHeader && authHeader.split(" ")[1];
   let decode = jwt.decode(token);
   const tokenData = {
-    user_id: decode.sub,
-    role: decode["https://peerly.com"].roleId,
-    org: decode["https://peerly.com"].orgId,
+    userId: decode.sub,
+    roleId: decode["https://peerly.com"].roleId,
+    orgId: decode["https://peerly.com"].orgId,
   };
   return tokenData;
 };
