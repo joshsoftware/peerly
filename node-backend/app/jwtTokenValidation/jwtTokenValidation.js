@@ -5,13 +5,13 @@ module.exports.autheticateToken = (req, res, next) => {
   if (token === null)
     res.status(412).send({
       error: {
-        message: "invalid token",
+        message: "unauthorised token",
       },
     });
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
     if (err) {
       res.status(412).send({
-        message: "invalid token",
+        message: "unauthorised token",
       });
     } else {
       next();
