@@ -7,13 +7,17 @@ module.exports.create = (req, res) => {
   //validation schema
   const schema = yup.object().shape({
     org_id: yup
-      .number("Id should be number")
-      .required("organisation id required"),
-    core_value_text: yup.string().required("core value text required"),
-    description: yup.string().required("description required"),
+      .number({ org_id: "Id should be number" })
+      .required({ org_id: "organisation id required" }),
+    core_value_text: yup
+      .string()
+      .required({ core_value_text: "core value text required" }),
+    description: yup
+      .string()
+      .required({ description: "description is required" }),
     parent_core_value_id: yup
-      .number("Id should be number")
-      .required("parent core value id required"),
+      .number({ parent_core_value_id: "Id should be number" })
+      .required({ parent_core_value_id: "parent core value id required" }),
   });
   // Create a core value object
   const coreValue = {
@@ -54,8 +58,8 @@ module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     org_id: yup
-      .number(" organisation id should be number")
-      .required("organisation id required"),
+      .number({ org_id: " organisation id should be number" })
+      .required({ org_id: "organisation id required" }),
   });
   idSchema
     .validate({ org_id }, { abortEarly: false })
@@ -88,10 +92,12 @@ module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
-    id: yup.number("Id should be number").required("id is required"),
+    id: yup
+      .number({ id: "Id should be number" })
+      .required({ id: "id is required" }),
     org_id: yup
-      .number("organisation id should be number")
-      .required("organisation id required"),
+      .number({ org_id: "organisation id should be number" })
+      .required({ org_id: "organisation id required" }),
   });
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
@@ -105,7 +111,7 @@ module.exports.findOne = (req, res) => {
           } else {
             res.status(404).send({
               error: {
-                message: "core value with specified id is not found",
+                message: "core value not found for specified id ",
               },
             });
           }
@@ -135,13 +141,17 @@ module.exports.update = (req, res) => {
   const description = req.body.description;
   const parent_core_value_id = req.body.parent_core_value_id;
   const schema = yup.object().shape({
-    id: yup.number("Id should be number").required("id required"),
+    id: yup
+      .number({ id: "Id should be number" })
+      .required({ id: "id required" }),
     org_id: yup
-      .number("organisation id should be number")
-      .required("organisation id required"),
+      .number({ org_id: "organisation id should be number" })
+      .required({ org_id: "organisation id required" }),
     core_value_text: yup.string(),
     description: yup.string(),
-    parent_core_value_id: yup.number("parent_core_value_id"),
+    parent_core_value_id: yup.number({
+      parent_core_value_id: "parent_core_value_id should be number",
+    }),
   });
   const coreValue = {
     core_value_text: req.body.core_value_text,
@@ -155,17 +165,18 @@ module.exports.update = (req, res) => {
     )
     .then(() => {
       CoreValue.update(coreValue, {
+        returning: true,
         where: { id: id, org_id: org_id },
       })
-        .then((num) => {
-          if (num == 1) {
+        .then(([rowsUpdate, [updatedCoreValue]]) => {
+          if (rowsUpdate == 1) {
             res.status(200).send({
-              message: "core value is updated successfully.",
+              data: updatedCoreValue,
             });
           } else {
             res.status(404).send({
               error: {
-                message: `Cannot update core value with id=${id}. Maybe core value was not found`,
+                message: "core value not found for specified id",
               },
             });
           }
