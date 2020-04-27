@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const db = require("../models/sequelize");
 const Users = db.users;
@@ -12,8 +13,8 @@ module.exports.login = async (req, res) => {
   let orgName;
   let orgId;
   let expTime;
-  const date = new Date();
-  const epoch = Math.round(date.getTime() / 1000);
+  let epoch = moment().valueOf();
+  epoch = (epoch - (epoch % 1000)) / 1000;
   let result = await getUser(email);
   if (result == "error") {
     res.status(500).send({
