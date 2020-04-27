@@ -13,8 +13,6 @@ module.exports.login = async (req, res) => {
   let orgName;
   let orgId;
   let expTime;
-  let epoch = moment().valueOf();
-  epoch = (epoch - (epoch % 1000)) / 1000;
   let result = await getUser(email);
   if (result == "error") {
     res.status(500).send({
@@ -35,7 +33,7 @@ module.exports.login = async (req, res) => {
         iss: "node.peerly.com",
         sub: userId,
         aud: "peerly.com",
-        nbf: epoch,
+        nbf: moment.utc().unix(),
         "https://peerly.com": {
           roleId: roleId,
           orgId: orgId,
@@ -86,7 +84,7 @@ module.exports.login = async (req, res) => {
               iss: "node.peerly.com",
               sub: userId,
               aud: "peerly.com",
-              nbf: epoch,
+              nbf: moment.utc().unix(),
               "https://peerly.com": {
                 roleId: roleId,
                 orgId: orgId,
