@@ -7,69 +7,110 @@ module.exports.login = async (req, res) => {
   let email = profile.emails[0].value;
   let userName = profile.name.givenName;
   let displayName = profile.displayName;
-  let emailId;
-  let role;
-  let organizationData;
+  let userId;
+  let roleId;
+  let orgName;
+  let orgId;
   let expTime;
+  const date = new Date();
+  const epoch = Math.round(date.getTime() / 1000);
   let result = await getUser(email);
   if (result == "error") {
-    res.status(500).send({ message: "Internal server error" });
+    res.status(500).send({
+      error: {
+        message: "internal server error",
+      },
+    });
   } else if (result[1].rowCount) {
-    emailId = result[0][0].email;
-    role = result[0][0].role;
-    organizationData = result[0][0].name;
+    userId = result[0][0].id;
+    roleId = result[0][0].roleid;
+    orgName = result[0][0].name;
+    orgId = result[0][0].orgid;
     expTime = {
       expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
     };
     const token = jwt.sign(
       {
-        email: emailId,
+        iss: "node.peerly.com",
+        sub: userId,
+        aud: "peerly.com",
+        nbf: epoch,
+        "https://peerly.com": {
+          roleId: roleId,
+          orgId: orgId,
+          orgName: orgName,
+        },
       },
       process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
       expTime
     );
     res.send({
-      token: token,
-      role: role,
-      organization: organizationData,
+      data: {
+        token: token,
+      },
     });
   } else {
     let domainName = profile.emails[0].value.split("@").pop();
     let domainResult = await getOrganization(domainName);
     if (domainResult == "error") {
-      res.status(500).send({ message: "Internal server error" });
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
     } else if (domainResult[1].rowCount) {
       let orgId = domainResult[0][0].id;
       let checkerror = await insertData(orgId, userName, email, displayName);
       if (checkerror == "error") {
-        res.status(500).send({ message: "Internal server error" });
+        res.status(500).send({
+          error: {
+            message: "internal server error",
+          },
+        });
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
-          emailId = getUserResult[0][0].email;
-          role = getUserResult[0][0].role;
-          organizationData = getUserResult[0][0].name;
+          userId = getUserResult[0][0].id;
+          roleId = getUserResult[0][0].roleid;
+          orgName = getUserResult[0][0].name;
+          orgId = getUserResult[0][0].orgid;
           expTime = {
             expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
           };
           const token = jwt.sign(
             {
-              email: emailId,
+              iss: "node.peerly.com",
+              sub: userId,
+              aud: "peerly.com",
+              nbf: epoch,
+              "https://peerly.com": {
+                roleId: roleId,
+                orgId: orgId,
+                orgName: orgName,
+              },
             },
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
             expTime
           );
           res.send({
-            token: token,
-            role: role,
-            organization: organizationData,
+            data: {
+              token: token,
+            },
           });
         } else {
-          res.status(403).send({ message: "Unauthorized user" });
+          res.status(401).send({
+            error: {
+              message: "unauthorized user",
+            },
+          });
         }
       }
     } else {
-      res.status(403).send({ message: "Unauthorized user" });
+      res.status(401).send({
+        error: {
+          message: "unauthorized user",
+        },
+      });
     }
   }
 };
@@ -78,7 +119,7 @@ const getUser = async (email) => {
   let result;
   await db.sequelize
     .query(
-      "select roles.role,users.email,organizations.name from users,roles,organizations where users.email = '" +
+      "select roles.id as roleId,organizations.id as orgId,users.id,organizations.name from users,roles,organizations where users.email = '" +
         email +
         "'"
     )
