@@ -1,11 +1,11 @@
-const db = require("../models/sequelize");
+const moment = require("moment");
+var cron = require("node-cron");
 
-setInterval(() => {
-  const date = new Date();
-  const delete_token_time = Math.round(date.getTime() / 1000);
+const db = require("../models/sequelize");
+let epoch = moment().valueOf();
+epoch = (epoch - (epoch % 1000)) / 1000;
+cron.schedule("* * * * *", () => {
   db.sequelize.query(
-    "delete from user_blacklisted_tokens where expiry_date < '" +
-      delete_token_time +
-      "'"
+    "delete from user_blacklisted_tokens where expiry_date < '" + epoch + "'"
   );
-}, process.env.TOKEN_DELETION_INTERVAL);
+});
