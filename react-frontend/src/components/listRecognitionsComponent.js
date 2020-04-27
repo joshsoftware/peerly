@@ -23,9 +23,13 @@ const ListRecognitionComponent = (props) => {
     return shortName.match(/\b(\w)/g);
   };
   const showTime = (timestamp) => {
-    let time = timestamp.split(".")[0];
-    let date = new Date(time);
-    let milliseconds = Date.now() - date.getTime();
+    let timestamp2 = new Date(timestamp * 1000);
+    let date = timestamp2.toLocaleDateString().split("/");
+    date = date[2] + "-" + date[1] + "-" + date[0];
+    let time = timestamp2.toLocaleTimeString();
+    let dateTime = date + " " + time;
+    var date2 = new Date(dateTime);
+    var milliseconds = Date.now() - date2.getTime();
     return timeAgo.format(Date.now() - milliseconds, "time");
   };
 
