@@ -5,6 +5,9 @@ const yup = require("yup");
 
 const loginController = require("../controllers/loginController");
 require("../google_auth/google_auth")();
+const token = require("../jwtTokenValidation/jwtTokenValidation");
+const blacklistedToken = require("../jwtTokenValidation/blacklistedToken");
+const logoutController = require("../controllers/logoutController");
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.post(
@@ -30,6 +33,13 @@ router.post(
   },
   passport.authenticate("google-token", { session: false }),
   loginController.login
+);
+
+router.post(
+  "/logout",
+  token.autheticateToken,
+  blacklistedToken.userBlacklistedToken,
+  logoutController.logout
 );
 
 module.exports = router;
