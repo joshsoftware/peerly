@@ -14,8 +14,7 @@ module.exports.logout = (req, res) => {
   userBlacklistedTokens
     .create(user)
     .then((user_blacklisted_tokens) => {
-      let domainResult = user_blacklisted_tokens;
-      res.status(200).send({ data: domainResult });
+      res.status(200).send({ data: user_blacklisted_tokens });
     })
     .catch(() => {
       res.status(500).send({
