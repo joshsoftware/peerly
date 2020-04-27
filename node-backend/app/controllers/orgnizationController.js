@@ -4,24 +4,32 @@ const db = require("../models/sequelize");
 const Organizations = db.organizations;
 
 const schema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  contact_email: yup.string().email("Invalid Email"),
+  name: yup.string().required({ name: "required" }),
+  contact_email: yup.string().email({ contact_email: "should be invalid" }),
   domain_name: yup
     .string()
     .matches(
-      /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g,
-      "Invalid domain name"
+      {
+        regex: /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g,
+      },
+      { domain_name: "should be invalid" }
     )
-    .required("Domain name is required"),
-  subscription_status: yup.number().required("Subscription status is required"),
-  subscription_valid_upto: yup
+    .required({ domain_name: "required" }),
+  subscription_status: yup
     .number()
-    .required("Subscription valid upto is required"),
-  hi5_limit: yup.number().required("Hi5 limit is required"),
+    .required({ subscription_status: "required" }),
+  subscription_valid_upto: yup.number().required({
+    subscription_valid_upto: "required",
+  }),
+  hi5_limit: yup.number().required({ hi5_limit: "required" }),
   hi5_quota_renewal_frequency: yup
-    .string("Hi5 quota renewal frequency is required")
-    .required(),
-  timezone: yup.string().required("Timezone is required"),
+    .string({
+      hi5_quota_renewal_frequency: "should be string",
+    })
+    .required({
+      hi5_quota_renewal_frequency: "required",
+    }),
+  timezone: yup.string().required({ timezone: "required" }),
 });
 
 exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
@@ -57,9 +65,11 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(400).send({
+      res.status(412).send({
         error: {
-          message: err.errors,
+          code: "invalid organisation",
+          message: "Invalid organisation Data",
+          fields: err.errors,
         },
       });
     });
@@ -83,7 +93,7 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
 
 exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
   const idSchema = yup.object().shape({
-    id: yup.number("Id should be number").required("Id is required"),
+    id: yup.number({ id: "should be number" }).required({ id: "required" }),
   });
   idSchema
     .validate({ id: req.params.id }, { abortEarly: false })
@@ -111,10 +121,12 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
           });
         });
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch((err) => {
       res.status(400).send({
         error: {
-          message: ["Invalid value for parameter id"],
+          code: "invalid orgnisation",
+          message: "Invalid value for parameter id",
+          fields: err.errors,
         },
       });
     });
@@ -131,9 +143,15 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
     })
     .then((valid) => {
       if (!valid) {
-        res.status(400).send({
+        res.status(412).send({
           error: {
-            message: ["Invalid value for parameter id"],
+            code: "invalid orgnisation",
+            message: "Invalid value for parameter id",
+            fields: [
+              {
+                id: "should be number",
+              },
+            ],
           },
         });
       } else {
@@ -148,15 +166,16 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
           timezone: req.body.timezone,
         };
         schema
-          .validate(organizations)
+          .validate(organizations, { abortEarly: false })
           .then(() => {
             Organizations.update(organizations, {
+              returning: true,
               where: { id: id },
             })
-              .then((num) => {
-                if (num == 1) {
+              .then(([rowsUpdate, [updatedCoreValue]]) => {
+                if (rowsUpdate == 1) {
                   res.status(200).send({
-                    message: "Organization is updated successfully.",
+                    data: updatedCoreValue,
                   });
                 } else {
                   res.status(404).send({
@@ -175,9 +194,11 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
               });
           })
           .catch((err) => {
-            res.status(400).send({
+            res.status(412).send({
               error: {
-                message: err.errors,
+                code: "invalid organisation",
+                message: "Invalid organisation Data",
+                fields: err.errors,
               },
             });
           });
