@@ -5,14 +5,14 @@ const Organizations = db.organizations;
 
 const schema = yup.object().shape({
   name: yup.string().required({ name: "required" }),
-  contact_email: yup.string().email({ contact_email: "should be invalid" }),
+  contact_email: yup.string().email({ contact_email: "should be invalid?" }),
   domain_name: yup
     .string()
     .matches(
       {
         regex: /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g,
       },
-      { domain_name: "should be invalid" }
+      { domain_name: "should be invalid?" }
     )
     .required({ domain_name: "required" }),
   subscription_status: yup
