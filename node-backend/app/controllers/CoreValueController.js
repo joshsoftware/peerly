@@ -160,12 +160,12 @@ module.exports.update = (req, res) => {
         .then((num) => {
           if (num == 1) {
             res.status(200).send({
-              message: "Organization is updated successfully.",
+              message: "core value is updated successfully.",
             });
           } else {
             res.status(404).send({
               error: {
-                message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`,
+                message: `Cannot update core value with id=${id}. Maybe core value was not found`,
               },
             });
           }
