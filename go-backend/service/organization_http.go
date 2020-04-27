@@ -153,7 +153,7 @@ func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 		err = deps.Store.DeleteOrganization(req.Context(), id)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while deleting organization")
-			rw.WriteHeader(http.StatusNotFound)
+			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
