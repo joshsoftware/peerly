@@ -33,7 +33,7 @@ func TestExampleTestSuite(t *testing.T) {
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	suite.dbMock.On("ListUsers", mock.Anything).Return(
 		[]db.User{
-			db.User{Name: "test-user", Age: 18},
+			{Name: "test-user"},
 		},
 		nil,
 	)
@@ -46,7 +46,7 @@ func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"full_name":"test-user","age":18}]`, recorder.Body.String())
+	assert.Equal(suite.T(), `[{"id":0,"full_name":"test-user","org_id":0,"email":"","display_name":"","profile_image_url":"","soft_delete":false,"role_id":0,"hi5_quota_balance":0,"soft_delete_by":0}]`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 

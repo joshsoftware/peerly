@@ -11,6 +11,7 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+// Claims - for use with JWT
 type Claims struct {
 	UserID         int64     `json:"user_id"`
 	ExpirationDate time.Time `json:"expiration_date"`

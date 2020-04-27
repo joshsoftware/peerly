@@ -14,7 +14,7 @@ const (
 	authHeader    = "X-Auth-Token"
 )
 
-/* The routing mechanism. Mux helps us define handler functions and the access methods */
+// InitRouter -  The routing mechanism. Mux helps us define handler functions and the access methods
 func InitRouter(deps Dependencies) (router *mux.Router) {
 	router = mux.NewRouter()
 
