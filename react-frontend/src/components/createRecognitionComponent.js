@@ -22,6 +22,7 @@ const CreateRecognition = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [labelData, setLabelData] = useState("");
 
   useEffect(() => {
     console.log("Loading the page  " + isLoading); // eslint-disable-line no-console
@@ -57,6 +58,13 @@ const CreateRecognition = (props) => {
   };
 
   const handleOnChange = (e) => {
+    if (state.coreValue !== "" && state.user !== "") {
+      setLabelData(
+        `rewarding for @` + state.user + " with #" + state.coreValue
+      );
+    } else if (state.user !== "") {
+      setLabelData(`rewarding for @` + state.user);
+    }
     const { value, name } = e.target;
     let updatedValues = {};
     updatedValues[name] = value;
@@ -139,6 +147,10 @@ const CreateRecognition = (props) => {
                   <Form.Label className="font-italic text-info">
                     * Description
                   </Form.Label>
+                  <br />
+                  <Form.Label className="font-italic text-info">
+                    {labelData}
+                  </Form.Label>
                   <Form.Control
                     as="textarea"
                     name="description"
@@ -149,7 +161,7 @@ const CreateRecognition = (props) => {
                     }}
                     value={state.description}
                     required
-                  />
+                  ></Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Please write a description.
                   </Form.Control.Feedback>
@@ -202,4 +214,5 @@ CreateRecognition.defaultProps = {
   coreValuePlaceholder: "Select core value",
   textareaPlaceholder: "Write a description",
 };
+
 export default CreateRecognition;
