@@ -16,7 +16,7 @@ module.exports.create = (req, res) => {
     hi5_frequency: yup.string().required("hi5 frequency required"),
   });
   // Create a badges object
-  const corevalue = {
+  const badges = {
     org_id: req.params.organisation_id,
     name: req.body.name,
     hi5_count_required: req.body.hi5_count_required,
@@ -24,10 +24,10 @@ module.exports.create = (req, res) => {
   };
 
   schema
-    .validate(corevalue, { abortEarly: false })
+    .validate(badges, { abortEarly: false })
     .then(() => {
       // Save badges in the database
-      Badges.create(corevalue)
+      Badges.create(badges)
         .then((data) => {
           res.status(201).send({
             data: data,
@@ -143,7 +143,7 @@ module.exports.update = (req, res) => {
     hi5_frequency: yup.string(),
     hi5_count_required: yup.number("hi5 count required ahould be number"),
   });
-  const corevalue = {
+  const badges = {
     name: req.body.name,
     hi5_count_required: req.body.hi5_count_required,
     hi5_frequency: req.body.hi5_frequency,
@@ -154,7 +154,7 @@ module.exports.update = (req, res) => {
       { abortEarly: false }
     )
     .then(() => {
-      Badges.update(corevalue, {
+      Badges.update(badges, {
         where: { id: id, org_id: org_id },
       })
         .then((num) => {
