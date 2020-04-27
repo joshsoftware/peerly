@@ -1,20 +1,20 @@
 const jwt = require("jsonwebtoken");
 
 const db = require("../models/sequelize");
-const UserBlacklistedTokens = db.userBlacklistedTokens;
+const UserBlacklistedTokens = db.user_blacklisted_tokens;
 
 module.exports.autheticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token === null)
-    res.status(401).send({
+    res.status(412).send({
       error: {
         message: "unauthorised user",
       },
     });
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
     if (err) {
-      res.status(401).send({
+      res.status(412).send({
         message: "unauthorised user",
       });
     } else {
