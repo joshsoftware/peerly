@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
 	"net/http"
@@ -20,6 +21,13 @@ type Claims struct {
 
 var errInvalidToken = errors.New("Invalid Token")
 var errMissingAuthHeader = errors.New("Missing Auth header")
+
+func handleAuthCallback(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		fmt.Printf("TODO: Handle /auth callback from Google")
+		return
+	})
+}
 
 func getClaims(token string) (claims *Claims, err error) {
 	// Initialize a new instance of `Claims`
