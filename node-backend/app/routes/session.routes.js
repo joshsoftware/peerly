@@ -5,8 +5,7 @@ const yup = require("yup");
 
 const loginController = require("../controllers/loginController");
 require("../google_auth/google_auth")();
-const token = require("../jwtTokenValidation/jwtTokenValidation");
-const blacklistedToken = require("../jwtTokenValidation/blacklistedToken");
+const tokenValidation = require("../jwtTokenValidation/jwtValidation");
 const logoutController = require("../controllers/logoutController");
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -23,7 +22,7 @@ router.post(
       if (valid) {
         next();
       } else {
-        res.status(400).send({
+        res.status(412).send({
           error: {
             message: "invalid access token",
           },
@@ -37,8 +36,7 @@ router.post(
 
 router.post(
   "/logout",
-  token.autheticateToken,
-  blacklistedToken.userBlacklistedToken,
+  tokenValidation.autheticateToken,
   logoutController.logout
 );
 
