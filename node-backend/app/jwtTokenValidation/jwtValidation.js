@@ -9,7 +9,7 @@ module.exports.autheticateToken = (req, res, next) => {
   if (token === null)
     res.status(401).send({
       error: {
-        message: "undefined token",
+        message: "unauthorised user",
       },
     });
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
