@@ -44,8 +44,8 @@ module.exports.create = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
+          code: "invalid-badges",
+          message: "Invalid badges data",
           fields: err.errors,
         },
       });
@@ -79,8 +79,8 @@ module.exports.findAll = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
+          code: "invalid-badges",
+          message: "Invalid badges data",
           fields: err.errors,
         },
       });
@@ -125,8 +125,8 @@ module.exports.findOne = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
+          code: "invalid-badges",
+          message: "Invalid badges data",
           fields: err.errors,
         },
       });
@@ -190,8 +190,8 @@ module.exports.update = (req, res) => {
     .catch((err) => {
       res.status(412).send({
         error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
+          code: "invalid-badges",
+          message: "Invalid badges data",
           fields: err.errors,
         },
       });
