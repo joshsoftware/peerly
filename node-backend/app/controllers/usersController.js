@@ -1,12 +1,12 @@
 const db = require("../models/sequelize");
 const jwtToken = require("../jwtTokenValidation/jwtValidation");
-module.exports.findUsersByOrg = (req, res) => {
-  let token = jwtToken.getData(req, res);
+module.exports.findUsersByOrg = async (req, res) => {
+  let userData = await jwtToken.getData(req, res);
   db.sequelize
     .query(
-      "select id,name,email,display_name,profile_image_url,role_id,hi5_quota_balance from users where org_id = '" +
-        token.orgId +
-        "' and role_id not in (select id from roles where role = 'admin')"
+      "select users.id,users.name,users.email,users.display_name,users.profile_image_url,users.role_id,users.hi5_quota_balance from users, roles where org_id = '" +
+        userData.orgId +
+        "' and role = 'Employee'"
     )
     .then((users) => {
       res.status(200).send({
