@@ -3,8 +3,9 @@ const http = require("http");
 const bodyParser = require("body-parser");
 
 require("dotenv").config("./.env");
-const routes = require("./app/routes/logout.routes");
+const logoutRoutes = require("./app/routes/logout.routes"); // eslint-disable-line no-unused-vars
 require("./app/jwtTokenValidation/deleteExpiredToken");
+const routes = require("./app/routes/routes");
 const dbConn = require("./app/models/sequelize");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));

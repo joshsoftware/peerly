@@ -2,12 +2,16 @@
 var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
-module.exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
-module.exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
+  // eslint-disable-line node/exports-style
   db.createTable(
     "organizations",
     {
@@ -60,10 +64,10 @@ module.exports.up = function (db, callback) {
     }
   );
 };
-module.exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
+  // eslint-disable-line node/exports-style
   db.dropTable("organizations", callback);
 };
-
-module.exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   "version": 1, // eslint-disable-line prettier/prettier
 };
