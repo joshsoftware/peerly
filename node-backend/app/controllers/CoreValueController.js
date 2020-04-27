@@ -16,7 +16,7 @@ module.exports.create = (req, res) => {
       .required("parent core value id required"),
   });
   // Create a core value object
-  const corevalue = {
+  const coreValue = {
     org_id: req.params.organisation_id,
     core_value_text: req.body.core_value_text,
     description: req.body.description,
@@ -24,10 +24,10 @@ module.exports.create = (req, res) => {
   };
 
   schema
-    .validate(corevalue, { abortEarly: false })
+    .validate(coreValue, { abortEarly: false })
     .then(() => {
-      // Save corevalue in the database
-      CoreValue.create(corevalue)
+      // Save coreValue in the database
+      CoreValue.create(coreValue)
         .then((data) => {
           res.status(201).send({
             data: data,
@@ -143,7 +143,7 @@ module.exports.update = (req, res) => {
     description: yup.string(),
     parent_core_value_id: yup.number("parent_core_value_id"),
   });
-  const corevalue = {
+  const coreValue = {
     core_value_text: req.body.core_value_text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
@@ -154,7 +154,7 @@ module.exports.update = (req, res) => {
       { abortEarly: false }
     )
     .then(() => {
-      CoreValue.update(corevalue, {
+      CoreValue.update(coreValue, {
         where: { id: id, org_id: org_id },
       })
         .then((num) => {
