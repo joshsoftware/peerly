@@ -15,7 +15,7 @@ module.exports.create = (req, res) => {
       .required("description required"),
     hi5_frequency: yup.string().required("hi5 frequency required"),
   });
-  // Create a core value object
+  // Create a badges object
   const corevalue = {
     org_id: req.params.organisation_id,
     name: req.body.name,
@@ -26,7 +26,7 @@ module.exports.create = (req, res) => {
   schema
     .validate(corevalue, { abortEarly: false })
     .then(() => {
-      // Save corevalue in the database
+      // Save badges in the database
       Badges.create(corevalue)
         .then((data) => {
           res.status(201).send({
@@ -49,7 +49,7 @@ module.exports.create = (req, res) => {
       });
     });
 };
-//get all core values
+//get all badges
 module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
@@ -83,7 +83,7 @@ module.exports.findAll = (req, res) => {
     });
 };
 
-//get core value with id
+//get badges with id
 module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
@@ -127,7 +127,7 @@ module.exports.findOne = (req, res) => {
     });
 };
 
-//update core value with id
+//update badges with id
 module.exports.update = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
