@@ -26,10 +26,10 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/v1/organisations/t/badges")
       .expect("Content-type", /json/)
-      .expect(400) // THis is HTTP response
+      .expect(412) // THis is HTTP response
       .end(function (err, res) {
-        // HTTP status should be 200
-        res.status.should.equal(400);
+        // HTTP status should be 412
+        res.status.should.equal(412);
         done();
       });
   });
@@ -65,10 +65,10 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/v1/organisations/1/badges/t")
       .expect("Content-type", /json/)
-      .expect(400) // THis is HTTP response
+      .expect(412) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 200
-        res.status.should.equal(400);
+        // HTTP status should be 412
+        res.status.should.equal(412);
         // Error key should be false.
         done();
       });
@@ -86,7 +86,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect("Content-type", /json/)
       .expect(201) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 200
+        // HTTP status should be 201
         res.status.should.equal(201);
         // Error key should be false.
         done();
@@ -103,10 +103,10 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         hi5_frequency: "high",
       })
       .expect("Content-type", /json/)
-      .expect(400) // THis is HTTP response
+      .expect(412) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 400
-        res.status.should.equal(400);
+        // HTTP status should be 412
+        res.status.should.equal(412);
         done();
       });
   });
@@ -158,10 +158,10 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         hi5_frequency: "high",
       })
       .expect("Content-type", /json/)
-      .expect(400) // THis is HTTP response
+      .expect(412) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 400
-        res.status.should.equal(400);
+        // HTTP status should be 412
+        res.status.should.equal(412);
         done();
       });
   });
@@ -178,7 +178,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect("Content-type", /json/)
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 400
+        // HTTP status should be 404
         res.status.should.equal(404);
         done();
       });
