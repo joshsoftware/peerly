@@ -1,36 +1,36 @@
 const yup = require("yup");
 
-const utility = require("../utils/utility");
-const db = require("../models/sequelize");
-const Badges = db.badges;
+const utility = require("../../utils/utility");
+const db = require("../../models/sequelize");
+const CoreValue = db.core_value;
 
 module.exports.create = (req, res) => {
   //validation schema
   const schema = yup.object().shape({
     org_id: yup
       .number()
-      .required({ org_id: "required" })
-      .typeError({ org_id: "should be a number" }),
-    name: yup.string().required({ name: "required" }),
-    hi5_count_required: yup
+      .typeError({ org_id: "should be number" })
+      .required({ org_id: "required" }),
+    core_value_text: yup.string().required({ core_value_text: "required" }),
+    description: yup.string().required({ description: "required" }),
+    parent_core_value_id: yup
       .number()
-      .typeError({ hi5_count_required: "should be a number" })
-      .required({ hi5_count_required: "required" }),
-    hi5_frequency: yup.string().required({ hi5_frequency: "required" }),
+      .typeError({ parent_core_value_id: "should be number" })
+      .required({ parent_core_value_id: "required" }),
   });
-  // Create a badges object
-  const badges = {
+  // Create a core value object
+  const coreValue = {
     org_id: req.params.organisation_id,
-    name: req.body.name,
-    hi5_count_required: req.body.hi5_count_required,
-    hi5_frequency: req.body.hi5_frequency,
+    core_value_text: req.body.core_value_text,
+    description: req.body.description,
+    parent_core_value_id: req.body.parent_core_value_id,
   };
 
   schema
-    .validate(badges, { abortEarly: false })
+    .validate(coreValue, { abortEarly: false })
     .then(() => {
-      // Save badges in the database
-      Badges.create(badges)
+      // Save coreValue in the database
+      CoreValue.create(coreValue)
         .then((data) => {
           res.status(201).send({
             data: data,
@@ -45,28 +45,28 @@ module.exports.create = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
+      res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          "invalid-core-value",
+          "Invalid core value data",
           err.errors
         ),
       });
     });
 };
-//get all badges
+//get all core values
 module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     org_id: yup
       .number()
-      .typeError({ org_id: "should be a number" })
+      .typeError({ org_id: "should be number" })
       .required({ org_id: "required" }),
   });
   idSchema
     .validate({ org_id }, { abortEarly: false })
     .then(() => {
-      Badges.findAll({ where: { org_id: req.params.organisation_id } })
+      CoreValue.findAll({ where: { org_id: req.params.organisation_id } })
         .then((data) => {
           res.status(200).send({
             data: data,
@@ -81,34 +81,34 @@ module.exports.findAll = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
+      res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          "invalid-core-value",
+          "Invalid core value data",
           err.errors
         ),
       });
     });
 };
 
-//get badges with id
+//get core value with id
 module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     id: yup
       .number()
-      .required({ id: "required" })
-      .typeError({ id: "should be a number" }),
+      .typeError({ id: "should be number" })
+      .required({ id: "required" }),
     org_id: yup
       .number()
-      .typeError({ org_id: "should be a number" })
+      .typeError({ org_id: "should be number" })
       .required({ org_id: "required" }),
   });
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
     .then(() => {
-      Badges.findAll({ where: { org_id: org_id, id: id } })
+      CoreValue.findAll({ where: { org_id: org_id, id: id } })
         .then((data) => {
           if (data.length != 0) {
             res.status(200).send({
@@ -117,7 +117,7 @@ module.exports.findOne = (req, res) => {
           } else {
             res.status(404).send({
               error: {
-                message: "Badge not found for specified id",
+                message: "core value not found for specified id ",
               },
             });
           }
@@ -131,62 +131,62 @@ module.exports.findOne = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
+      res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          "invalid-core-value",
+          "Invalid core value data",
           err.errors
         ),
       });
     });
 };
 
-//update badges with id
+//update core value with id
 module.exports.update = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
-  const name = req.body.name;
-  const hi5_count_required = req.body.hi5_count_required;
-  const hi5_frequency = req.body.hi5_frequency;
+  const core_value_text = req.body.core_value_text;
+  const description = req.body.description;
+  const parent_core_value_id = req.body.parent_core_value_id;
   const schema = yup.object().shape({
     id: yup
       .number()
-      .required({ id: "required" })
-      .typeError({ id: "should be a number" }),
+      .typeError({ id: "should be a number" })
+      .required({ id: "required" }),
     org_id: yup
       .number()
       .typeError({ org_id: "should be a number" })
       .required({ org_id: "required" }),
-    name: yup.string(),
-    hi5_frequency: yup.string(),
-    hi5_count_required: yup.number().typeError({
-      hi5_count_required: "Should be a number",
+    core_value_text: yup.string(),
+    description: yup.string(),
+    parent_core_value_id: yup.number().typeError({
+      parent_core_value_id: "should be a number",
     }),
   });
-  const badges = {
-    name: req.body.name,
-    hi5_count_required: req.body.hi5_count_required,
-    hi5_frequency: req.body.hi5_frequency,
+  const coreValue = {
+    core_value_text: req.body.core_value_text,
+    description: req.body.description,
+    parent_core_value_id: req.body.parent_core_value_id,
   };
   schema
     .validate(
-      { id, org_id, name, hi5_count_required, hi5_frequency },
+      { id, org_id, core_value_text, description, parent_core_value_id },
       { abortEarly: false }
     )
     .then(() => {
-      Badges.update(badges, {
+      CoreValue.update(coreValue, {
         returning: true,
         where: { id: id, org_id: org_id },
       })
-        .then(([rowsUpdate, [updatedBadges]]) => {
+        .then(([rowsUpdate, [updatedCoreValue]]) => {
           if (rowsUpdate == 1) {
             res.status(200).send({
-              data: updatedBadges,
+              data: updatedCoreValue,
             });
           } else {
             res.status(404).send({
               error: {
-                message: "Badge not found for specified id",
+                message: "core value not found for specified id",
               },
             });
           }
@@ -200,10 +200,10 @@ module.exports.update = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
+      res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          "invalid-core-value",
+          "Invalid core value data",
           err.errors
         ),
       });

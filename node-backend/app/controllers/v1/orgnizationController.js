@@ -1,6 +1,6 @@
 const yup = require("yup");
 
-const db = require("../models/sequelize");
+const db = require("../../models/sequelize");
 const Organizations = db.organizations;
 
 const schema = yup.object().shape({
