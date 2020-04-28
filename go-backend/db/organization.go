@@ -179,7 +179,7 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			reqOrganization.Hi5QuotaRenewalFrequency,
 			reqOrganization.Timezone,
 			reqOrganization.UpdatedBy,
-			time.Now(),
+			time.Now().Unix(),
 			organizationID,
 		)
 		if err != nil {
