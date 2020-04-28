@@ -12,10 +12,15 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      name: {
+      first_name: {
         type: Sequelize.STRING,
-        length: 30,
+        length: 50,
         notNull: true,
+      },
+      last_name: {
+        type: Sequelize.STRING,
+        length: 50,
+        notNull: false,
       },
       email: {
         type: Sequelize.STRING,

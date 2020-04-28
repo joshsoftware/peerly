@@ -33,10 +33,15 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
           },
         },
       },
-      name: {
+      first_name: {
         type: "string",
-        length: 30,
+        length: 50,
         notNull: true,
+      },
+      last_name: {
+        type: "string",
+        length: 50,
+        notNull: false,
       },
       email: {
         type: "string",
