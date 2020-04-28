@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const db = require("../models/sequelize");
-const UserBlacklistedTokens = db.userBlacklistedTokens;
+const UserBlacklistedTokens = db.user_blacklisted_tokens;
 
 module.exports.autheticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];

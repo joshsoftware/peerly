@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const db = require("../models/sequelize");
 const Users = db.users;
@@ -13,8 +14,6 @@ module.exports.login = async (req, res) => {
   let orgName;
   let orgId;
   let expTime;
-  const date = new Date();
-  const epoch = Math.round(date.getTime() / 1000);
   let result = await getUser(email);
   if (result == "error") {
     res.status(500).send({
@@ -35,7 +34,7 @@ module.exports.login = async (req, res) => {
         iss: "node.peerly.com",
         sub: userId,
         aud: "peerly.com",
-        nbf: epoch,
+        nbf: moment.utc().unix(),
         "https://peerly.com": {
           roleId: roleId,
           orgId: orgId,
@@ -43,7 +42,10 @@ module.exports.login = async (req, res) => {
         },
       },
       process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
-      expTime
+      expTime,
+      {
+        expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
+      }
     );
     res.send({
       data: {
@@ -89,7 +91,7 @@ module.exports.login = async (req, res) => {
               iss: "node.peerly.com",
               sub: userId,
               aud: "peerly.com",
-              nbf: epoch,
+              nbf: moment.utc().unix(),
               "https://peerly.com": {
                 roleId: roleId,
                 orgId: orgId,

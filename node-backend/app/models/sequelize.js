@@ -18,9 +18,8 @@ db.sequelize = sequelize;
 db.roles = require("./roles.model.js")(sequelize, Sequelize);
 db.organizations = require("./organizations.model.js")(sequelize, Sequelize);
 db.users = require("./users.model.js")(sequelize, Sequelize);
-db.userBlacklistedTokens = require("./user_blacklisted_tokens.model")(
+db.user_blacklisted_tokens = require("./user_blacklisted_tokens.model.js")(
   sequelize,
   Sequelize
 );
-
 module.exports = db;
