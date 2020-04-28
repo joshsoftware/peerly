@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	CreateOrganizationQuery = `INSERT INTO organizations (
+	createOrganizationQuery = `INSERT INTO organizations (
 		name,
 		contact_email,
 		domain_name,
@@ -21,7 +21,7 @@ const (
 		updated_by)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
-	UpdateOrganizationQuery = `UPDATE organizations SET (
+	updateOrganizationQuery = `UPDATE organizations SET (
 		name,
 		contact_email,
 		domain_name,
@@ -34,8 +34,9 @@ const (
 		updated_on) = 
 		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) where id = $11`
 
-	DeleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
-	GetOrganizationQuery = `SELECT id,
+	deleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
+
+	getOrganizationQuery = `SELECT id,
 		name,
 		contact_email,
 		domain_name,
@@ -49,7 +50,7 @@ const (
 		updated_by,
 		updated_on FROM organizations WHERE id=$1`
 	
-	ListOrganizationsQuery =`SELECT id,
+	listOrganizationsQuery =`SELECT id,
 		name,
 		contact_email,
 		domain_name,
@@ -62,24 +63,24 @@ const (
 		created_on,
 		updated_by,
 		updated_on FROM organizations ORDER BY name ASC`
-	emailRegex = 	"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+	emailRegex = `^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$`
 	domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 )
 
 type Organization struct {
-	ID                       int       `db:"id" json:"id" `
-	Name                     string    `db:"name" json:"name"`
-	ContactEmail             string    `db:"contact_email" json:"email"`
-	DomainName               string    `db:"domain_name" json:"domain_name"`
-	SubscriptionStatus       int       `db:"subscription_status" json:"subscription_status"`
-	SubscriptionValidUpto    time.Time `db:"subscription_valid_upto" json:"subscription_valid_upto"`
-	Hi5Limit                 int    `db:"hi5_limit" json:"hi5_limit"`
-	Hi5QuotaRenewalFrequency string    `db:"hi5_quota_renewal_frequency" json:"hi5_quota_renewal_frequency"`
-	Timezone                 string    `db:"timezone" json:"timezone"`
-	CreatedBy                int    `db:"created_by" json:"_"`
-	CreatedOn                time.Time `db:"created_on" json:"_"`
-	UpdatedBy                int    `db:"updated_by" json:"_"`
-	UpdatedOn                time.Time `db:"updated_on" json:"_"`
+	ID                       int       	`db:"id" json:"id" `
+	Name                     string    	`db:"name" json:"name"`
+	ContactEmail             string    	`db:"contact_email" json:"email"`
+	DomainName               string    	`db:"domain_name" json:"domain_name"`
+	SubscriptionStatus       int       	`db:"subscription_status" json:"subscription_status"`
+	SubscriptionValidUpto    time.Time 	`db:"subscription_valid_upto" json:"subscription_valid_upto"`
+	Hi5Limit                 int    	 	`db:"hi5_limit" json:"hi5_limit"`
+	Hi5QuotaRenewalFrequency string    	`db:"hi5_quota_renewal_frequency" json:"hi5_quota_renewal_frequency"`
+	Timezone                 string    	`db:"timezone" json:"timezone"`
+	CreatedBy                int    	 	`db:"created_by" json:"_"`
+	CreatedOn                time.Time 	`db:"created_on" json:"_"`
+	UpdatedBy                int    	 	`db:"updated_by" json:"_"`
+	UpdatedOn                time.Time 	`db:"updated_on" json:"_"`
 }
 
 //TODO how to declare this as reusable
@@ -89,26 +90,28 @@ type ErrorResponse struct {
 	Fields map[string]string `json:"fields"`
 }
 
-func (org *Organization) ValidateOrganization() (errorResponse map[string]ErrorResponse, valid bool) {
+var validEmail = regexp.MustCompile(emailRegex)
+var validDomain = regexp.MustCompile(domainRegex)
 
-	valid = true
+func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
+
 	fieldErrors := make(map[string]string)
-	var validEmail, _ = regexp.Compile(emailRegex)
-	var validDomain, _ = regexp.Compile(domainRegex)
-	
+
 	if org.Name == "" {
-		valid = false
 		fieldErrors["name"] = "Can't be blank"
 	}
 
 	if !validEmail.MatchString(org.ContactEmail) {
-		valid = false
 		fieldErrors["email"] = "Please enter a valid email"
 	}
 
 	if !validDomain.MatchString(org.DomainName) {
 		fieldErrors["domain_name"] = "Please enter valid domain"
-		valid = false
+	}
+
+	if len(fieldErrors) == 0 {
+		valid = true
+		return
 	}
 
 	errorResponse = map[string]ErrorResponse{"error": ErrorResponse{
@@ -124,8 +127,7 @@ func (org *Organization) ValidateOrganization() (errorResponse map[string]ErrorR
 }
 
 func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organization, err error) {
-
-	err = s.db.Select(&organizations, ListOrganizationsQuery)
+	err = s.db.Select(&organizations, listOrganizationsQuery)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing organizations")
 		return
@@ -135,9 +137,8 @@ func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organi
 }
 
 func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err error) {
-
 	_, err = s.db.Exec(
-		CreateOrganizationQuery,
+		createOrganizationQuery,
 		org.Name,
 		org.ContactEmail,
 		org.DomainName,
@@ -158,15 +159,14 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err
 }
 
 func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organization, organizationID int) (updatedOrganization Organization, err error) {
-
 		var dbOrganization Organization
-		err = s.db.Get(&dbOrganization, GetOrganizationQuery, organizationID)
+		err = s.db.Get(&dbOrganization, getOrganizationQuery, organizationID)
 
 		reqOrganization.CreatedOn = dbOrganization.CreatedOn
 		reqOrganization.CreatedBy = dbOrganization.CreatedBy
 
 		_, err = s.db.Exec(
-			UpdateOrganizationQuery,
+			updateOrganizationQuery,
 			reqOrganization.Name,
 			reqOrganization.ContactEmail,
 			reqOrganization.DomainName,
@@ -183,7 +183,7 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			logger.WithField("err", err.Error()).Error("Error updating organization")
 			return
 		}
-		
+
 		updatedOrganization = reqOrganization
 		updatedOrganization.ID = dbOrganization.ID
 
@@ -191,9 +191,8 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 }
 
 func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (err error) {
-
 	_, err = s.db.Exec(
-		DeleteOrganizationQuery,
+		deleteOrganizationQuery,
 		organizationID,
 	)
 	if err != nil {
@@ -205,8 +204,7 @@ func (s *pgStore) DeleteOrganization(ctx context.Context, organizationID int) (e
 }
 
 func (s *pgStore) GetOrganization(ctx context.Context, organizationID int) (organization Organization, err error) {
-
-	err = s.db.Get(&organization, GetOrganizationQuery, organizationID)
+	err = s.db.Get(&organization, getOrganizationQuery, organizationID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error fetching organization")
 		return

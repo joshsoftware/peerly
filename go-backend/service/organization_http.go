@@ -19,7 +19,7 @@ func listOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		organizations, err := deps.Store.ListOrganizations(req.Context())
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error fetching data")
+			logger.WithField("err", err.Error()).Error("Error listing organizations")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -47,21 +47,22 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 		var organization db.Organization
 		err := json.NewDecoder(req.Body).Decode(&organization)
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
-			logger.WithField("err", err.Error()).Error("Error while decoding organizations data")
+			rw.WriteHeader(http.StatusBadRequest)
+			logger.WithField("err", err.Error()).Error("Error while decoding organization data")
 			return
 		}
-		errorResponse, valid := organization.ValidateOrganization()
-		if valid == false {
+
+		errorResponse, valid := organization.Validate()
+		if !valid {
 			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {
-				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+				logger.WithField("err", err.Error()).Error("Error marshaling organization data")
 				rw.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 	
 			rw.Header().Add("Content-Type", "application/json")
-			rw.WriteHeader(http.StatusPreconditionFailed)
+			rw.WriteHeader(http.StatusBadRequest)
 			rw.Write(respBytes)
 			return
 		}
@@ -102,8 +103,8 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			return
 		}
 
-		errorResponse, valid := organization.ValidateOrganization()
-		if valid == false {
+		errorResponse, valid := organization.Validate()
+		if !valid {
 			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
@@ -112,7 +113,7 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			}
 	
 			rw.Header().Add("Content-Type", "application/json")
-			rw.WriteHeader(http.StatusPreconditionFailed)
+			rw.WriteHeader(http.StatusBadRequest)
 			rw.Write(respBytes)
 			return
 		}
@@ -176,10 +177,10 @@ func deleteOrganizationHandler(deps Dependencies) http.HandlerFunc {
 func getOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-    id, err := strconv.Atoi(vars["id"])
+		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
-			rw.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
@@ -192,7 +193,7 @@ func getOrganizationHandler(deps Dependencies) http.HandlerFunc {
 
 		respBytes, err := json.Marshal(organization)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+			logger.WithField("err", err.Error()).Error("Error marshaling organization data")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}

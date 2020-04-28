@@ -12,7 +12,7 @@ import (
 
 const (
 	testValue = "January 28, 2015"
-	testForm = "January 2, 2006"
+	testFormat = "January 2, 2006"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -28,7 +28,7 @@ func (suite *OrganizationHandlerTestSuite) SetupTest() {
 }
 
 func (suite *OrganizationHandlerTestSuite) TestListOrganizationsSuccess() {
-	testTime, _ := time.Parse(testForm, testValue)
+	testTime, _ := time.Parse(testFormat, testValue)
 
 	suite.dbMock.On("ListOrganizations", mock.Anything).Return(
 		[]db.Organization{
@@ -121,13 +121,13 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationValidationFailu
 		createOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
-	assert.Equal(suite.T(), http.StatusPreconditionFailed, recorder.Code)
+	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
 	assert.Equal(suite.T(), `{"error":{"code":"invalid_data","message":"Please provide valid organization data","fields":{"domain_name":"Please enter valid domain","email":"Please enter a valid email","name":"Can't be blank"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
 func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
-	testTime, _ := time.Parse(testForm, testValue)
+	testTime, _ := time.Parse(testFormat, testValue)
 
 	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{
 				ID:1,
@@ -151,6 +151,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
+	assert.Equal(suite.T(), `{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":"2015-01-28T00:00:00Z","hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -181,14 +182,14 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationValidationFailu
 		updateOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
-	assert.Equal(suite.T(), http.StatusPreconditionFailed, recorder.Code)
+	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
 	assert.Equal(suite.T(), `{"error":{"code":"invalid_data","message":"Please provide valid organization data","fields":{"domain_name":"Please enter valid domain","email":"Please enter a valid email"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
 func (suite *OrganizationHandlerTestSuite) TestGetOrganizationSuccess() {
 
-	testTime, _ := time.Parse(testForm, testValue)
+	testTime, _ := time.Parse(testFormat, testValue)
 	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
 		db.Organization{
 				ID:1,
