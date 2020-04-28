@@ -20,7 +20,7 @@ module.exports.up = function (db, callback) {
       },
       role: {
         type: "string",
-        length: 15,
+        length: 25,
         notNull: true,
       },
     },

@@ -156,7 +156,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   });
 
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong Contents", function (done) {
-    // post request for create orgnisation with wrong Contents
+    // put request for update orgnisation with wrong Contents
     server
       .put("/v2/organisations/1")
       .send({
@@ -179,7 +179,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   });
 
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with Invalid Id", function (done) {
-    // post request for create orgnisation with wrong Contents
+    // put request for update orgnisation with wrong Contents
     server
       .put("/v2/organisations/udc")
       .send({
@@ -202,7 +202,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   });
 
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong url", function (done) {
-    // calling post request for create orgnisation with wrong url
+    // calling put request for update orgnisation with wrong url
     server
       .put("/v2/organisations/dec/dd")
       .send({

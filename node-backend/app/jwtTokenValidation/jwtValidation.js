@@ -1,23 +1,21 @@
 const jwt = require("jsonwebtoken");
 
 const db = require("../models/sequelize");
-const UserBlacklistedTokens = db.user_blacklisted_tokens;
+const UserBlacklistedTokens = db.userBlacklistedTokens;
+
 module.exports.autheticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token === null)
-    res.status(412).send({
+    res.status(401).send({
       error: {
-        message: "validation error",
+        message: "unauthorised user",
       },
     });
-
   jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
     if (err) {
       res.status(401).send({
-        error: {
-          message: "Invalid token",
-        },
+        message: "unauthorised user",
       });
     } else {
       UserBlacklistedTokens.findOne({ where: { token: token } }).then(
@@ -26,9 +24,7 @@ module.exports.autheticateToken = (req, res, next) => {
             next();
           } else {
             res.status(401).send({
-              error: {
-                message: "Invalid token",
-              },
+              message: "unauthorised user",
             });
           }
         }
@@ -37,7 +33,9 @@ module.exports.autheticateToken = (req, res, next) => {
   });
 };
 
-module.exports.getData = (token) => {
+module.exports.getData = (req, res /*eslint-disable-line no-unused-vars*/) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
   let decode = jwt.decode(token);
   const tokenData = {
     userId: decode.sub,
