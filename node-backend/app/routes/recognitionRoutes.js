@@ -9,7 +9,7 @@ async function authorizedRole(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   const tokenData = await jwtValidate.getData(token);
-  if (tokenData.roleId !== 1) {
+  if (tokenData.roleId !== 2) {
     next();
   } else {
     res.status(401).send({
@@ -24,9 +24,12 @@ recRouter.use(bodyParser.urlencoded({ extended: true }));
 
 recRouter.use(authorizedRole);
 
-recRouter.post("/organisations/:id/recognitions", recognitionController.create);
+recRouter.post("/organisations/recognitions", recognitionController.create);
 
-//recRouter.post("/organisations/:organisation_id/recognitions/search", recognitionController.findAll);
+recRouter.get(
+  "/organisations/recognitions/search",
+  recognitionController.findAll
+);
 
 //recRouter.get("/organisations/:organisation_id/recognition/:id", recognitionController.findOne);
 
