@@ -7,7 +7,7 @@ module.exports.autheticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null /*eslint-disable-line no-eq-null*/) {
-    res.status(412).send({
+    res.status(401).send({
       error: {
         message: "unauthorised user",
       },
