@@ -1,5 +1,6 @@
 const yup = require("yup");
 
+const utility = require("../utils/utility");
 const db = require("../models/sequelize");
 const Badges = db.badges;
 
@@ -7,11 +8,13 @@ module.exports.create = (req, res) => {
   //validation schema
   const schema = yup.object().shape({
     org_id: yup
-      .number({ org_id: "should be a number" })
-      .required({ org_id: "required" }),
+      .number()
+      .required({ org_id: "required" })
+      .typeError({ org_id: "should be a number" }),
     name: yup.string().required({ name: "required" }),
     hi5_count_required: yup
-      .number({ hi5_count_required: "should be a number" })
+      .number()
+      .typeError({ hi5_count_required: "should be a number" })
       .required({ hi5_count_required: "required" }),
     hi5_frequency: yup.string().required({ hi5_frequency: "required" }),
   });
@@ -43,11 +46,11 @@ module.exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(412).send({
-        error: {
-          code: "invalid-badges",
-          message: "Invalid badges data",
-          fields: err.errors,
-        },
+        error: utility.getFormattedErrorObj(
+          "invalid-badges",
+          "Invalid badges data",
+          err.errors
+        ),
       });
     });
 };
@@ -56,7 +59,8 @@ module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     org_id: yup
-      .number({ org_id: "should be a number" })
+      .number()
+      .typeError({ org_id: "should be a number" })
       .required({ org_id: "required" }),
   });
   idSchema
@@ -78,11 +82,11 @@ module.exports.findAll = (req, res) => {
     })
     .catch((err) => {
       res.status(412).send({
-        error: {
-          code: "invalid-badges",
-          message: "Invalid badges data",
-          fields: err.errors,
-        },
+        error: utility.getFormattedErrorObj(
+          "invalid-badges",
+          "Invalid badges data",
+          err.errors
+        ),
       });
     });
 };
@@ -92,9 +96,13 @@ module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
-    id: yup.number({ id: "should be a number" }).required({ id: "required" }),
+    id: yup
+      .number()
+      .required({ id: "required" })
+      .typeError({ id: "should be a number" }),
     org_id: yup
-      .number({ org_id: "should be a number" })
+      .number()
+      .typeError({ org_id: "should be a number" })
       .required({ org_id: "required" }),
   });
   idSchema
@@ -124,11 +132,11 @@ module.exports.findOne = (req, res) => {
     })
     .catch((err) => {
       res.status(412).send({
-        error: {
-          code: "invalid-badges",
-          message: "Invalid badges data",
-          fields: err.errors,
-        },
+        error: utility.getFormattedErrorObj(
+          "invalid-badges",
+          "Invalid badges data",
+          err.errors
+        ),
       });
     });
 };
@@ -141,13 +149,17 @@ module.exports.update = (req, res) => {
   const hi5_count_required = req.body.hi5_count_required;
   const hi5_frequency = req.body.hi5_frequency;
   const schema = yup.object().shape({
-    id: yup.number({ id: "should be a number" }).required({ id: "required" }),
+    id: yup
+      .number()
+      .required({ id: "required" })
+      .typeError({ id: "should be a number" }),
     org_id: yup
-      .number({ org_id: "should be a number" })
+      .number()
+      .typeError({ org_id: "should be a number" })
       .required({ org_id: "required" }),
     name: yup.string(),
     hi5_frequency: yup.string(),
-    hi5_count_required: yup.number({
+    hi5_count_required: yup.number().typeError({
       hi5_count_required: "Should be a number",
     }),
   });
@@ -189,11 +201,11 @@ module.exports.update = (req, res) => {
     })
     .catch((err) => {
       res.status(412).send({
-        error: {
-          code: "invalid-badges",
-          message: "Invalid badges data",
-          fields: err.errors,
-        },
+        error: utility.getFormattedErrorObj(
+          "invalid-badges",
+          "Invalid badges data",
+          err.errors
+        ),
       });
     });
 };
