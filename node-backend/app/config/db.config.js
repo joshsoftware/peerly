@@ -1,9 +1,10 @@
+require("dotenv").config("./.env");
 /*eslint-disable  no-undef*/
 module.exports = {
   HOST: process.env.DATABASE_URL,
   USER: process.env.DB_USER_NAME,
   PASSWORD: process.env.DB_PASSWORD,
-  DB: process.env.DB_DATABASE_NAME,
+  DB: process.env.DB_NAME,
   dialect: process.env.DB_DIALECT,
   pool: {
     max: parseInt(process.env.SEQUELIZE_CONN_MAX),

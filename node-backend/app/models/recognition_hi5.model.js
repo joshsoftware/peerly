@@ -1,28 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-  const Core_values = sequelize.define(
-    "core_values",
+  const Recognition_hi5 = sequelize.define(
+    "recognition_hi5",
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
         autoIncrement: true,
         primaryKey: true,
+        notNull: true,
       },
-      org_id: {
+      recognition_id: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      core_value_text: {
-        type: Sequelize.STRING,
-        notNull: true,
-      },
-      description: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
-      },
-      parent_core_value_id: {
+      hi5_by: {
         type: Sequelize.INTEGER,
+        notNull: true,
+      },
+      hi5_given_on_date: {
+        type: Sequelize.BIGINT,
         notNull: true,
       },
     },
@@ -32,5 +27,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return Core_values;
+  return Recognition_hi5;
 };
