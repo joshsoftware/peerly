@@ -90,8 +90,8 @@ type ErrorResponse struct {
 	Fields map[string]string `json:"fields"`
 }
 
-var validEmail = regexp.MustCompile(emailRegex)
-var validDomain = regexp.MustCompile(domainRegex)
+var emailRegex = regexp.MustCompile(emailRegex)
+var domainRegex = regexp.MustCompile(domainRegex)
 
 func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
 	fieldErrors := make(map[string]string)
@@ -100,11 +100,11 @@ func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, val
 		fieldErrors["name"] = "Can't be blank"
 	}
 
-	if !validEmail.MatchString(org.ContactEmail) {
+	if !emailRegex.MatchString(org.ContactEmail) {
 		fieldErrors["email"] = "Please enter a valid email"
 	}
 
-	if !validDomain.MatchString(org.DomainName) {
+	if !domainRegex.MatchString(org.DomainName) {
 		fieldErrors["domain_name"] = "Please enter valid domain"
 	}
 
@@ -135,7 +135,7 @@ func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organi
 	return
 }
 
-func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (updatedOrganization Organization, err error) {
+func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (createdOrganization Organization, err error) {
 
 	lastInsertId := 0
 	 err = s.db.QueryRow(
@@ -156,7 +156,7 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (upd
 		return
 	}
 
-	err = s.db.Get(&updatedOrganization, getOrganizationQuery, lastInsertId)
+	err = s.db.Get(&createdOrganization, getOrganizationQuery, lastInsertId)
 
 	return
 }
