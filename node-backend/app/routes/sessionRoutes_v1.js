@@ -3,10 +3,10 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const yup = require("yup");
 
-const loginController = require("../controllers/loginController");
+const loginController = require("../controllers/v1/loginController");
 require("../google_auth/google_auth")();
 const tokenValidation = require("../jwtTokenValidation/jwtValidation");
-const logoutController = require("../controllers/logoutController");
+const logoutController = require("../controllers/v1/logoutController");
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.post(

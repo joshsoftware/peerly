@@ -1,5 +1,5 @@
-const db = require("../models/sequelize");
-const jsonwebtoken = require("../jwtTokenValidation/jwtValidation");
+const db = require("../../models/sequelize");
+const jsonwebtoken = require("../../jwtTokenValidation/jwtValidation");
 const userBlacklistedTokens = db.user_blacklisted_tokens;
 module.exports.logout = async (req, res) => {
   const authHeader = req.headers["authorization"];

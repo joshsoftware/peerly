@@ -1,5 +1,5 @@
-const db = require("../models/sequelize");
-const jwtToken = require("../jwtTokenValidation/jwtValidation");
+const db = require("../../models/sequelize");
+const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 module.exports.findUsersByOrg = async (req, res) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];

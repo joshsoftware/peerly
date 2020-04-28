@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
-const db = require("../models/sequelize");
+const db = require("../../models/sequelize");
 const Users = db.users;
 module.exports.login = async (req, res) => {
   let profile = req.user;
