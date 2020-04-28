@@ -67,14 +67,23 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		err = deps.Store.CreateOrganization(req.Context(), organization)
+		var updatedOrganization db.Organization
+		updatedOrganization, err = deps.Store.CreateOrganization(req.Context(), organization)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
 			logger.WithField("err", err.Error()).Error("Error create organization")
 			return
 		}
 
+		respBytes, err := json.Marshal(updatedOrganization)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
 		rw.WriteHeader(http.StatusCreated)
+		rw.Write(respBytes)
 		rw.Header().Add("Content-Type", "application/json")
 	})
 }

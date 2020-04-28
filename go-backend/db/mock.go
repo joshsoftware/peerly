@@ -20,9 +20,9 @@ func (m *DBMockStore) ListOrganizations(ctx context.Context) (organizations []Or
 	return args.Get(0).([]Organization), args.Error(1)
 }
 
-func (m *DBMockStore) CreateOrganization(ctx context.Context, org Organization) (err error) {
+func (m *DBMockStore) CreateOrganization(ctx context.Context, org Organization) (updatedOrg Organization, err error) {
 	args := m.Called(ctx, org)
-	return args.Error(0)
+	return args.Get(0).(Organization), args.Error(1)
 }
 
 func (m *DBMockStore) GetOrganization(ctx context.Context, id int) (organization Organization, err error) {

@@ -19,7 +19,7 @@ const (
 		timezone,
 		created_by,
 		updated_by)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`
 
 	updateOrganizationQuery = `UPDATE organizations SET (
 		name,
@@ -68,19 +68,19 @@ const (
 )
 
 type Organization struct {
-	ID                       int       	`db:"id" json:"id" `
-	Name                     string    	`db:"name" json:"name"`
-	ContactEmail             string    	`db:"contact_email" json:"email"`
-	DomainName               string    	`db:"domain_name" json:"domain_name"`
-	SubscriptionStatus       int       	`db:"subscription_status" json:"subscription_status"`
-	SubscriptionValidUpto    time.Time 	`db:"subscription_valid_upto" json:"subscription_valid_upto"`
-	Hi5Limit                 int    	 	`db:"hi5_limit" json:"hi5_limit"`
-	Hi5QuotaRenewalFrequency string    	`db:"hi5_quota_renewal_frequency" json:"hi5_quota_renewal_frequency"`
-	Timezone                 string    	`db:"timezone" json:"timezone"`
-	CreatedBy                int    	 	`db:"created_by" json:"_"`
-	CreatedOn                time.Time 	`db:"created_on" json:"_"`
-	UpdatedBy                int    	 	`db:"updated_by" json:"_"`
-	UpdatedOn                time.Time 	`db:"updated_on" json:"_"`
+	ID                       int				`db:"id" json:"id" `
+	Name                     string				`db:"name" json:"name"`
+	ContactEmail             string				`db:"contact_email" json:"email"`
+	DomainName               string				`db:"domain_name" json:"domain_name"`
+	SubscriptionStatus       int				`db:"subscription_status" json:"subscription_status"`
+	SubscriptionValidUpto    int64				`db:"subscription_valid_upto" json:"subscription_valid_upto"`
+	Hi5Limit                 int				`db:"hi5_limit" json:"hi5_limit"`
+	Hi5QuotaRenewalFrequency string				`db:"hi5_quota_renewal_frequency" json:"hi5_quota_renewal_frequency"`
+	Timezone                 string				`db:"timezone" json:"timezone"`
+	CreatedBy                int				`db:"created_by" json:"_"`
+	CreatedOn                int64				`db:"created_on" json:"_"`
+	UpdatedBy                int				`db:"updated_by" json:"_"`
+	UpdatedOn                int64				`db:"updated_on" json:"_"`
 }
 
 //TODO how to declare this as reusable
@@ -94,7 +94,6 @@ var validEmail = regexp.MustCompile(emailRegex)
 var validDomain = regexp.MustCompile(domainRegex)
 
 func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
-
 	fieldErrors := make(map[string]string)
 
 	if org.Name == "" {
@@ -115,11 +114,11 @@ func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, val
 	}
 
 	errorResponse = map[string]ErrorResponse{"error": ErrorResponse{
-		Code: "invalid_data",
-		Message: "Please provide valid organization data",
-		Fields: fieldErrors,
-	},
-}
+			Code: "invalid_data",
+			Message: "Please provide valid organization data",
+			Fields: fieldErrors,
+		},
+	}
 
 	//TODO: Ask what other validations are expected
 	
@@ -136,8 +135,10 @@ func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organi
 	return
 }
 
-func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err error) {
-	_, err = s.db.Exec(
+func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (updatedOrganization Organization, err error) {
+
+	lastInsertId := 0
+	 err = s.db.QueryRow(
 		createOrganizationQuery,
 		org.Name,
 		org.ContactEmail,
@@ -149,11 +150,13 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (err
 		org.Timezone,
 		org.CreatedBy,
 		org.UpdatedBy,
-	)
+	).Scan(&lastInsertId)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error creating organization")
 		return
 	}
+
+	err = s.db.Get(&updatedOrganization, getOrganizationQuery, lastInsertId)
 
 	return
 }
@@ -184,8 +187,7 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			return
 		}
 
-		updatedOrganization = reqOrganization
-		updatedOrganization.ID = dbOrganization.ID
+		err = s.db.Get(&updatedOrganization, getOrganizationQuery, organizationID)
 
 		return
 }
