@@ -1,32 +1,23 @@
 import React from "react";
 import Header from "core-components/Header";
-import GivenByComponent from "core-components/GivenByComponent";
-import GivenToComponent from "core-components/GivenToComponent";
 import { Row, Col, Form } from "react-bootstrap";
-import BadgeTypeComponent from "core-components/BadgeTypeComponent";
+import ListContainer from "Container/ListContainer";
 import SubmitComponent from "core-components/SubmitComponent";
 const MainComponent = () => {
+  const text = "Filter";
   return (
     <div>
-      <Header />
+      <Header text={text} />
       <br></br>
       <Form>
         <Row>
           <Col md={{ span: 3, offset: 1 }}>
-            <GivenByComponent />
+            <ListContainer />
           </Col>
         </Row>
         <br></br>
         <Row>
-          <Col md={{ span: 3, offset: 1 }}>
-            <GivenToComponent />
-          </Col>
-        </Row>
-        <br></br>
-        <Row>
-          <Col md={{ span: 3, offset: 1 }}>
-            <BadgeTypeComponent />
-          </Col>
+          <Col md={{ span: 3, offset: 1 }}></Col>
         </Row>
         <br></br>
         <Row>
