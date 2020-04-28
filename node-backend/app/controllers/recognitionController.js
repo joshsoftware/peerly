@@ -109,3 +109,34 @@ exports.create = /*eslint-disable-line node/exports-style*/ async (
       });
     });
 };
+
+exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
+  const queryParamSchema = /*eslint-disable-line no-unused-vars*/ yup
+    .object()
+    .shape({
+      core_value_id: yup
+        .number()
+        .typeError({ core_value_id: "should be number" }),
+      recognition_for: yup
+        .number()
+        .typeError({ recognition_for: "should be number" }),
+      recognition_by: yup
+        .number()
+        .typeError({ recognition_by: "should be number" }),
+    });
+  const data = [
+    {
+      recognition_for: {
+        $eq: req.query.recognition_for || null,
+      },
+    },
+  ];
+
+  Recognitions.findAll({ where: { $or: data } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
