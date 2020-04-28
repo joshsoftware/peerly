@@ -1,28 +1,32 @@
 module.exports = (sequelize, Sequelize) => {
-  const Core_values = sequelize.define(
-    "core_values",
+  const Recognition_Moderation = sequelize.define(
+    "recognition_moderation",
     {
       id: {
         type: Sequelize.INTEGER,
         notNull: true,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
       },
-      org_id: {
+      recognition_id: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      core_value_text: {
-        type: Sequelize.STRING,
+      is_inappropriate: {
+        type: Sequelize.BOOLEAN,
         notNull: true,
       },
-      description: {
+      moderated_comment: {
         type: Sequelize.STRING,
         length: 45,
         notNull: true,
       },
-      parent_core_value_id: {
+      moderated_by: {
         type: Sequelize.INTEGER,
+        notNull: true,
+      },
+      moderated_on: {
+        type: "TIMESTAMP",
         notNull: true,
       },
     },
@@ -32,5 +36,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return Core_values;
+  return Recognition_Moderation;
 };

@@ -1,29 +1,33 @@
 module.exports = (sequelize, Sequelize) => {
-  const Core_values = sequelize.define(
-    "core_values",
+  const Reported_Recognitions = sequelize.define(
+    "reported_recognitions",
     {
       id: {
         type: Sequelize.INTEGER,
         notNull: true,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
       },
-      org_id: {
+      recognition_id: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      core_value_text: {
-        type: Sequelize.STRING,
-        notNull: true,
-      },
-      description: {
+      type_of_reporting: {
         type: Sequelize.STRING,
         length: 45,
         notNull: true,
       },
-      parent_core_value_id: {
+      reason_for_reporting: {
+        type: Sequelize.STRING,
+        notNull: true,
+      },
+      reported_by: {
         type: Sequelize.INTEGER,
         notNull: true,
+      },
+      reported_on: {
+        type: "TIMESTAMP",
+        notNull: false,
       },
     },
     {
@@ -32,5 +36,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return Core_values;
+  return Reported_Recognitions;
 };
