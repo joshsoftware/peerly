@@ -71,7 +71,7 @@ module.exports.login = async (req, res) => {
       if (checkerror == "error") {
         res.status(500).send({
           error: {
-            message: "internal server error ",
+            message: "internal server error",
           },
         });
       } else {
