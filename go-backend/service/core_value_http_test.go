@@ -24,11 +24,11 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesSuccess() {
 	suite.dbMock.On("ListCoreValues", mock.Anything, mock.Anything).Return(
 		[]db.CoreValue{
 			db.CoreValue{
-				ID:                1,
-				OrgID:             1,
-				CoreValueText:     "TEST",
-				Description:       "Description TEST",
-				ParentCoreValueID: nil,
+				ID:          1,
+				OrgID:       1,
+				Text:        "TEST",
+				Description: "Description TEST",
+				ParentID:    nil,
 			},
 		},
 		nil,
@@ -43,7 +43,7 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"id":1,"org_id":1,"core_value_text":"TEST","description":"Description TEST","parent_core_value_id":null}]`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":[{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}]}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -65,132 +65,14 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesWhenDBFailure() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func (suite *CoreValueHandlerTestSuite) TestListSubCoreValuesSuccess() {
-	var parentID int64
-	parentID = 1
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{
-			ID:                1,
-			OrgID:             1,
-			CoreValueText:     "TEST PARENT",
-			Description:       "Description TEST PARENT",
-			ParentCoreValueID: nil,
-		},
-		nil,
-	)
-	suite.dbMock.On("ListSubCoreValues", mock.Anything, mock.Anything, mock.Anything).Return(
-		[]db.CoreValue{
-			db.CoreValue{
-				ID:                2,
-				OrgID:             1,
-				CoreValueText:     "TEST",
-				Description:       "Description TEST",
-				ParentCoreValueID: &parentID,
-			},
-			db.CoreValue{
-				ID:                3,
-				OrgID:             1,
-				CoreValueText:     "TEST 1",
-				Description:       "Description TEST 1",
-				ParentCoreValueID: &parentID,
-			},
-		},
-		nil,
-	)
-
-	recorder := makeHTTPCall(
-		http.MethodGet,
-		"/organisations/{organisation_id:[0-9]+}/core_values/{core_value_id:[0-9]+}/sub_core_values",
-		"/organisations/1/core_values/1/sub_core_values",
-		"",
-		listSubCoreValuesHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"id":2,"org_id":1,"core_value_text":"TEST","description":"Description TEST","parent_core_value_id":1},{"id":3,"org_id":1,"core_value_text":"TEST 1","description":"Description TEST 1","parent_core_value_id":1}]`, recorder.Body.String())
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
-func (suite *CoreValueHandlerTestSuite) TestListSubCoreValueWhenInvalidParentID() {
-	var parentID int64
-	parentID = 2
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{
-			ID:                1,
-			OrgID:             1,
-			CoreValueText:     "TEST",
-			Description:       "Description TEST",
-			ParentCoreValueID: &parentID,
-		},
-		nil,
-	)
-
-	recorder := makeHTTPCall(
-		http.MethodPost,
-		"/organisations/{organisation_id}/core_values/{core_value_id}/sub_core_values",
-		"/organisations/1/core_values/1/sub_core_values",
-		"",
-		listSubCoreValuesHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
-func (suite *CoreValueHandlerTestSuite) TestListSubCoreValueWhenParentCoreValueIDNotPresent() {
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{},
-		errors.New("Error while getting parent core value"),
-	)
-
-	recorder := makeHTTPCall(
-		http.MethodPost,
-		"/organisations/{organisation_id}/core_values/{core_value_id}/sub_core_values",
-		"/organisations/1/core_values/1/sub_core_values",
-		"",
-		listSubCoreValuesHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
-func (suite *CoreValueHandlerTestSuite) TestListSubCoreValuesWhenDBFailure() {
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{
-			ID:                1,
-			OrgID:             1,
-			CoreValueText:     "TEST PARENT",
-			Description:       "Description TEST PARENT",
-			ParentCoreValueID: nil,
-		},
-		nil,
-	)
-	suite.dbMock.On("ListSubCoreValues", mock.Anything, mock.Anything, mock.Anything).Return(
-		[]db.CoreValue{},
-		errors.New("Error while fetching sub core values"),
-	)
-
-	recorder := makeHTTPCall(
-		http.MethodGet,
-		"/organisations/{organisation_id:[0-9]+}/core_values/{core_value_id:[0-9]+}/sub_core_values",
-		"/organisations/1/core_values/1/sub_core_values",
-		"",
-		listSubCoreValuesHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
 func (suite *CoreValueHandlerTestSuite) TestGetCoreValueSuccess() {
 	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
 		db.CoreValue{
-			ID:                1,
-			OrgID:             1,
-			CoreValueText:     "TEST",
-			Description:       "Description TEST",
-			ParentCoreValueID: nil,
+			ID:          1,
+			OrgID:       1,
+			Text:        "TEST",
+			Description: "Description TEST",
+			ParentID:    nil,
 		},
 		nil,
 	)
@@ -204,34 +86,7 @@ func (suite *CoreValueHandlerTestSuite) TestGetCoreValueSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"org_id":1,"core_value_text":"TEST","description":"Description TEST","parent_core_value_id":null}`, recorder.Body.String())
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
-func (suite *CoreValueHandlerTestSuite) TestGetCoreValueSuccessWhenGetSubCoreValue() {
-	var parentID int64
-	parentID = 1
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{
-			ID:                2,
-			OrgID:             1,
-			CoreValueText:     "TEST",
-			Description:       "Description TEST",
-			ParentCoreValueID: &parentID,
-		},
-		nil,
-	)
-
-	recorder := makeHTTPCall(
-		http.MethodGet,
-		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
-		"/organisations/1/core_values/2",
-		"",
-		getCoreValueHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":2,"org_id":1,"core_value_text":"TEST","description":"Description TEST","parent_core_value_id":1}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -283,10 +138,16 @@ func (suite *CoreValueHandlerTestSuite) TestDeleteCoreValueWhenDBFailure() {
 }
 
 func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueSuccess() {
-	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{
+		ID:          1,
+		OrgID:       1,
+		Text:        "TEST",
+		Description: "Description TEST",
+		ParentID:    nil,
+	}, nil)
 
 	body := `{
-		"core_value_text": "Mentoring",
+		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
 	}`
 
@@ -302,47 +163,16 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueSuccess() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueSuccess() {
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{
-			ID:                1,
-			OrgID:             1,
-			CoreValueText:     "TEST",
-			Description:       "Description TEST",
-			ParentCoreValueID: nil,
-		},
-		nil,
-	)
-	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-
-	body := `{
-		"core_value_text": "Mentoring",
-		"description": "Investing time and effort to mentor others",
-		"parent_core_value_id": 1
-	}`
-
-	recorder := makeHTTPCall(
-		http.MethodPost,
-		"/organisations/{organisation_id:[0-9]+}/core_values",
-		"/organisations/1/core_values",
-		body,
-		createCoreValueHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusCreated, recorder.Code)
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
-func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueWhenParentCoreValueNotPresent() {
+func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenParentCoreValueNotPresent() {
 	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
 		db.CoreValue{},
 		errors.New("error fetching core value"),
 	)
 
 	body := `{
-		"core_value_text": "Mentoring",
+		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others",
-		"parent_core_value_id": 1
+		"parent_id": 1
 	}`
 
 	recorder := makeHTTPCall(
@@ -357,24 +187,24 @@ func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueWhenParentCoreValu
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueWhenInvalidParentCoreValue() {
+func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidParentCoreValue() {
 	var parentID int64
 	parentID = 2
 	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
 		db.CoreValue{
-			ID:                2,
-			OrgID:             1,
-			CoreValueText:     "TEST",
-			Description:       "Description TEST",
-			ParentCoreValueID: &parentID,
+			ID:          2,
+			OrgID:       1,
+			Text:        "TEST",
+			Description: "Description TEST",
+			ParentID:    &parentID,
 		},
 		nil,
 	)
 
 	body := `{
-		"core_value_text": "Mentoring",
+		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others",
-		"parent_core_value_id": 2
+		"parent_id": 2
 	}`
 
 	recorder := makeHTTPCall(
@@ -390,10 +220,10 @@ func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueWhenInvalidParentC
 }
 
 func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenDBFailure() {
-	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("error creating core value"))
+	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{}, errors.New("error creating core value"))
 
 	body := `{
-		"core_value_text": "Mentoring",
+		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
 	}`
 
@@ -411,7 +241,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenDBFailure() {
 
 func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidJSONFormat() {
 	body := `{
-		"core_value_text": "Mentoring"
+		"text": "Mentoring"
 		"description": "Investing time and effort to mentor others"
 	}`
 
@@ -427,44 +257,18 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidJSONFormat
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func (suite *CoreValueHandlerTestSuite) TestCreateSubCoreValueWhenDBFailure() {
-	suite.dbMock.On("GetCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(
-		db.CoreValue{
-			ID:                1,
-			OrgID:             1,
-			CoreValueText:     "TEST",
-			Description:       "Description TEST",
-			ParentCoreValueID: nil,
-		},
-		nil,
-	)
-	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("error creating core value"))
-
-	body := `{
-		"core_value_text": "Mentoring",
-		"description": "Investing time and effort to mentor others",
-		"parent_core_value_id": 1
-	}`
-
-	recorder := makeHTTPCall(
-		http.MethodPost,
-		"/organisations/{organisation_id:[0-9]+}/core_values",
-		"/organisations/1/core_values",
-		body,
-		createCoreValueHandler(Dependencies{Store: suite.dbMock}),
-	)
-
-	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
-	suite.dbMock.AssertExpectations(suite.T())
-}
-
 func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueSuccess() {
-	suite.dbMock.On("UpdateCoreValue", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(nil)
+	suite.dbMock.On("UpdateCoreValue", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{
+		ID:          1,
+		OrgID:       1,
+		Text:        "TEST",
+		Description: "Description TEST",
+		ParentID:    nil,
+	}, nil)
 
 	body := `{
-		"core_value_text": "Mentoring",
-		"description": "Investing time and effort to mentor others",
-		"parent_core_value_id": 1
+		"text": "Mentoring",
+		"description": "Investing time and effort to mentor others"
 	}`
 
 	recorder := makeHTTPCall(
@@ -480,12 +284,11 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueSuccess() {
 }
 
 func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenDBFailure() {
-	suite.dbMock.On("UpdateCoreValue", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(errors.New("error updating core value"))
+	suite.dbMock.On("UpdateCoreValue", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{}, errors.New("error updating core value"))
 
 	body := `{
-		"core_value_text": "Mentoring",
-		"description": "Investing time and effort to mentor others",
-		"parent_core_value_id": 1
+		"text": "Mentoring",
+		"description": "Investing time and effort to mentor others"
 	}`
 
 	recorder := makeHTTPCall(
@@ -500,11 +303,29 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenDBFailure() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
+func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidRequest() {
+	body := `{
+		"text": "",
+		"description": ""
+	}`
+
+	recorder := makeHTTPCall(
+		http.MethodPut,
+		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
+		"/organisations/1/core_values/2",
+		body,
+		updateCoreValueHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
 func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidJSONFormat() {
 	body := `{
-		"core_value_text": "Mentoring",
+		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
-		"parent_core_value_id": 1
+		"parent_id": 1
 	}`
 
 	recorder := makeHTTPCall(

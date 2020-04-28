@@ -8,25 +8,60 @@ import (
 )
 
 const (
-	listCoreValuesQuery    = `SELECT * FROM core_values WHERE org_id = $1 and parent_core_value_id IS NULL`
-	listSubCoreValuesQuery = `SELECT * FROM core_values WHERE org_id = $1 and parent_core_value_id = $2`
-	getCoreValueQuery      = `SELECT * FROM core_values WHERE org_id = $1 and id = $2`
-	createCoreValueQuery   = `INSERT INTO core_values (org_id, core_value_text,
-		description, parent_core_value_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
-	deleteSubCoreValueQuery = `DELETE FROM core_values WHERE org_id = $1 and parent_core_value_id = $2`
+	listCoreValuesQuery  = `SELECT id, org_id, text, description, parent_id  FROM core_values WHERE org_id = $1`
+	getCoreValueQuery    = `SELECT id, org_id, text, description, parent_id FROM core_values WHERE org_id = $1 and id = $2`
+	createCoreValueQuery = `INSERT INTO core_values (org_id, text,
+		description, parent_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, org_id, text, description, parent_id`
+	deleteSubCoreValueQuery = `DELETE FROM core_values WHERE org_id = $1 and parent_id = $2`
 	deleteCoreValueQuery    = `DELETE FROM core_values WHERE org_id = $1 and id = $2`
-	updateCoreValueQuery    = `UPDATE core_values SET (core_value_text, description, updated_at) =
-		($1, $2, $3) where id = $4 and org_id = $5`
+	updateCoreValueQuery    = `UPDATE core_values SET (text, description, updated_at) =
+		($1, $2, $3) where id = $4 and org_id = $5 RETURNING id, org_id, text, description, parent_id`
 )
 
 type CoreValue struct {
-	ID                int64     `db:"id" json:"id"`
-	OrgID             int64     `db:"org_id" json:"org_id"`
-	CoreValueText     string    `db:"core_value_text" json:"core_value_text"`
-	Description       string    `db:"description" json:"description"`
-	ParentCoreValueID *int64    `db:"parent_core_value_id" json:"parent_core_value_id"`
-	CreatedAt         time.Time `db:"created_at" json:"-"`
-	UpdatedAt         time.Time `db:"updated_at" json:"-"`
+	ID          int64     `db:"id" json:"id"`
+	OrgID       int64     `db:"org_id" json:"org_id"`
+	Text        string    `db:"text" json:"text"`
+	Description string    `db:"description" json:"description"`
+	ParentID    *int64    `db:"parent_id" json:"parent_id"`
+	CreatedAt   time.Time `db:"created_at" json:"-"`
+	UpdatedAt   time.Time `db:"updated_at" json:"-"`
+}
+
+func validateParentCoreValue(ctx context.Context, storer Storer, organisationID, coreValueID int64) (ok bool) {
+	coreValue, err := storer.GetCoreValue(ctx, organisationID, coreValueID)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Parent core value id not present")
+		return
+	}
+
+	if coreValue.ParentID != nil {
+		logger.Error("Invalid parent core value id")
+		return
+	}
+
+	return true
+}
+
+func (coreValue CoreValue) Validate(ctx context.Context, storer Storer, organisationID int64) (valid bool, errFields map[string]string) {
+	errFields = make(map[string]string)
+
+	if coreValue.Text == "" {
+		errFields["text"] = "Can't be blank"
+	}
+	if coreValue.Description == "" {
+		errFields["description"] = "Can't be blank"
+	}
+	if coreValue.ParentID != nil {
+		if !validateParentCoreValue(ctx, storer, organisationID, *coreValue.ParentID) {
+			errFields["parent_id"] = "Invalid parent core value"
+		}
+	}
+
+	if len(errFields) == 0 {
+		valid = true
+	}
+	return
 }
 
 func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (coreValues []CoreValue, err error) {
@@ -37,25 +72,12 @@ func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (cor
 		listCoreValuesQuery,
 		organisationID,
 	)
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting core values")
-		return
-	}
 
-	return
-}
-
-func (s *pgStore) ListSubCoreValues(ctx context.Context, organisationID, coreValueID int64) (coreValues []CoreValue, err error) {
-	coreValues = make([]CoreValue, 0)
-	err = s.db.SelectContext(
-		ctx,
-		&coreValues,
-		listSubCoreValuesQuery,
-		organisationID,
-		coreValueID,
-	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting sub core values")
+		logger.WithFields(logger.Fields{
+			"err":    err.Error(),
+			"org_id": organisationID,
+		}).Error("Error while getting core values")
 		return
 	}
 
@@ -71,27 +93,36 @@ func (s *pgStore) GetCoreValue(ctx context.Context, organisationID, coreValueID 
 		coreValueID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting core value")
+		logger.WithFields(logger.Fields{
+			"err":           err.Error(),
+			"org_id":        organisationID,
+			"core_value_id": coreValueID,
+		}).Error("Error while getting core value")
 		return
 	}
 
 	return
 }
 
-func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, coreValue CoreValue) (err error) {
+func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, coreValue CoreValue) (resp CoreValue, err error) {
 	now := time.Now()
-	_, err = s.db.ExecContext(
+	err = s.db.GetContext(
 		ctx,
+		&resp,
 		createCoreValueQuery,
 		organisationID,
-		coreValue.CoreValueText,
+		coreValue.Text,
 		coreValue.Description,
-		coreValue.ParentCoreValueID,
+		coreValue.ParentID,
 		now,
 		now,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while creating core value")
+		logger.WithFields(logger.Fields{
+			"err":               err.Error(),
+			"org_id":            organisationID,
+			"core_value_params": coreValue,
+		}).Error("Error while creating core value")
 		return
 	}
 
@@ -106,7 +137,11 @@ func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValue
 		coreValueID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while deleting sub core value")
+		logger.WithFields(logger.Fields{
+			"err":           err.Error(),
+			"org_id":        organisationID,
+			"core_value_id": coreValueID,
+		}).Error("Error while deleting sub core value")
 		return
 	}
 
@@ -117,26 +152,36 @@ func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValue
 		coreValueID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while deleting core value")
+		logger.WithFields(logger.Fields{
+			"err":           err.Error(),
+			"org_id":        organisationID,
+			"core_value_id": coreValueID,
+		}).Error("Error while deleting core value")
 		return
 	}
 
 	return
 }
 
-func (s *pgStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (err error) {
+func (s *pgStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (resp CoreValue, err error) {
 	now := time.Now()
-	_, err = s.db.ExecContext(
+	err = s.db.GetContext(
 		ctx,
+		&resp,
 		updateCoreValueQuery,
-		coreValue.CoreValueText,
+		coreValue.Text,
 		coreValue.Description,
 		now,
 		coreValueID,
 		organisationID,
 	)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while updating core value")
+		logger.WithFields(logger.Fields{
+			"err":               err.Error(),
+			"org_id":            organisationID,
+			"core_value_id":     coreValueID,
+			"core_value_params": coreValue,
+		}).Error("Error while updating core value")
 		return
 	}
 
