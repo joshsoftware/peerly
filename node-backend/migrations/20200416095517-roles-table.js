@@ -3,12 +3,12 @@
 var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
-exports.setup = function (options, seedLink) {
+module.exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
-exports.up = function (db, callback) {
+module.exports.up = function (db, callback) {
   db.createTable(
     "roles",
     {
@@ -20,7 +20,7 @@ exports.up = function (db, callback) {
       },
       role: {
         type: "string",
-        length: 15,
+        length: 25,
         notNull: true,
       },
     },
@@ -30,6 +30,6 @@ exports.up = function (db, callback) {
     }
   );
 };
-exports.down = function (db, callback) {
+module.exports.down = function (db, callback) {
   db.dropTable("roles", callback);
 };

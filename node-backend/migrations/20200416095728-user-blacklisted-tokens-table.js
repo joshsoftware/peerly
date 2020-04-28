@@ -2,14 +2,17 @@
 var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
-    "user_blacklisted_token",
+    "user_blacklisted_tokens",
     {
       id: {
         type: "int",
@@ -34,7 +37,7 @@ exports.up = function (db, callback) {
         notNull: true,
       },
       expiry_date: {
-        type: "timestamp",
+        type: "bigint",
         notNull: true,
       },
     },
@@ -44,10 +47,11 @@ exports.up = function (db, callback) {
     }
   );
 };
-exports.down = function (db, callback) {
+
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("user_blacklisted_token", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   "version": 1 // eslint-disable-line prettier/prettier
 };

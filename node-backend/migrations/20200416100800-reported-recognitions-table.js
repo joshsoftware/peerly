@@ -4,13 +4,16 @@ var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
 
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate; // eslint-disable-line no-unused-vars
   type = dbm.dataType; // eslint-disable-line no-unused-vars
   seed = seedLink;
 };
 
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
     "reported_recognitions",
     {
@@ -54,7 +57,7 @@ exports.up = function (db, callback) {
         },
       },
       reported_on: {
-        type: "timestamp",
+        type: "bigint",
       },
     },
     function (err) {
@@ -63,10 +66,10 @@ exports.up = function (db, callback) {
     }
   );
 };
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("reported_recognitions", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   version: 1,
 };
