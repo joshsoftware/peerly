@@ -5,7 +5,8 @@ const Users = db.users;
 module.exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
-  let userName = profile.name.givenName;
+  let firstName = profile.name.givenName;
+  let lastName = profile.name.familyName;
   let displayName = profile.displayName;
   let userId;
   let roleId;
@@ -60,11 +61,17 @@ module.exports.login = async (req, res) => {
       });
     } else if (domainResult[1].rowCount) {
       let orgId = domainResult[0][0].id;
-      let checkerror = await insertData(orgId, userName, email, displayName);
+      let checkerror = await insertData(
+        orgId,
+        firstName,
+        lastName,
+        email,
+        displayName
+      );
       if (checkerror == "error") {
         res.status(500).send({
           error: {
-            message: "internal server error",
+            message: "internal server error aya ",
           },
         });
       } else {
@@ -147,11 +154,12 @@ const getOrganization = async (domainName) => {
   return domainResult;
 };
 
-const insertData = async (orgId, userName, email, displayName) => {
+const insertData = async (orgId, firstName, lastName, email, displayName) => {
   let errorCheck;
   const user = {
     org_id: orgId,
-    name: userName,
+    first_name: firstName,
+    last_name: lastName,
     email: email,
     display_name: displayName,
     soft_delete: false,
