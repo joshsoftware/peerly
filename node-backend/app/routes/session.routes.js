@@ -22,7 +22,7 @@ router.post(
       if (valid) {
         next();
       } else {
-        res.status(412).send({
+        res.status(400).send({
           error: {
             message: "invalid access token",
           },
