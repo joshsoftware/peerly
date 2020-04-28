@@ -1,28 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-  const Core_values = sequelize.define(
-    "core_values",
+  const User_Badges = sequelize.define(
+    "user_badges",
     {
       id: {
         type: Sequelize.INTEGER,
         notNull: true,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
       },
-      org_id: {
+      badge_id: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      core_value_text: {
-        type: Sequelize.STRING,
-        notNull: true,
-      },
-      description: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
-      },
-      parent_core_value_id: {
+      user_id: {
         type: Sequelize.INTEGER,
+        notNull: true,
+      },
+      obtained_on: {
+        type: "TIMESTAMP",
         notNull: true,
       },
     },
@@ -32,5 +27,5 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
-  return Core_values;
+  return User_Badges;
 };
