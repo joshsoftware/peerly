@@ -12,19 +12,19 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      recognition_text: {
+      text: {
         type: Sequelize.STRING,
         notNull: true,
       },
-      recognition_for: {
+      given_for: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      recognition_by: {
+      given_by: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      recognition_on: {
+      given_at: {
         type: Sequelize.BIGINT,
         notNull: true,
       },
