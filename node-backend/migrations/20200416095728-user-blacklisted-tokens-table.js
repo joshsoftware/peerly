@@ -36,7 +36,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         type: "text",
         notNull: true,
       },
-      expiry_date: {
+      expires_at: {
         type: "bigint",
         notNull: true,
       },
@@ -49,7 +49,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
 };
 
 exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.dropTable("user_blacklisted_token", callback);
+  db.dropTable("user_blacklisted_tokens", callback);
 };
 
 exports._meta = /*eslint-disable-line node/exports-style*/ {
