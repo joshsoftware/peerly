@@ -19,8 +19,9 @@ import (
 
 const (
 	dbDriver      = "postgres"
-	migrationPath = "./migrations"
 )
+
+var migrationPath string = config.ReadEnvString("MIGRATE_PATH")
 
 var errFindingDriver = errors.New("no migrate driver instance found")
 

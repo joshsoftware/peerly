@@ -63,8 +63,8 @@ const (
 		created_on,
 		updated_by,
 		updated_on FROM organizations ORDER BY name ASC`
-	emailRegex = `^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$`
-	domainRegex = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
+	emailRegexString = `^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$`
+	domainRegexString = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 )
 
 type Organization struct {
@@ -90,8 +90,8 @@ type ErrorResponse struct {
 	Fields map[string]string `json:"fields"`
 }
 
-var emailRegex = regexp.MustCompile(emailRegex)
-var domainRegex = regexp.MustCompile(domainRegex)
+var emailRegex = regexp.MustCompile(emailRegexString)
+var domainRegex = regexp.MustCompile(domainRegexString)
 
 func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
 	fieldErrors := make(map[string]string)

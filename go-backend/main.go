@@ -23,7 +23,7 @@ func main() {
 		TimestampFormat: "02-01-2006 15:04:05",
 	})
 
-	config.Load()
+	config.Load("application")
 
 	cliApp := cli.NewApp()
 	cliApp.Name = config.AppName()
