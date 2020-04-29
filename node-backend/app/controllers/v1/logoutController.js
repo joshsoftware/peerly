@@ -8,12 +8,12 @@ module.exports.logout = async (req, res) => {
   const user = {
     user_id: decode.userId,
     token: token,
-    expiry_date: decode.exp,
+    expires_at: decode.exp,
   };
   userBlacklistedTokens
     .create(user)
-    .then((user_blacklisted_tokens) => {
-      res.status(201).send({ data: user_blacklisted_tokens });
+    .then(() => {
+      res.status(200).send();
     })
     .catch(() => {
       res.status(500).send({
