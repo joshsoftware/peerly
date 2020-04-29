@@ -23,7 +23,6 @@ module.exports = (sequelize, Sequelize) => {
       },
       parent_core_value_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
       },
     },
     {

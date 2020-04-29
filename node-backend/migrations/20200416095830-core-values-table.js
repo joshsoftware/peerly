@@ -46,7 +46,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
       },
       parent_core_value_id: {
         type: "int",
-        notNull: true,
+        notNull: false,
       },
     },
     function (err) {
