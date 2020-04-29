@@ -30,7 +30,7 @@ var errMissingAuthHeader = errors.New("Missing Auth header")
 func handleAuthCallback(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		goth.UseProviders(
-			google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:330001/auth/google/callback"),
+			google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:33001/auth/google/callback"),
 		)
 
 		user, err := gothic.CompleteUserAuth(rw, req)
@@ -38,8 +38,30 @@ func handleAuthCallback(deps Dependencies) http.HandlerFunc {
 			fmt.Fprintln(rw, err)
 			return
 		}
-		fmt.Printf("%+v\n", user)
+
+		// Successful authentication
+		fmt.Printf("Auth Success: %+v\n", user)
 		return
+	})
+}
+
+func handleAuthInit(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		// Specify the auth provider for Gothic to use
+		goth.UseProviders(
+			google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), "http://localhost:33001/auth/google/callback"),
+		)
+
+		// Try to get the user without re-authenticating; if we can't, then
+		// go ahead and re-authenticate anyway.
+		gothUser, err := gothic.CompleteUserAuth(rw, req)
+		if err == nil {
+			// Successful Auth Already In Place
+			fmt.Printf("Auth already in place: %v+\n", gothUser)
+		} else {
+			// Re-initialize the auth process
+			gothic.BeginAuthHandler(rw, req)
+		}
 	})
 }
 

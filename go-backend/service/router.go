@@ -25,7 +25,14 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	v1 := fmt.Sprintf("application/vnd.%s.v1", config.AppName())
 
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	// Basic logout
 	router.HandleFunc("/logout", handleLogout(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
-	router.HandleFunc("/auth/google/callback", handleAuthCallback(deps)).Methods(http.MethodGet) // Not specifying headers here because I'm not yet sure what Google will pass for the callback
+
+	// Note on {provider} here - the auth library in use (goth) requires this variable name so it can
+	// discern which provider is being used to authenticate based on the request URL.
+	router.HandleFunc("/auth/{provider}/callback", handleAuthCallback(deps)).Methods(http.MethodGet)
+	router.HandleFunc("/auth/{provider}", handleAuthInit(deps)).Methods(http.MethodGet)
+
 	return
 }
