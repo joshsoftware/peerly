@@ -5,22 +5,9 @@ const server = supertest.agent(process.env.TEST_URL);
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
 describe("test cases for login", function () {
-  it("invalid access token", function (done) {
-    server
-      .post("/v1/oauth/google")
-      .send({
-        access_token: "",
-      })
-      .expect("Content-type", /json/)
-      .expect(400)
-      .end(function (err, res) {
-        res.body.error.message.should.equal("invalid access token");
-        done();
-      });
-  });
   it("should give ok status", function (done) {
     server
-      .post("/v1/oauth/google")
+      .post("/oauth/google")
       .send({
         access_token: "",
       })
@@ -33,7 +20,7 @@ describe("test cases for login", function () {
   });
   it("should give internal server error", function (done) {
     server
-      .post("/v1/oauth/google")
+      .post("/oauth/google")
       .send({
         access_token: "",
       })
@@ -46,14 +33,26 @@ describe("test cases for login", function () {
   });
   it("should unauthorize user", function (done) {
     server
-      .post("/v1/oauth/google")
+      .post("/oauth/google")
       .send({
         access_token: "",
       })
       .expect("Content-type", /json/)
       .expect(401)
       .end(function (err, res) {
-        res.body.error.message.should.equal("unauthorized user");
+        res.body.error.code.should.equal("invalid-token");
+        done();
+      });
+  });
+  it("shoul give unauthorize with 401", function (done) {
+    server
+      .post("/oauth/google")
+      .send({
+        access_token: "xxxxxxx",
+      })
+      .expect(401)
+      .end(function (err, res) {
+        res.status.should.equal(401);
         done();
       });
   });
