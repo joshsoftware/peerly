@@ -13,6 +13,7 @@ describe("test cases for logout", function () {
       .expect(401)
       .end(function (err, res) {
         res.body.message.should.equal("Not a valid token");
+        res.status.should.equal(401);
         done();
       });
   });
@@ -35,6 +36,7 @@ describe("test cases for logout", function () {
       .expect(500)
       .end(function (err, res) {
         res.body.error.message.should.equal("internal server error");
+        res.status.should.equal(500);
         done();
       });
   });
@@ -46,6 +48,7 @@ describe("test cases for logout", function () {
       .expect(401)
       .end(function (err, res) {
         res.body.error.message.should.equal("unauthorized user");
+        res.status.should.equal(401);
         done();
       });
   });
