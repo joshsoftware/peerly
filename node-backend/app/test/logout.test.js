@@ -7,7 +7,7 @@ const server = supertest.agent(process.env.TEST_URL);
 describe("test cases for logout", function () {
   it("invalid access token", function (done) {
     server
-      .post("/v1/logout")
+      .post("/logout")
       .send()
       .expect("Content-type", /json/)
       .expect(401)
@@ -18,7 +18,7 @@ describe("test cases for logout", function () {
   });
   it("should give ok status", function (done) {
     server
-      .post("/v1/logout")
+      .post("/logout")
       .set("Authorization", "Bearer " + "")
       .expect("Content-type", /json/)
       .expect(200)
@@ -29,7 +29,7 @@ describe("test cases for logout", function () {
   });
   it("should give internal server error", function (done) {
     server
-      .post("/v1/oauth/google")
+      .post("/logout")
       .set("Authorization", "Bearer " + "")
       .expect("Content-type", /json/)
       .expect(500)
@@ -38,9 +38,9 @@ describe("test cases for logout", function () {
         done();
       });
   });
-  it("should unauthorize user", function (done) {
+  it("should unauthorized user", function (done) {
     server
-      .post("/v1/logout")
+      .post("/logout")
       .set("Authorization", "Bearer " + "")
       .expect("Content-type", /json/)
       .expect(401)
