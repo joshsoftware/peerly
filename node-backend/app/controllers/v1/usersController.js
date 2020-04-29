@@ -6,7 +6,7 @@ module.exports.findUsersByOrg = async (req, res) => {
   let userData = await jwtToken.getData(token);
   db.sequelize
     .query(
-      "select users.id,users.first_name,users.email,users.display_name,users.profile_image_url,users.role_id,users.hi5_quota_balance from users, roles where org_id = '" +
+      "select distinct users.id,users.first_name,users.email,users.display_name,users.profile_image_url,users.role_id,users.hi5_quota_balance from users, roles where org_id = '" +
         userData.orgId +
         "' and role = 'Employee'"
     )
