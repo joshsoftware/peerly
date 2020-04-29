@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       role: {
         type: Sequelize.STRING,
-        length: 15,
+        length: 25,
         notNull: true,
       },
     },

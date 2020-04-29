@@ -47,6 +47,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
     }
   );
 };
+
 exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("user_blacklisted_token", callback);
 };

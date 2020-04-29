@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const BadgesController = require("../controllers/badgesController");
+const BadgesController = require("../controllers/v1/badgesController");
 const badgesRouter = express.Router();
 badgesRouter.use(bodyParser.urlencoded({ extended: true }));
 //for create core value

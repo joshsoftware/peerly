@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const organisationController = require("../controllers/orgnizationController");
+const organisationController = require("../controllers/v1/orgnizationController");
 const orgRouter = express.Router();
 orgRouter.use(bodyParser.urlencoded({ extended: true }));
 

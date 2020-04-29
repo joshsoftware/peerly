@@ -1,10 +1,11 @@
 const yup = require("yup");
 
-const db = require("../models/sequelize");
+const utility = require("../../utils/utility");
+const db = require("../../models/sequelize");
 const Organizations = db.organizations;
 
 const schema = yup.object().shape({
-  name: yup.string().required({ name: "required" }),
+  name: yup.string({ name: "should be text" }).required({ name: "required" }),
   contact_email: yup.string().email({ contact_email: "should be valid" }),
   domain_name: yup
     .string()
@@ -14,14 +15,20 @@ const schema = yup.object().shape({
       },
       { domain_name: "should be valid" }
     )
-    .required({ domain_name: "required" }),
+    .required({ domain_name: "required" })
+    .typeError({ domain_name: "should be valid" }),
   subscription_status: yup
     .number()
-    .required({ subscription_status: "required" }),
-  subscription_valid_upto: yup.number().required({
-    subscription_valid_upto: "required",
-  }),
-  hi5_limit: yup.number().required({ hi5_limit: "required" }),
+    .required({ subscription_status: "required" })
+    .typeError({ subscription_status: "should be number" }),
+  subscription_valid_upto: yup
+    .number()
+    .required({ subscription_valid_upto: "required" })
+    .typeError({ subscription_valid_upto: "should be number" }),
+  hi5_limit: yup
+    .number()
+    .required({ hi5_limit: "required" })
+    .typeError({ hi5_limit: "should be number" }),
   hi5_quota_renewal_frequency: yup
     .string({
       hi5_quota_renewal_frequency: "should be string",
@@ -65,12 +72,12 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
-        error: {
-          code: "invalid organisation",
-          message: "Invalid organisation Data",
-          fields: err.errors,
-        },
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid organisation",
+          "Invalid organisation Data",
+          err.errors
+        ),
       });
     });
 };
@@ -123,11 +130,11 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
     })
     .catch((err) => {
       res.status(400).send({
-        error: {
-          code: "invalid orgnisation",
-          message: "Invalid value for parameter id",
-          fields: err.errors,
-        },
+        error: utility.getFormattedErrorObj(
+          "invalid orgnisation",
+          "Invalid value for parameter id",
+          err.errors
+        ),
       });
     });
 };
@@ -143,15 +150,13 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
     })
     .then((valid) => {
       if (!valid) {
-        res.status(412).send({
+        res.status(400).send({
           error: {
             code: "invalid orgnisation",
             message: "Invalid value for parameter id",
-            fields: [
-              {
-                id: "should be number",
-              },
-            ],
+            fields: {
+              id: "should be number",
+            },
           },
         });
       } else {
@@ -194,12 +199,12 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
               });
           })
           .catch((err) => {
-            res.status(412).send({
-              error: {
-                code: "invalid organisation",
-                message: "Invalid organisation Data",
-                fields: err.errors,
-              },
+            res.status(400).send({
+              error: utility.getFormattedErrorObj(
+                "invalid orgnisation",
+                "Invalid organisation Data",
+                err.errors
+              ),
             });
           });
       }

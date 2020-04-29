@@ -23,7 +23,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         autoIncrement: true,
         notNull: true,
       },
-      badges_id: {
+      badge_id: {
         type: "int",
         notNull: true,
         foreignKey: {

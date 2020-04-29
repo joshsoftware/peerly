@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const CorevalueController = require("../controllers/CoreValueController");
+const CorevalueController = require("../controllers/v1/CoreValueController");
 const coreValueRouter = express.Router();
 coreValueRouter.use(bodyParser.urlencoded({ extended: true }));
 //for create core value

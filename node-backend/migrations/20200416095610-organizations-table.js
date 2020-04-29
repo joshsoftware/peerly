@@ -68,7 +68,6 @@ exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   // eslint-disable-line node/exports-style
   db.dropTable("organizations", callback);
 };
-
 exports._meta = /*eslint-disable-line node/exports-style*/ {
   "version": 1, // eslint-disable-line prettier/prettier
 };
