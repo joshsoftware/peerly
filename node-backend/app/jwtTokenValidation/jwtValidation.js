@@ -39,7 +39,8 @@ module.exports.autheticateToken = (req, res, next) => {
   }
 };
 
-module.exports.getData = (token) => {
+module.exports.getData = (authHeader) => {
+  const token = authHeader && authHeader.split(" ")[1];
   let decode = jwt.decode(token);
   const tokenData = {
     userId: decode.sub,
