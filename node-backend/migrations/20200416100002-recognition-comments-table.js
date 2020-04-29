@@ -37,11 +37,11 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         },
         notNull: true,
       },
-      comment: {
+      text: {
         type: "text",
         notNull: true,
       },
-      comment_by: {
+      commented_by: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -53,7 +53,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
           },
         },
       },
-      commented_on: {
+      commented_at: {
         type: "bigint",
         notNull: true,
       },

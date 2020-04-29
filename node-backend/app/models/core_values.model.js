@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      core_value_text: {
+      text: {
         type: Sequelize.STRING,
         notNull: true,
       },
@@ -23,7 +23,6 @@ module.exports = (sequelize, Sequelize) => {
       },
       parent_core_value_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
       },
     },
     {
