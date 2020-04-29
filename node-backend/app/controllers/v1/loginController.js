@@ -3,6 +3,7 @@ const moment = require("moment");
 
 const db = require("../../models/sequelize");
 const Users = db.users;
+const Organizations = db.organizations;
 module.exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
@@ -61,8 +62,8 @@ module.exports.login = async (req, res) => {
           message: "internal server error",
         },
       });
-    } else if (domainResult[1].rowCount) {
-      let orgId = domainResult[0][0].id;
+    } else if (domainResult) {
+      let orgId = domainResult.id;
       let checkerror = await insertData(
         orgId,
         firstName,
@@ -143,10 +144,7 @@ const getUser = async (email) => {
 
 const getOrganization = async (domainName) => {
   let domainResult;
-  await db.sequelize
-    .query(
-      " SELECT * FROM organizations WHERE domain_name = '" + domainName + "'"
-    )
+  await Organizations.findOne({ where: { domain_name: domainName } })
     .then(function (organizationData) {
       domainResult = organizationData;
     })
@@ -165,7 +163,7 @@ const insertData = async (orgId, firstName, lastName, email, displayName) => {
     email: email,
     display_name: displayName,
     soft_delete: false,
-    role_id: 1,
+    role_id: 2,
     hi5_quota_balance: 5,
   };
   await Users.create(user).catch(() => {
