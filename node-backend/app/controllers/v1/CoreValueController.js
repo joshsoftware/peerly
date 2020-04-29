@@ -15,8 +15,7 @@ module.exports.create = (req, res) => {
     description: yup.string().required({ description: "required" }),
     parent_core_value_id: yup
       .number()
-      .typeError({ parent_core_value_id: "should be number" })
-      .required({ parent_core_value_id: "required" }),
+      .typeError({ parent_core_value_id: "should be number" }),
   });
   // Create a core value object
   const coreValue = {
