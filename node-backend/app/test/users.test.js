@@ -13,6 +13,7 @@ describe("test cases for users listing for organization", function () {
       .expect(401)
       .end(function (err, res) {
         res.body.error.message.should.equal("unauthorised user");
+        res.status.should.equal(401);
         done();
       });
   });
@@ -23,7 +24,7 @@ describe("test cases for users listing for organization", function () {
       .expect("Content-type", /json/)
       .expect(200)
       .end(function (err, res) {
-        res.body.data[0].id.should.equal(8);
+        res.status.should.equal(200);
         done();
       });
   });
@@ -35,6 +36,7 @@ describe("test cases for users listing for organization", function () {
       .expect(500)
       .end(function (err, res) {
         res.body.error.message.should.equal("internal server error");
+        res.status.should.equal(500);
         done();
       });
   });
