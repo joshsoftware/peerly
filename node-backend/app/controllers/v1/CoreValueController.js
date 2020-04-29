@@ -11,7 +11,7 @@ module.exports.create = (req, res) => {
       .number()
       .typeError({ org_id: "should be number" })
       .required({ org_id: "required" }),
-    core_value_text: yup.string().required({ core_value_text: "required" }),
+    text: yup.string().required({ text: "required" }),
     description: yup.string().required({ description: "required" }),
     parent_core_value_id: yup
       .number()
@@ -21,7 +21,7 @@ module.exports.create = (req, res) => {
   // Create a core value object
   const coreValue = {
     org_id: req.params.organisation_id,
-    core_value_text: req.body.core_value_text,
+    text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
   };
@@ -145,7 +145,7 @@ module.exports.findOne = (req, res) => {
 module.exports.update = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
-  const core_value_text = req.body.core_value_text;
+  const text = req.body.text;
   const description = req.body.description;
   const parent_core_value_id = req.body.parent_core_value_id;
   const schema = yup.object().shape({
@@ -157,20 +157,20 @@ module.exports.update = (req, res) => {
       .number()
       .typeError({ org_id: "should be a number" })
       .required({ org_id: "required" }),
-    core_value_text: yup.string(),
+    text: yup.string(),
     description: yup.string(),
     parent_core_value_id: yup.number().typeError({
       parent_core_value_id: "should be a number",
     }),
   });
   const coreValue = {
-    core_value_text: req.body.core_value_text,
+    text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
   };
   schema
     .validate(
-      { id, org_id, core_value_text, description, parent_core_value_id },
+      { id, org_id, text, description, parent_core_value_id },
       { abortEarly: false }
     )
     .then(() => {

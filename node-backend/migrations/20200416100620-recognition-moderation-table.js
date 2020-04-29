@@ -54,7 +54,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
           },
         },
       },
-      moderated_on: {
+      moderated_at: {
         type: "bigint",
         notNull: true,
       },
