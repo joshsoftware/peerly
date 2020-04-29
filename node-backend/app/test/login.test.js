@@ -15,6 +15,7 @@ describe("test cases for login", function () {
       .expect(200)
       .end(function (err, res) {
         res.body.token.should.equal("");
+        res.status.should.equal(200);
         done();
       });
   });
@@ -28,6 +29,7 @@ describe("test cases for login", function () {
       .expect(500)
       .end(function (err, res) {
         res.body.error.message.should.equal("internal server error");
+        res.status.should.equal(500);
         done();
       });
   });
@@ -41,6 +43,7 @@ describe("test cases for login", function () {
       .expect(401)
       .end(function (err, res) {
         res.body.error.code.should.equal("invalid-token");
+        res.status.should.equal(401);
         done();
       });
   });
