@@ -11,6 +11,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 dbConn.sequelize;
-app.use("/v1", indexRoute); // eslint-disable-line no-undef
+app.use("/", indexRoute); // eslint-disable-line no-undef
 const httpServer = http.createServer(app);
 httpServer.listen(process.env.HTTP_PORT || 8080); // eslint-disable-line no-undef

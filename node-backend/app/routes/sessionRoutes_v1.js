@@ -3,6 +3,7 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const yup = require("yup");
 
+const utility = require("../utils/utility");
 const loginController = require("../controllers/v1/loginController");
 require("../google_auth/google_auth")();
 const tokenValidation = require("../jwtTokenValidation/jwtValidation");
@@ -16,19 +17,22 @@ router.post(
       token: req.body.access_token,
     };
     const schema = yup.object().shape({
-      token: yup.string().required(),
+      token: yup.string().required({ token: "required" }),
     });
-    schema.isValid(accessToken).then(function (valid) {
-      if (valid) {
+    schema
+      .validate(accessToken, { abortEarly: false })
+      .then(() => {
         next();
-      } else {
+      })
+      .catch((err) => {
         res.status(400).send({
-          error: {
-            message: "invalid access token",
-          },
+          error: utility.getFormattedErrorObj(
+            "invalid-token",
+            "Invalid token data",
+            err.errors
+          ),
         });
-      }
-    });
+      });
   },
   passport.authenticate("google-token", { session: false }),
   loginController.login
