@@ -1,4 +1,3 @@
-require("dotenv").config("./.env");
 /*eslint-disable  no-undef*/
 module.exports = {
   HOST: process.env.DATABASE_URL,

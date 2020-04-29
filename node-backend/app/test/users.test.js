@@ -4,22 +4,22 @@ const should = require("should"); //eslint-disable-line node/no-unpublished-requ
 const server = supertest.agent(process.env.TEST_URL);
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
-describe("test cases for logout", function () {
+describe("test cases for users listing for organization", function () {
   it("invalid access token", function (done) {
     server
-      .post("/logout")
+      .get("/users")
       .send()
       .expect("Content-type", /json/)
       .expect(401)
       .end(function (err, res) {
-        res.body.message.should.equal("Not a valid token");
+        res.body.error.message.should.equal("unauthorised user");
         res.status.should.equal(401);
         done();
       });
   });
   it("should give ok status", function (done) {
     server
-      .post("/logout")
+      .get("/users")
       .set("Authorization", "Bearer " + "")
       .expect("Content-type", /json/)
       .expect(200)
@@ -30,7 +30,7 @@ describe("test cases for logout", function () {
   });
   it("should give internal server error", function (done) {
     server
-      .post("/logout")
+      .get("/users")
       .set("Authorization", "Bearer " + "")
       .expect("Content-type", /json/)
       .expect(500)
@@ -40,15 +40,14 @@ describe("test cases for logout", function () {
         done();
       });
   });
-  it("should unauthorized user", function (done) {
+  it("should unauthorize user", function (done) {
     server
-      .post("/logout")
-      .set("Authorization", "Bearer " + "")
+      .get("/users")
+      .set("Authorization", "Bearer " + "xxxxx")
       .expect("Content-type", /json/)
       .expect(401)
       .end(function (err, res) {
-        res.body.error.message.should.equal("unauthorized user");
-        res.status.should.equal(401);
+        res.body.error.message.should.equal("unauthorised user");
         done();
       });
   });
