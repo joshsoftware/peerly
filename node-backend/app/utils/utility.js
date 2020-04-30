@@ -13,3 +13,14 @@ module.exports.getFormattedErrorObj = (
   const result = { code: errorCode, message: errorMessage, fields };
   return result;
 };
+/*eslint-disable no-useless-escape*/
+module.exports.getVersionedController = (headers, route) => {
+  let version = headers.accept.split(/\.(?=[^\.]+$)/)[1];
+  switch (version) {
+    case "v1":
+      return route.concat("V1");
+    default:
+      return route.concat("V1");
+  }
+};
+/*eslint-enable no-useless-escape*/
