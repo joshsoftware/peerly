@@ -15,7 +15,7 @@ dbConn.sequelize;
 
 const corsOption = {
   origin: [
-    "https://dev.peerly.com",
+    "http://dev.peerly.com:3000",
     "http://ec2-18-216-79-5.us-east-2.compute.amazonaws.com:3000",
   ],
 };
