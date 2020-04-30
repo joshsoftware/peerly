@@ -8,5 +8,5 @@ APP_PORT: "33001"
 # Postgres
 DB_URI: "postgresql://user:password@localhost:5432/dbname?sslmode=disable"
 
-# MIGRATE_PATH: "./migrations" // for application.yml
-# MIGRATE_PATH: "./../migrations" //for application_test.yml
+# MIGRATION_FOLDER_PATH: "./migrations" // for application.yml
+# MIGRATION_FOLDER_PATH: "./../migrations" //for application_test.yml

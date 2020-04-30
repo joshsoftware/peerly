@@ -30,12 +30,11 @@ func (suite *OrganizationTestSuite) SetupSuite() {
 	}
 
 	store, err := Init()
-	suite.dbStore = store
-
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 		return
 	}
+  suite.dbStore = store
 }
 
 // TODO complete teardown function
