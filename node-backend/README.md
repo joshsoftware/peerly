@@ -22,3 +22,6 @@
 1. `cd` into project root directory
 2. `cd node-backend`
 3. `mina deploy`
+
+## step for cors configure
+1. change origin value of corsOption in server.js with react server url
