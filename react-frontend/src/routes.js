@@ -1,15 +1,17 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import App from "App";
+import Dashboard from "Dashboard";
 
-function Root() {
+function Routes() {
   return (
     <main>
       <Switch>
         <Route path="/" component={App} exact />
+        <Route path="/dashboard" component={Dashboard} />
       </Switch>
     </main>
   );
 }
 
-export default Root;
+export default Routes;

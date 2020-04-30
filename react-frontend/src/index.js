@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import { store } from "redux-store";
-import Root from "root-routes";
+import Routes from "routes";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -12,7 +12,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <Root />
+        <Routes />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
