@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"time"
 	"regexp"
 	logger "github.com/sirupsen/logrus"
 )
@@ -16,10 +15,8 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone,
-		created_by,
-		updated_by)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`
+		timezone)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
 
 	updateOrganizationQuery = `UPDATE organizations SET (
 		name,
@@ -29,10 +26,8 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone,
-		updated_by,
-		updated_on) = 
-		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) where id = $11`
+		timezone) = 
+		($1, $2, $3, $4, $5, $6, $7, $8) where id = $9`
 
 	deleteOrganizationQuery = `DELETE FROM organizations WHERE id = $1`
 
@@ -44,11 +39,7 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone,
-		created_by,
-		created_on,
-		updated_by,
-		updated_on FROM organizations WHERE id=$1`
+		timezone FROM organizations WHERE id=$1`
 	
 	listOrganizationsQuery =`SELECT id,
 		name,
@@ -58,11 +49,7 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone,
-		created_by,
-		created_on,
-		updated_by,
-		updated_on FROM organizations ORDER BY name ASC`
+		timezone FROM organizations ORDER BY name ASC`
 	emailRegexString = `^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$`
 	domainRegexString = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 )
@@ -77,10 +64,6 @@ type Organization struct {
 	Hi5Limit                 int				`db:"hi5_limit" json:"hi5_limit"`
 	Hi5QuotaRenewalFrequency string				`db:"hi5_quota_renewal_frequency" json:"hi5_quota_renewal_frequency"`
 	Timezone                 string				`db:"timezone" json:"timezone"`
-	CreatedBy                int				`db:"created_by" json:"_"`
-	CreatedOn                int64				`db:"created_on" json:"_"`
-	UpdatedBy                int				`db:"updated_by" json:"_"`
-	UpdatedOn                int64				`db:"updated_on" json:"_"`
 }
 
 //TODO how to declare this as reusable
@@ -148,8 +131,6 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (cre
 		org.Hi5Limit,
 		org.Hi5QuotaRenewalFrequency,
 		org.Timezone,
-		org.CreatedBy,
-		org.UpdatedBy,
 	).Scan(&lastInsertId)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error creating organization")
@@ -165,9 +146,6 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 		var dbOrganization Organization
 		err = s.db.Get(&dbOrganization, getOrganizationQuery, organizationID)
 
-		reqOrganization.CreatedOn = dbOrganization.CreatedOn
-		reqOrganization.CreatedBy = dbOrganization.CreatedBy
-
 		_, err = s.db.Exec(
 			updateOrganizationQuery,
 			reqOrganization.Name,
@@ -178,8 +156,6 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 			reqOrganization.Hi5Limit,
 			reqOrganization.Hi5QuotaRenewalFrequency,
 			reqOrganization.Timezone,
-			reqOrganization.UpdatedBy,
-			time.Now().Unix(),
 			organizationID,
 		)
 		if err != nil {

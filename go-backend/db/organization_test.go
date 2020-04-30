@@ -18,7 +18,6 @@ type OrganizationTestSuite struct {
 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(OrganizationTestSuite))
-	suite.Run(t, new(UserTestSuite))
 }
 
 func (suite *OrganizationTestSuite) SetupSuite() {
@@ -36,14 +35,6 @@ func (suite *OrganizationTestSuite) SetupSuite() {
 	}
   suite.dbStore = store
 }
-
-// TODO complete teardown function
-// func (suite *OrganizationTestSuite) TearDownSuite() {
-// 	err := RollbackMigrations("1")
-// 	if err!=nil {
-// 		fmt.Println("errors", err)
-// 	}
-// }
 
 func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 
@@ -63,10 +54,6 @@ func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 
 	assert.Nil(suite.T(), err)
 
-	expectedOrg.UpdatedBy = createdOrganization.UpdatedBy
-	expectedOrg.CreatedBy = createdOrganization.CreatedBy
-	expectedOrg.UpdatedOn = createdOrganization.UpdatedOn
-	expectedOrg.CreatedOn = createdOrganization.CreatedOn
 	expectedOrg.ID = createdOrganization.ID
 
 	assert.Equal(suite.T(), expectedOrg, createdOrganization)
@@ -90,7 +77,6 @@ func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 
 	createdOrganization.Name = "Updated name"
 	updatedOrg, err = suite.dbStore.UpdateOrganization(context.Background(), createdOrganization, expectedOrg.ID)
-	createdOrganization.UpdatedOn = updatedOrg.UpdatedOn
 	
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), updatedOrg, createdOrganization)

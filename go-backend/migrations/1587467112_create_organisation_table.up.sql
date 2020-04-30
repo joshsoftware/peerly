@@ -7,9 +7,5 @@ CREATE TABLE organizations (
 	subscription_valid_upto BIGINT,
 	hi5_limit integer,
 	hi5_quota_renewal_frequency varchar(50),
-	timezone varchar(100),
-	created_by integer,
-	created_on BIGINT DEFAULT extract(epoch from now()),
-	updated_by integer,
-	updated_on BIGINT DEFAULT extract(epoch from now())
+	timezone varchar(100)
 );
