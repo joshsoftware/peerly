@@ -42,7 +42,9 @@ func handleAuthCallback(deps Dependencies) http.HandlerFunc {
 
 		// Successful authentication
 		fmt.Printf("Auth Success: %+v\n", user)
-		// TODO: Auth success - issue jwt and redirect
+		// TODO: Check if user is already in database and if not, create them
+		// TODO: Check to see if user is soft deleted and if so, fail authentication
+		// TODO: Auth success - issue jwt and serve up main front-end entry point
 		return
 	})
 }
