@@ -10,11 +10,15 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
-	_ "github.com/mattes/migrate/source/file"
 	logger "github.com/sirupsen/logrus"
+
+	// Import PostgreSQL database driver
+	_ "github.com/lib/pq"
+
+	// For database migrations
+	_ "github.com/mattes/migrate/source/file"
 )
 
 const (
@@ -28,6 +32,7 @@ type pgStore struct {
 	db *sqlx.DB
 }
 
+// Init - initialize database connection and return the db store
 func Init() (s Storer, err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -41,6 +46,7 @@ func Init() (s Storer, err error) {
 	return &pgStore{conn}, nil
 }
 
+// RunMigrations - runs all database migrations (see ../migrtions/*.up.sql)
 func RunMigrations() (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -68,6 +74,7 @@ func RunMigrations() (err error) {
 	return
 }
 
+// CreateMigrationFile - Creates a boilerplate *.sql files for a database migration
 func CreateMigrationFile(filename string) (err error) {
 	if len(filename) == 0 {
 		err = errors.New("filename is not provided")
@@ -97,6 +104,7 @@ func CreateMigrationFile(filename string) (err error) {
 	return
 }
 
+// RollbackMigrations - Used to run the "down" database migrations in ../migrations/*.down.sql
 func RollbackMigrations(s string) (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
