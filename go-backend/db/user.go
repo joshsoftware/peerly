@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -19,7 +20,8 @@ type User struct {
 	RoleID          int64     `db:"role_id" json:"role_id"`
 	Hi5QuotaBalance int       `db:"hi5_quota_balance" json:"hi5_quota_balance"`
 	SoftDeleteBy    int64     `db:"soft_delete_by" json:"soft_delete_by"`
-	SoftDeleteOn    time.Time `db:"soft_delete_on" json:"-"`
+	SoftDeleteOn    time.Time `db:"soft_delete_on" json:"soft_delete_on"`
+	CreatedAt       time.Time `db:"created_at" json:"created_at"`
 }
 
 // GetUserByEmail - Given an email address, return that user.
@@ -36,7 +38,7 @@ func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, 
 func (s *pgStore) GetUserByID(ctx context.Context, id int64) (user User, err error) {
 	err = s.db.Select(&user, `SELECT * FROM users WHERE id=$1 LIMIT 1`, id)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error selecting user from database by id %v", id)
+		logger.WithField("err", err.Error()).Error("Error selecting user from database by id " + strconv.FormatInt(id, 10))
 		return
 	}
 	return
@@ -61,6 +63,8 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 		logger.WithField("err", err.Error()).Error("Error checking for duplicate user in db.CreateNewUser w/ email: " + u.Email)
 		return
 	}
+
+	// TODO: Check if newUser is a blank/nil object and if so, continue, otherwise return
 
 	// If we made it this far, they don't appear to be in the database yet.
 	q := `INSERT INTO users (

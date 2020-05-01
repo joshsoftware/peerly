@@ -37,16 +37,18 @@ func (m *MockStore) GetUserByEmail(ctx context.Context, email string) (user User
 		fmt.Printf("Error creating mock user for db.GetUserByEmail. %+v", user)
 	}
 
-	user.Email = email // Alter the user's email to be what was passed in
+	user.Email = email // Alter the user's email to be what was passed in since faker will create it at random
 	return
 }
 
 // CreateNewUser - Mock for database new user creation. Just returns a fake user object
 func (m *MockStore) CreateNewUser(ctx context.Context, u User) (newUser User, err error) {
-	newUser = User{}
-	err = faker.FakeData(&newUser)
-	if err != nil {
-		fmt.Printf("Error creating mock data for db.CreateNewUser. %+v", newUser)
-	}
-	return
+	args := m.Called(ctx, u)
+	return args.Get(0).(User), args.Error(1)
+}
+
+// GetUserByID - Mock to retrieve a user by their ID (BIGSERIAL in PostgreSQL, int64 in Golang)
+func (m *MockStore) GetUserByID(ctx context.Context, id int64) (user User, err error) {
+	args := m.Called(ctx, id)
+	return args.Get(0).(User), args.Error(1)
 }
