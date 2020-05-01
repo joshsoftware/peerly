@@ -11,5 +11,6 @@ type Storer interface {
 	CreateUserBlacklistedToken(context.Context, UserBlacklistedToken) error
 	CreateNewUser(context.Context, User) (User, error)
 	GetUserByEmail(context.Context, string) (User, error)
+	GetUserByID(context.Context, int64) (User, error)
 	//Delete(context.Context, string) error
 }
