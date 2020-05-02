@@ -21,7 +21,14 @@ const PrivateRoute = ({ route }) => {
 };
 
 PrivateRoute.propTypes = {
-  route: PropTypes.object,
+  route: PropTypes.shape({
+    path: PropTypes.string,
+    component: PropTypes.element,
+    is_protected: PropTypes.bool,
+    is_navbar: PropTypes.bool,
+    is_sidebar: PropTypes.bool,
+    exact: PropTypes.bool,
+  }),
 };
 
 export default PrivateRoute;
