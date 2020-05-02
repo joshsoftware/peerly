@@ -1,16 +1,25 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
-import App from "App";
-import Dashboard from "Dashboard";
+import { Switch, Route } from "react-router-dom";
+
+import rootRoutes from "root-routes";
+import PrivateRoute from "PrivateRoute";
 
 function Routes() {
   return (
-    <main>
-      <Switch>
-        <Route path="/" component={App} exact />
-        <Route path="/dashboard" component={Dashboard} />
-      </Switch>
-    </main>
+    <Switch>
+      {rootRoutes.map((route) => {
+        return route.is_protected ? (
+          <PrivateRoute route={route} key={route.path} />
+        ) : (
+          <Route
+            path={route.path}
+            component={route.component}
+            exact={route.exact}
+            key={route.path}
+          />
+        );
+      })}
+    </Switch>
   );
 }
 
