@@ -4,7 +4,7 @@ const userBlacklistedTokens = db.user_blacklisted_tokens;
 module.exports.logout = async (req, res) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  let decode = await jsonwebtoken.getData(token);
+  let decode = await jsonwebtoken.getData(authHeader);
   const user = {
     user_id: decode.userId,
     token: token,

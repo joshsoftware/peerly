@@ -1,10 +1,10 @@
 const db = require("../../models/sequelize");
 const Users = db.users;
+
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 module.exports.findUsersByOrg = async (req, res) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  let userData = await jwtToken.getData(token);
+  let userData = await jwtToken.getData(authHeader);
   Users.findAll({
     where: { org_id: userData.orgId, role_id: 2 },
     attributes: [

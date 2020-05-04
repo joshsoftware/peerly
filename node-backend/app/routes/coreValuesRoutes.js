@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const CorevalueController = require("../controllers/v1/CoreValueController");
+
+const utility = require("../utils/utility");
+const /*eslint-disable no-unused-vars*/ CorevalueControllerV1 = require("../controllers/v1/CoreValueController");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 const coreValueRouter = express.Router();
 coreValueRouter.use(bodyParser.urlencoded({ extended: true }));
@@ -23,25 +25,49 @@ async function authorizedRole(req, res, next) {
 coreValueRouter.post(
   "/organisations/:organisation_id/core_values",
   authorizedRole,
-  CorevalueController.create
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "CorevalueController"
+    );
+    /*eslint-disable no-eval*/ eval(controller).create(req, res);
+  }
 );
 //for get all core values
 coreValueRouter.get(
   "/organisations/:organisation_id/core_values",
   authorizedRole,
-  CorevalueController.findAll
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "CorevalueController"
+    );
+    eval(controller).findAll(req, res);
+  }
 );
 //for get core value by id
 coreValueRouter.get(
   "/organisations/:organisation_id/core_values/:id",
   authorizedRole,
-  CorevalueController.findOne
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "CorevalueController"
+    );
+    eval(controller).findOne(req, res);
+  }
 );
 //for update core value
 coreValueRouter.put(
   "/organisations/:organisation_id/core_values/:id",
   authorizedRole,
-  CorevalueController.update
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "CorevalueController"
+    );
+    eval(controller).update(req, res);
+  }
 );
 
 module.exports = coreValueRouter;

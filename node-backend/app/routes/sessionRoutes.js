@@ -7,7 +7,7 @@ const utility = require("../utils/utility");
 const loginController = require("../controllers/v1/loginController");
 require("../google_auth/google_auth")();
 const tokenValidation = require("../jwtTokenValidation/jwtValidation");
-const logoutController = require("../controllers/v1/logoutController");
+const /*eslint-disable no-unused-vars*/ logoutControllerV1 = require("../controllers/v1/logoutController");
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.post(
@@ -38,10 +38,12 @@ router.post(
   loginController.login
 );
 
-router.post(
-  "/logout",
-  tokenValidation.autheticateToken,
-  logoutController.logout
-);
+router.post("/logout", tokenValidation.autheticateToken, async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "logoutController"
+  );
+  /*eslint-disable no-eval*/ eval(controller).logout(req, res);
+});
 
 module.exports = router;
