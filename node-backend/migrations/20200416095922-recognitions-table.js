@@ -36,11 +36,11 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         },
         notNull: true,
       },
-      recognition_text: {
+      text: {
         type: "text",
         notNull: true,
       },
-      recognition_for: {
+      given_for: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -52,7 +52,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
           },
         },
       },
-      recognition_by: {
+      given_by: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -64,7 +64,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
           },
         },
       },
-      recognition_on: {
+      given_at: {
         type: "bigint",
         notNull: true,
       },

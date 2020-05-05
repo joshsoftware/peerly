@@ -1,24 +1,26 @@
 const yup = require("yup");
 
-const db = require("../models/sequelize");
+const utility = require("../../utils/utility");
+const db = require("../../models/sequelize");
 const CoreValue = db.core_value;
 
 module.exports.create = (req, res) => {
   //validation schema
   const schema = yup.object().shape({
     org_id: yup
-      .number({ org_id: "should be number" })
+      .number()
+      .typeError({ org_id: "should be number" })
       .required({ org_id: "required" }),
-    core_value_text: yup.string().required({ core_value_text: "required" }),
+    text: yup.string().required({ text: "required" }),
     description: yup.string().required({ description: "required" }),
     parent_core_value_id: yup
-      .number({ parent_core_value_id: "should be number" })
-      .required({ parent_core_value_id: "required" }),
+      .number()
+      .typeError({ parent_core_value_id: "should be number" }),
   });
   // Create a core value object
   const coreValue = {
     org_id: req.params.organisation_id,
-    core_value_text: req.body.core_value_text,
+    text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
   };
@@ -42,12 +44,12 @@ module.exports.create = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
-        error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
-          fields: err.errors,
-        },
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid-core-value",
+          "Invalid core value data",
+          err.errors
+        ),
       });
     });
 };
@@ -56,7 +58,8 @@ module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
     org_id: yup
-      .number({ org_id: "should be number" })
+      .number()
+      .typeError({ org_id: "should be number" })
       .required({ org_id: "required" }),
   });
   idSchema
@@ -77,12 +80,12 @@ module.exports.findAll = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
-        error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
-          fields: err.errors,
-        },
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid-core-value",
+          "Invalid core value data",
+          err.errors
+        ),
       });
     });
 };
@@ -92,9 +95,13 @@ module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = yup.object().shape({
-    id: yup.number({ id: "should be number" }).required({ id: "required" }),
+    id: yup
+      .number()
+      .typeError({ id: "should be number" })
+      .required({ id: "required" }),
     org_id: yup
-      .number({ org_id: "should be number" })
+      .number()
+      .typeError({ org_id: "should be number" })
       .required({ org_id: "required" }),
   });
   idSchema
@@ -123,12 +130,12 @@ module.exports.findOne = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
-        error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
-          fields: err.errors,
-        },
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid-core-value",
+          "Invalid core value data",
+          err.errors
+        ),
       });
     });
 };
@@ -137,28 +144,32 @@ module.exports.findOne = (req, res) => {
 module.exports.update = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
-  const core_value_text = req.body.core_value_text;
+  const text = req.body.text;
   const description = req.body.description;
   const parent_core_value_id = req.body.parent_core_value_id;
   const schema = yup.object().shape({
-    id: yup.number({ id: "should be a number" }).required({ id: "required" }),
+    id: yup
+      .number()
+      .typeError({ id: "should be a number" })
+      .required({ id: "required" }),
     org_id: yup
-      .number({ org_id: "should be a number" })
+      .number()
+      .typeError({ org_id: "should be a number" })
       .required({ org_id: "required" }),
-    core_value_text: yup.string(),
+    text: yup.string(),
     description: yup.string(),
-    parent_core_value_id: yup.number({
+    parent_core_value_id: yup.number().typeError({
       parent_core_value_id: "should be a number",
     }),
   });
   const coreValue = {
-    core_value_text: req.body.core_value_text,
+    text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
   };
   schema
     .validate(
-      { id, org_id, core_value_text, description, parent_core_value_id },
+      { id, org_id, text, description, parent_core_value_id },
       { abortEarly: false }
     )
     .then(() => {
@@ -188,12 +199,12 @@ module.exports.update = (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
-        error: {
-          code: "invalid-core-value",
-          message: "Invalid core value data",
-          fields: err.errors,
-        },
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid-core-value",
+          "Invalid core value data",
+          err.errors
+        ),
       });
     });
 };

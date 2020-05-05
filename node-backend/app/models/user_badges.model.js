@@ -16,8 +16,8 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      obtained_on: {
-        type: "TIMESTAMP",
+      obtained_at: {
+        type: Sequelize.BIGINT,
         notNull: true,
       },
     },

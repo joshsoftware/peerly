@@ -12,15 +12,15 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      comment: {
+      text: {
         type: Sequelize.STRING,
         notNull: true,
       },
-      comment_by: {
+      commented_by: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      commented_on: {
+      commented_at: {
         type: Sequelize.BIGINT,
         notNull: true,
       },

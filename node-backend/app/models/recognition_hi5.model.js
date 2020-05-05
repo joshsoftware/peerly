@@ -12,11 +12,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      hi5_by: {
+      given_by: {
         type: Sequelize.INTEGER,
         notNull: true,
       },
-      hi5_given_on_date: {
+      given_at: {
         type: Sequelize.BIGINT,
         notNull: true,
       },

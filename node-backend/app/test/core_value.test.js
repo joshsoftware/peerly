@@ -3,7 +3,8 @@ const should = require("should" /*eslint-disable-line node/no-unpublished-requir
 
 // This agent refers to PORT where program is runninng.
 
-const server = supertest.agent(`http://localhost:${process.env.HTTP_PORT}`);
+const server = supertest.agent(process.env.URL);
+const token = process.env.TOKEN;
 
 // UNIT test begin
 
@@ -11,7 +12,8 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "get API all core value correct response", function (done) {
     // calling get all core value api
     server
-      .get("/v1/organisations/1/core_values")
+      .get("/organisations/1/core_values")
+      .set("Authorization", "Bearer " + token)
       .expect("Content-type", /json/)
       .expect(200) // THis is HTTP response
       .end(function (err, res) {
@@ -24,12 +26,13 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "get API all core value invalid type recognation id response", function (done) {
     // calling get all core value api
     server
-      .get("/v1/organisations/t/core_values")
+      .get("/organisations/t/core_values")
+      .set("Authorization", "Bearer " + token)
       .expect("Content-type", /json/)
-      .expect(412) // THis is HTTP response
+      .expect(400) // THis is HTTP response
       .end(function (err, res) {
-        // HTTP status should be 412
-        res.status.should.equal(412);
+        // HTTP status should be 400
+        res.status.should.equal(400);
         done();
       });
   });
@@ -37,7 +40,8 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "get request contain valid id ", function (done) {
     // calling get by id core value api
     server
-      .get("/v1/organisations/1/core_values/2")
+      .get("/organisations/1/core_values/2")
+      .set("Authorization", "Bearer " + token)
       .expect("Content-type", /json/)
       .expect(200) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -50,7 +54,8 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "get request contain invalid id ", function (done) {
     // calling get request with wrong id in core value
     server
-      .get("/v1/organisations/1/core_values/1000")
+      .get("/organisations/1/core_values/1000")
+      .set("Authorization", "Bearer " + token)
       .expect("Content-type", /json/)
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -63,12 +68,13 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "get request pass invalid type content content ", function (done) {
     // calling get request with passing other than id
     server
-      .get("/v1/organisations/1/core_values/t")
+      .get("/organisations/1/core_values/t")
+      .set("Authorization", "Bearer " + token)
       .expect("Content-type", /json/)
-      .expect(412) // THis is HTTP response
+      .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 412
-        res.status.should.equal(412);
+        // HTTP status should be 400
+        res.status.should.equal(400);
         // Error key should be false.
         done();
       });
@@ -77,16 +83,17 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "post request for create core value with right Contents,url", function (done) {
     // post request for create core value successfully
     server
-      .post("/v1/organisations/1/core_values")
+      .post("/organisations/1/core_values")
       .send({
-        core_value_text: "Tata",
+        text: "Tata",
         description: "good",
         parent_core_value_id: 2,
       })
       .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
       .expect(201) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 200
+        // HTTP status should be 201
         res.status.should.equal(201);
         // Error key should be false.
         done();
@@ -96,17 +103,18 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong Contents", function (done) {
     // post request for create core value with wrong Contents
     server
-      .post("/v1/organisations/1/core_values")
+      .post("/organisations/1/core_values")
       .send({
-        core_value_text: "Tata",
+        text: "Tata",
         description: "good",
         parent_core_value_id: "xyz",
       })
       .expect("Content-type", /json/)
-      .expect(412) // THis is HTTP response
+      .set("Authorization", "Bearer " + token)
+      .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 412
-        res.status.should.equal(412);
+        // HTTP status should be 400
+        res.status.should.equal(400);
         done();
       });
   });
@@ -114,13 +122,14 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong url", function (done) {
     // calling post request for create core value with wrong url
     server
-      .post("/v1/organisations/1/core_value")
+      .post("/organisations/1/core_value")
       .send({
-        core_value_text: "Tata",
+        text: "Tata",
         description: "good",
         parent_core_value_id: 2,
       })
       .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 404
@@ -132,13 +141,14 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "put request for updated core value with write content and url", function (done) {
     // calling put request for updated core value sucessfully
     server
-      .put("/v1/organisations/1/core_values/2")
+      .put("/organisations/1/core_values/2")
       .send({
-        core_value_text: "Tata",
+        text: "Tata",
         description: "good",
         parent_core_value_id: 2,
       })
       .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
       .expect(200) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
@@ -151,17 +161,18 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "put request for update core value with wrong Contents", function (done) {
     // post request for update core value with wrong Contents
     server
-      .put("/v1/organisations/1/core_values/2")
+      .put("/organisations/1/core_values/2")
       .send({
-        core_value_text: "Tata",
+        text: "Tata",
         description: "good",
         parent_core_value_id: "xyz",
       })
       .expect("Content-type", /json/)
-      .expect(412) // THis is HTTP response
+      .set("Authorization", "Bearer " + token)
+      .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 412
-        res.status.should.equal(412);
+        // HTTP status should be 400
+        res.status.should.equal(400);
         done();
       });
   });
@@ -169,13 +180,14 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "put request for update core value with Invalid Id", function (done) {
     // post request for update core value with wrong Contents
     server
-      .put("/v1/organisations/1/core_values/7000")
+      .put("/organisations/1/core_values/7000")
       .send({
-        core_value_text: "Tata",
+        text: "Tata",
         description: "good",
         parent_core_value_id: 2,
       })
       .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 404

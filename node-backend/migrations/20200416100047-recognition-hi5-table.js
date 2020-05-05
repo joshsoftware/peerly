@@ -35,7 +35,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         },
         notNull: true,
       },
-      hi5_by: {
+      given_by: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -47,7 +47,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
           },
         },
       },
-      hi5_given_on_date: {
+      given_at: {
         type: "bigint",
         notNull: true,
       },
