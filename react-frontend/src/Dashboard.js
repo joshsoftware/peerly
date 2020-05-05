@@ -6,7 +6,7 @@ function Dashboard() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>After login dashboard</p>
+        <p>Recognition listing placeholder</p>
       </header>
     </div>
   );

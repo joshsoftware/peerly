@@ -1,29 +1,25 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-import "./App.css";
-import Fallback from "Fallback";
 import withLayout from "HOC/withLayout";
+import SessionFallback from "sharedComponents/SessionFallback";
 
 const PrivateRoute = ({ route }) => {
-  // TODO get login info from session
-  const isLoggedIn = true;
-  const finalComponent = isLoggedIn ? route.component : Fallback;
-  const withLayoutComponent = withLayout(finalComponent);
+  const token = useSelector((state) => state.appReducer.token);
+
+  const finalComponent = token ? withLayout(route.component) : SessionFallback;
+
   return (
-    <Route
-      path={route.path}
-      component={withLayoutComponent}
-      exact={route.exact}
-    />
+    <Route path={route.path} component={finalComponent} exact={route.exact} />
   );
 };
 
 PrivateRoute.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string,
-    component: PropTypes.element,
+    component: PropTypes.func,
     is_protected: PropTypes.bool,
     is_navbar: PropTypes.bool,
     is_sidebar: PropTypes.bool,

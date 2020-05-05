@@ -1,4 +1,6 @@
-const defaultState = {};
+const defaultState = {
+  token: "",
+};
 
 export default (state = defaultState, action) => {
   switch (action.type) {
