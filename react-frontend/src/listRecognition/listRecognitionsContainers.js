@@ -3,6 +3,9 @@ import ListRecognitionComponent from "components/listRecognitionsComponent";
 
 const ListRecognitionsContainer = () => {
   function recognitionListData() {
+    fetch("http://localhost:3120/organisations/1/badges").then((response) =>
+      response.json()
+    );
     const list = [
       {
         hi5_quota_balance: "25",
