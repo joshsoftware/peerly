@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	dbDriver      = "postgres"
+	dbDriver = "postgres"
 )
 
 var errFindingDriver = errors.New("no migrate driver instance found")
