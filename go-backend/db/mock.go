@@ -38,6 +38,7 @@ func (m *DBMockStore) DeleteCoreValue(ctx context.Context, organisationID, coreV
 func (m *DBMockStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (CoreValue, error) {
 	args := m.Called(ctx, organisationID, coreValueID, coreValue)
 	return args.Get(0).(CoreValue), args.Error(1)
+}
 
 func (m *DBMockStore) ListOrganizations(ctx context.Context) (organizations []Organization, err error) {
 	args := m.Called(ctx)
