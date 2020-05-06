@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 const PeerlyButtonComponent = (props) => {
-  const { buttonText, className, type, onClick, value, variant, size } = props;
+  const { value, className, type, onClick, variant, size } = props;
   return (
     <Button
       className={className}
@@ -15,7 +15,7 @@ const PeerlyButtonComponent = (props) => {
         onClick();
       }}
     >
-      {buttonText}
+      {value}
     </Button>
   );
 };
@@ -26,13 +26,11 @@ PeerlyButtonComponent.defaultProps = {
 };
 
 PeerlyButtonComponent.propTypes = {
-  type: PropTypes.string.isRequired,
-  buttonText: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  value: PropTypes.any.isRequired,
   variant: PropTypes.string,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  size: PropTypes.oneOf(["sm", "lg"]),
   className: PropTypes.string,
   onClick: PropTypes.func,
 };
-
 export default PeerlyButtonComponent;
