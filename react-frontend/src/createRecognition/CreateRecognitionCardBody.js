@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import PeerlyLabelComponent from "../coreComponents/LabelCoreComponent";
-import PeerlyButtonComponent from "../coreComponents/ButtonCoreComponent";
+import LabelCoreComponent from "../coreComponents/LabelCoreComponent";
+import ButtonCoreComponent from "../coreComponents/ButtonCoreComponent";
 const CreateRecognitionCardBody = (props) => {
   const {
     CoreValue,
     labelName,
     labelClassName,
-    className,
+    buttonclassName,
     type,
     variant,
     size,
@@ -16,19 +16,19 @@ const CreateRecognitionCardBody = (props) => {
 
   return (
     <>
-      <PeerlyLabelComponent labelName={labelName} ClassName={labelClassName} />
+      <LabelCoreComponent labelName={labelName} ClassName={labelClassName} />
       {CoreValue.map((object) => (
-        <PeerlyButtonComponent
+        <ButtonCoreComponent
           key={object.index}
-          className={className}
+          className={buttonclassName}
           type={type}
           variant={variant}
           size={size}
           value={object.name}
         />
       ))}
-      <PeerlyButtonComponent value="add comments" />
-      <PeerlyButtonComponent value="Done" />
+      <ButtonCoreComponent value="add comments" />
+      <ButtonCoreComponent value="Done" />
     </>
   );
 };
@@ -38,7 +38,7 @@ CreateRecognitionCardBody.propTypes = {
   CoreValue: PropTypes.arrayOf(PropTypes.object),
   variant: PropTypes.string,
   size: PropTypes.oneOf(["sm", "lg"]),
-  className: PropTypes.string,
+  buttonclassName: PropTypes.string,
   onClick: PropTypes.func,
   labelName: PropTypes.string.isRequired,
   labelClassName: PropTypes.string,
