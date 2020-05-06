@@ -1,24 +1,18 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-import PeerlyDisplayImage from "../coreComponents/PeerlyDisplayImage";
-import PeerlyLabelComponent from "../coreComponents/PeerlyLabelComponent";
-const CreateRecognitionCardHeader = ({ labelName, src, className }) => {
+import PeerlyDisplayImage from "../coreComponents/ImageCoreComponent";
+import PeerlyLabelComponent from "../coreComponents/LabelCoreComponent";
+const CreateRecognitionCardHeader = ({
+  labelName,
+  src,
+  imgClassName,
+  labelClassName,
+}) => {
   return (
     <>
-      <Row>
-        <Col xs={2}></Col>
-        <Col>
-          <PeerlyDisplayImage src={src} className={className} />
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={2}></Col>
-        <Col>
-          <PeerlyLabelComponent labelName={labelName} />
-        </Col>
-      </Row>
+      <PeerlyDisplayImage src={src} className={imgClassName} />
+      <PeerlyLabelComponent labelName={labelName} className={labelClassName} />
     </>
   );
 };
@@ -26,7 +20,8 @@ const CreateRecognitionCardHeader = ({ labelName, src, className }) => {
 CreateRecognitionCardHeader.propTypes = {
   labelName: PropTypes.string.isRequired,
   src: PropTypes.string.isRequired,
-  className: PropTypes.string.isRequired,
+  imgClassName: PropTypes.string,
+  labelClassName: PropTypes.string,
 };
 
 export default CreateRecognitionCardHeader;
