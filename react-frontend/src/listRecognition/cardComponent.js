@@ -67,7 +67,9 @@ const CardComponent = (props) => {
       </Card.Body>
       <Card.Footer className="d-flex justify-content-left bg-light grey">
         <LabelComponent labelText="+1" className="font-weight-bold" />
-        <ImageComponent img={object.hi5img} />
+        <Button className="bg-light grey btn-outline-light grey btn-sm">
+          <ImageComponent img={object.hi5img} />
+        </Button>
       </Card.Footer>
     </Card>
   );
