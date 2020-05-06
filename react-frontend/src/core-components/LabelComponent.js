@@ -8,7 +8,7 @@ const LabelComponent = ({ text, className }) => (
 
 LabelComponent.propTypes = {
   className: PropTypes.string,
-  text: PropTypes.string,
+  text: PropTypes.string.isRequired,
 };
 
 export default LabelComponent;
