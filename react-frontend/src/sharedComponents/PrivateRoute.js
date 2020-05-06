@@ -4,12 +4,14 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 import withLayout from "HOC/withLayout";
-import SessionFallback from "sharedComponents/SessionFallback";
+import SessionTimeoutComponent from "sharedComponents/SessionTimeoutComponent";
 
 const PrivateRoute = ({ route }) => {
   const token = useSelector((state) => state.appReducer.token);
 
-  const finalComponent = token ? withLayout(route.component) : SessionFallback;
+  const finalComponent = token
+    ? withLayout(route.component, route.includeNavbar, route.includeSidebar)
+    : SessionTimeoutComponent;
 
   return (
     <Route path={route.path} component={finalComponent} exact={route.exact} />
@@ -20,11 +22,11 @@ PrivateRoute.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string,
     component: PropTypes.func,
-    is_protected: PropTypes.bool,
-    is_navbar: PropTypes.bool,
-    is_sidebar: PropTypes.bool,
+    isProtected: PropTypes.bool,
+    includeNavbar: PropTypes.bool,
+    includeSidebar: PropTypes.bool,
     exact: PropTypes.bool,
-  }),
+  }).isRequired,
 };
 
 export default PrivateRoute;

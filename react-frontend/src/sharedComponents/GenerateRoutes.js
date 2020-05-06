@@ -4,35 +4,35 @@ import PropTypes from "prop-types";
 
 import PrivateRoute from "sharedComponents/PrivateRoute";
 
-function GenerateRoutes({ configs }) {
-  return (
-    <>
-      {configs.map((route) => {
-        return route.is_protected ? (
-          <PrivateRoute route={route} key={route.path} />
-        ) : (
-          <Route
-            path={route.path}
-            component={route.component}
-            exact={route.exact}
-            key={route.path}
-          />
-        );
-      })}
-    </>
+const getRoutes = (config) =>
+  config.map((route) =>
+    route.isProtected ? (
+      <PrivateRoute route={route} key={route.path} />
+    ) : (
+      <Route
+        path={route.path}
+        component={route.component}
+        exact={route.exact}
+        key={route.key}
+      />
+    )
   );
+
+function GenerateRoutes({ config }) {
+  return getRoutes(config);
 }
 
 GenerateRoutes.propTypes = {
-  configs: PropTypes.arrayOf(
+  config: PropTypes.arrayOf(
     PropTypes.shape({
       path: PropTypes.string,
-      is_protected: PropTypes.bool,
-      is_navbar: PropTypes.bool,
-      is_sidebar: PropTypes.bool,
+      isProtected: PropTypes.bool,
+      includeNavbar: PropTypes.bool,
+      includeSidebar: PropTypes.bool,
       component: PropTypes.func,
       exact: PropTypes.bool,
     })
-  ),
+  ).isRequired,
 };
+
 export default GenerateRoutes;

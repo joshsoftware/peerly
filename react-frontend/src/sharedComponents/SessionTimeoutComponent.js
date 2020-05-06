@@ -1,18 +1,17 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { REDIRECT_TIMEOUT } from "constants/appConstants";
 
-const redirectTimeout = 3000;
-
-function SessionFallback() {
+function SessionTimeoutComponent() {
   let history = useHistory();
 
   useEffect(() => {
     setTimeout(() => {
       history.push("/");
-    }, redirectTimeout);
+    }, REDIRECT_TIMEOUT);
   }, [history]);
 
   return <p>session timed out!! Redirecting to login page</p>;
 }
 
-export default SessionFallback;
+export default SessionTimeoutComponent;

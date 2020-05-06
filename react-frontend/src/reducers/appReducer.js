@@ -1,5 +1,5 @@
 const defaultState = {
-  token: "",
+  token: null,
 };
 
 export default (state = defaultState, action) => {
