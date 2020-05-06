@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import PeerlyDisplayImage from "../coreComponents/ImageCoreComponent";
-import PeerlyLabelComponent from "../coreComponents/LabelCoreComponent";
+import ImageCoreComponent from "../coreComponents/ImageCoreComponent";
+import LabelCoreComponent from "../coreComponents/LabelCoreComponent";
 const CreateRecognitionCardHeader = ({
   labelName,
   src,
@@ -11,8 +11,8 @@ const CreateRecognitionCardHeader = ({
 }) => {
   return (
     <>
-      <PeerlyDisplayImage src={src} className={imgClassName} />
-      <PeerlyLabelComponent labelName={labelName} className={labelClassName} />
+      <ImageCoreComponent src={src} className={imgClassName} />
+      <LabelCoreComponent labelName={labelName} className={labelClassName} />
     </>
   );
 };
