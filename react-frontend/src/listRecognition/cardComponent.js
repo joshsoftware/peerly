@@ -39,7 +39,7 @@ const CardComponent = (props) => {
                 </Row>
               </Col>
               <Col md={2}>
-                <Button className="bg-secondary">
+                <Button className="bg-secondary  btn-sm">
                   <FontAwesomeIcon icon={faEllipsisH} />
                 </Button>
               </Col>
@@ -65,7 +65,7 @@ const CardComponent = (props) => {
           </Col>
         </Row>
       </Card.Body>
-      <Card.Footer className="d-flex justify-content-left ">
+      <Card.Footer className="d-flex justify-content-left bg-light grey">
         <LabelComponent labelText="+1" className="font-weight-bold" />
         <ImageComponent img={object.hi5img} />
       </Card.Footer>

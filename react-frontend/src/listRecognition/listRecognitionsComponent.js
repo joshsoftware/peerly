@@ -1,5 +1,5 @@
 import React from "react";
-import Container from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "@reach/menu-button/styles.css";
 
@@ -12,7 +12,8 @@ const ListRecognitionsComponent = () => {
       recognition_by: { name: "Onkar Hasabe", img: "man-4216529__480.png" },
       recognistion_on: "today at 5:37 pm",
       recognistion_text:
-        "i give high five to onkar for writing block on react strap documentation ",
+        "i give high five to avinash for writing block on react strap documentation " +
+        "i learn more from this docs",
       core_value_text: "write a block",
       pixelimg: "pexels-3312664.jpg",
       hi5img: "high-five.png",
@@ -22,7 +23,8 @@ const ListRecognitionsComponent = () => {
       recognition_by: { name: "Onkar Hasabe", img: "man-4216529__480.png" },
       recognistion_on: "today at 5:37 pm",
       recognistion_text:
-        "i give high five to onkar for writing block on react strap documentation ",
+        "i give high five to avinash for writing block on react strap docs " +
+        "i learn more from this docs",
       core_value_text: "write a block",
       pixelimg: "pexels-3312664.jpg",
       hi5img: "high-five.png",
@@ -32,7 +34,8 @@ const ListRecognitionsComponent = () => {
       recognition_by: { name: "Onkar Hasabe", img: "man-4216529__480.png" },
       recognistion_on: "today at 5:37 pm",
       recognistion_text:
-        "i give high five to onkar for writing block on react strap documentation ",
+        "i give high five to avinash for writing block on react strap docs " +
+        "i learn more from this docs",
       core_value_text: "write a block",
       pixelimg: "pexels-3312664.jpg",
       hi5img: "high-five.png",
