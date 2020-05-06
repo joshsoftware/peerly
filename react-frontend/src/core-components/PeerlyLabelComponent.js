@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 const PeerlyLabelComponent = (props) => {
   const { text, className } = props;
-  return <Form.Label className={className} defaultValue={text} />;
+  return <Form.Label className={className}> {text} </Form.Label>;
 };
 
 PeerlyLabelComponent.propTypes = {

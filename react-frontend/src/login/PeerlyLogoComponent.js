@@ -20,8 +20,4 @@ const PeerlyLogoComponent = (props /*eslint-disable-line no-unused-vars*/) => {
   );
 };
 
-PeerlyLogoComponent.defaultProps = {
-  alt: "Peerly Image",
-};
-
 export default PeerlyLogoComponent;
