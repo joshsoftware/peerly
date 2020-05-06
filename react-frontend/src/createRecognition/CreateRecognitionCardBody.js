@@ -27,6 +27,13 @@ const CreateRecognitionCardBody = (props) => {
           value={object.name}
         />
       ))}
+      {CoreValue.map((object) => (
+        <LabelCoreComponent
+          key={object.index}
+          labelName={object.labelName}
+          ClassName={object.labelClassName}
+        />
+      ))}
       <ButtonCoreComponent value="add comments" />
       <ButtonCoreComponent value="Done" />
     </>
