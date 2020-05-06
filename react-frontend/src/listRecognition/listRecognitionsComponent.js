@@ -1,41 +1,48 @@
 import React from "react";
-import { Row, Col, Button, Container, Card, Image } from "react-bootstrap";
-import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import Container from "react-bootstrap";
 import PropTypes from "prop-types";
 import "@reach/menu-button/styles.css";
 
+import CardComponent from "./cardComponent";
+
 const ListRecognitionsComponent = () => {
+  const list = [
+    {
+      recognition_for: { name: "Avinash Mane", img: "boy-524512_1280.png" },
+      recognition_by: { name: "Onkar Hasabe", img: "man-4216529__480.png" },
+      recognistion_on: "today at 5:37 pm",
+      recognistion_text:
+        "i give high five to onkar for writing block on react strap documentation ",
+      core_value_text: "write a block",
+      pixelimg: "pexels-3312664.jpg",
+      hi5img: "high-five.png",
+    },
+    {
+      recognition_for: { name: "Avinash Mane", img: "boy-524512_1280.png" },
+      recognition_by: { name: "Onkar Hasabe", img: "man-4216529__480.png" },
+      recognistion_on: "today at 5:37 pm",
+      recognistion_text:
+        "i give high five to onkar for writing block on react strap documentation ",
+      core_value_text: "write a block",
+      pixelimg: "pexels-3312664.jpg",
+      hi5img: "high-five.png",
+    },
+    {
+      recognition_for: { name: "Avinash Mane", img: "boy-524512_1280.png" },
+      recognition_by: { name: "Onkar Hasabe", img: "man-4216529__480.png" },
+      recognistion_on: "today at 5:37 pm",
+      recognistion_text:
+        "i give high five to onkar for writing block on react strap documentation ",
+      core_value_text: "write a block",
+      pixelimg: "pexels-3312664.jpg",
+      hi5img: "high-five.png",
+    },
+  ];
   return (
     <Container className="rounded border border-secondary">
-      <Card className="mt-2 ml-2 mr-2 mb-2 rounded border border-secondary">
-        <Card.Body>
-          <Row>
-            <Col lg={8}>
-              <Row>
-                <Col lg={3}>
-                  <Image src={require("./boy-524512_1280.png")} roundedCircle />
-                </Col>
-                <Col lg={7}>avinash mane</Col>
-                <Col lg={2}>
-                  <FontAwesomeIcon icon={faEllipsisH} />
-                </Col>
-              </Row>
-              <Row>
-                <Card.Text className="mt-2 ml-2 mr-2 mb-2 rounded border border-secondary">
-                  hii
-                </Card.Text>
-              </Row>
-            </Col>
-            <Col lg={4}>image</Col>
-          </Row>
-          <Row></Row>
-        </Card.Body>
-        <Card.Footer>
-          <Button></Button>
-        </Card.Footer>
-      </Card>
+      {list.map((object) => (
+        <CardComponent key={object.index} object={object} />
+      ))}
     </Container>
   );
 };

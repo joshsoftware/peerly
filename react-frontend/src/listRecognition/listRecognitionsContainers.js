@@ -1,5 +1,5 @@
 import React from "react";
-import ListRecognitionComponent from "components/listRecognitionsComponent";
+import ListRecognitionComponent from "./listRecognitionsComponent";
 
 const ListRecognitionsContainer = () => {
   function recognitionListData() {

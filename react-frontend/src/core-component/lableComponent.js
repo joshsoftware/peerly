@@ -7,12 +7,8 @@ const LabelComponent = (props) => {
   return <Form.Label className={className}> {labelText} </Form.Label>;
 };
 
-LabelComponent.defaultProps = {
-  allClasses: "",
-};
-
 LabelComponent.propTypes = {
-  labelText: PropTypes.string,
+  labelText: PropTypes.string.isRequired,
   className: PropTypes.string,
 };
 export default LabelComponent;
