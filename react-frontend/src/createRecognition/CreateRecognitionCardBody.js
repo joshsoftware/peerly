@@ -1,97 +1,47 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-import PeerlyLabelComponent from "../coreComponents/PeerlyLabelComponent";
-import PeerlyButtonComponent from "../coreComponents/PeerlyButtonComponent";
+import PeerlyLabelComponent from "../coreComponents/LabelCoreComponent";
+import PeerlyButtonComponent from "../coreComponents/ButtonCoreComponent";
 const CreateRecognitionCardBody = (props) => {
   const {
-    buttonText,
+    CoreValue,
     labelName,
+    labelClassName,
     className,
     type,
-    value,
     variant,
     size,
   } = props;
 
   return (
     <>
-      <Row>
-        <Col xs={2}></Col>
-        <Col>
-          <PeerlyLabelComponent labelName={labelName} />
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={2}></Col>
-        <Col xs={2}>
-          <PeerlyButtonComponent
-            variant={variant}
-            size={size}
-            type={type}
-            className={className}
-            buttonText={buttonText}
-            value={value}
-          />
-        </Col>
-        <Col xs={2}>
-          <PeerlyButtonComponent
-            variant={variant}
-            size={size}
-            type={type}
-            className={className}
-            buttonText={buttonText}
-            value={value}
-          />
-        </Col>
-        <Col xs={2}>
-          <PeerlyButtonComponent
-            variant={variant}
-            size={size}
-            type={type}
-            className={className}
-            buttonText={buttonText}
-            value={value}
-          />
-        </Col>
-        <Col xs={2}>
-          <PeerlyButtonComponent
-            variant={variant}
-            size={size}
-            type={type}
-            className={className}
-            buttonText={buttonText}
-            value={value}
-          />
-        </Col>
-        <Col xs={2}></Col>
-      </Row>
-      <Row>
-        <Col xs={2}></Col>
-        <Col>
-          <PeerlyButtonComponent variant={variant} buttonText={buttonText} />
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={2}></Col>
-        <Col>
-          <PeerlyButtonComponent variant="outline-info" buttonName="Done" />
-        </Col>
-      </Row>
+      <PeerlyLabelComponent labelName={labelName} ClassName={labelClassName} />
+      {CoreValue.map((object) => (
+        <PeerlyButtonComponent
+          key={object.index}
+          className={className}
+          type={type}
+          variant={variant}
+          size={size}
+          value={object.name}
+        />
+      ))}
+      <PeerlyButtonComponent value="add comments" />
+      <PeerlyButtonComponent value="Done" />
     </>
   );
 };
 
 CreateRecognitionCardBody.propTypes = {
-  type: PropTypes.string.isRequired,
-  buttonText: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  CoreValue: PropTypes.arrayOf(PropTypes.object),
   variant: PropTypes.string,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  size: PropTypes.oneOf(["sm", "lg"]),
   className: PropTypes.string,
   onClick: PropTypes.func,
   labelName: PropTypes.string.isRequired,
+  labelClassName: PropTypes.string,
 };
 
 export default CreateRecognitionCardBody;
