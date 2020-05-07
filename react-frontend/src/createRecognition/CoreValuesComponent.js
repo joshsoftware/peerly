@@ -1,26 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const CoreValuesComponent = ({ coreValues }) => {
-  return (
-    <>
-      {coreValues.map((coreValue, index) => (
-        <div
-          key={index}
-          value={coreValue.value}
-          labelname={coreValue.labelName}
-        />
-      ))}
-    </>
-  );
-};
+import CoreValueComponent from "sharedComponent/CoreValueComponent";
+const CoreValuesComponent = ({ coreValues }) =>
+  coreValues.map((coreValue, index) => (
+    <CoreValueComponent key={index} labelName={coreValue.labelName} />
+  ));
 
 CoreValuesComponent.propTypes = {
-  type: PropTypes.string,
   coreValues: PropTypes.arrayOf(
     PropTypes.shape({
       labelName: PropTypes.string.isRequired,
-      value: PropTypes.string.isRequired,
     })
   ),
 };
