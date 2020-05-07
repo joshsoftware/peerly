@@ -7,12 +7,11 @@ const LoginLabelComponent = ({
   encoragementThought,
 }) => (
   <div className={className}>
-    <p>
+    <span>
       {orgPrimaryCoreValue}
-      <br />
-      ___
+      <hr className="w-25 bg-light" />
       <h6>{encoragementThought}</h6>
-    </p>
+    </span>
   </div>
 );
 
