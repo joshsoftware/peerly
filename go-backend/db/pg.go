@@ -27,6 +27,8 @@ type pgStore struct {
 	db *sqlx.DB
 }
 
+var pgStoreConn pgStore
+
 func Init() (s Storer, err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -36,8 +38,9 @@ func Init() (s Storer, err error) {
 		return
 	}
 
+	pgStoreConn.db = conn
 	logger.WithField("uri", uri).Info("Connected to pg database")
-	return &pgStore{conn}, nil
+	return &pgStoreConn, nil
 }
 
 func RunMigrations() (err error) {
@@ -130,4 +133,8 @@ func createFile(filename string) (err error) {
 
 func getMigrationPath() string {
 	return fmt.Sprintf("file://%s", config.ReadEnvString("MIGRATION_FOLDER_PATH"))
+}
+
+func getDBConn() *sqlx.DB {
+	return pgStoreConn.db
 }
