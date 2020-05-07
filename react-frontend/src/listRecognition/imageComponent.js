@@ -3,7 +3,7 @@ import { Image } from "react-bootstrap";
 import PropTypes from "prop-types";
 const ImageComponent = (props) => {
   const { src, shape } = props;
-  return <Image src={require("./images/" + src)} className={shape} />;
+  return <Image src={src} className={shape} />;
 };
 ImageComponent.propTypes = {
   src: PropTypes.string.isRequired,

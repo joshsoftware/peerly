@@ -25,8 +25,7 @@ const RecognitionCardComponent = (props) => {
             />
           </div>
           <div className="d-flex flex-column">
-            <ImageComponent src={object.pixelimage} shape="rounded" />
-            <HighFiveButtonComponent />
+            <ImageComponent src="" shape="rounded" />
           </div>
         </div>
       </Card.Body>
