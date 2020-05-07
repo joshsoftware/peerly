@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import ImageCoreComponent from "../coreComponents/ImageCoreComponent";
-import LabelCoreComponent from "../coreComponents/LabelCoreComponent";
+import ImageCoreComponent from "coreComponents/ImageCoreComponent";
+import LabelCoreComponent from "coreComponents/LabelCoreComponent";
 const CreateRecognitionCardHeader = ({
   labelName,
   src,
