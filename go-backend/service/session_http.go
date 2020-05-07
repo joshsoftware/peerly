@@ -1,17 +1,14 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
+	"io/ioutil"
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
 	"net/http"
-	"os"
+	"net/url"
 	"time"
-
-	"github.com/markbates/goth"
-	"github.com/markbates/goth/gothic"
-	"github.com/markbates/goth/providers/google"
 
 	"github.com/dgrijalva/jwt-go"
 	logger "github.com/sirupsen/logrus"
@@ -24,49 +21,78 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+// OAuthToken - a struct used to json.Unmarshal the response body from an oauth provider
+type OAuthToken struct {
+	AccessToken  string `json:"access_token"`
+	IDToken      string `json:"id_token"`
+	ExpiresIn    int32  `json:"expires_in"`
+	TokenType    string `json:"token_type"`
+	Scope        string `json:"scope"`
+	RefreshToken string `json:"refresh_token"`
+}
+
 var errInvalidToken = errors.New("Invalid Token")
+var errNoAuthCode = errors.New("authCode URL parameter missing")
 var errMissingAuthHeader = errors.New("Missing Auth header")
 
-func handleAuthCallback(deps Dependencies) http.HandlerFunc {
+func handleAuth(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		goth.UseProviders(
-			google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), os.Getenv("OAUTH_CALLBACK_URI")),
-		)
-
-		user, err := gothic.CompleteUserAuth(rw, req)
-		if err != nil {
-			fmt.Fprintln(rw, err)
-			// TODO: Auth failure output/logs
+		// We should have a URL-encoded parameter called "authCode" here, which we use
+		// to exchange for an auth *token* from Google via oauth 2.
+		auth, ok := req.URL.Query()["authCode"]
+		if !ok || len(auth[0]) < 1 {
+			rw.WriteHeader(http.StatusBadRequest)
+			logger.WithField("err", errNoAuthCode.Error()).Error("authCode URL parameter missing")
 			return
 		}
 
-		// Successful authentication
-		fmt.Printf("Auth Success: %+v\n", user)
-		// TODO: Check if user is already in database and if not, create them
-		// TODO: Check to see if user is soft deleted and if so, fail authentication
-		// TODO: Auth success - issue jwt and serve up main front-end entry point
-		return
-	})
-}
+		// http.Request.URL.Query() returns an array even for only one thing, and we just want
+		// that one value only
+		authCode := auth[0]
 
-func handleAuthInit(deps Dependencies) http.HandlerFunc {
-	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		// Specify the auth provider for Gothic to use
-		goth.UseProviders(
-			google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), os.Getenv("OAUTH_CALLBACK_URI")),
+		// Now, exchange the authCode for an authentication *token* with the OAuth provider
+		// To do this, we do a POST to https://oauth2.googleapis.com/token which will respond
+		// with a 200 OK and a JSON response body containing keys for access_token, id_token,
+		// expires_in, token_type, scope and refresh_token
+		resp, err := http.PostForm("https://oauth2.googleapis.com/token",
+			url.Values{
+				"code":          {authCode},
+				"client_id":     {"TODO: Client ID"},
+				"client_secret": {"TODO: Client Secret"},
+				"scope":         {""},
+				"grant_type":    {"authorization_code"},
+			},
 		)
 
-		// Try to get the user without re-authenticating; if we can't, then
-		// go ahead and re-authenticate anyway.
-		gothUser, err := gothic.CompleteUserAuth(rw, req)
-		if err == nil {
-			// Successful Auth Already In Place
-			fmt.Printf("Auth already in place: %v+\n", gothUser)
-		} else {
-			fmt.Printf("%v+\n", err)
-			// Re-initialize the auth process
-			gothic.BeginAuthHandler(rw, req)
+		if err != nil {
+			// TODO: Handle the error
+			// 1. Log it here
+			// 2. Send an unauthorized http header to our client
+			// 3. Include a JSON message that says the auth provider denied auth code <-> token exchange
+			return
 		}
+
+		var token []OAuthToken
+		payload, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			// TODO: Handle error - unable to parse OAuth provider response body *prior* to JSON decode
+			return
+		}
+		err = json.Unmarshal(payload, &token)
+		if err != nil {
+			// TODO: Handle error - unable to decode JSON received from OAuth provider
+			return
+		}
+
+		// If we get here, we have valid data in the token struct,
+		// Use it to get information with the userinfo.email scope
+		// TODO
+
+		// Once we have that information, we can check if the user's organization exists in our DB
+		// TODO
+
+		// And if they do, log them in
+		// TODO
 	})
 }
 

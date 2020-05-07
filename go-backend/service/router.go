@@ -29,10 +29,5 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	// Basic logout
 	router.HandleFunc("/logout", handleLogout(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 
-	// Note on {provider} here - the auth library in use (goth) requires this variable name so it can
-	// discern which provider is being used to authenticate based on the request URL.
-	router.HandleFunc("/auth/{provider}/callback", handleAuthCallback(deps)).Methods(http.MethodGet)
-	router.HandleFunc("/auth/{provider}", handleAuthInit(deps)).Methods(http.MethodGet)
-
 	return
 }
