@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"github.com/jmoiron/sqlx"
 	logger "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -10,12 +11,13 @@ import (
 
 type CoreValueTestSuite struct {
 	suite.Suite
+	db               *sqlx.DB
 	dbStore          Storer
 	OrganizationID   int64
 	CoreValueCreated CoreValue
 }
 
-func (suite *CoreValueTestSuite) SetupSuite() {
+func (suite *CoreValueTestSuite) Init() {
 	config.Load("application_test")
 
 	err := RunMigrations()
@@ -29,9 +31,11 @@ func (suite *CoreValueTestSuite) SetupSuite() {
 		return
 	}
 	suite.dbStore = store
+	suite.db = getDBConn()
 }
 
 func (suite *CoreValueTestSuite) SetupTest() {
+	suite.Init()
 	org := Organization{
 		Name:                     "test organization",
 		ContactEmail:             "test@gmail.com",
@@ -69,6 +73,19 @@ func (suite *CoreValueTestSuite) TestCreateCoreValueSuccess() {
 	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
 }
 
+func (suite *CoreValueTestSuite) TestCreateCoreValueFailed() {
+	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+	suite.db.Close()
+
+	expectedCoreValue := CoreValue{
+		Text:        "Test Text",
+		Description: "Test Description",
+	}
+	_, err := suite.dbStore.CreateCoreValue(context.Background(), suite.OrganizationID, expectedCoreValue)
+
+	assert.NotNil(suite.T(), err)
+}
+
 func (suite *CoreValueTestSuite) TestListCoreValueSuccess() {
 	coreValues, err := suite.dbStore.ListCoreValues(context.Background(), suite.OrganizationID)
 	assert.Nil(suite.T(), err)
@@ -78,6 +95,15 @@ func (suite *CoreValueTestSuite) TestListCoreValueSuccess() {
 	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
 }
 
+func (suite *CoreValueTestSuite) TestListCoreValueFailed() {
+	suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
+	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+	suite.db.Close()
+
+	_, err := suite.dbStore.ListCoreValues(context.Background(), suite.OrganizationID)
+	assert.NotNil(suite.T(), err)
+}
+
 func (suite *CoreValueTestSuite) TestGetCoreValueSuccess() {
 	coreValue, err := suite.dbStore.GetCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
 	assert.Nil(suite.T(), err)
@@ -85,6 +111,15 @@ func (suite *CoreValueTestSuite) TestGetCoreValueSuccess() {
 
 	suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
 	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+}
+
+func (suite *CoreValueTestSuite) TestGetCoreValueFailed() {
+	suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
+	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+	suite.db.Close()
+
+	_, err := suite.dbStore.GetCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
+	assert.NotNil(suite.T(), err)
 }
 
 func (suite *CoreValueTestSuite) TestUpdateCoreValueSuccess() {
@@ -98,10 +133,30 @@ func (suite *CoreValueTestSuite) TestUpdateCoreValueSuccess() {
 	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
 }
 
+func (suite *CoreValueTestSuite) TestUpdateCoreValueFailed() {
+	suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
+	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+	suite.db.Close()
+
+	suite.CoreValueCreated.Text = "Text Update"
+	_, err := suite.dbStore.UpdateCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID, suite.CoreValueCreated)
+
+	assert.NotNil(suite.T(), err)
+}
+
 func (suite *CoreValueTestSuite) TestDeleteCoreValueSuccess() {
 	err := suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
 
 	assert.Nil(suite.T(), err)
 
 	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+}
+
+func (suite *CoreValueTestSuite) TestDeleteCoreValueFailed() {
+	suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
+	suite.dbStore.DeleteOrganization(context.Background(), int(suite.OrganizationID))
+	suite.db.Close()
+
+	err := suite.dbStore.DeleteCoreValue(context.Background(), suite.OrganizationID, suite.CoreValueCreated.ID)
+	assert.NotNil(suite.T(), err)
 }

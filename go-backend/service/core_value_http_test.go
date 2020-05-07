@@ -62,6 +62,7 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesWhenDBFailure() {
 	)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Internal server error"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -104,6 +105,7 @@ func (suite *CoreValueHandlerTestSuite) TestGetCoreValuesWhenDBFailure() {
 		getCoreValueHandler(Dependencies{Store: suite.dbMock}),
 	)
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Internal server error"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -160,6 +162,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusCreated, recorder.Code)
+	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -184,6 +187,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenParentCoreValueNo
 	)
 
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid core value data","fields":{"parent_id":"Invalid parent core value"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -216,6 +220,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidParentCore
 	)
 
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid core value data","fields":{"parent_id":"Invalid parent core value"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -236,6 +241,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenDBFailure() {
 	)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Internal server error"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -254,6 +260,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidJSONFormat
 	)
 
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid json request body"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -280,6 +287,7 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
+	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -300,6 +308,7 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenDBFailure() {
 	)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Internal server error"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -318,6 +327,7 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidRequest() 
 	)
 
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid core value data","fields":{"description":"Can't be blank","text":"Can't be blank"}}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -337,5 +347,6 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidJSONFormat
 	)
 
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid json request body"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
