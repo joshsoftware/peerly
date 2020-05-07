@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 
 const LoginLabelComponent = ({
   className,
-  primaryGole,
+  orgPrimaryCoreValue,
   encoragementThought,
 }) => (
   <div className={className}>
     <p>
-      {primaryGole}
+      {orgPrimaryCoreValue}
       <br />
       ___
       <h6>{encoragementThought}</h6>
@@ -18,7 +18,7 @@ const LoginLabelComponent = ({
 
 LoginLabelComponent.propTypes = {
   className: PropTypes.string,
-  primaryGole: PropTypes.string.isRequired,
+  orgPrimaryCoreValue: PropTypes.string.isRequired,
   encoragementThought: PropTypes.string.isRequired,
 };
 
