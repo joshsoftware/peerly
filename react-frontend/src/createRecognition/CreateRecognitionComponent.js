@@ -1,6 +1,6 @@
 import React from "react";
 
-import CreateRecognitionCard from "./CreateRecognitionCard";
+import CreateRecognitionCard from "createRecognition/CreateRecognitionCard";
 const CreateRecognitionComponent = () => <CreateRecognitionCard />;
 
 export default CreateRecognitionComponent;
