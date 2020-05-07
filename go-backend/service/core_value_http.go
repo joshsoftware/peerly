@@ -24,15 +24,15 @@ func listCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
-			repsonse(rw, http.StatusInternalServerError, errorResponse{
-				Error: errorMessage{
+			repsonse(rw, http.StatusInternalServerError, map[string]messageObject{
+				"error": messageObject{
 					Message: "Internal server error",
 				},
 			})
 			return
 		}
 
-		repsonse(rw, http.StatusOK, successResponse{Data: coreValues})
+		repsonse(rw, http.StatusOK, map[string][]db.CoreValue{"data": coreValues})
 	})
 }
 
@@ -56,15 +56,15 @@ func getCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		coreValue, err := deps.Store.GetCoreValue(req.Context(), organisationID, coreValueID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while fetching data")
-			repsonse(rw, http.StatusInternalServerError, errorResponse{
-				Error: errorMessage{
+			repsonse(rw, http.StatusInternalServerError, map[string]messageObject{
+				"error": messageObject{
 					Message: "Internal server error",
 				},
 			})
 			return
 		}
 
-		repsonse(rw, http.StatusOK, successResponse{Data: coreValue})
+		repsonse(rw, http.StatusOK, map[string]db.CoreValue{"data": coreValue})
 	})
 }
 
@@ -82,8 +82,8 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		err = json.NewDecoder(req.Body).Decode(&coreValue)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while decoding request data")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: errorMessage{
+			repsonse(rw, http.StatusBadRequest, map[string]messageObject{
+				"error": messageObject{
 					Message: "Invalid json request body",
 				},
 			})
@@ -92,10 +92,10 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 		ok, errFields := coreValue.Validate(req.Context(), deps.Store, organisationID)
 		if !ok {
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: errorObject{
+			repsonse(rw, http.StatusBadRequest, map[string]errorObject{
+				"error": errorObject{
 					Fields:  errFields,
-					Message: "Invalid core value data",
+					messageObject: messageObject{"Invalid core value data"},
 				},
 			})
 			return
@@ -104,15 +104,15 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		resp, err := deps.Store.CreateCoreValue(req.Context(), organisationID, coreValue)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while creating core value")
-			repsonse(rw, http.StatusInternalServerError, errorResponse{
-				Error: errorMessage{
+			repsonse(rw, http.StatusInternalServerError, map[string]messageObject{
+				"error": messageObject{
 					Message: "Internal server error",
 				},
 			})
 			return
 		}
 
-		repsonse(rw, http.StatusCreated, successResponse{Data: resp})
+		repsonse(rw, http.StatusCreated, map[string]db.CoreValue{"data": resp})
 	})
 }
 
@@ -136,8 +136,8 @@ func deleteCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		err = deps.Store.DeleteCoreValue(req.Context(), organisationID, coreValueID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while deleting core value")
-			repsonse(rw, http.StatusInternalServerError, errorResponse{
-				Error: errorObject{
+			repsonse(rw, http.StatusInternalServerError, map[string]messageObject{
+				"error": messageObject{
 					Message: "Internal server error",
 				},
 			})
@@ -169,8 +169,8 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		err = json.NewDecoder(req.Body).Decode(&coreValue)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while decoding request data")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: errorMessage{
+			repsonse(rw, http.StatusBadRequest, map[string]messageObject{
+				"error": messageObject{
 					Message: "Invalid json request body",
 				},
 			})
@@ -179,10 +179,10 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 		ok, errFields := coreValue.Validate(req.Context(), deps.Store, organisationID)
 		if !ok {
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: errorObject{
+			repsonse(rw, http.StatusBadRequest, map[string]errorObject{
+				"error": errorObject{
 					Fields:  errFields,
-					Message: "Invalid core value data",
+					messageObject: messageObject{"Invalid core value data"},
 				},
 			})
 			return
@@ -191,14 +191,14 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		resp, err := deps.Store.UpdateCoreValue(req.Context(), organisationID, coreValueID, coreValue)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while updating core value")
-			repsonse(rw, http.StatusInternalServerError, errorResponse{
-				Error: errorMessage{
+			repsonse(rw, http.StatusInternalServerError, map[string]messageObject{
+				"error": messageObject{
 					Message: "Internal server error",
 				},
 			})
 			return
 		}
 
-		repsonse(rw, http.StatusOK, successResponse{Data: resp})
+		repsonse(rw, http.StatusOK, map[string]db.CoreValue{"data": resp})
 	})
 }
