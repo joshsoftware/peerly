@@ -25,7 +25,7 @@ HighFiveButtonComponent.propTypes = {
   onClickEvent: PropTypes.func.isRequired,
   imageIcon: PropTypes.string.isRequired,
   imageShape: PropTypes.string.isRequired,
-  buttonClassName: PropTypes.string.isRequired,
+  buttonClassName: PropTypes.string,
   highFiveIncrement: PropTypes.string.isRequired,
 };
 

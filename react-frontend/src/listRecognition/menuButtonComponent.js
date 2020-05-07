@@ -6,12 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "react-bootstrap";
 
 const MenuButtonComponent = (props) => {
-  const { onClickEvent } = props;
+  const { onClickEvent, buttonClassName } = props;
   return (
-    <Button
-      className="btn-sm bg-light grey text-dark font-weight-bold border-light grey"
-      onClick={onClickEvent}
-    >
+    <Button className={buttonClassName} onClick={onClickEvent}>
       <FontAwesomeIcon icon={faEllipsisH} />
     </Button>
   );
@@ -19,6 +16,7 @@ const MenuButtonComponent = (props) => {
 
 MenuButtonComponent.propTypes = {
   onClickEvent: PropTypes.func.isRequired,
+  buttonClassName: PropTypes.string,
 };
 
 export default MenuButtonComponent;
