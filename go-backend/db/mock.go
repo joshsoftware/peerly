@@ -39,3 +39,28 @@ func (m *DBMockStore) UpdateOrganization(ctx context.Context, org Organization, 
 	args := m.Called(ctx, org, id)
 	return args.Get(0).(Organization), args.Error(1)
 }
+
+func (m *DBMockStore) CreateBadge(ctx context.Context, bdg Badge) (createdBdg Badge, err error) {
+	args := m.Called(ctx, bdg)
+	return args.Get(0).(Badge), args.Error(1)
+}
+
+func (m *DBMockStore) ListBadges(ctx context.Context,org_id int) (bdgs []Badge, err error) {
+	args := m.Called(ctx,org_id)
+	return args.Get(0).([]Badge), args.Error(1)
+}
+
+func (m *DBMockStore) ShowBadge(ctx context.Context, bdg Badge) (bdgs Badge, err error) {
+	args := m.Called(ctx, bdg)
+	return args.Get(0).(Badge), args.Error(1)
+}
+
+func (m *DBMockStore) UpdateBadge(ctx context.Context,bdg Badge) (bdgs Badge, err error) {
+	args := m.Called(ctx,bdg)
+	return args.Get(0).(Badge), args.Error(1)
+}
+
+func (m *DBMockStore) DeleteBadge(ctx context.Context,org_id int,id int) (err error) {
+	args := m.Called(ctx,org_id,id)
+	return args.Error(1)
+}
