@@ -3,7 +3,15 @@ import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 const ButtonCoreComponent = (props) => {
-  const { value, className, type, onClick, variant, size } = props;
+  const {
+    value,
+    className,
+    type,
+    onClick,
+    variant,
+    size,
+    buttonNameText,
+  } = props;
   return (
     <Button
       className={className}
@@ -13,7 +21,7 @@ const ButtonCoreComponent = (props) => {
       size={size}
       onClick={onClick}
     >
-      {value}
+      {buttonNameText}
     </Button>
   );
 };
@@ -30,6 +38,7 @@ ButtonCoreComponent.propTypes = {
   size: PropTypes.oneOf(["sm", "lg"]),
   className: PropTypes.string,
   onClick: PropTypes.func.isRequired,
+  buttonNameText: PropTypes.string.isRequired,
 };
 
 export default ButtonCoreComponent;
