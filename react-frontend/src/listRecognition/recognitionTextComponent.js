@@ -3,9 +3,13 @@ import PropTypes from "prop-types";
 import LabelComponent from "../core-component/lableComponent";
 
 const RecognitionTextComponent = (props) => {
-  const { lableClassNameRecognitionText, recognition_text } = props;
+  const {
+    lableClassNameRecognitionText,
+    recognition_text,
+    divClassNameRecognitionText,
+  } = props;
   return (
-    <div>
+    <div className={divClassNameRecognitionText}>
       <LabelComponent
         labelText={recognition_text}
         className={lableClassNameRecognitionText}
@@ -15,8 +19,8 @@ const RecognitionTextComponent = (props) => {
 };
 
 RecognitionTextComponent.propTypes = {
-  recognition_by: PropTypes.object.isRequired,
   recognition_text: PropTypes.string.isRequired,
   lableClassNameRecognitionText: PropTypes.string,
+  divClassNameRecognitionText: PropTypes.string,
 };
 export default RecognitionTextComponent;

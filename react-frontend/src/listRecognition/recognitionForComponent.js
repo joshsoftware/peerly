@@ -3,29 +3,29 @@ import PropTypes from "prop-types";
 import LabelComponent from "../core-component/lableComponent";
 import ImageComponent from "../core-component/imageComponent";
 
-const RecognitionByComponent = (props) => {
+const RecognitionForComponent = (props) => {
   const {
-    recognition_by,
-    labelClassNameRecognitionBy,
+    recognition_for,
+    labelClassNameRecognitionFor,
     imageClassName,
     divClassNameRecognitionBy,
   } = props;
   return (
     <div className={divClassNameRecognitionBy}>
+      <ImageComponent src={recognition_for.image} className={imageClassName} />
       <LabelComponent
-        labelText={recognition_by.name}
-        className={labelClassNameRecognitionBy}
+        labelText={recognition_for.name}
+        className={labelClassNameRecognitionFor}
       />
-      <ImageComponent src={recognition_by.image} className={imageClassName} />
     </div>
   );
 };
 
-RecognitionByComponent.propTypes = {
-  recognition_by: PropTypes.object.isRequired,
-  labelClassNameRecognitionBy: PropTypes.string,
+RecognitionForComponent.propTypes = {
+  recognition_for: PropTypes.object.isRequired,
+  labelClassNameRecognitionFor: PropTypes.string,
   imageClassName: PropTypes.string,
   divClassNameRecognitionBy: PropTypes.string,
 };
 
-export default RecognitionByComponent;
+export default RecognitionForComponent;

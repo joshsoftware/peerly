@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import ImageComponent from "./imageComponent";
+import ImageComponent from "../core-component/imageComponent";
 
 const HighFiveButtonComponent = (props) => {
   const {
     onClickEvent,
-    src,
+    iconImage,
     imageClassName,
     buttonClassName,
     highFiveIncrement,
@@ -15,14 +15,14 @@ const HighFiveButtonComponent = (props) => {
   return (
     <Button className={buttonClassName} onClick={onClickEvent}>
       {highFiveIncrement}
-      <ImageComponent src={src} className={imageClassName} />
+      <ImageComponent src={iconImage} className={imageClassName} />
     </Button>
   );
 };
 
 HighFiveButtonComponent.propTypes = {
   onClickEvent: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
+  iconImage: PropTypes.string.isRequired,
   imageClassName: PropTypes.string,
   buttonClassName: PropTypes.string,
   highFiveIncrement: PropTypes.string.isRequired,
