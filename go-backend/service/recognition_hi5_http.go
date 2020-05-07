@@ -39,8 +39,7 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 			rw.Write(respBytes)
 			return
 		}
-		// TODO
-		// Update Hi5 quota balance on successful creation of Hi5 (subtract 1)
+
 		err = deps.Store.CreateRecognitionHi5(req.Context(), recognitionHi5, recognitionId)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error in creating recognition hi5")
@@ -48,15 +47,23 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 			return
 		}
 
-		respBytes, err := json.Marshal("Hi5 to you too!")
+		currentUser, err := deps.Store.GetUser(req.Context(), recognitionHi5.GivenBy)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling response")
+			logger.WithField("err", err.Error()).Error("Error while fetching User")
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		
-		rw.WriteHeader(http.StatusOK)
-		rw.Write(respBytes)
+
+		currentUser.Hi5QuotaBalance -= 1
+
+		_, err = deps.Store.UpdateUser(req.Context(), currentUser, recognitionHi5.GivenBy)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while subtracting User Hi5 quota balance")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		rw.WriteHeader(http.StatusCreated)
 		return
 	})
 }
