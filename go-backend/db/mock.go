@@ -48,3 +48,13 @@ func (m *DBMockStore) UpdateUser(ctx context.Context, usr User, id int) (updated
 	args := m.Called(ctx, usr, id)
 	return args.Get(0).(User), args.Error(1)
 }
+
+func (m *DBMockStore) CreateRecognitionHi5(ctx context.Context, recognitionHi5 RecognitionHi5, recognitionId int) (err error) {
+	args := m.Called(ctx, recognitionHi5, recognitionId)
+	return args.Error(0)
+}
+
+func (m *DBMockStore) CheckHi5QuotaBalance(recognitionHi5 RecognitionHi5) (errorResponse map[string]ErrorResponse, valid bool) {
+	args := m.Called(recognitionHi5)
+	return args.Get(0).(map[string]ErrorResponse), args.Get(1).(bool)
+}

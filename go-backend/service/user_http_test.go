@@ -29,6 +29,7 @@ func (suite *UsersHandlerTestSuite) SetupTest() {
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(UsersHandlerTestSuite))
 	suite.Run(t, new(OrganizationHandlerTestSuite))
+	suite.Run(t, new(RecognitionHi5HandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
