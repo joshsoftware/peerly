@@ -1,5 +1,4 @@
 import React from "react";
-import "@reach/menu-button/styles.css";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import ImageComponent from "./imageComponent";
@@ -7,8 +6,8 @@ import ImageComponent from "./imageComponent";
 const HighFiveButtonComponent = (props) => {
   const {
     onClickEvent,
-    imageIcon,
-    imageShape,
+    src,
+    imageClassName,
     buttonClassName,
     highFiveIncrement,
   } = props;
@@ -16,15 +15,15 @@ const HighFiveButtonComponent = (props) => {
   return (
     <Button className={buttonClassName} onClick={onClickEvent}>
       {highFiveIncrement}
-      <ImageComponent src={imageIcon} shape={imageShape} />
+      <ImageComponent src={src} className={imageClassName} />
     </Button>
   );
 };
 
 HighFiveButtonComponent.propTypes = {
   onClickEvent: PropTypes.func.isRequired,
-  imageIcon: PropTypes.string.isRequired,
-  imageShape: PropTypes.string.isRequired,
+  src: PropTypes.string.isRequired,
+  imageClassName: PropTypes.string,
   buttonClassName: PropTypes.string,
   highFiveIncrement: PropTypes.string.isRequired,
 };

@@ -2,11 +2,13 @@ import React from "react";
 import { Image } from "react-bootstrap";
 import PropTypes from "prop-types";
 const ImageComponent = (props) => {
-  const { src, shape } = props;
-  return <Image src={src} className={shape} />;
+  const { src, className } = props;
+  return <Image src={src} className={className} />;
 };
+
 ImageComponent.propTypes = {
   src: PropTypes.string.isRequired,
-  shape: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
+
 export default ImageComponent;
