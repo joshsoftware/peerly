@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import LabelCoreComponent from "../coreComponents/LabelCoreComponent";
-import ButtonCoreComponent from "../coreComponents/ButtonCoreComponent";
+import LabelCoreComponent from "coreComponents/LabelCoreComponent";
+import ButtonCoreComponent from "coreComponents/ButtonCoreComponent";
+import CoreValuesComponent from "./CoreValuesComponent";
 const CreateRecognitionCardBody = (props) => {
   const {
-    CoreValue,
+    coreValues,
     labelName,
     labelClassName,
     buttonclassName,
@@ -17,36 +18,39 @@ const CreateRecognitionCardBody = (props) => {
   return (
     <>
       <LabelCoreComponent labelName={labelName} ClassName={labelClassName} />
-      {CoreValue.map((object) => (
-        <ButtonCoreComponent
-          key={object.index}
-          className={buttonclassName}
-          type={type}
-          variant={variant}
-          size={size}
-          value={object.name}
-        />
-      ))}
-      {CoreValue.map((object) => (
-        <LabelCoreComponent
-          key={object.index}
-          labelName={object.labelName}
-          ClassName={object.labelClassName}
-        />
-      ))}
-      <ButtonCoreComponent value="add comments" />
-      <ButtonCoreComponent value="Done" />
+      <CoreValuesComponent coreValues={coreValues} />
+      <ButtonCoreComponent
+        onClick={""}
+        value="add comments"
+        buttonclassName={buttonclassName}
+        type={type}
+        variant={variant}
+        size={size}
+      />
+      <ButtonCoreComponent
+        onClick={""}
+        value="Done"
+        buttonclassName={buttonclassName}
+        type={type}
+        variant={variant}
+        size={size}
+      />
     </>
   );
 };
 
 CreateRecognitionCardBody.propTypes = {
   type: PropTypes.string,
-  CoreValue: PropTypes.arrayOf(PropTypes.object),
+  coreValues: PropTypes.arrayOf(
+    PropTypes.shape({
+      labelName: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    })
+  ),
   variant: PropTypes.string,
   size: PropTypes.oneOf(["sm", "lg"]),
   buttonclassName: PropTypes.string,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
   labelName: PropTypes.string.isRequired,
   labelClassName: PropTypes.string,
 };
