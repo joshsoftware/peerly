@@ -11,9 +11,7 @@ const ButtonCoreComponent = (props) => {
       value={value}
       variant={variant}
       size={size}
-      onClick={() => {
-        onClick();
-      }}
+      onClick={onClick}
     >
       {value}
     </Button>
@@ -31,6 +29,7 @@ ButtonCoreComponent.propTypes = {
   variant: PropTypes.string,
   size: PropTypes.oneOf(["sm", "lg"]),
   className: PropTypes.string,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 };
+
 export default ButtonCoreComponent;
