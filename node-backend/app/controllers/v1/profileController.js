@@ -3,8 +3,7 @@ const Users = db.users;
 
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 module.exports.getProfile = async (req, res) => {
-  const authHeader = req.headers["authorization"];
-  let userData = await jwtToken.getData(authHeader);
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   Users.findByPk(userData.userId)
     .then((profile) => {
       res.status(200).send({

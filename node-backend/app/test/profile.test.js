@@ -28,16 +28,5 @@ describe("test cases for get profile", function () {
         done();
       });
   });
-  it("should give internal server error", function (done) {
-    server
-      .get("/profile")
-      .set("Authorization", "Bearer " + token)
-      .expect("Content-type", /json/)
-      .expect(500)
-      .end(function (err, res) {
-        res.status.should.equal(500);
-        done();
-      });
-  });
 });
 /*eslint-disable  no-undef*/
