@@ -6,4 +6,7 @@ test-coverage:
 	go tool cover -html=coverage.out
 
 server:
-	source ./.env ; go run main.go -- start
+	go run main.go -- start
+
+debug:
+	dlv debug -- start
