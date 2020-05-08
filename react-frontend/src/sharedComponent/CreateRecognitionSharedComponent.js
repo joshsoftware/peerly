@@ -26,7 +26,8 @@ const CreateRecognitionSharedComponent = ({
         value={createRecognitionSharedComponent.value}
         variant={createRecognitionSharedComponent.variant}
         size={createRecognitionSharedComponent.size}
-        buttonNameText={createRecognitionSharedComponent.buttonNameText}
+        ButtonIcon={createRecognitionSharedComponent.buttonIcon}
+        hi5CountComponent={createRecognitionSharedComponent.hi5CountComponent}
       />
     </Card.Body>
   </Card>
@@ -46,7 +47,18 @@ CreateRecognitionSharedComponent.propTypes = {
     alt: PropTypes.string,
     height: PropTypes.string,
     width: PropTypes.string,
-    buttonNameText: PropTypes.string.isRequired,
+    buttonIcon: PropTypes.any.isRequired,
+    hi5CountComponent: PropTypes.shape({
+      availabilityStatus: PropTypes.string.isRequired,
+      availabilityStatusClassName: PropTypes.string,
+      src: PropTypes.string.isRequired,
+      imgClassName: PropTypes.string,
+      alt: PropTypes.string,
+      height: PropTypes.string,
+      width: PropTypes.string,
+      hi5CountClassName: PropTypes.string,
+      hi5Count: PropTypes.string.isRequired,
+    }),
   }),
 };
 
