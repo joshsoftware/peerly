@@ -21,6 +21,9 @@ CreateRecognitionComponent.propTypes = {
         coreValues: PropTypes.arrayOf(
           PropTypes.shape({
             labelName: PropTypes.string.isRequired,
+            labelClassName: PropTypes.string,
+            IconClassName: PropTypes.string,
+            Icon: PropTypes.any.isRequired,
           })
         ),
         type: PropTypes.string,
@@ -54,7 +57,18 @@ CreateRecognitionComponent.propTypes = {
       buttonclassName: PropTypes.string,
       labelName: PropTypes.string.isRequired,
       labelClassName: PropTypes.string,
-      buttonNameText: PropTypes.string.isRequired,
+      buttonIcon: PropTypes.any.isRequired,
+      hi5CountComponent: PropTypes.shape({
+        availabilityStatus: PropTypes.string.isRequired,
+        availabilityStatusClassName: PropTypes.string,
+        src: PropTypes.string.isRequired,
+        imgClassName: PropTypes.string,
+        alt: PropTypes.string,
+        height: PropTypes.string,
+        width: PropTypes.string,
+        hi5CountClassName: PropTypes.string,
+        hi5Count: PropTypes.string.isRequired,
+      }),
     }),
   }),
 };
