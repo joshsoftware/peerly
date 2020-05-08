@@ -5,6 +5,7 @@ import ButtonCoreComponent from "coreComponents/ButtonCoreComponent";
 const EmployeeNameAndImageComponent = (props) => {
   const { buttonclassName, type, value, variant, size, buttonNameText } = props;
   const onClick = () => {}; //eslint-disable-line no-empty-function
+
   return (
     <ButtonCoreComponent
       className={buttonclassName}
