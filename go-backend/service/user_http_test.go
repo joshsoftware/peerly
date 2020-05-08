@@ -34,7 +34,19 @@ func TestExampleTestSuite(t *testing.T) {
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	suite.dbMock.On("ListUsers", mock.Anything).Return(
 		[]db.User{
-			db.User{FirstName: "test-user", OrgID: 1},
+			db.User{
+				ID:              1,
+				OrgID:           1,
+				FirstName:       "test1",
+				LastName:        "test2",
+				Email:           "test@gmail.com",
+				DisplayName:     "test",
+				ProfileImage:    "test.jpg",
+				SoftDelete:      false,
+				RoleID:          10,
+				Hi5QuotaBalance: 5,
+				SoftDeleteBy:    2,
+				SoftDeleteAt:    1588073442241},
 		},
 		nil,
 	)
@@ -48,7 +60,7 @@ func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"full_name":"test-user","age":18}]`, recorder.Body.String())
+	assert.Equal(suite.T(), `[{"id":1,"org_id":1,"first_name":"test1","last_name":"test2","email":"test@gmail.com","display_name":"test","profile_image":"test.jpg","soft_delete":false,"role_id":10,"hi5_quota_balance":5,"soft_delete_by":2,"soft_delete_at":1588073442241}]`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -143,9 +155,9 @@ func (suite *UsersHandlerTestSuite) TestGetUserSuccess() {
 			OrgID:           1,
 			FirstName:       "test1",
 			LastName:        "test2",
-			Email:           "testuser@gmail.com",
-			DisplayName:     "test user",
-			ProfileImage:    "test.jpg",``
+			Email:           "test@gmail.com",
+			DisplayName:     "test",
+			ProfileImage:    "test.jpg",
 			SoftDelete:      false,
 			RoleID:          10,
 			Hi5QuotaBalance: 5,
@@ -162,7 +174,7 @@ func (suite *UsersHandlerTestSuite) TestGetUserSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1 "org_id":1,"first_name":"test1", "last_name":"test2", "email":"test@gmail.com", "display_name": "test user", "profile_image": "test.jpg", "soft_delete": false, "role_id": 10, "hi5_quota_balance": 5, "soft_delete_by": 2, "soft_delete_at": 1588073442241}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"id":1,"org_id":1,"first_name":"test1","last_name":"test2","email":"test@gmail.com","display_name":"test","profile_image":"test.jpg","soft_delete":false,"role_id":10,"hi5_quota_balance":5,"soft_delete_by":2,"soft_delete_at":1588073442241}`, recorder.Body.String())
 
 	suite.dbMock.AssertExpectations(suite.T())
 }
