@@ -13,11 +13,11 @@ var (
 	appPort int
 )
 
-func Load() {
+func Load(configFile string) {
 	viper.SetDefault("APP_NAME", "app")
 	viper.SetDefault("APP_PORT", "8002")
 
-	viper.SetConfigName("application")
+	viper.SetConfigName(configFile)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")
 	viper.AddConfigPath("./..")

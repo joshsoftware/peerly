@@ -33,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
         notNull: false,
       },
       profile_image_url: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         notNull: false,
       },
       soft_delete: {
@@ -51,8 +51,8 @@ module.exports = (sequelize, Sequelize) => {
       soft_delete_by: {
         type: Sequelize.INTEGER,
       },
-      soft_delete_on: {
-        type: "TIMESTAMP",
+      soft_delete_at: {
+        type: Sequelize.BIGINT,
       },
     },
     {

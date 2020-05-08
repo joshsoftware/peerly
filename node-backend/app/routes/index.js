@@ -2,11 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const routes = express.Router();
 
-const sessionRoute = require("./sessionRoutes_v1");
-const usersRoute = require("./usersRoutes_v1");
-const coreValuesRoute = require("./coreValuesRoutes_v1");
-const orgRoute = require("./organisationsRoutes_v1");
-const badgesRoute = require("./badgesRoutes_v1");
+const sessionRoute = require("./sessionRoutes");
+const usersRoute = require("./usersRoutes");
+const coreValuesRoute = require("./coreValuesRoutes");
+const orgRoute = require("./organisationsRoutes");
+const badgesRoute = require("./badgesRoutes");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 const recognitionRoute = require("./recognitionRoutes");
 

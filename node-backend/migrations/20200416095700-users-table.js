@@ -80,7 +80,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
       soft_delete_by: {
         type: "int",
       },
-      soft_delete_on: {
+      soft_delete_at: {
         type: "bigint",
       },
     },

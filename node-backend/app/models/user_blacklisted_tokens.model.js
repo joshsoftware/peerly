@@ -16,8 +16,8 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.TEXT,
         notNull: true,
       },
-      expiry_date: {
-        type: "TIMESTAMP",
+      expires_at: {
+        type: Sequelize.BIGINT,
         notNull: true,
       },
     },
