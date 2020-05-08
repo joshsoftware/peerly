@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const recognitionController = require("../controllers/v1/recognitionController");
+const utility = require("../utils/utility");
+const /*eslint-disable no-unused-vars*/ recognitionControllerV1 = require("../controllers/v1/recognitionController");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 const recRouter = express.Router();
 
@@ -22,9 +23,21 @@ async function authorizedRole(req, res, next) {
 recRouter.use(bodyParser.urlencoded({ extended: true }));
 
 recRouter.use(authorizedRole);
+/*eslint-disable  no-eval*/
+recRouter.post("/organisations/recognitions", async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "recognitionController"
+  );
+  eval(controller).create(req, res);
+});
 
-recRouter.post("/organisations/recognitions", recognitionController.create);
-
-recRouter.get("/organisations/recognitions/:id", recognitionController.findOne);
+recRouter.get("/organisations/recognitions/:id", async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "recognitionController"
+  );
+  eval(controller).findOne(req, res);
+});
 
 module.exports = recRouter;
