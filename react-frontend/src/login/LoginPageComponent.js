@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Row, Col, Container } from "react-bootstrap";
+import { AiOutlineMail } from "react-icons/ai";
 
 import LoginLabelComponent from "login/LoginLabelComponent";
 import LogoComponent from "login/LogoComponent";
@@ -14,6 +15,7 @@ const LoginPageComponent = ({
   mobileVersionImage,
   webVersionImage,
   sliderList,
+  buttonText,
 }) => (
   <>
     <Container fluid={true}>
@@ -49,8 +51,10 @@ const LoginPageComponent = ({
                 <Col className="justify-content-center w-100 pt-5">
                   <ButtonComponent
                     type="button"
-                    className="btn btn-light "
-                    text="LOG IN WITH EMAIL"
+                    className="btn btn-light text-sm"
+                    style={{ borderRadius: 25 }}
+                    icon={<AiOutlineMail height={15} width={2} />}
+                    text={buttonText}
                   />
                 </Col>
               </Row>
@@ -111,6 +115,7 @@ LoginPageComponent.propTypes = {
       }).isRequired,
     })
   ),
+  buttonText: PropTypes.string.isRequired,
 };
 
 export default LoginPageComponent;

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import LabelComponent from "../core-components/LabelComponent";
+import LabelComponent from "core-components/LabelComponent";
 
 const LogoComponent = ({ className, text }) => (
   <div className={className}>
