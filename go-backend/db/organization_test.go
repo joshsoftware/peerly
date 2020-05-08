@@ -25,7 +25,8 @@ func (suite *OrganizationTestSuite) SetupSuite() {
 
 	err := RunMigrations()
 	if err!=nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
+		logger.WithField("err", err.Error()).Error("Database migration failed")
+		return
 	}
 
 	store, err := Init()

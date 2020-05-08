@@ -20,8 +20,20 @@ func (suite *RecognitionHi5HandlerTestSuite) SetupTest() {
 
 func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Success() {
 	suite.dbMock.On("CreateRecognitionHi5", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-	suite.dbMock.On("CheckHi5QuotaBalance", mock.Anything).Return(map[string]db.ErrorResponse{}, true)
-	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{}, nil,)
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{
+		ID:              1,
+		OrgID:           1,
+		FirstName:       "test1",
+		LastName:        "test2",
+		Email:           "test@gmail.com",
+		DisplayName:     "test",
+		ProfileImage:    "test.jpg",
+		SoftDelete:      false,
+		RoleID:          10,
+		Hi5QuotaBalance: 5,
+		SoftDeleteBy:    2,
+		SoftDeleteAt:    1588073442241,
+	}, nil,)
 	suite.dbMock.On("UpdateUser", mock.Anything, mock.Anything, mock.Anything).Return(db.User{}, nil)
 
 	body := `{"comment": "testComment", "given_by": 1}`
@@ -39,15 +51,21 @@ func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Success() {
 
 func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Failure() {
 	suite.dbMock.On("CreateRecognitionHi5", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{}, nil,)
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{
+		ID:              1,
+		OrgID:           1,
+		FirstName:       "test1",
+		LastName:        "test2",
+		Email:           "test@gmail.com",
+		DisplayName:     "test",
+		ProfileImage:    "test.jpg",
+		SoftDelete:      false,
+		RoleID:          10,
+		Hi5QuotaBalance: 0,
+		SoftDeleteBy:    2,
+		SoftDeleteAt:    1588073442241,
+	}, nil,)
 	suite.dbMock.On("UpdateUser", mock.Anything, mock.Anything, mock.Anything).Return(db.User{}, nil)
-	suite.dbMock.On("CheckHi5QuotaBalance", mock.Anything).Return(map[string]db.ErrorResponse{
-		"error": db.ErrorResponse{
-				  Code: "insufficient_hi5_quota_balance",
-					Message: "Insufficient Hi5 quota balance.",
-					Fields: nil,
-				},
-	}, false)
 
 	body := `{"comment": "testComment", "given_by": 1}`
 
@@ -61,14 +79,26 @@ func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Failure() {
 	assert.Equal(suite.T(), `{"error":{"code":"insufficient_hi5_quota_balance","message":"Insufficient Hi5 quota balance.","fields":null}}`, recorder.Body.String())
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
 	suite.dbMock.AssertNotCalled(suite.T(), "CreateRecognitionHi5", mock.Anything, mock.Anything, mock.Anything)
-	suite.dbMock.AssertNotCalled(suite.T(), "GetUser", mock.Anything, mock.Anything)
+	suite.dbMock.AssertCalled(suite.T(), "GetUser", mock.Anything, mock.Anything)
 	suite.dbMock.AssertNotCalled(suite.T(), "UpdateUser", mock.Anything, mock.Anything, mock.Anything)
-	suite.dbMock.AssertCalled(suite.T(), "CheckHi5QuotaBalance", mock.Anything)
 }
 
 func (suite *RecognitionHi5HandlerTestSuite) TestRecognitionHi5DBFailure() {
 	suite.dbMock.On("CreateRecognitionHi5", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("Error in creating recognition hi5"))
-	suite.dbMock.On("CheckHi5QuotaBalance", mock.Anything).Return(map[string]db.ErrorResponse{}, true)
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{
+		ID:              1,
+		OrgID:           1,
+		FirstName:       "test1",
+		LastName:        "test2",
+		Email:           "test@gmail.com",
+		DisplayName:     "test",
+		ProfileImage:    "test.jpg",
+		SoftDelete:      false,
+		RoleID:          10,
+		Hi5QuotaBalance: 2,
+		SoftDeleteBy:    2,
+		SoftDeleteAt:    1588073442241,
+	}, nil,)
 
 	body := `{"comment": "testComment", "given_by": 1}`
 
