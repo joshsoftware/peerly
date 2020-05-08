@@ -6,6 +6,9 @@ import HighFiveButtonComponent from "./highFiveButtonComponent";
 import RecognitionCardHeaderComponent from "./recogntionCardHeaderComponent";
 import RecognitionCardBodyComponent from "./recognitionCardBodyComponent";
 
+const onclickHighFiveButton = () => {
+  //todo function for increase high five count
+};
 const RecognitionCardComponent = (props) => {
   const { recognition } = props;
   return (
@@ -38,10 +41,12 @@ const RecognitionCardComponent = (props) => {
               iconImage={recognition.highFiveImage}
               highFiveIncrement={recognition.highFiveIncrement}
               buttonClassName="bg-light grey btn-sm font-weight-bold text-dark btn-outline-light grey"
+              onClickEvent={onclickHighFiveButton}
             />
           </Card.Footer>
         </Card>
       </div>
+
       {/* for mobile version */}
       <div className=" d-sm-block d-md-none">
         <Card className="mt-4 ml-2 mr-2 shadow p-3 mb-4 rounded border border-secondary bg-light grey">
@@ -68,6 +73,7 @@ const RecognitionCardComponent = (props) => {
               iconImage={recognition.highFiveImage}
               highFiveIncrement={recognition.highFiveIncrement}
               buttonClassName="bg-light grey btn-sm font-weight-bold text-dark btn-outline-light grey"
+              onClickEvent={onclickHighFiveButton}
             />
           </Card.Footer>
         </Card>

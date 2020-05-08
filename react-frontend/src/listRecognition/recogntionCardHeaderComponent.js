@@ -7,12 +7,19 @@ import MenuButtonComponent from "./menuButtonComponent";
 import RecognitionCoreValueComponent from "./recognitionCoreValueComponent";
 import RecognitionOnComponent from "./recogntionOnComponent";
 
+const onclickMenuButton = () => {
+  //todo function for menu
+};
+
 const RecognitionCardHeaderComponent = (props) => {
   const { recognition_on, recognition_for, core_value, highFiveText } = props;
   return (
     <div>
       <div className="d-flex justify-content-end">
-        <MenuButtonComponent ClassName="bg-light grey text-dark btn-outline-light grey" />
+        <MenuButtonComponent
+          ClassName="bg-light grey text-dark btn-outline-light grey"
+          onClickEvent={onclickMenuButton}
+        />
       </div>
       <div className="d-flex  flex-column-left">
         <ImageComponent
