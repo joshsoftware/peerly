@@ -12,6 +12,7 @@ type messageObject struct {
 }
 
 type errorObject struct {
+	Code string `json:"code"`
 	messageObject
 	Fields  map[string]string `json:"fields"`
 }

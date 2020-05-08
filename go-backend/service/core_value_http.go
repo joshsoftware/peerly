@@ -94,6 +94,7 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		if !ok {
 			repsonse(rw, http.StatusBadRequest, map[string]errorObject{
 				"error": errorObject{
+					Code: "invalid-core-value",
 					Fields:  errFields,
 					messageObject: messageObject{"Invalid core value data"},
 				},
@@ -181,6 +182,7 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 		if !ok {
 			repsonse(rw, http.StatusBadRequest, map[string]errorObject{
 				"error": errorObject{
+					Code: "invalid-core-value",
 					Fields:  errFields,
 					messageObject: messageObject{"Invalid core value data"},
 				},
