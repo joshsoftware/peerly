@@ -27,11 +27,18 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 			return
 		}
 
-		errorResponse, valid := deps.Store.CheckHi5QuotaBalance(recognitionHi5)
+		currentUser, err := deps.Store.GetUser(req.Context(), recognitionHi5.GivenBy)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching User")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		errorResponse, valid := recognitionHi5.CheckHi5QuotaBalance(currentUser.Hi5QuotaBalance)
 		if !valid {
 			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {
-				logger.WithField("err", err.Error()).Error("Error marshaling organizations data")
+				logger.WithField("err", err.Error()).Error("Error marshaling recognitionHi5 data")
 				rw.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -44,13 +51,6 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error in creating recognition hi5")
 			rw.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		currentUser, err := deps.Store.GetUser(req.Context(), recognitionHi5.GivenBy)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while fetching User")
-			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
