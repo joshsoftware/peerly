@@ -29,5 +29,8 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	// Basic logout
 	router.HandleFunc("/logout", handleLogout(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 
+	// TODO: Finish login system
+	router.HandleFunc("/auth/google", handleAuth(deps)).Methods(http.MethodGet)
+
 	return
 }
