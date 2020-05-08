@@ -29,4 +29,5 @@ CreateRecognitionListOfEmployee.propTypes = {
     })
   ),
 };
+
 export default CreateRecognitionListOfEmployee;
