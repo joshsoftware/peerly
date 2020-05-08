@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import EmployeeNameAndImageComponent from "sharedComponent/EmployeeNameAndImageComponent";
 const CreateRecognitionListOfEmployee = ({ employeeList }) =>
-  employeeList.map((employee) => (
+  employeeList.map((employee, index) => (
     <EmployeeNameAndImageComponent
-      key={employee.index}
+      key={index}
       src={employee.src}
       alt={employee.alt}
       height={employee.height}
