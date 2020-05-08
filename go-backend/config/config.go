@@ -14,6 +14,7 @@ var (
 	jwtKey  string
 )
 
+// Load - loads all the environment variables and/or params in application.yml
 func Load() {
 	viper.SetDefault("APP_NAME", "app")
 	viper.SetDefault("APP_PORT", "8002")
@@ -27,6 +28,7 @@ func Load() {
 	viper.AutomaticEnv()
 }
 
+// AppName - returns the app name
 func AppName() string {
 	if appName == "" {
 		appName = ReadEnvString("APP_NAME")
@@ -34,6 +36,7 @@ func AppName() string {
 	return appName
 }
 
+// AppPort - returns application http port
 func AppPort() int {
 	if appPort == 0 {
 		appPort = ReadEnvInt("APP_PORT")
@@ -41,6 +44,7 @@ func AppPort() int {
 	return appPort
 }
 
+// JwtKey - returns the JSON Web Token key
 func JwtKey() []byte {
 	if jwtKey == "" {
 		jwtKey = ReadEnvString("JWT_SECRET")
@@ -48,6 +52,7 @@ func JwtKey() []byte {
 	return []byte(jwtKey)
 }
 
+// ReadEnvInt - reads an environment variable as an integer
 func ReadEnvInt(key string) int {
 	checkIfSet(key)
 	v, err := strconv.Atoi(viper.GetString(key))
@@ -57,11 +62,13 @@ func ReadEnvInt(key string) int {
 	return v
 }
 
+// ReadEnvString - reads an environment variable as a string
 func ReadEnvString(key string) string {
 	checkIfSet(key)
 	return viper.GetString(key)
 }
 
+// ReadEnvBool - reads environment variable as a boolean
 func ReadEnvBool(key string) bool {
 	checkIfSet(key)
 	return viper.GetBool(key)
