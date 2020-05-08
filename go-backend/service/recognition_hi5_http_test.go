@@ -1,7 +1,7 @@
 package service
 
 import (
-	_"errors"
+	"errors"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"github.com/stretchr/testify/assert"
@@ -58,9 +58,27 @@ func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Failure() {
 		createRecognitionHi5Handler(Dependencies{Store: suite.dbMock}),
 	)
 
+	assert.Equal(suite.T(), `{"error":{"code":"insufficient_hi5_quota_balance","message":"Insufficient Hi5 quota balance.","fields":null}}`, recorder.Body.String())
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
 	suite.dbMock.AssertNotCalled(suite.T(), "CreateRecognitionHi5", mock.Anything, mock.Anything, mock.Anything)
 	suite.dbMock.AssertNotCalled(suite.T(), "GetUser", mock.Anything, mock.Anything)
 	suite.dbMock.AssertNotCalled(suite.T(), "UpdateUser", mock.Anything, mock.Anything, mock.Anything)
 	suite.dbMock.AssertCalled(suite.T(), "CheckHi5QuotaBalance", mock.Anything)
+}
+
+func (suite *RecognitionHi5HandlerTestSuite) TestRecognitionHi5DBFailure() {
+	suite.dbMock.On("CreateRecognitionHi5", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("Error in creating recognition hi5"))
+	suite.dbMock.On("CheckHi5QuotaBalance", mock.Anything).Return(map[string]db.ErrorResponse{}, true)
+
+	body := `{"comment": "testComment", "given_by": 1}`
+
+	recorder := makeHTTPCall(http.MethodPost,
+		"/recognitions/{recognition_id:[0-9]+}/hi5",
+		"/recognitions/1/hi5",
+		body,
+		createRecognitionHi5Handler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	suite.dbMock.AssertExpectations(suite.T())
 }
