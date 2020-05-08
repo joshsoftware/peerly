@@ -28,6 +28,9 @@ CreateRecognitionCard.propTypes = {
       coreValues: PropTypes.arrayOf(
         PropTypes.shape({
           labelName: PropTypes.string.isRequired,
+          labelClassName: PropTypes.string,
+          IconClassName: PropTypes.string,
+          Icon: PropTypes.any.isRequired,
         })
       ),
       labelName: PropTypes.string.isRequired,
