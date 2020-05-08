@@ -12,6 +12,7 @@ const ButtonCoreComponent = (props) => {
     size,
     buttonNameText,
   } = props;
+
   return (
     <Button
       className={className}
