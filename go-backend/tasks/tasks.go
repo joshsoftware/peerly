@@ -13,6 +13,6 @@ import (
 // external scripts that would otherwise do the same thing.
 func Init(deps service.Dependencies) {
 	s1 := gocron.NewScheduler(time.UTC)
-	s1.Every(3).Seconds().Do(deps.Store.CleanBlacklistedTokens)
+	s1.Every(1).Hours().Do(deps.Store.CleanBlacklistedTokens)
 	s1.Start()
 }
