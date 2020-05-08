@@ -27,6 +27,7 @@ const ListRecognitionsComponent = () => {
       highFiveText: "got high-five for",
       rightColumnImage: rightColumnImage,
       highFiveImage: highFiveImage,
+      highFiveIncrement: "+1",
     },
     {
       recognition_for: {
@@ -45,6 +46,7 @@ const ListRecognitionsComponent = () => {
       highFiveText: "got high-five for",
       rightColumnImage: rightColumnImage,
       highFiveImage: highFiveImage,
+      highFiveIncrement: "+1",
     },
   ];
 
