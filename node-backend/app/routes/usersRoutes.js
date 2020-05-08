@@ -5,11 +5,15 @@ const /*eslint-disable no-unused-vars*/ usersControllerV1 = require("../controll
 const utility = require("../utils/utility");
 const usersRouter = express.Router();
 usersRouter.use(bodyParser.urlencoded({ extended: true }));
-usersRouter.get("/users", async (req, res) => {
-  let controller = await utility.getVersionedController(
-    req.headers,
-    "usersController"
-  );
-  /*eslint-disable no-eval*/ eval(controller).findUsersByOrg(req, res);
-});
+usersRouter.get(
+  "/users/:limit/:offset/:starts_with/:org_id",
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "usersController"
+    );
+    /*eslint-disable no-eval*/ eval(controller).findUsersByOrg(req, res);
+  }
+);
+
 module.exports = usersRouter;
