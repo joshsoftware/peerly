@@ -64,12 +64,14 @@ module.exports.login = async (req, res) => {
       });
     } else if (domainResult) {
       let orgId = domainResult.id;
+      let hi5QuotaBalance = domainResult.hi5_limit;
       let checkerror = await insertData(
         orgId,
         firstName,
         lastName,
         email,
-        displayName
+        displayName,
+        hi5QuotaBalance
       );
       if (checkerror == "error") {
         res.status(500).send({
@@ -154,7 +156,14 @@ const getOrganization = async (domainName) => {
   return domainResult;
 };
 
-const insertData = async (orgId, firstName, lastName, email, displayName) => {
+const insertData = async (
+  orgId,
+  firstName,
+  lastName,
+  email,
+  displayName,
+  hi5QuotaBalance
+) => {
   let errorCheck;
   const user = {
     org_id: orgId,
@@ -164,7 +173,7 @@ const insertData = async (orgId, firstName, lastName, email, displayName) => {
     display_name: displayName,
     soft_delete: false,
     role_id: 2,
-    hi5_quota_balance: 5,
+    hi5_quota_balance: hi5QuotaBalance,
   };
   await Users.create(user).catch(() => {
     errorCheck = "error";
