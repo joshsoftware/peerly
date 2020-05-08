@@ -29,4 +29,4 @@ PrivateRoute.propTypes = {
   }).isRequired,
 };
 
-export default PrivateRoute;
+export default React.memo(PrivateRoute);

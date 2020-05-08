@@ -35,4 +35,4 @@ GenerateRoutes.propTypes = {
   ).isRequired,
 };
 
-export default GenerateRoutes;
+export default React.memo(GenerateRoutes);

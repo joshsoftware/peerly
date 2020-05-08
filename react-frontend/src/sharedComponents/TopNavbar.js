@@ -8,4 +8,4 @@ function TopNavbar() {
   );
 }
 
-export default TopNavbar;
+export default React.memo(TopNavbar);

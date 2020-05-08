@@ -4,4 +4,4 @@ function UnauthorisedErrorComponent() {
   return <p>You dont have access to this page</p>;
 }
 
-export default UnauthorisedErrorComponent;
+export default React.memo(UnauthorisedErrorComponent);

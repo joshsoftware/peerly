@@ -14,4 +14,4 @@ function SessionTimeoutComponent() {
   return <p>session timed out!! Redirecting to login page</p>;
 }
 
-export default SessionTimeoutComponent;
+export default React.memo(SessionTimeoutComponent);
