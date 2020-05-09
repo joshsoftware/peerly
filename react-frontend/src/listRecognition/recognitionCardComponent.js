@@ -5,6 +5,7 @@ import ImageComponent from "../core-component/imageComponent";
 import HighFiveButtonComponent from "./highFiveButtonComponent";
 import RecognitionCardHeaderComponent from "./recogntionCardHeaderComponent";
 import RecognitionCardBodyComponent from "./recognitionCardBodyComponent";
+import CoreValueIconComponent from "./coreValueIconComponent";
 
 const onclickHighFiveButton = () => {
   //todo function for increase high five count
@@ -33,6 +34,11 @@ const RecognitionCardComponent = (props) => {
               <ImageComponent
                 src={recognition.rightColumnImage}
                 className="rounded"
+              />
+              <CoreValueIconComponent
+                size="40px"
+                color="red"
+                className="shadow p-2 mt-4 rounded-circle border border-danger"
               />
             </div>
           </Card.Body>
