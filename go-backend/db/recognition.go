@@ -62,19 +62,23 @@ func (recognition Recognition) ValidateRecognition() (err error) {
 	return
 }
 
-func (s *pgStore) CreateRecognition(ctx context.Context, recognition Recognition) (err error) {
-	_, err = s.db.Exec(
+func (s *pgStore) CreateRecognition(ctx context.Context, recognition Recognition) (createdRecognition Recognition, err error) {
+	lastInsertId := 0
+	err = s.db.QueryRow(
 		createRecognitionQuery,
 		recognition.CoreValueID,
 		recognition.Text,
 		recognition.GivenFor,
 		recognition.GivenBy,
 		recognition.GivenAt,
-	)
+	).Scan(&lastInsertId)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error creating recognition")
+		logger.WithField("err", err.Error()).Error("Error creating Recognition")
 		return
 	}
+
+	err = s.db.Get(&createdRecognition, showRecognitionQuery, lastInsertId)
+
 	return
 }
 

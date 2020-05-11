@@ -60,15 +60,23 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		err = deps.Store.CreateRecognition(req.Context(), recognition)
+		CreateRecognition, err := deps.Store.CreateRecognition(req.Context(), recognition)
 		if err != nil {
 			rw.WriteHeader(http.StatusBadRequest)
 			logger.WithField("err", err.Error()).Error("Error while creating recognition")
 			return
 		}
+		respBytes, err := json.Marshal(CreateRecognition)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling recognition data")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 
 		rw.Header().Add("Content-Type", "application/json")
 		rw.WriteHeader(http.StatusCreated)
+		rw.Write(respBytes)
+
 	})
 }
 
@@ -82,7 +90,7 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 
-		recognitionID, err := strconv.Atoi(vars["recognition_id"])
+		recognitionID, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)

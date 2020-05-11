@@ -44,9 +44,9 @@ func (m *DBMockStore) ShowRecognition(ctx context.Context, recognitionID int) (r
 	return args.Get(0).(Recognition), args.Error(1)
 }
 
-func (m *DBMockStore) CreateRecognition(ctx context.Context, recognition Recognition) (err error) {
+func (m *DBMockStore) CreateRecognition(ctx context.Context, recognition Recognition) (createdRecognition Recognition, err error) {
 	args := m.Called(ctx)
-	return args.Error(0)
+	return args.Get(0).(Recognition), args.Error(1)
 }
 
 func (m *DBMockStore) ListRecognitions(ctx context.Context) (users []Recognition, err error) {
