@@ -12,25 +12,25 @@ import (
 )
 
 type FilterParam struct {
-	RecognitionFor int `schema:"recognition_for"`
-	RecognitionBy  int `schema:"recognition_by"`
-	CoreValuesID   int `schema:"core_values_id"`
+	GivenFor    int `schema:"given_for"`
+	GivenBy     int `schema:"given_by"`
+	CoreValueID int `schema:"core_value_id"`
 }
 
 func (f FilterParam) isEmpty() bool {
-	return f.RecognitionBy == 0 && f.RecognitionFor == 0 && f.CoreValuesID == 0
+	return f.GivenBy == 0 && f.GivenFor == 0 && f.CoreValueID == 0
 }
 
 func (f FilterParam) applicableFilters() (res map[string]int) {
 	res = make(map[string]int)
-	if f.RecognitionFor != 0 {
-		res["recognition_for"] = f.RecognitionFor
+	if f.GivenFor != 0 {
+		res["given_for"] = f.GivenFor
 	}
-	if f.RecognitionBy != 0 {
-		res["recognition_by"] = f.RecognitionBy
+	if f.GivenBy != 0 {
+		res["given_by"] = f.GivenBy
 	}
-	if f.CoreValuesID != 0 {
-		res["core_values_id"] = f.CoreValuesID
+	if f.CoreValueID != 0 {
+		res["core_value_id"] = f.CoreValueID
 	}
 	return
 }

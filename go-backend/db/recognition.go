@@ -23,15 +23,15 @@ const (
 )
 
 func listRecognitionsFilterByOneFilterQuery(column_name string) string {
-	return "SELECT * FROM recognitions WHERE " + column_name + "=$1 ORDER BY recognition_on ASC"
+	return "SELECT * FROM recognitions WHERE " + column_name + "=$1 ORDER BY given_at ASC"
 }
 
 func listRecognitionsFilterByTwoFilterQuery(column_name_1 string, column_name_2 string) string {
-	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 ORDER BY recognition_on ASC"
+	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 ORDER BY given_at ASC"
 }
 
 func listRecognitionsFilterByThreeFilterQuery(column_name_1 string, column_name_2 string, column_name_3 string) string {
-	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 AND " + column_name_3 + "=$3 ORDER BY recognition_on ASC"
+	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 AND " + column_name_3 + "=$3 ORDER BY given_at ASC"
 }
 
 type Recognition struct {
