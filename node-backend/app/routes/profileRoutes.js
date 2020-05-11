@@ -9,7 +9,7 @@ const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 
 async function authorizedRole(req, res, next) {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
-  if (tokenData.roleId == (1 || 20)) {
+  if (tokenData.roleId == (1 || 2)) {
     next();
   } else {
     res.status(401).send({
