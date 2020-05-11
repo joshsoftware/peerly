@@ -18,6 +18,7 @@ type OrganizationTestSuite struct {
 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(OrganizationTestSuite))
+	suite.Run(t, new(RecognitionHi5TestSuite))
 }
 
 func (suite *OrganizationTestSuite) SetupSuite() {
@@ -39,7 +40,7 @@ func (suite *OrganizationTestSuite) SetupSuite() {
 
 func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 
-// test create organization
+	// test create organization
  	expectedOrg := Organization{
 		Name:"test organization",
 		ContactEmail: "test@gmail.com",
