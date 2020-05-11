@@ -82,7 +82,7 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func listRecognitionsHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-
+		// TODO Once organisation crud is ready
 		// userId := req.URL.Query().Get("user_id")
 		// coreValueId := req.URL.Query().Get("core_value_id")
 

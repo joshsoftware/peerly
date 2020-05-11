@@ -1,8 +1,8 @@
 CREATE TABLE recognitions (
   id serial PRIMARY KEY,
-  core_values_id INTEGER,
-  recognition_text TEXT,
-  recognition_for INTEGER,
-  recognition_by INTEGER,
-  recognition_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  core_value_id INTEGER,
+  text TEXT,
+  given_for INTEGER,
+  given_by INTEGER,
+  given_at BIGINT
 );
