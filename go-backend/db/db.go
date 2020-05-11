@@ -12,7 +12,6 @@ type Storer interface {
 	DeleteOrganization(context.Context, int) error
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
 	CreateRecognitionHi5(context.Context, RecognitionHi5, int)(error)
-	CheckHi5QuotaBalance(RecognitionHi5)(map[string]ErrorResponse, bool)
 	//Create(context.Context, User) error
 	//GetUser(context.Context) (User, error)
 	//Delete(context.Context, string) error
