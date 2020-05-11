@@ -18,11 +18,11 @@ const (
 )
 
 type RecognitionHi5 struct {
-	Id 				int  		`db:"id" json:"id"`
-	RecognitionId 	int  		`db:"recognition_id" json:"recognition_id"`
-	Comment 		string  	`db:"comment" json:"comment"`
-	GivenBy 		int  		`db:"given_by" json:"given_by"`
-	GivenAt 		int64  		`db:"given_at" json:"given_at"`
+	Id				int			`db:"id" json:"id"`
+	RecognitionId			int			`db:"recognition_id" json:"recognition_id"`
+	Comment				string			`db:"comment" json:"comment"`
+	GivenBy				int			`db:"given_by" json:"given_by"`
+	GivenAt				int64			`db:"given_at" json:"given_at"`
 }
 
 func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse map[string]ErrorResponse, valid bool){
