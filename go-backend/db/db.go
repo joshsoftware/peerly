@@ -13,7 +13,7 @@ type Storer interface {
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
 	GetUser(context.Context, int) (User, error)
 	UpdateUser(context.Context, User, int) (User, error)
-	CreateRecognitionHi5(context.Context, RecognitionHi5, int)(error)
+	CreateRecognitionHi5(context.Context, RecognitionHi5, int, int)(error)
 	//Create(context.Context, User) error
 	//GetUser(context.Context) (User, error)
 	//Delete(context.Context, string) error

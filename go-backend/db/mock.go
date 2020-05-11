@@ -49,7 +49,7 @@ func (m *DBMockStore) UpdateUser(ctx context.Context, usr User, id int) (updated
 	return args.Get(0).(User), args.Error(1)
 }
 
-func (m *DBMockStore) CreateRecognitionHi5(ctx context.Context, recognitionHi5 RecognitionHi5, recognitionId int) (err error) {
-	args := m.Called(ctx, recognitionHi5, recognitionId)
+func (m *DBMockStore) CreateRecognitionHi5(ctx context.Context, recognitionHi5 RecognitionHi5, recognitionId int, hi5QuotaBalance int) (err error) {
+	args := m.Called(ctx, recognitionHi5, recognitionId, hi5QuotaBalance)
 	return args.Error(0)
 }
