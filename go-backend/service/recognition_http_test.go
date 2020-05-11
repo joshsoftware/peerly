@@ -30,14 +30,13 @@ func (suite *RecognitionsHandlerTestSuite) TestShowRecognitionSuccess() {
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
-		"/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}",
+		"/organisations/{orgnization_id:[0-9]+}/recognitions/{id:[0-9]+}",
 		"/organisations/11/recognitions/1",
 		"",
 		getRecognitionHandler(Dependencies{Store: suite.dbMock}),
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"core_values_id":0,"recognition_text":"","recognition_for":0,"recognition_by":0,"recognition_on":"0001-01-01T00:00:00Z"}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -49,7 +48,7 @@ func (suite *RecognitionsHandlerTestSuite) TestShowRecognitionWhenDBFailure() {
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
-		"/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}",
+		"/organisations/{orgnization_id:[0-9]+}/recognitions/{id:[0-9]+}",
 		"/organisations/11/recognitions/2",
 		"",
 		getRecognitionHandler(Dependencies{Store: suite.dbMock}),
@@ -60,14 +59,14 @@ func (suite *RecognitionsHandlerTestSuite) TestShowRecognitionWhenDBFailure() {
 }
 
 func (suite *RecognitionsHandlerTestSuite) TestCreateRecognitionSuccess() {
-	suite.dbMock.On("CreateRecognition", mock.Anything, mock.Anything).Return(nil)
-
-	body := `{
-		"core_values_id" : 1,
-		"recognition_text": "recognition_text",
-		"recognition_for": 1,
-		"recognition_by": 2
-	}`
+	suite.dbMock.On("CreateRecognition", mock.Anything, mock.Anything).Return(db.Recognition{
+		CoreValueID: 1,
+		Text:        "test",
+		GivenFor:    1,
+		GivenBy:     2,
+		GivenAt:     1588073442241,
+	}, nil)
+	body := `{"core_value_id":1,"text":"test","given_for":1,"given_by":2,"given_at":1588073442241}`
 
 	recorder := makeHTTPCall(
 		http.MethodPost,
@@ -77,15 +76,15 @@ func (suite *RecognitionsHandlerTestSuite) TestCreateRecognitionSuccess() {
 		createRecognitionHandler(Dependencies{Store: suite.dbMock}),
 	)
 
-	assert.Equal(suite.T(), http.StatusCreated, recorder.Code)
+	assert.Equal(suite.T(), `{"id":0,"core_value_id":1,"text":"test","given_for":1,"given_by":2,"given_at":1588073442241}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
 func (suite *RecognitionsHandlerTestSuite) TestCreateRecognitionWhenCoreValueIDNotPresent() {
 	body := `{
-		"recognition_text": "recognition_text",
-		"recognition_for": 1,
-		"recognition_by": 2
+		"text": "text",
+		"given_for": 1,
+		"given_by": 2
 	}`
 
 	recorder := makeHTTPCall(
@@ -103,10 +102,9 @@ func (suite *RecognitionsHandlerTestSuite) TestCreateRecognitionWhenCoreValueIDN
 func (suite *RecognitionsHandlerTestSuite) TestCreateRecognitionWhenSomeKeyHasTypo() {
 
 	body := `{
-		"core_values_id1" : 1,
-		"recognition_text": "recognition_text",
-		"recognition_for": 1,
-		"recognition_by": 2
+		"text": "text",
+		"given_for": 1,
+		"given_by": 2
 	}`
 
 	recorder := makeHTTPCall(
@@ -136,7 +134,7 @@ func (suite *RecognitionsHandlerTestSuite) TestListRecognitionSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"id":1,"core_values_id":0,"recognition_text":"","recognition_for":0,"recognition_by":0,"recognition_on":"0001-01-01T00:00:00Z"}]`, recorder.Body.String())
+	assert.Equal(suite.T(), `[{"id":1,"core_value_id":0,"text":"","given_for":0,"given_by":0,"given_at":0}]`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -160,20 +158,20 @@ func (suite *RecognitionsHandlerTestSuite) TestListRecognitionWhenDBFailure() {
 
 func (suite *RecognitionsHandlerTestSuite) TestListRecognitionWithFiltersSuccess() {
 	suite.dbMock.On("ListRecognitionsWithFilter", mock.Anything, mock.Anything).Return(
-		[]db.Recognition{db.Recognition{ID: 1, CoreValuesID: 1}},
+		[]db.Recognition{db.Recognition{ID: 1, CoreValueID: 1}},
 		nil,
 	)
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
 		"/organisations/{orgnization_id:[0-9]+}/recognitions",
-		"/organisations/11/recognitions?core_values_id=1",
+		"/organisations/11/recognitions?core_value_id=1",
 		"",
 		listRecognitionsHandler(Dependencies{Store: suite.dbMock}),
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"id":1,"core_values_id":1,"recognition_text":"","recognition_for":0,"recognition_by":0,"recognition_on":"0001-01-01T00:00:00Z"}]`, recorder.Body.String())
+	assert.Equal(suite.T(), `[{"id":1,"core_value_id":1,"text":"","given_for":0,"given_by":0,"given_at":0}]`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -186,7 +184,7 @@ func (suite *RecognitionsHandlerTestSuite) TestListRecognitionWithFiltersWhenDBF
 	recorder := makeHTTPCall(
 		http.MethodGet,
 		"/organisations/{orgnization_id:[0-9]+}/recognitions",
-		"/organisations/11/recognitions?core_values_id=1",
+		"/organisations/11/recognitions?core_value_id=1",
 		"",
 		listRecognitionsHandler(Dependencies{Store: suite.dbMock}),
 	)
