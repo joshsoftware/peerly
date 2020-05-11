@@ -6,7 +6,7 @@ const utility = require("../utils/utility");
 const profileRouter = express.Router();
 profileRouter.use(bodyParser.urlencoded({ extended: true }));
 
-profileRouter.get("/profile", async (req, res) => {
+profileRouter.get("users/me/profile", async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "profileController"
