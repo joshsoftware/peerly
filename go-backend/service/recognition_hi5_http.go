@@ -47,19 +47,10 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 			return
 		}
 
-		err = deps.Store.CreateRecognitionHi5(req.Context(), recognitionHi5, recognitionId)
+		err = deps.Store.CreateRecognitionHi5(req.Context(), recognitionHi5, recognitionId, currentUser.Hi5QuotaBalance)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error in creating recognition hi5")
 			rw.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		currentUser.Hi5QuotaBalance -= 1
-
-		_, err = deps.Store.UpdateUser(req.Context(), currentUser, recognitionHi5.GivenBy)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while subtracting User Hi5 quota balance")
-			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 

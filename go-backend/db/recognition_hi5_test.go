@@ -5,7 +5,6 @@ import (
 	"github.com/stretchr/testify/suite"
 	"context"
 	"joshsoftware/peerly/config"
-	_"testing"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -37,8 +36,7 @@ func (suite *RecognitionHi5TestSuite) TestRecognitionsSuccess() {
 		Comment: "Test Comment",
 		GivenBy: 1,
 	}
+	err := suite.dbStore.CreateRecognitionHi5(context.Background(), recognitionHi5, recognitionHi5.RecognitionId, 2)
 
-	err := suite.dbStore.CreateRecognitionHi5(context.Background(), recognitionHi5, recognitionHi5.RecognitionId)
-	
 	assert.Nil(suite.T(), err)
 }
