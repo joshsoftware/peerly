@@ -22,3 +22,6 @@ node_modules/
 *.tar
 *.zip
 
+# Environment files
+.env
+.env.local

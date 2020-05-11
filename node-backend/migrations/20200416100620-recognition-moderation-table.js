@@ -3,12 +3,15 @@
 var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType; // eslint-disable-line no-unused-vars
   seed = seedLink; // eslint-disable-line no-unused-vars
 };
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
     "recognition_moderation",
     {
@@ -51,8 +54,8 @@ exports.up = function (db, callback) {
           },
         },
       },
-      moderated_on: {
-        type: "timestamp",
+      moderated_at: {
+        type: "bigint",
         notNull: true,
       },
     },
@@ -62,10 +65,10 @@ exports.up = function (db, callback) {
     }
   );
 };
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("recognition_moderation", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   version: 1,
 };

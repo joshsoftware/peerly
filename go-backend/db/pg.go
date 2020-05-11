@@ -19,7 +19,6 @@ import (
 
 const (
 	dbDriver      = "postgres"
-	migrationPath = "./migrations"
 )
 
 var errFindingDriver = errors.New("no migrate driver instance found")
@@ -75,8 +74,8 @@ func CreateMigrationFile(filename string) (err error) {
 	}
 
 	timeStamp := time.Now().Unix()
-	upMigrationFilePath := fmt.Sprintf("%s/%d_%s.up.sql", migrationPath, timeStamp, filename)
-	downMigrationFilePath := fmt.Sprintf("%s/%d_%s.down.sql", migrationPath, timeStamp, filename)
+	upMigrationFilePath := fmt.Sprintf("%s/%d_%s.up.sql", config.ReadEnvString("MIGRATION_FOLDER_PATH"), timeStamp, filename)
+	downMigrationFilePath := fmt.Sprintf("%s/%d_%s.down.sql", config.ReadEnvString("MIGRATION_FOLDER_PATH"), timeStamp, filename)
 
 	err = createFile(upMigrationFilePath)
 	if err != nil {
@@ -130,5 +129,5 @@ func createFile(filename string) (err error) {
 }
 
 func getMigrationPath() string {
-	return fmt.Sprintf("file://%s", migrationPath)
+	return fmt.Sprintf("file://%s", config.ReadEnvString("MIGRATION_FOLDER_PATH"))
 }

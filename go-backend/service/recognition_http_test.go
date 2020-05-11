@@ -41,10 +41,10 @@ func (suite *RecognitionsHandlerTestSuite) TestShowRecognitionSuccess() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func (suite *RecognitionsHandlerTestSuite) TestListUsersWhenDBFailure() {
+func (suite *RecognitionsHandlerTestSuite) TestShowRecognitionWhenDBFailure() {
 	suite.dbMock.On("ShowRecognition", mock.Anything).Return(
 		db.Recognition{},
-		errors.New("error fetching organization records"),
+		errors.New("error fetching recognization records"),
 	)
 
 	recorder := makeHTTPCall(
@@ -118,5 +118,79 @@ func (suite *RecognitionsHandlerTestSuite) TestCreateRecognitionWhenSomeKeyHasTy
 	)
 
 	assert.Equal(suite.T(), http.StatusBadRequest, recorder.Code)
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *RecognitionsHandlerTestSuite) TestListRecognitionSuccess() {
+	suite.dbMock.On("ListRecognitions", mock.Anything, mock.Anything).Return(
+		[]db.Recognition{db.Recognition{ID: 1}},
+		nil,
+	)
+
+	recorder := makeHTTPCall(
+		http.MethodGet,
+		"/organisations/{orgnization_id:[0-9]+}/recognitions",
+		"/organisations/11/recognitions",
+		"",
+		listRecognitionsHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
+	assert.Equal(suite.T(), `[{"id":1,"core_values_id":0,"recognition_text":"","recognition_for":0,"recognition_by":0,"recognition_on":"0001-01-01T00:00:00Z"}]`, recorder.Body.String())
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *RecognitionsHandlerTestSuite) TestListRecognitionWhenDBFailure() {
+	suite.dbMock.On("ListRecognitions", mock.Anything).Return(
+		[]db.Recognition{},
+		errors.New("error fetching recognitions records"),
+	)
+
+	recorder := makeHTTPCall(
+		http.MethodGet,
+		"/organisations/{orgnization_id:[0-9]+}/recognitions",
+		"/organisations/11/recognitions",
+		"",
+		listRecognitionsHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *RecognitionsHandlerTestSuite) TestListRecognitionWithFiltersSuccess() {
+	suite.dbMock.On("ListRecognitionsWithFilter", mock.Anything, mock.Anything).Return(
+		[]db.Recognition{db.Recognition{ID: 1, CoreValuesID: 1}},
+		nil,
+	)
+
+	recorder := makeHTTPCall(
+		http.MethodGet,
+		"/organisations/{orgnization_id:[0-9]+}/recognitions",
+		"/organisations/11/recognitions?core_values_id=1",
+		"",
+		listRecognitionsHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
+	assert.Equal(suite.T(), `[{"id":1,"core_values_id":1,"recognition_text":"","recognition_for":0,"recognition_by":0,"recognition_on":"0001-01-01T00:00:00Z"}]`, recorder.Body.String())
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *RecognitionsHandlerTestSuite) TestListRecognitionWithFiltersWhenDBFailure() {
+	suite.dbMock.On("ListRecognitionsWithFilter", mock.Anything).Return(
+		[]db.Recognition{},
+		errors.New("error fetching recognitions records"),
+	)
+
+	recorder := makeHTTPCall(
+		http.MethodGet,
+		"/organisations/{orgnization_id:[0-9]+}/recognitions",
+		"/organisations/11/recognitions?core_values_id=1",
+		"",
+		listRecognitionsHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
 	suite.dbMock.AssertExpectations(suite.T())
 }
