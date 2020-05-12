@@ -65,7 +65,6 @@ func (suite *OrganizationHandlerTestSuite) TestListOrganizationsDBFailure() {
 	)
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
-	// TODO: can we also assert the error messages
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
