@@ -175,21 +175,35 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ async (
       .typeError({ core_value_id: "should be number" }),
     given_for: yup.number().typeError({ given_for: "should be number" }),
     given_by: yup.number().typeError({ given_by: "should be number" }),
-    limit: yup.number().typeError({ given_for: "should be number" }),
-    offset: yup.number().typeError({ given_for: "should be number" }),
+    limit: yup
+      .number()
+      .nullable()
+      .typeError({ given_limit: "should be number" }),
+    offset: yup
+      .number()
+      .nullable()
+      .typeError({ given_offset: "should be number" }),
   });
 
+  const filterData = {
+    core_value_id: req.body.core_value_id,
+    given_for: req.body.given_for,
+    given_by: req.body.given_by,
+    limit: req.body.limit || null,
+    offset: req.body.offset || null,
+  };
+
   filterSchema
-    .validate(req.body, { abortEarly: false })
+    .validate(filterData, { abortEarly: false })
     .then(() => {
       db.sequelize
         .query(
           "select * from recognitions where given_for in (select id from users where org_id=" +
             tokenData.orgId +
             ") limit " +
-            req.body.limit +
+            filterData.limit +
             " offset " +
-            req.body.offset +
+            filterData.offset +
             ""
         )
         .then((data) => {
