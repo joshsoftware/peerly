@@ -116,7 +116,10 @@ exports.create = /*eslint-disable-line node/exports-style*/ async (
     });
 };
 
-exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
+exports.findOne = /*eslint-disable-line node/exports-style*/ async (
+  req,
+  res
+) => {
   const idSchema = yup.object().shape({
     id: yup
       .number()
@@ -140,6 +143,59 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
               data: data,
             });
           }
+        })
+        .catch(() => {
+          res.status(500).send({
+            error: {
+              message: "internal server error ",
+            },
+          });
+        });
+    })
+    .catch((err) => {
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid recognition",
+          "invalid recognition Data",
+          err.errors
+        ),
+      });
+    });
+};
+
+exports.findAll = /*eslint-disable-line node/exports-style*/ async (
+  req,
+  res
+) => {
+  const authHeader = req.headers["authorization"];
+  const tokenData = await jwtValidate.getData(authHeader);
+  const filterSchema = yup.object().shape({
+    core_value_id: yup
+      .number()
+      .typeError({ core_value_id: "should be number" }),
+    given_for: yup.number().typeError({ given_for: "should be number" }),
+    given_by: yup.number().typeError({ given_by: "should be number" }),
+    limit: yup.number().typeError({ given_for: "should be number" }),
+    offset: yup.number().typeError({ given_for: "should be number" }),
+  });
+
+  filterSchema
+    .validate(req.body, { abortEarly: false })
+    .then(() => {
+      db.sequelize
+        .query(
+          "select * from recognitions where given_for in (select id from users where org_id=" +
+            tokenData.orgId +
+            ") limit " +
+            req.body.limit +
+            " offset " +
+            req.body.offset +
+            ""
+        )
+        .then((data) => {
+          res.status(200).send({
+            data: data[0],
+          });
         })
         .catch(() => {
           res.status(500).send({

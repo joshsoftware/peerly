@@ -40,4 +40,12 @@ recRouter.get("/organisations/recognitions/:id", async (req, res) => {
   eval(controller).findOne(req, res);
 });
 
+recRouter.post("/organisations/recognitions/search", async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "recognitionController"
+  );
+  eval(controller).findAll(req, res);
+});
+
 module.exports = recRouter;
