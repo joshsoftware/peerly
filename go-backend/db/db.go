@@ -11,10 +11,11 @@ type Storer interface {
 	CreateUserBlacklistedToken(context.Context, UserBlacklistedToken) error
 	CreateNewUser(context.Context, User) (User, error)
 	GetUserByEmail(context.Context, string) (User, error)
-	GetUserByID(context.Context, int64) (User, error)
+	GetUserByID(context.Context, int) (User, error)
 	ListOrganizations(context.Context) ([]Organization, error)
 	GetOrganization(context.Context, int) (Organization, error)
 	CreateOrganization(context.Context, Organization) (Organization, error)
 	DeleteOrganization(context.Context, int) error
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
+	GetOrganizationByDomainName(context.Context, string) (Organization, error)
 }
