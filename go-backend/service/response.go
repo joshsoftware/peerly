@@ -7,6 +7,14 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+type successResponse struct {
+	Data interface{} `json:"data"`
+}
+
+type errorResponse struct {
+	Error interface{} `json:"error"`
+}
+
 type messageObject struct {
 	Message string `json:"message"`
 }
@@ -14,7 +22,7 @@ type messageObject struct {
 type errorObject struct {
 	Code string `json:"code"`
 	messageObject
-	Fields  map[string]string `json:"fields"`
+	Fields map[string]string `json:"fields"`
 }
 
 func repsonse(rw http.ResponseWriter, status int, responseBody interface{}) {
