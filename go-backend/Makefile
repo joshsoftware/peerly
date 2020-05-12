@@ -16,3 +16,10 @@ server:
 
 debug:
 	dlv debug -- start
+
+migrate:
+	go run main.go migrate
+
+resetdb:
+	go run main.go rollback `/bin/ls -1 migrations/*down.sql | wc -l`
+	go run main.go migrate
