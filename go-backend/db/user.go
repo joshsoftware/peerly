@@ -10,18 +10,18 @@ import (
 
 // User - basic struct representing a User
 type User struct {
-	ID              int       `db:"id" json:"id"`
-	Name            string    `db:"name" json:"full_name"`
-	OrgID           int       `db:"org_id" json:"org_id"`
-	Email           string    `db:"email" json:"email"`
-	DisplayName     string    `db:"display_name" json:"display_name"`
-	ProfileImageURL string    `db:"profile_image_url" json:"profile_image_url"`
-	SoftDelete      bool      `db:"soft_delete" json:"soft_delete"`
-	RoleID          int       `db:"role_id" json:"role_id"`
-	Hi5QuotaBalance int       `db:"hi5_quota_balance" json:"hi5_quota_balance"`
-	SoftDeleteBy    int       `db:"soft_delete_by" json:"soft_delete_by"`
-	SoftDeleteOn    time.Time `db:"soft_delete_on" json:"soft_delete_on"`
-	CreatedAt       time.Time `db:"created_at" json:"created_at"`
+	ID              int           `db:"id" json:"id"`
+	Name            string        `db:"name" json:"full_name"`
+	OrgID           int           `db:"org_id" json:"org_id"`
+	Email           string        `db:"email" json:"email"`
+	DisplayName     string        `db:"display_name" json:"display_name"`
+	ProfileImageURL string        `db:"profile_image_url" json:"profile_image_url"`
+	SoftDelete      bool          `db:"soft_delete" json:"soft_delete"`
+	RoleID          int           `db:"role_id" json:"role_id"`
+	Hi5QuotaBalance int           `db:"hi5_quota_balance" json:"hi5_quota_balance"`
+	SoftDeleteBy    sql.NullInt64 `db:"soft_delete_by" json:"soft_delete_by"`
+	SoftDeleteOn    sql.NullTime  `db:"soft_delete_on" json:"soft_delete_on"`
+	CreatedAt       time.Time     `db:"created_at" json:"created_at"`
 }
 
 // Organization - retrieve the user's organization based on the OrgID property
@@ -96,9 +96,16 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
     id, name, org_id, email, display_name, profile_image_url, soft_delete, role_id, hi5_quota_balance,
     soft_delete_by, soft_delete_on, created_at
   ) VALUES (
-    DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, :soft_delete, :role_id, :hi5_quota_balance,
-    :soft_delete_by, :soft_delete_on, DEFAULT
-  )`
+    DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
+    0, NULL, DEFAULT
+	)`
+
+	// Set the created_at time property on u so that it doesn't default to some weird value over 2000 years ago
+	u.CreatedAt = time.Now().UTC()
+
+	// TODO: Set the user's role
+	// u.RoleID = someroleid
+
 	tx, err := s.db.Beginx() // Use Beginx instead of MustBegin so process doesn't die if there's an error
 	if err != nil {
 		// FAIL: Could not begin database transaction
