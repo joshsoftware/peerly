@@ -17,7 +17,7 @@ import (
 
 // Claims - for use with JWT
 type Claims struct {
-	UserID         int64     `json:"user_id"`
+	UserID         int       `json:"user_id"`
 	ExpirationDate time.Time `json:"expiration_date"`
 	jwt.StandardClaims
 }
@@ -35,7 +35,7 @@ type OAuthUser struct {
 type OAuthToken struct {
 	AccessToken  string `json:"access_token"`
 	IDToken      string `json:"id_token"`
-	ExpiresIn    int32  `json:"expires_in"`
+	ExpiresIn    int    `json:"expires_in"`
 	TokenType    string `json:"token_type"`
 	Scope        string `json:"scope"`
 	RefreshToken string `json:"refresh_token"`
@@ -45,7 +45,7 @@ type OAuthToken struct {
 // to JSON or other types of messages/data as you need it
 type ErrorStruct struct {
 	Message string `json:"message"` // Your message to the end user or developer
-	Status  int32  `json:"status"`  // HTTP status code that should go with the message/log (if any)
+	Status  int    `json:"status"`  // HTTP status code that should go with the message/log (if any)
 	Sample  string `json:"sample"`  // A placeholder for any debug logging you want, (e.g. response body or something)
 }
 
@@ -141,18 +141,44 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 
 		fmt.Printf(string(payload))
 
-		// Check to make sure we have the user's domain, id and email properties
-		if user.ID != "" && user.Email != "" && user.Domain != "" {
-			// TODO: Check to see if that user's domain is in our organizations table
-			// TODO: If not, hard stop here and return an error with a nil user object
-
-			// Debugging for now...
-			fmt.Printf("%+v\n", user)
+		// See if there's an existing user that matches the oAuth user
+		existingUser, err := deps.Store.GetUserByEmail(req.Context(), user.Email)
+		if err != nil {
+			// TODO: Error log, message to user in json
 		}
+		fmt.Printf("%+v\n", existingUser)
+		if existingUser.ID == 0 { // 0 is what is auto-assigned when there's no ID value
+			// Check the OAuth User's domain and see if it's already in our database
+			org, err := deps.Store.GetOrganizationByDomainName(req.Context(), user.Domain)
+			if err != nil {
+				// TODO: Log error, push out json response
+			}
+			fmt.Printf("%+v\n", org)
+			if &org == nil || &org.ID == nil {
+				// Organization does not exist in our database. Halt the request and deny access.
+				// TODO: Forbidden header, json response body
+				return
+			}
+			// Organization DOES exist in the database. Create the user then re-query the db for them
+			// so we can use the same variable going forward.
+			existingUser, err := deps.Store.CreateNewUser(req.Context(), db.User{
+				Email:           user.Email,
+				ProfileImageURL: user.PictureURL,
+				OrgID:           org.ID,
+			})
+			if err != nil {
+				// TODO: Log error, push json to client, 500 response code
+			}
+			tmpOrg, _ := existingUser.Organization()
+			fmt.Printf("%+v\n", tmpOrg)
+			fmt.Printf("%+v\n", existingUser)
+		} // end if existingUser doesn't exist
 
+		// By the time we get here, we definitely have an existingUser object.
 		// TODO: Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
-		return
-	})
+
+		// return
+	}) // End HTTP handler
 }
 
 // JSONError - create a JSON string that can be used to report error messages in
@@ -167,7 +193,6 @@ func JSONError(errObj ErrorStruct) (payload []byte) {
 	payload, err := json.Marshal(errObj)
 	if err != nil {
 		log.Error(errJSONParseFail, "Failure parsing JSON in service.JSONError()", string(payload))
-		return
 	}
 	return
 }
@@ -183,7 +208,6 @@ func getClaims(token string) (claims *Claims, err error) {
 
 	if !newTkn.Valid {
 		err = errInvalidToken
-		return
 	}
 
 	return
