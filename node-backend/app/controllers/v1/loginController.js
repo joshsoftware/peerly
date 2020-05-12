@@ -155,7 +155,7 @@ const insertData = async (
     email: email,
     display_name: displayName,
     soft_delete: false,
-    role_id: 2,
+    role_id: 3,
     hi5_quota_balance: hi5QuotaBalance,
   };
   await Users.create(user).catch(() => {
