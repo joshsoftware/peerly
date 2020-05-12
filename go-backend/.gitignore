@@ -1,2 +1,4 @@
 peerly
 .env
+application.yml
+application_test.yml
