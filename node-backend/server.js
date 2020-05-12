@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 require("dotenv").config("./.env");
-
 require("./app/jwtTokenValidation/deleteExpiredToken.js"); // eslint-disable-line node/no-missing-require
 const indexRoute = require("./app/routes/index");
 const dbConn = require("./app/models/sequelize");
