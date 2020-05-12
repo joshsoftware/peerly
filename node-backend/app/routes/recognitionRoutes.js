@@ -9,12 +9,13 @@ const recRouter = express.Router();
 async function authorizedRole(req, res, next) {
   const authHeader = req.headers["authorization"];
   const tokenData = await jwtValidate.getData(authHeader);
-  if (tokenData.roleId !== 2) {
+  if (tokenData.roleId == 2 || tokenData.roleId == 3) {
     next();
   } else {
-    res.status(401).send({
+    res.status(403).send({
       error: {
-        message: "unauthorised user",
+        code: "access_denied",
+        message: "Permission required",
       },
     });
   }
@@ -22,9 +23,8 @@ async function authorizedRole(req, res, next) {
 
 recRouter.use(bodyParser.urlencoded({ extended: true }));
 
-recRouter.use(authorizedRole);
 /*eslint-disable  no-eval*/
-recRouter.post("/organisations/recognitions", async (req, res) => {
+recRouter.post("/recognitions", authorizedRole, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "recognitionController"
@@ -32,7 +32,7 @@ recRouter.post("/organisations/recognitions", async (req, res) => {
   eval(controller).create(req, res);
 });
 
-recRouter.get("/organisations/recognitions/:id", async (req, res) => {
+recRouter.get("/recognitions/:id", authorizedRole, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "recognitionController"
@@ -40,7 +40,7 @@ recRouter.get("/organisations/recognitions/:id", async (req, res) => {
   eval(controller).findOne(req, res);
 });
 
-recRouter.post("/organisations/recognitions/search", async (req, res) => {
+recRouter.get("/recognitions/", authorizedRole, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "recognitionController"

@@ -163,6 +163,93 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ async (
     });
 };
 
+const CreateFilterQuery = (filterData, tokenData) => {
+  const sqlQuery = "select * from recognitions where given_for";
+  if (
+    filterData.given_for == filterData.given_by &&
+    filterData.core_value_id == filterData.given_by
+  ) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" + tokenData.orgId + ")"
+    );
+  } else if (
+    filterData.given_for == filterData.given_by &&
+    filterData.core_value_id != undefined
+  ) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and core_value_id =" +
+        filterData.core_value_id +
+        ""
+    );
+  } else if (
+    filterData.given_by == filterData.core_value_id &&
+    filterData.given_for != undefined
+  ) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and given_for =" +
+        filterData.given_for +
+        ""
+    );
+  } else if (
+    filterData.given_for == filterData.core_value_id &&
+    filterData.given_by != undefined
+  ) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and given_by =" +
+        filterData.given_by +
+        ""
+    );
+  } else if (filterData.given_for == undefined) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and core_value_id =" +
+        filterData.core_value_id +
+        " and given_by =" +
+        filterData.given_by +
+        ""
+    );
+  } else if (filterData.given_by == undefined) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and core_value_id =" +
+        filterData.core_value_id +
+        " and given_for =" +
+        filterData.given_for +
+        ""
+    );
+  } else if (filterData.core_value_id == undefined) {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and given_for =" +
+        filterData.given_for +
+        " and given_by =" +
+        filterData.given_by +
+        ""
+    );
+  } else {
+    return sqlQuery.concat(
+      " in (select id from users where org_id=" +
+        tokenData.orgId +
+        ") and core_value_id =" +
+        filterData.core_value_id +
+        " and given_for =" +
+        filterData.given_for +
+        " and given_by = " +
+        filterData.given_by +
+        ""
+    );
+  }
+};
+
 exports.findAll = /*eslint-disable-line node/exports-style*/ async (
   req,
   res
@@ -186,11 +273,11 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ async (
   });
 
   const filterData = {
-    core_value_id: req.body.core_value_id,
-    given_for: req.body.given_for,
-    given_by: req.body.given_by,
-    limit: req.body.limit || null,
-    offset: req.body.offset || null,
+    core_value_id: req.query.core_value_id,
+    given_for: req.query.given_for,
+    given_by: req.query.given_by,
+    limit: req.query.limit || 100,
+    offset: req.query.offset || null,
   };
 
   filterSchema
@@ -198,18 +285,26 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ async (
     .then(() => {
       db.sequelize
         .query(
-          "select * from recognitions where given_for in (select id from users where org_id=" +
-            tokenData.orgId +
-            ") limit " +
+          CreateFilterQuery(filterData, tokenData) +
+            "limit " +
             filterData.limit +
             " offset " +
             filterData.offset +
             ""
         )
-        .then((data) => {
-          res.status(200).send({
-            data: data[0],
-          });
+        .then((info) => {
+          let data = info[0];
+          if (data[0] != undefined) {
+            res.status(200).send({
+              data: data,
+            });
+          } else {
+            res.status(404).send({
+              error: {
+                message: "Recognition with specified organisation is not found",
+              },
+            });
+          }
         })
         .catch(() => {
           res.status(500).send({
