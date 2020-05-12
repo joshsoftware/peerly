@@ -18,18 +18,18 @@ module.exports.findUsersByOrg = async (req, res) => {
 
   schema
     .validate(obj, { abortEarly: false })
-    .then(async () => {
-      let limit;
-      let offset;
+    .then(() => {
+      let limit = 10;
+      let offset = 0;
       if (obj.limit) {
-        limit = obj.limit;
-      } else {
-        limit = 10;
+        if (obj.limit > 100) {
+          limit = 100;
+        } else {
+          limit = obj.limit;
+        }
       }
       if (obj.offset) {
         offset = obj.offset;
-      } else {
-        offset = 0;
       }
       if (obj.org_id) {
         if (userData.roleId != 1) {
