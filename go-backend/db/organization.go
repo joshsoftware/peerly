@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"regexp"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -50,8 +49,6 @@ const (
 		hi5_limit,
 		hi5_quota_renewal_frequency,
 		timezone FROM organizations ORDER BY name ASC`
-	emailRegexString = `^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$`
-	domainRegexString = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 )
 
 type Organization struct {
@@ -65,16 +62,6 @@ type Organization struct {
 	Hi5QuotaRenewalFrequency string				`db:"hi5_quota_renewal_frequency" json:"hi5_quota_renewal_frequency"`
 	Timezone                 string				`db:"timezone" json:"timezone"`
 }
-
-//TODO how to declare this as reusable
-type ErrorResponse struct {
-	Code 	string `json:"code"`
-	Message	string `json:"message"`
-	Fields map[string]string `json:"fields"`
-}
-
-var emailRegex = regexp.MustCompile(emailRegexString)
-var domainRegex = regexp.MustCompile(domainRegexString)
 
 func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
 	fieldErrors := make(map[string]string)
