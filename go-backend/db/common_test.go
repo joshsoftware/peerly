@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"testing"
 )
+
 var dbStore Storer
 
 func init() {
@@ -22,7 +23,7 @@ func init() {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 		return
 	}
-  dbStore = store
+	dbStore = store
 }
 
 func TestExampleTestSuite(t *testing.T) {
