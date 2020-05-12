@@ -18,3 +18,4 @@ CREATE INDEX IF NOT EXISTS users_soft_delete_idx ON users(soft_delete);
 CREATE INDEX IF NOT EXISTS users_soft_delete_by_idx ON users(soft_delete_by);
 CREATE INDEX IF NOT EXISTS users_soft_delete_on_idx ON users(soft_delete_on);
 CREATE INDEX IF NOT EXISTS users_created_at_idx ON users(created_at);
+CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique_idx ON users(email);
