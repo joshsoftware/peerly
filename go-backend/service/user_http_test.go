@@ -4,11 +4,6 @@ import (
 	"errors"
 	"joshsoftware/peerly/db"
 	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
-
-	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -24,13 +19,6 @@ type UsersHandlerTestSuite struct {
 
 func (suite *UsersHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
-}
-
-func TestExampleTestSuite(t *testing.T) {
-	suite.Run(t, new(UsersHandlerTestSuite))
-	suite.Run(t, new(CoreValueHandlerTestSuite))
-	suite.Run(t, new(OrganizationHandlerTestSuite))
-	suite.Run(t, new(RecognitionHi5HandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
