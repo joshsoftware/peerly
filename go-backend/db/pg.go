@@ -10,8 +10,10 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+	// TODO: This repo is archived and they say to use golang-migrate/migrate instead; change?
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
+
 	logger "github.com/sirupsen/logrus"
 
 	// Import PostgreSQL database driver
@@ -22,7 +24,7 @@ import (
 )
 
 const (
-	dbDriver      = "postgres"
+	dbDriver = "postgres"
 )
 
 var errFindingDriver = errors.New("no migrate driver instance found")
