@@ -65,6 +65,25 @@ func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
+// func (suite *UsersHandlerTestSuite) TestGetUserByEmailSuccess() {
+// 	fakeUser := db.User{}
+// 	faker.FakeData(&fakeUser)
+// 	suite.dbMock.On("GetUserByEmail", mock.Anything).Return(fakeUser, nil)
+// 	recorder := makeHTTPCall(
+// 		http.MethodGet,
+// 		"users/{email}",
+// 		("/users/" + fakeUser.Email),
+// 		"",
+// 		getUserByEmailHandler(Dependencies{Store: suite.dbMock}),
+// 	)
+
+// 	var org db.Organization
+// 	err := json.Unmarshal(recorder.Body.Bytes(), &org)
+// 	if err != nil {
+// 		log.Fatal("Error in json.Unmarshal on TestGetUserByEmailSuccess (email: " + org.)
+// 	}
+// }
+
 func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 	suite.dbMock.On("ListUsers", mock.Anything).Return(
 		[]db.User{},

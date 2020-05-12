@@ -24,6 +24,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	v1 := fmt.Sprintf("application/vnd.%s.v1", config.AppName())
 
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/users/{email}", getUserByEmailHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	// Basic logout
 	router.HandleFunc("/logout", handleLogout(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
@@ -31,6 +32,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	// TODO: Finish login system
 	router.HandleFunc("/auth/google", handleAuth(deps)).Methods(http.MethodGet)
 
+	router.HandleFunc("/organizations/{domainName}", getOrganizationByDomainNameHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations", listOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", getOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
