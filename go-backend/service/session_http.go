@@ -143,14 +143,14 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 
 		// Check to make sure we have the user's domain, id and email properties
 		if user.ID != "" && user.Email != "" && user.Domain != "" {
-			// Check to see if that user's domain is in our organizations table
-			// TODO
+			// TODO: Check to see if that user's domain is in our organizations table
+			// TODO: If not, hard stop here and return an error with a nil user object
 
-			// Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
-			// TODO
+			// Debugging for now...
 			fmt.Printf("%+v\n", user)
 		}
 
+		// TODO: Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
 		return
 	})
 }

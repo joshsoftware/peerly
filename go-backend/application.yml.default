@@ -8,6 +8,7 @@ APP_PORT: "33001"
 # Postgres
 DB_URI: "postgresql://user:password@localhost:5432/dbname?sslmode=disable"
 
+<<<<<<< HEAD
 # JWT_SECRET
 JWT_SECRET: "some secret"
 
@@ -15,3 +16,7 @@ JWT_SECRET: "some secret"
 GOOGLE_KEY: "Get me from https://console.developers.google.com/apis/credentials"
 GOOGLE_SECRET: "Get me from https://console.developers.google.com/apis/credentials"
 GOOGLE_REDIRECT: "http://localhost:33001/auth/google"
+=======
+# MIGRATION_FOLDER_PATH: "./migrations" // for application.yml
+# MIGRATION_FOLDER_PATH: "./../migrations" //for application_test.yml
+>>>>>>> ccaf039fe9b3f8cc9119ab9569e3a1250a7f253f

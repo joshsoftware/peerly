@@ -14,12 +14,16 @@ var (
 	jwtKey  string
 )
 
+<<<<<<< HEAD
 // Load - loads all the environment variables and/or params in application.yml
 func Load() {
+=======
+func Load(configFile string) {
+>>>>>>> ccaf039fe9b3f8cc9119ab9569e3a1250a7f253f
 	viper.SetDefault("APP_NAME", "app")
 	viper.SetDefault("APP_PORT", "8002")
 
-	viper.SetConfigName("application")
+	viper.SetConfigName(configFile)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./")
 	viper.AddConfigPath("./..")
