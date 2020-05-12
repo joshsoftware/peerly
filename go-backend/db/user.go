@@ -22,6 +22,8 @@ type User struct {
 	SoftDeleteBy    int64     `db:"soft_delete_by" json:"soft_delete_by"`
 	SoftDeleteOn    time.Time `db:"soft_delete_on" json:"soft_delete_on"`
 	CreatedAt       time.Time `db:"created_at" json:"created_at"`
+
+	Organization
 }
 
 // GetUserByEmail - Given an email address, return that user.
@@ -29,7 +31,13 @@ func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, 
 	err = s.db.Select(&user, `SELECT * FROM users WHERE email=$1 LIMIT 1`, email)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user from database by email " + email)
-		return
+	}
+
+	// Populate the user's organization data
+	org := Organization{}
+	err = s.db.Select(&org, `SELECT * FROM organizations WHERE id=$1`, user.OrgID)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error selecting user's organization from database by email and id " + email + " " + string(user.OrgID))
 	}
 	return
 }
@@ -41,6 +49,12 @@ func (s *pgStore) GetUserByID(ctx context.Context, id int64) (user User, err err
 		logger.WithField("err", err.Error()).Error("Error selecting user from database by id " + strconv.FormatInt(id, 10))
 		return
 	}
+	// Populate the user's organization data
+	org := Organization{}
+	err = s.db.Select(&org, `SELECT * FROM organizations WHERE id=$1`, user.OrgID)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error selecting user's organization from database by user id and org id " + string(id) + " " + string(user.OrgID))
+	}
 	return
 }
 
@@ -49,9 +63,7 @@ func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
 	err = s.db.Select(&users, "SELECT * FROM users ORDER BY name ASC")
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing users")
-		return
 	}
-
 	return
 }
 
@@ -65,6 +77,9 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 	}
 
 	// TODO: Check if newUser is a blank/nil object and if so, continue, otherwise return
+
+	// TODO: Check for the existence of an organization based on u.OrgID or the u.Organization.ID in the user struct
+	// Make sure it exists; if it doesn't, FAIL user creation
 
 	// If we made it this far, they don't appear to be in the database yet.
 	q := `INSERT INTO users (
@@ -92,10 +107,8 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 
 	// If we make it this far we've successfully inserted a new user into the database.
 	// Re-select them and return that new user.
-	newUser = User{}
-	err = s.db.Select(&newUser, `SELECT * FROM users WHERE email=$1 LIMIT 1`, u.Email)
+	newUser, err = s.GetUserByEmail(ctx, u.Email)
 	if err != nil {
-		// FAIL: User selection failed even though they should have been inserted already?
 		logger.WithField("err", err.Error()).Error("Error selecting user from database with email: " + u.Email)
 	}
 	return
