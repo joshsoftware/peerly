@@ -1,4 +1,4 @@
-CREATE TABLE IF EXISTS organizations (
+CREATE TABLE IF NOT EXISTS organizations (
   id BIGSERIAL NOT NULL PRIMARY KEY,
 	name varchar(50),
 	contact_email varchar(50),
