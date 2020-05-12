@@ -4,6 +4,7 @@ import (
 	"errors"
 	"joshsoftware/peerly/db"
 	"net/http"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -14,27 +15,26 @@ import (
 type OrganizationHandlerTestSuite struct {
 	suite.Suite
 
-	dbMock *db.DBMockStore
+	dbMock *db.MockStore
 }
 
 func (suite *OrganizationHandlerTestSuite) SetupTest() {
-	suite.dbMock = &db.DBMockStore{}
+	suite.dbMock = &db.MockStore{}
 }
 
 func (suite *OrganizationHandlerTestSuite) TestListOrganizationsSuccess() {
-
 	suite.dbMock.On("ListOrganizations", mock.Anything).Return(
 		[]db.Organization{
 			db.Organization{
-				ID:1,
-				Name:"test organization",
-				ContactEmail: "test@gmail.com",
-				DomainName: "www.testdomain.com",
-				SubscriptionStatus: 1,
-				SubscriptionValidUpto: 1588073442241,
-				Hi5Limit: 5,
+				ID:                       1,
+				Name:                     "test organization",
+				ContactEmail:             "test@gmail.com",
+				DomainName:               "www.testdomain.com",
+				SubscriptionStatus:       1,
+				SubscriptionValidUpto:    1588073442241,
+				Hi5Limit:                 5,
 				Hi5QuotaRenewalFrequency: "2",
-				Timezone: "IST",
+				Timezone:                 "IST",
 			},
 		},
 		nil,
@@ -72,18 +72,18 @@ func (suite *OrganizationHandlerTestSuite) TestListOrganizationsDBFailure() {
 func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationSuccess() {
 
 	suite.dbMock.On("CreateOrganization", mock.Anything, mock.Anything).Return(db.Organization{
-				ID:1,
-				Name:"test organization",
-				ContactEmail: "test@gmail.com",
-				DomainName: "www.testdomain.com",
-				SubscriptionStatus: 1,
-				SubscriptionValidUpto: 1588073442241,
-				Hi5Limit: 5,
-				Hi5QuotaRenewalFrequency: "2",
-				Timezone: "IST",
-			}, nil)
+		ID:                       1,
+		Name:                     "test organization",
+		ContactEmail:             "test@gmail.com",
+		DomainName:               "www.testdomain.com",
+		SubscriptionStatus:       1,
+		SubscriptionValidUpto:    1588073442241,
+		Hi5Limit:                 5,
+		Hi5QuotaRenewalFrequency: "2",
+		Timezone:                 "IST",
+	}, nil)
 
-	body:=`{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
+	body := `{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
 	recorder := makeHTTPCall(http.MethodPost,
 		"/organizations",
@@ -101,7 +101,7 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationDbFailure() {
 
 	suite.dbMock.On("CreateOrganization", mock.Anything, mock.Anything).Return(db.Organization{}, errors.New("Error while creating organization"))
 
-	body:=`{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
+	body := `{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
 	recorder := makeHTTPCall(http.MethodPost,
 		"/organizations",
@@ -116,7 +116,7 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationDbFailure() {
 
 func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationValidationFailure() {
 
-	body:=`{"name":"","email":"","domain_name":"","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
+	body := `{"name":"","email":"","domain_name":"","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
 	recorder := makeHTTPCall(http.MethodPost,
 		"/organizations",
@@ -133,18 +133,18 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationValidationFailu
 func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 
 	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{
-				ID:1,
-				Name:"test organization",
-				ContactEmail: "test@gmail.com",
-				DomainName: "www.testdomain.com",
-				SubscriptionStatus: 1,
-				SubscriptionValidUpto: 1588073442241,
-				Hi5Limit: 5,
-				Hi5QuotaRenewalFrequency: "2",
-				Timezone: "IST",
-			},nil)
+		ID:                       1,
+		Name:                     "test organization",
+		ContactEmail:             "test@gmail.com",
+		DomainName:               "www.testdomain.com",
+		SubscriptionStatus:       1,
+		SubscriptionValidUpto:    1588073442241,
+		Hi5Limit:                 5,
+		Hi5QuotaRenewalFrequency: "2",
+		Timezone:                 "IST",
+	}, nil)
 
-	body:=`{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
+	body := `{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
 	recorder := makeHTTPCall(http.MethodPut,
 		"/organizations/{id:[0-9]+}",
@@ -161,7 +161,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationDbFailure() {
 	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{}, errors.New("Error while updating organization"))
 
-	body:=`{"name":"test update organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
+	body := `{"name":"test update organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
 	recorder := makeHTTPCall(http.MethodPut,
 		"/organizations/{id:[0-9]+}",
@@ -176,7 +176,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationDbFailure() {
 
 func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationValidationFailure() {
 
-	body:=`{"name":"name","email":"invalid email","domain_name":"invalid domain","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
+	body := `{"name":"name","email":"invalid email","domain_name":"invalid domain","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
 
 	recorder := makeHTTPCall(http.MethodPut,
 		"/organizations/{id:[0-9]+}",
@@ -194,16 +194,16 @@ func (suite *OrganizationHandlerTestSuite) TestGetOrganizationSuccess() {
 
 	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
 		db.Organization{
-				ID:1,
-				Name:"test organization",
-				ContactEmail: "test@gmail.com",
-				DomainName: "www.testdomain.com",
-				SubscriptionStatus: 1,
-				SubscriptionValidUpto: 1588073442241,
-				Hi5Limit: 5,
-				Hi5QuotaRenewalFrequency: "2",
-				Timezone: "IST",
-			}, nil,
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+		}, nil,
 	)
 
 	recorder := makeHTTPCall(http.MethodGet,
