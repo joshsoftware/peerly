@@ -13,6 +13,12 @@ type MockStore struct {
 	mock.Mock
 }
 
+// GetOrganizationByDomainName - test mock
+func (m *MockStore) GetOrganizationByDomainName(ctx context.Context, domainName string) (organization Organization, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).(Organization), args.Error(1)
+}
+
 // ListUsers - test mock
 func (m *MockStore) ListUsers(ctx context.Context) (users []User, err error) {
 	args := m.Called(ctx)
@@ -47,8 +53,8 @@ func (m *MockStore) CreateNewUser(ctx context.Context, u User) (newUser User, er
 	return args.Get(0).(User), args.Error(1)
 }
 
-// GetUserByID - Mock to retrieve a user by their ID (BIGSERIAL in PostgreSQL, int64 in Golang)
-func (m *MockStore) GetUserByID(ctx context.Context, id int64) (user User, err error) {
+// GetUserByID - Mock to retrieve a user by their ID (BIGSERIAL in PostgreSQL, int in Golang)
+func (m *MockStore) GetUserByID(ctx context.Context, id int) (user User, err error) {
 	args := m.Called(ctx, id)
 	return args.Get(0).(User), args.Error(1)
 }
