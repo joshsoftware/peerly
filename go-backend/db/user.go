@@ -25,17 +25,8 @@ type User struct {
 }
 
 // Organization - retrieve the user's organization based on the OrgID property
-func (u *User) Organization() (org Organization, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	store, err := Init() // TODO: Find a better way to do this
-	if err != nil {
-		// TODO: Log error
-	}
+func (u *User) Organization(ctx context.Context, store Storer) (org Organization, err error) {
 	org, err = store.GetOrganization(ctx, u.OrgID)
-	if err != nil {
-		// TODO: Log error
-	}
 	return
 }
 
