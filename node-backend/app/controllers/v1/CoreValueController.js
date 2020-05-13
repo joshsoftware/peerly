@@ -208,3 +208,74 @@ module.exports.update = (req, res) => {
       });
     });
 };
+
+module.exports.getCoreValueById = (req, res) => {
+  const id = req.params.id;
+  const idSchema = yup.object().shape({
+    id: yup
+      .number()
+      .typeError({ id: "should be number" })
+      .required({ id: "required" }),
+  });
+  idSchema
+    .validate({ id }, { abortEarly: false })
+    .then(() => {
+      CoreValue.findAll({
+        where: { id: id },
+        attributes: [
+          "id",
+          "description",
+          "text",
+          "parent_core_value_id",
+          "org_id",
+        ],
+      })
+        .then((data) => {
+          if (data.length != 0) {
+            res.status(200).send({
+              data: data,
+            });
+          } else {
+            res.status(404).send({
+              error: {
+                message: "core value not found for specified id ",
+              },
+            });
+          }
+        })
+        .catch(() => {
+          res.status(500).send({
+            error: {
+              message: "internal server error",
+            },
+          });
+        });
+    })
+    .catch((err) => {
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid-core-value",
+          "Invalid core value data",
+          err.errors
+        ),
+      });
+    });
+};
+
+module.exports.getCoreValues = (req, res) => {
+  CoreValue.findAll({
+    attributes: ["id", "description", "text", "parent_core_value_id", "org_id"],
+  })
+    .then((info) => {
+      res.status(200).send({
+        data: info,
+      });
+    })
+    .catch(() => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};

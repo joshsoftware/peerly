@@ -70,4 +70,19 @@ coreValueRouter.put(
   }
 );
 
+coreValueRouter.get("/core_values", async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "CorevalueController"
+  );
+  eval(controller).getCoreValues(req, res);
+});
+
+coreValueRouter.get("/core_values/:id", async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "CorevalueController"
+  );
+  eval(controller).getCoreValueById(req, res);
+});
 module.exports = coreValueRouter;
