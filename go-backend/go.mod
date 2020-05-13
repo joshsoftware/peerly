@@ -6,6 +6,7 @@ require (
 	github.com/bxcodec/faker/v3 v3.3.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-co-op/gocron v0.1.1
+	github.com/go-delve/delve v1.4.0 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/lib/pq v1.4.0
