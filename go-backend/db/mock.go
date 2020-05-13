@@ -13,6 +13,18 @@ type MockStore struct {
 	mock.Mock
 }
 
+// GetRoleByID - test mock
+func (m *MockStore) GetRoleByID(ctx context.Context, id int) (role Role, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).(Role), args.Error(1)
+}
+
+// GetRoleByName - test mock
+func (m *MockStore) GetRoleByName(ctx context.Context, name string) (role Role, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).(Role), args.Error(1)
+}
+
 // GetOrganizationByDomainName - test mock
 func (m *MockStore) GetOrganizationByDomainName(ctx context.Context, domainName string) (organization Organization, err error) {
 	args := m.Called(ctx)

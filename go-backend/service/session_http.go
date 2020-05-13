@@ -180,7 +180,6 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		// By the time we get here, we definitely have an existingUser object.
 		// TODO: Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
 
-		// return
 	}) // End HTTP handler
 }
 
