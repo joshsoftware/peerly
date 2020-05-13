@@ -15,22 +15,10 @@ module.exports.findUsersByOrg = async (req, res) => {
     offset: yup.number().typeError({ offset: "should be a number" }),
   });
   let obj = qs.parse(req.query);
-
+  let limitOffsetObj = await utility.getLimitAndOffset(obj);
   schema
     .validate(obj, { abortEarly: false })
     .then(() => {
-      let limit = 10;
-      let offset = 0;
-      if (obj.limit) {
-        if (obj.limit > 100) {
-          limit = 100;
-        } else {
-          limit = obj.limit;
-        }
-      }
-      if (obj.offset) {
-        offset = obj.offset;
-      }
       if (obj.org_id) {
         if (userData.roleId != 1) {
           {
@@ -57,8 +45,8 @@ module.exports.findUsersByOrg = async (req, res) => {
               "soft_delete_by",
               "soft_delete_at",
             ],
-            limit: limit,
-            offset: offset,
+            limit: limitOffsetObj.limit,
+            offset: limitOffsetObj.offset,
           })
             .then((users) => {
               res.status(200).send({
@@ -89,8 +77,8 @@ module.exports.findUsersByOrg = async (req, res) => {
             "soft_delete_by",
             "soft_delete_at",
           ],
-          limit: limit,
-          offset: offset,
+          limit: limitOffsetObj.limit,
+          offset: limitOffsetObj.offset,
         })
           .then((users) => {
             res.status(200).send({
