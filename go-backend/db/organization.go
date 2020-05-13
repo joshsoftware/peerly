@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"regexp"
 	"time"
 
@@ -17,8 +18,9 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
+		timezone,
+		created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`
 
 	updateOrganizationQuery = `UPDATE organizations SET (
 		name,
@@ -130,6 +132,8 @@ func (s *pgStore) ListOrganizations(ctx context.Context) (organizations []Organi
 }
 
 func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (createdOrganization Organization, err error) {
+	// Set org.CreatedAt so we get a valid created_at value from the database going forward
+	org.CreatedAt = time.Now().UTC()
 
 	lastInsertID := 0
 	err = s.db.QueryRow(
@@ -142,6 +146,7 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (cre
 		org.Hi5Limit,
 		org.Hi5QuotaRenewalFrequency,
 		org.Timezone,
+		org.CreatedAt,
 	).Scan(&lastInsertID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error creating organization")
@@ -149,7 +154,11 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (cre
 	}
 
 	err = s.db.Get(&createdOrganization, getOrganizationQuery, lastInsertID)
-
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// TODO: Log that we can't find the organization even though it's just been created
+		}
+	}
 	return
 }
 
@@ -167,6 +176,7 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 		reqOrganization.Hi5Limit,
 		reqOrganization.Hi5QuotaRenewalFrequency,
 		reqOrganization.Timezone,
+		reqOrganization.CreatedAt,
 		organizationID,
 	)
 	if err != nil {
