@@ -24,3 +24,23 @@ module.exports.getVersionedController = (headers, route) => {
   }
 };
 /*eslint-enable no-useless-escape*/
+
+module.exports.getLimitAndOffset = (queryParamsObj) => {
+  let limit = 10;
+  let offset = 0;
+  if (queryParamsObj.limit) {
+    if (queryParamsObj.limit > 100) {
+      limit = 100;
+    } else {
+      limit = queryParamsObj.limit;
+    }
+  }
+  if (queryParamsObj.offset) {
+    offset = queryParamsObj.offset;
+  }
+  let limitOffsetObj = {
+    limit: limit,
+    offset: offset,
+  };
+  return limitOffsetObj;
+};
