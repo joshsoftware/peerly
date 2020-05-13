@@ -1,12 +1,14 @@
 package db
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
 	"context"
 	"joshsoftware/peerly/config"
 	"testing"
+	"time"
+
 	logger "github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -24,7 +26,7 @@ func (suite *OrganizationTestSuite) SetupSuite() {
 	config.Load("application_test")
 
 	err := RunMigrations()
-	if err!=nil {
+	if err != nil {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 		return
 	}
@@ -34,21 +36,22 @@ func (suite *OrganizationTestSuite) SetupSuite() {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 		return
 	}
-  suite.dbStore = store
+	suite.dbStore = store
 }
 
 func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 
-// test create organization
- 	expectedOrg := Organization{
-		Name:"test organization",
-		ContactEmail: "test@gmail.com",
-		DomainName: "www.testdomain.com",
-		SubscriptionStatus: 1,
-		SubscriptionValidUpto: 1588073442241,
-		Hi5Limit: 5,
+	// test create organization
+	expectedOrg := Organization{
+		Name:                     "test organization",
+		ContactEmail:             "test@gmail.com",
+		DomainName:               "www.testdomain.com",
+		SubscriptionStatus:       1,
+		SubscriptionValidUpto:    1588073442241,
+		Hi5Limit:                 5,
 		Hi5QuotaRenewalFrequency: "2",
-		Timezone: "IST",
+		Timezone:                 "IST",
+		CreatedAt:                time.Now().UTC(),
 	}
 	var err error
 	createdOrganization, err := suite.dbStore.CreateOrganization(context.Background(), expectedOrg)
@@ -62,14 +65,14 @@ func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 	// test list organization
 	var organizationsList []Organization
 	organizationsList, err = suite.dbStore.ListOrganizations(context.Background())
-	
+
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), organizationsList, []Organization{createdOrganization})
 
 	// test get organization
 	var organizationData Organization
 	organizationData, err = suite.dbStore.GetOrganization(context.Background(), expectedOrg.ID)
-	
+
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), organizationData, createdOrganization)
 
@@ -78,13 +81,13 @@ func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
 
 	createdOrganization.Name = "Updated name"
 	updatedOrg, err = suite.dbStore.UpdateOrganization(context.Background(), createdOrganization, expectedOrg.ID)
-	
+
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), updatedOrg, createdOrganization)
 
 	//test delete organization
 	err = suite.dbStore.DeleteOrganization(context.Background(), createdOrganization.ID)
-	
+
 	assert.Nil(suite.T(), err)
 }
 
