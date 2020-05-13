@@ -94,14 +94,16 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
     soft_delete_by, soft_delete_on, created_at
   ) VALUES (
     DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
-    0, NULL, DEFAULT
+    0, NULL, :created_at
 	)`
 
 	// Set the created_at time property on u so that it doesn't default to some weird value over 2000 years ago
 	u.CreatedAt = time.Now().UTC()
 
-	// TODO: Set the user's role
-	// u.RoleID = someroleid
+	// Set the user's role; we're going to start by looking up the role for "Employee" (automatically created by
+	// database migrations so we know it's there), then assign the user's RoleID to that role's ID.
+	r, _ := s.GetRoleByName(ctx, "Employee")
+	u.RoleID = r.ID
 
 	tx, err := s.db.Beginx() // Use Beginx instead of MustBegin so process doesn't die if there's an error
 	if err != nil {
