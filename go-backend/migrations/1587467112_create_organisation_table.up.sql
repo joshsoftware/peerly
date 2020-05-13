@@ -22,16 +22,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS fk_organizations_domain_name_unique ON organiz
 
 -- Create the Josh Software organization
 -- TODO: Get proper values (management decisions) for these things...
-INSERT INTO organizations 
-	(
+INSERT INTO organizations (
 		id, name, contact_email, domain_name, subscription_status, subscription_valid_upto, hi5_limit, 
 		hi5_quota_renewal_frequency, timezone, created_at
-	)
-VALUES
-	(
+) VALUES (
 		DEFAULT, 'Josh Software', 'j.austin.hughey@joshsoftware.com', 'joshsoftware.com', 9999, 9999, 9999, 
-		'1 Week', DEFAULT, DEFAULT)
-ON
-	CONFLICT
-		DO NOTHING
-;
+		'1 Week', DEFAULT, DEFAULT
+) ON CONFLICT DO NOTHING;
