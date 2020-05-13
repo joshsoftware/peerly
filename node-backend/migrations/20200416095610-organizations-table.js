@@ -2,12 +2,16 @@
 var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
+  // eslint-disable-line node/exports-style
   db.createTable(
     "organizations",
     {
@@ -37,7 +41,7 @@ exports.up = function (db, callback) {
         notNull: true,
       },
       subscription_valid_upto: {
-        type: "timestamp",
+        type: "bigint",
         notNull: true,
       },
       hi5_limit: {
@@ -60,10 +64,10 @@ exports.up = function (db, callback) {
     }
   );
 };
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
+  // eslint-disable-line node/exports-style
   db.dropTable("organizations", callback);
 };
-
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   "version": 1, // eslint-disable-line prettier/prettier
 };

@@ -8,9 +8,10 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+// UserBlacklistedToken - struct representing a token to be blacklisted (logout)
 type UserBlacklistedToken struct {
-	ID             int64     `db:"id" json:"id"`
-	UserID         int64     `db:"user_id" json:"user_id"`
+	ID             int       `db:"id" json:"id"`
+	UserID         int       `db:"user_id" json:"user_id"`
 	Token          string    `db:"token" json:"token"`
 	ExpirationDate time.Time `db:"expiration_date" json:"expiration_date"`
 }
@@ -22,6 +23,8 @@ const insertBlacklistedToken = `INSERT INTO user_blacklisted_tokens
 	VALUES ($1, $2, $3)
 	`
 
+// CleanBlacklistedTokens - this function (to be executed in a goroutine) is responsible for
+// purging old blacklisted session tokens so the database doesn't fill up with junk data
 func (s *pgStore) CleanBlacklistedTokens() (err error) {
 	_, err = s.db.Exec(deleteExpiredToken, time.Now().UTC())
 

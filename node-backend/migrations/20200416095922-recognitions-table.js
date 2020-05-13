@@ -5,13 +5,16 @@ var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
 // Recognition Table Migration
 
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType; // eslint-disable-line no-undef
   seed = seedLink; // eslint-disable-line no-undef
 };
 
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
     "recognitions",
     {
@@ -33,11 +36,11 @@ exports.up = function (db, callback) {
         },
         notNull: true,
       },
-      recognition_text: {
+      text: {
         type: "text",
         notNull: true,
       },
-      recognition_for: {
+      given_for: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -49,7 +52,7 @@ exports.up = function (db, callback) {
           },
         },
       },
-      recognition_by: {
+      given_by: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -61,8 +64,8 @@ exports.up = function (db, callback) {
           },
         },
       },
-      recognition_on: {
-        type: "timestamp",
+      given_at: {
+        type: "bigint",
         notNull: true,
       },
     },
@@ -73,10 +76,10 @@ exports.up = function (db, callback) {
   );
 };
 
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("recognitions", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   version: 1,
 };

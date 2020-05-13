@@ -10,16 +10,21 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	// TODO: This repo is archived and they say to use golang-migrate/migrate instead; change?
 	"github.com/mattes/migrate"
 	"github.com/mattes/migrate/database/postgres"
-	_ "github.com/mattes/migrate/source/file"
+
 	logger "github.com/sirupsen/logrus"
+
+	// Import PostgreSQL database driver
+	_ "github.com/lib/pq"
+
+	// For database migrations
+	_ "github.com/mattes/migrate/source/file"
 )
 
 const (
-	dbDriver      = "postgres"
-	migrationPath = "./migrations"
+	dbDriver = "postgres"
 )
 
 var errFindingDriver = errors.New("no migrate driver instance found")
@@ -28,6 +33,7 @@ type pgStore struct {
 	db *sqlx.DB
 }
 
+// Init - initialize database connection and return the db store
 func Init() (s Storer, err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -41,6 +47,7 @@ func Init() (s Storer, err error) {
 	return &pgStore{conn}, nil
 }
 
+// RunMigrations - runs all database migrations (see ../migrtions/*.up.sql)
 func RunMigrations() (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -68,6 +75,7 @@ func RunMigrations() (err error) {
 	return
 }
 
+// CreateMigrationFile - Creates a boilerplate *.sql files for a database migration
 func CreateMigrationFile(filename string) (err error) {
 	if len(filename) == 0 {
 		err = errors.New("filename is not provided")
@@ -75,8 +83,8 @@ func CreateMigrationFile(filename string) (err error) {
 	}
 
 	timeStamp := time.Now().Unix()
-	upMigrationFilePath := fmt.Sprintf("%s/%d_%s.up.sql", migrationPath, timeStamp, filename)
-	downMigrationFilePath := fmt.Sprintf("%s/%d_%s.down.sql", migrationPath, timeStamp, filename)
+	upMigrationFilePath := fmt.Sprintf("%s/%d_%s.up.sql", config.ReadEnvString("MIGRATION_FOLDER_PATH"), timeStamp, filename)
+	downMigrationFilePath := fmt.Sprintf("%s/%d_%s.down.sql", config.ReadEnvString("MIGRATION_FOLDER_PATH"), timeStamp, filename)
 
 	err = createFile(upMigrationFilePath)
 	if err != nil {
@@ -97,6 +105,7 @@ func CreateMigrationFile(filename string) (err error) {
 	return
 }
 
+// RollbackMigrations - Used to run the "down" database migrations in ../migrations/*.down.sql
 func RollbackMigrations(s string) (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -130,5 +139,5 @@ func createFile(filename string) (err error) {
 }
 
 func getMigrationPath() string {
-	return fmt.Sprintf("file://%s", migrationPath)
+	return fmt.Sprintf("file://%s", config.ReadEnvString("MIGRATION_FOLDER_PATH"))
 }

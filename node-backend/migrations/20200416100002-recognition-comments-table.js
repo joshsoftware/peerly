@@ -6,13 +6,16 @@ var seed; // eslint-disable-line no-unused-vars
 
 //Recongnition table migration
 
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType; // eslint-disable-line no-undef
   seed = seedLink; // eslint-disable-line no-undef
 };
 
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
     "recognition_comments",
     {
@@ -34,11 +37,11 @@ exports.up = function (db, callback) {
         },
         notNull: true,
       },
-      comment: {
+      text: {
         type: "text",
         notNull: true,
       },
-      comment_by: {
+      commented_by: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -50,8 +53,8 @@ exports.up = function (db, callback) {
           },
         },
       },
-      commented_on: {
-        type: "timestamp",
+      commented_at: {
+        type: "bigint",
         notNull: true,
       },
     },
@@ -62,10 +65,10 @@ exports.up = function (db, callback) {
   );
 };
 
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("recognition_comments", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   version: 1,
 };
