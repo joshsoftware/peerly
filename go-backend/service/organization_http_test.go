@@ -141,7 +141,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 
 	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{
 		ID:                       1,
-		Name:                     "test organization",
+		Name:                     "test organization (updated)",
 		ContactEmail:             "test@gmail.com",
 		DomainName:               "www.testdomain.com",
 		SubscriptionStatus:       1,
@@ -165,7 +165,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 	_ = json.Unmarshal(recorder.Body.Bytes(), &testOrg)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), 1, testOrg.ID)
+	assert.Equal(suite.T(), "test organization (updated)", testOrg.Name)
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -224,8 +224,11 @@ func (suite *OrganizationHandlerTestSuite) TestGetOrganizationSuccess() {
 		getOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
+	testOrg := db.Organization{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &testOrg)
+
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`, recorder.Body.String())
+	assert.Equal(suite.T(), 1, testOrg.ID)
 
 	suite.dbMock.AssertExpectations(suite.T())
 }
