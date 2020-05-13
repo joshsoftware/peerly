@@ -59,6 +59,9 @@ var errHTTPRequest = errors.New("HTTP Request Failed")
 
 func handleAuth(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		// We're going to use req.Context() a lot here, so create a simple variable first
+		ctx := req.Context()
+
 		// We should have a URL-encoded parameter called "authCode" here, which we use
 		// to exchange for an auth *token* from Google via oauth 2.
 		auth, ok := req.URL.Query()["code"]
@@ -142,14 +145,14 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		fmt.Printf(string(payload))
 
 		// See if there's an existing user that matches the oAuth user
-		existingUser, err := deps.Store.GetUserByEmail(req.Context(), user.Email)
+		existingUser, err := deps.Store.GetUserByEmail(ctx, user.Email)
 		if err != nil {
 			// TODO: Error log, message to user in json
 		}
 		fmt.Printf("%+v\n", existingUser)
 		if existingUser.ID == 0 { // 0 is what is auto-assigned when there's no ID value
 			// Check the OAuth User's domain and see if it's already in our database
-			org, err := deps.Store.GetOrganizationByDomainName(req.Context(), user.Domain)
+			org, err := deps.Store.GetOrganizationByDomainName(ctx, user.Domain)
 			if err != nil {
 				// TODO: Log error, push out json response
 			}
@@ -161,7 +164,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 			}
 			// Organization DOES exist in the database. Create the user then re-query the db for them
 			// so we can use the same variable going forward.
-			existingUser, err := deps.Store.CreateNewUser(req.Context(), db.User{
+			existingUser, err := deps.Store.CreateNewUser(ctx, db.User{
 				Email:           user.Email,
 				ProfileImageURL: user.PictureURL,
 				OrgID:           org.ID,
@@ -169,7 +172,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 			if err != nil {
 				// TODO: Log error, push json to client, 500 response code
 			}
-			tmpOrg, _ := existingUser.Organization()
+			tmpOrg, _ := existingUser.Organization(ctx, deps.Store)
 			fmt.Printf("%+v\n", tmpOrg)
 			fmt.Printf("%+v\n", existingUser)
 		} // end if existingUser doesn't exist
