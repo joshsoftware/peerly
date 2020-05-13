@@ -41,11 +41,8 @@ func (suite *UserTestSuite) TestUserSuccess() {
 		Email:           "testuser@gmail.com",
 		DisplayName:     "test user",
 		ProfileImage:    "test.jpg",
-		SoftDelete:      false,
 		RoleID:          1,
 		Hi5QuotaBalance: 5,
-		SoftDeleteBy:    101,
-		SoftDeleteAt:    1588073442241,
 	}
 	var err error
 

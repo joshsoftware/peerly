@@ -14,11 +14,8 @@ const (
 		email,
 		display_name,
 		profile_image,
-		soft_delete,
 		role_id,
-		hi5_quota_balance,
-		soft_delete_by,
-		soft_delete_at
+		hi5_quota_balance
 		FROM users WHERE id=$1`
 
 	updateUserQuery = `UPDATE users SET (
@@ -27,13 +24,10 @@ const (
 		email,
 		display_name,
 		profile_image,
-		soft_delete,
 		role_id,
-		hi5_quota_balance,
-		soft_delete_by,
-		soft_delete_at
+		hi5_quota_balance
 		) = 
-		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) where id = $11`
+		($1, $2, $3, $4, $5, $6, $7) where id = $8`
 )
 
 type User struct {
@@ -44,11 +38,11 @@ type User struct {
 	Email           string `db:"email" json:"email"`
 	DisplayName     string `db:"display_name" json:"display_name"`
 	ProfileImage    string `db:"profile_image" json:"profile_image"`
-	SoftDelete      bool   `db:"soft_delete" json:"soft_delete"`
+	SoftDelete      bool   `db:"soft_delete" json:"soft_delete,omitempty"`
 	RoleID          int    `db:"role_id" json:"role_id" `
 	Hi5QuotaBalance int    `db:"hi5_quota_balance" json:"hi5_quota_balance"`
-	SoftDeleteBy    int    `db:"soft_delete_by" json:"soft_delete_by" `
-	SoftDeleteAt    int64  `db:"soft_delete_at" json:"soft_delete_at" `
+	SoftDeleteBy    int    `db:"soft_delete_by" json:"soft_delete_by,omitempty" `
+	SoftDeleteAt    int64  `db:"soft_delete_at" json:"soft_delete_at,omitempty" `
 }
 
 func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
@@ -73,7 +67,10 @@ func (s *pgStore) GetUser(ctx context.Context, userID int) (user User, err error
 func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) (updatedUser User, err error) {
 	var dbUser User
 	err = s.db.Get(&dbUser, getUserQuery, userID)
-
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while getting user profile")
+		return
+	}
 	_, err = s.db.Exec(
 		updateUserQuery,
 		userProfile.FirstName,
@@ -81,11 +78,8 @@ func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) 
 		userProfile.Email,
 		userProfile.DisplayName,
 		userProfile.ProfileImage,
-		userProfile.SoftDelete,
 		userProfile.RoleID,
 		userProfile.Hi5QuotaBalance,
-		userProfile.SoftDeleteBy,
-		userProfile.SoftDeleteAt,
 		userID,
 	)
 	if err != nil {
@@ -94,7 +88,10 @@ func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) 
 	}
 
 	err = s.db.Get(&updatedUser, getUserQuery, userID)
-
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while getting user profile")
+		return
+	}
 	return
 }
 
@@ -125,7 +122,6 @@ func (usr *User) Validate() (errorResponse map[string]ErrorResponse, valid bool)
 		Fields:  fieldErrors,
 	},
 	}
-
 	//TODO: Ask what other validations are expected
 
 	return

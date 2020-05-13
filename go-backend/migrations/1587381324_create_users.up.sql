@@ -1,5 +1,6 @@
-CREATE TABLE users (
-id serial PRIMARY KEY,
+CREATE TABLE users
+(
+  id serial PRIMARY KEY,
   org_id integer,
   first_name character(100),
   last_name character(100),
