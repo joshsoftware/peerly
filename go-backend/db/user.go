@@ -30,6 +30,12 @@ func (u *User) Organization(ctx context.Context, store Storer) (org Organization
 	return
 }
 
+// Role - retrieve the user's role based on the RoleID property
+func (u *User) Role(ctx context.Context, store Storer) (role Role, err error) {
+	role, err = store.GetRoleByID(ctx, u.RoleID)
+	return
+}
+
 // GetUserByEmail - Given an email address, return that user.
 func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, err error) {
 	err = s.db.Get(&user, `SELECT * FROM users WHERE email=$1 LIMIT 1`, email)
