@@ -7,8 +7,7 @@ const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 const recRouter = express.Router();
 
 async function authorizedRole(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const tokenData = await jwtValidate.getData(authHeader);
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   if (tokenData.roleId == 2 || tokenData.roleId == 3) {
     next();
   } else {
