@@ -12,7 +12,7 @@ import (
 func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request){
 		vars := mux.Vars(req)
-		recognitionId, err := strconv.Atoi(vars["recognition_id"])
+		recognitionID, err := strconv.Atoi(vars["recognition_id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error recognition_id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
@@ -47,7 +47,7 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 			return
 		}
 
-		err = deps.Store.CreateRecognitionHi5(req.Context(), recognitionHi5, recognitionId, currentUser.Hi5QuotaBalance)
+		err = deps.Store.CreateRecognitionHi5(req.Context(), recognitionHi5, recognitionID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error in creating recognition hi5")
 			rw.WriteHeader(http.StatusBadRequest)
