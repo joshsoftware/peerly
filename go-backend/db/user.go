@@ -16,7 +16,7 @@ const (
 		profile_image,
 		role_id,
 		hi5_quota_balance
-		FROM users WHERE id=$1`
+		FROM users WHERE id=$1 AND soft_delete = $2 `
 
 	updateUserQuery = `UPDATE users SET (
 		first_name,
@@ -27,7 +27,7 @@ const (
 		role_id,
 		hi5_quota_balance
 		) = 
-		($1, $2, $3, $4, $5, $6, $7) where id = $8`
+		($1, $2, $3, $4, $5, $6, $7) where id = $8 AND soft_delete = $9`
 )
 
 type User struct {
@@ -46,7 +46,7 @@ type User struct {
 }
 
 func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
-	err = s.db.Select(&users, "SELECT * FROM users ORDER BY first_name ASC")
+	err = s.db.Select(&users, "SELECT * FROM users WHERE soft_delete = false  ORDER BY first_name ASC")
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing users")
 		return
@@ -56,7 +56,7 @@ func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
 }
 
 func (s *pgStore) GetUser(ctx context.Context, userID int) (user User, err error) {
-	err = s.db.Get(&user, getUserQuery, userID)
+	err = s.db.Get(&user, getUserQuery, userID, false)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error fetching user")
 		return
@@ -66,7 +66,7 @@ func (s *pgStore) GetUser(ctx context.Context, userID int) (user User, err error
 
 func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) (updatedUser User, err error) {
 	var dbUser User
-	err = s.db.Get(&dbUser, getUserQuery, userID)
+	err = s.db.Get(&dbUser, getUserQuery, userID, false)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error while getting user profile")
 		return
@@ -81,13 +81,14 @@ func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) 
 		userProfile.RoleID,
 		userProfile.Hi5QuotaBalance,
 		userID,
+		false,
 	)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error updating user profile")
 		return
 	}
 
-	err = s.db.Get(&updatedUser, getUserQuery, userID)
+	err = s.db.Get(&updatedUser, getUserQuery, userID, false)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error while getting user profile")
 		return
