@@ -14,15 +14,15 @@ const (
 		given_at
 		) VALUES ($1, $2, $3, $4);`
 
-	updateHi5QuotaQuery = `UPDATE users SET hi5_quota_balance = $1 where id = $2;`
+	updateHi5QuotaQuery = `UPDATE users SET hi5_quota_balance = hi5_quota_balance - 1 where id = $1;`
 )
 
 type RecognitionHi5 struct {
-	Id				int			`db:"id" json:"id"`
-	RecognitionId			int			`db:"recognition_id" json:"recognition_id"`
-	Comment				string			`db:"comment" json:"comment"`
-	GivenBy				int			`db:"given_by" json:"given_by"`
-	GivenAt				int64			`db:"given_at" json:"given_at"`
+	Id		int	`db:"id" json:"id"`
+	RecognitionID	int	`db:"recognition_id" json:"recognition_id"`
+	Comment		string	`db:"comment" json:"comment"`
+	GivenBy		int	`db:"given_by" json:"given_by"`
+	GivenAt		int64	`db:"given_at" json:"given_at"`
 }
 
 func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse map[string]ErrorResponse, valid bool){
@@ -41,14 +41,14 @@ func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse m
 	return
 }
 
-func (s *pgStore) CreateRecognitionHi5(ctx context.Context, reqHi5 RecognitionHi5, recognitionId int, hi5QuotaBalance int)(err error){
+func (s *pgStore) CreateRecognitionHi5(ctx context.Context, reqHi5 RecognitionHi5, recognitionID int) (err error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		logger.WithField("err",err.Error()).Error("Error while initiating transaction")
 		return
 	}
 
-	_, err = tx.ExecContext(ctx, updateHi5QuotaQuery, hi5QuotaBalance - 1, reqHi5.GivenBy)
+	_, err = tx.ExecContext(ctx, updateHi5QuotaQuery, reqHi5.GivenBy)
 	if err != nil {
 		logger.WithField("err",err.Error()).Error("Error updating users hi5QuotaBalance")
 		tx.Rollback()
@@ -57,7 +57,7 @@ func (s *pgStore) CreateRecognitionHi5(ctx context.Context, reqHi5 RecognitionHi
 
 	_, err = tx.ExecContext(ctx,
 		createRecognitionHi5Query,
-		recognitionId,
+		recognitionID,
 		reqHi5.Comment,
 		reqHi5.GivenBy,
 		time.Now().Unix(),
