@@ -34,8 +34,10 @@ func createRecognitionHi5Handler(deps Dependencies)(http.HandlerFunc){
 			return
 		}
 
-		errorResponse, valid := recognitionHi5.CheckHi5QuotaBalance(currentUser.Hi5QuotaBalance)
-		if !valid {
+		errorResponse := recognitionHi5.CheckHi5QuotaBalance(currentUser.Hi5QuotaBalance)
+		if len(errorResponse) > 0 {
+			logger.Error("Insufficient hi5 quota balance");
+			
 			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling recognitionHi5 data")
