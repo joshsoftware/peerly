@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
+      comment: {
+        type: Sequelize.STRING,
+      },
       given_by: {
         type: Sequelize.INTEGER,
         notNull: true,
