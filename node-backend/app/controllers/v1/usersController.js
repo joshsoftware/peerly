@@ -18,9 +18,13 @@ module.exports.findUsersByOrg = async (req, res) => {
   let limitOffsetObj = await utility.getLimitAndOffset(obj);
   schema
     .validate(obj, { abortEarly: false })
-    .then(() => {
+    .then(async () => {
       if (obj.org_id) {
-        if (userData.roleId != 1) {
+        let superAdminAuth = await utility.validateRole(
+          userData.roleId,
+          "SuperAdmin"
+        );
+        if (!superAdminAuth) {
           {
             res.status(403).send({
               error: {
