@@ -10,15 +10,14 @@ import (
 	log "joshsoftware/peerly/util/log"
 	"net/http"
 	"net/url"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // Claims - for use with JWT
 type Claims struct {
-	UserID         int       `json:"user_id"`
-	ExpirationDate time.Time `json:"expiration_date"`
+	UserID int `json:"user_id"`
+	// ExpirationDate time.Time `json:"expiration_date"`
 	jwt.StandardClaims
 }
 
@@ -49,6 +48,14 @@ type ErrorStruct struct {
 	Sample  string `json:"sample"`  // A placeholder for any debug logging you want, (e.g. response body or something)
 }
 
+// authBody - a struct we use for marshalling into JSON to send down as the response body after a user has been
+// successfully authenticated and they need their token for using the app in subsequent API requests
+// (see the 'handleAuth' function below).
+type authBody struct {
+	Message string `json:"message"`
+	Token   string `json:"token"`
+}
+
 var errInvalidToken = errors.New("Invalid Token")
 var errNoAuthCode = errors.New("authCode URL parameter missing")
 var errMissingAuthHeader = errors.New("Missing Auth header")
@@ -56,6 +63,7 @@ var errAuthCodeRequestFail = errors.New("Request for OAuth 2.0 authorization tok
 var errJSONParseFail = errors.New("Failed to parse JSON response (likely not valid JSON)")
 var errReadingResponseBody = errors.New("Could not read HTTP response body")
 var errHTTPRequest = errors.New("HTTP Request Failed")
+var errNoSigningKey = errors.New("no JWT signing key specified; cannot authenticate users. Define JWT_SECRET in application.yml and restart")
 
 func handleAuth(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -178,7 +186,24 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		} // end if existingUser doesn't exist
 
 		// By the time we get here, we definitely have an existingUser object.
-		// TODO: Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
+		// Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
+		authToken, err := newJWT(existingUser.Email)
+		if err != nil {
+			// There was a problem generating the token, so they can't be authenticated.
+			// TODO: Log the error here
+			// TODO: Write a 500 header response and a JSON response body expalining the error
+			return
+		}
+
+		// If we get this far, we have a valid authToken. Go ahead and return it to the client.
+		respBody, err := json.Marshal(authBody{Message: "Authentication Successful", Token: authToken})
+		if err != nil {
+			// There was a problem with json.Marshal. Cannot continue.
+			// TODO: Log the error
+			// TODO: Write an appropriate header and JSON response body
+			return
+		}
+		rw.Write(respBody)
 
 	}) // End HTTP handler
 }
@@ -199,16 +224,54 @@ func JSONError(errObj ErrorStruct) (payload []byte) {
 	return
 }
 
+// newJWT() - Creates and returns a new JSON Web Token to be sent to an API consumer on valid
+// authentication, so they can re-use it by sending it in the Authorization header on subsequent
+// requests.
+func newJWT(email string) (newToken string, err error) {
+	signingKey := config.JwtKey()
+	if signingKey == nil {
+		// No signing key? We're screwed. Bail out.
+		// TODO: Log message
+		err = errNoSigningKey
+		return
+	}
+
+	claims := &jwt.StandardClaims{
+		ExpiresAt: 15000,
+		Issuer:    "joshsoftware.com",
+		IssuedAt:  9999, // TODO: What should actually go here? time.Now() * time.Second? Seconds since UNIX epoch?
+		Subject:   email,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	newToken, err = token.SignedString(signingKey)
+	if err != nil {
+		// Error signing the token for some reason.
+		// TODO: Log the error
+	}
+	return
+}
+
+/*
+type Claims struct {
+	UserID         int       `json:"user_id"`
+	ExpirationDate time.Time `json:"expiration_date"`
+	jwt.StandardClaims
+}
+*/
+
+/*
 func getClaims(token string) (claims *Claims, err error) {
 	// Initialize a new instance of `Claims`
 	claims = &Claims{}
 
 	var newTkn *jwt.Token
-	newTkn, err = jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+	newTkn, err = jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
 		return config.JwtKey(), nil
 	})
 
 	if err != nil {
+		// TODO: Log that jwt.ParseWithClaims failed somehow
 		return
 	}
 
@@ -218,13 +281,16 @@ func getClaims(token string) (claims *Claims, err error) {
 
 	return
 }
+*/
 
+/*
 func handleLogout(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		token := req.Header.Get(authHeader)
 		if token == "" {
 			rw.WriteHeader(http.StatusBadRequest)
 			log.Error(errMissingAuthHeader, "Auth header is missing", req.Header.Get(authHeader))
+			return
 		}
 
 		claims, err := getClaims(token)
@@ -266,3 +332,4 @@ func handleLogout(deps Dependencies) http.HandlerFunc {
 		return
 	})
 }
+*/
