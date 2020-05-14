@@ -1,5 +1,6 @@
 const yup = require("yup");
 const moment = require("moment"); //eslint-disable-line node/no-extraneous-require
+const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
 
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
@@ -22,12 +23,8 @@ const schema = yup.object().shape({
   given_at: yup.number().typeError({ given_at: "should be number" }),
 });
 
-exports.create = /*eslint-disable-line node/exports-style*/ async (
-  req,
-  res
-) => {
-  const authHeader = req.headers["authorization"];
-  const tokenData = await jwtValidate.getData(authHeader);
+module.exports.create = async (req, res) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   // Create a Recognition
   const recognitions = {
     core_value_id: req.body.core_value_id,
@@ -77,7 +74,7 @@ exports.create = /*eslint-disable-line node/exports-style*/ async (
                 } else {
                   res.status(404).send({
                     error: {
-                      message: "User not found in specified organition",
+                      message: "User not found in specified organisation",
                     },
                   });
                 }
@@ -116,10 +113,7 @@ exports.create = /*eslint-disable-line node/exports-style*/ async (
     });
 };
 
-exports.findOne = /*eslint-disable-line node/exports-style*/ async (
-  req,
-  res
-) => {
+module.exports.findOne = async (req, res) => {
   const idSchema = yup.object().shape({
     id: yup
       .number()
@@ -163,17 +157,19 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ async (
     });
 };
 
-const CreateFilterQuery = (filterData, tokenData) => {
+const createFilterQuery = (filterData, tokenData) => {
   const sqlQuery = "select * from recognitions where given_for";
   if (
-    filterData.given_for == filterData.given_by &&
-    filterData.core_value_id == filterData.given_by
+    filterData.given_for == undefined &&
+    filterData.core_value_id == undefined &&
+    filterData.given_by == undefined
   ) {
     return sqlQuery.concat(
       " in (select id from users where org_id=" + tokenData.orgId + ")"
     );
   } else if (
-    filterData.given_for == filterData.given_by &&
+    filterData.given_for == undefined &&
+    filterData.given_for == undefined &&
     filterData.core_value_id != undefined
   ) {
     return sqlQuery.concat(
@@ -184,7 +180,8 @@ const CreateFilterQuery = (filterData, tokenData) => {
         ""
     );
   } else if (
-    filterData.given_by == filterData.core_value_id &&
+    filterData.given_by == undefined &&
+    filterData.core_value_id == undefined &&
     filterData.given_for != undefined
   ) {
     return sqlQuery.concat(
@@ -195,7 +192,8 @@ const CreateFilterQuery = (filterData, tokenData) => {
         ""
     );
   } else if (
-    filterData.given_for == filterData.core_value_id &&
+    filterData.given_for == undefined &&
+    filterData.core_value_id == undefined &&
     filterData.given_by != undefined
   ) {
     return sqlQuery.concat(
@@ -250,13 +248,19 @@ const CreateFilterQuery = (filterData, tokenData) => {
   }
 };
 
-exports.findAll = /*eslint-disable-line node/exports-style*/ async (
-  req,
-  res
-) => {
-  const authHeader = req.headers["authorization"];
-  const tokenData = await jwtValidate.getData(authHeader);
-  const filterSchema = yup.object().shape({
+const getFilterData = (data) => {
+  let filterData = {
+    core_value_id: data.core_value_id,
+    given_for: data.given_for,
+    given_by: data.given_by,
+    limit: data.limit || 100,
+    offset: data.offset || null,
+  };
+  return filterData;
+};
+
+const getFilterSchema = () => {
+  return yup.object().shape({
     core_value_id: yup
       .number()
       .typeError({ core_value_id: "should be number" }),
@@ -271,21 +275,19 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ async (
       .nullable()
       .typeError({ given_offset: "should be number" }),
   });
+};
 
-  const filterData = {
-    core_value_id: req.query.core_value_id,
-    given_for: req.query.given_for,
-    given_by: req.query.given_by,
-    limit: req.query.limit || 100,
-    offset: req.query.offset || null,
-  };
+module.exports.findAll = async (req, res) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+  const filterSchema = getFilterSchema();
+  const filterData = getFilterData(qs.parse(req.query));
 
   filterSchema
     .validate(filterData, { abortEarly: false })
     .then(() => {
       db.sequelize
         .query(
-          CreateFilterQuery(filterData, tokenData) +
+          createFilterQuery(filterData, tokenData) +
             "limit " +
             filterData.limit +
             " offset " +
