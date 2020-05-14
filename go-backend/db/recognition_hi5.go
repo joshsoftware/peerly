@@ -25,19 +25,15 @@ type RecognitionHi5 struct {
 	GivenAt		int64	`db:"given_at" json:"given_at"`
 }
 
-func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse map[string]ErrorResponse, valid bool){
+func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse map[string]ErrorResponse){
 	if hi5Quota <= 0 {
-		logger.Error("Not enough Hi5 quota balance")
 		errorResponse = map[string]ErrorResponse {
 			"error": ErrorResponse {
 				Code: "insufficient_hi5_quota_balance",
 				Message: "Insufficient Hi5 quota balance.",
 			},
 		}
-		valid = false
-		return
 	}
-	valid = true
 	return
 }
 
