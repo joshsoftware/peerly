@@ -114,7 +114,7 @@ const getUser = async (email) => {
   let result;
   await db.sequelize
     .query(
-      "select roles.id as roleId,organizations.id as orgId,users.id,organizations.name from users,roles,organizations where users.email = '" +
+      "SELECT  roles.id as roleId,organizations.id as orgId,users.id,organizations.name FROM users INNER JOIN organizations ON users.org_id = organizations.id INNER JOIN roles ON users.role_id = roles.id WHERE users.email= '" +
         email +
         "'"
     )
