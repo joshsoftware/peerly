@@ -23,6 +23,83 @@ const schema = yup.object().shape({
   given_at: yup.number().typeError({ given_at: "should be number" }),
 });
 
+const validateCoreValue = async (req, res) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+  return CoreValues.findByPk(req.body.core_value_id, {
+    attributes: ["org_id"],
+  })
+    .then((data) => {
+      if (data === null) {
+        res.status(404).send({
+          error: {
+            message: "core value not found with specified id",
+          },
+        });
+      } else if (data.dataValues.org_id == tokenData.orgId) {
+        // CoreValue validate successfully
+        return true;
+      } else {
+        res.status(404).send({
+          error: {
+            message: "core value not found with specified organisation",
+          },
+        });
+      }
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
+const validateGivenFor = async (req, res) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+  return Users.findByPk(req.body.given_for, { attributes: ["org_id"] })
+    .then((data) => {
+      if (data === null) {
+        res.status(404).send({
+          error: {
+            message: "User with specified id is not found",
+          },
+        });
+      } else if (data.dataValues.org_id == tokenData.orgId) {
+        return true;
+      } else {
+        res.status(404).send({
+          error: {
+            message: "User not found in specified organisation",
+          },
+        });
+      }
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
+const addRecognition = (req, res, recognitions) => {
+  Recognitions.create(recognitions)
+    .then((info) => {
+      res.status(201).send({
+        data: info,
+      });
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
 module.exports.create = async (req, res) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   // Create a Recognition
@@ -36,71 +113,12 @@ module.exports.create = async (req, res) => {
   // Validate request
   schema
     .validate(recognitions, { abortEarly: false })
-    .then(() => {
-      CoreValues.findByPk(req.body.core_value_id, {
-        attributes: ["org_id"],
-      })
-        .then((data) => {
-          if (data === null) {
-            res.status(404).send({
-              error: {
-                message: "core value not found with specified id",
-              },
-            });
-          } else if (data.dataValues.org_id == tokenData.orgId) {
-            // Save Recognition in the database
-            Users.findByPk(req.body.given_for, { attributes: ["org_id"] })
-              .then((data) => {
-                if (data === null) {
-                  res.status(404).send({
-                    error: {
-                      message: "User with specified id is not found",
-                    },
-                  });
-                } else if (data.dataValues.org_id == tokenData.orgId) {
-                  Recognitions.create(recognitions)
-                    .then((info) => {
-                      res.status(201).send({
-                        data: info,
-                      });
-                    })
-                    .catch((err /*eslint-disable-line no-unused-vars*/) => {
-                      res.status(500).send({
-                        error: {
-                          message: "internal server error",
-                        },
-                      });
-                    });
-                } else {
-                  res.status(404).send({
-                    error: {
-                      message: "User not found in specified organisation",
-                    },
-                  });
-                }
-              })
-              .catch((err /*eslint-disable-line no-unused-vars*/) => {
-                res.status(500).send({
-                  error: {
-                    message: "internal server error",
-                  },
-                });
-              });
-          } else {
-            res.status(404).send({
-              error: {
-                message: "core value not found with specified organisation",
-              },
-            });
-          }
-        })
-        .catch((err /*eslint-disable-line no-unused-vars*/) => {
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
-        });
+    .then(async () => {
+      if (await validateCoreValue(req, res)) {
+        if (await validateGivenFor(req, res)) {
+          await addRecognition(req, res, recognitions);
+        }
+      }
     })
     .catch((err) => {
       res.status(400).send({
