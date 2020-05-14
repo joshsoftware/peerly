@@ -3,17 +3,18 @@ const should = require("should" /*eslint-disable-line node/no-unpublished-requir
 
 // This agent refers to PORT where program is runninng.
 
-const server = supertest.agent(process.env.URL);
+const server = supertest.agent(process.env.TEST_URL);
 const token = process.env.TOKEN;
 
 // UNIT test begin
 
-describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
+describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function () {
   it(/*eslint-disable-line no-undef*/ "get API all core value correct response", function (done) {
     // calling get all core value api
     server
       .get("/organisations/1/core_values")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200) // THis is HTTP response
       .end(function (err, res) {
@@ -28,6 +29,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/organisations/t/core_values")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(400) // THis is HTTP response
       .end(function (err, res) {
@@ -42,6 +44,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/organisations/1/core_values/2")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -56,6 +59,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/organisations/1/core_values/1000")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -70,6 +74,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/organisations/1/core_values/t")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -91,6 +96,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect(201) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 201
@@ -111,6 +117,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 400
@@ -130,6 +137,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 404
@@ -149,6 +157,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect(200) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
@@ -169,6 +178,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 400
@@ -188,6 +198,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 404
@@ -198,7 +209,9 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
 
   it(/*eslint-disable-line no-undef*/ "get request contain valid id ", function (done) {
     server
-      .get("core_values/1")
+      .get("/core_values/2")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -210,6 +223,8 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   it(/*eslint-disable-line no-undef*/ "get  request contain invalid id ", function (done) {
     server
       .get("/core_values/5000")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(404)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -220,7 +235,9 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
 
   it(/*eslint-disable-line no-undef*/ "get request pass other content ", function (done) {
     server
-      .get("core_values/t")
+      .get("/core_values/t")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(400)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -233,6 +250,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/core_values")
       .set("Authorization", "Bearer " + "")
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(401)
       .end(function (err, res) {
@@ -244,6 +262,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     server
       .get("/core_values")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200)
       .end(function (err, res) {

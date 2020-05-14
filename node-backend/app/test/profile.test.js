@@ -10,6 +10,7 @@ describe("test cases for get profile", function () {
     server
       .get("/profile")
       .set("Authorization", "Bearer " + "")
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(401)
       .end(function (err, res) {
@@ -19,8 +20,9 @@ describe("test cases for get profile", function () {
   });
   it("get profile", function (done) {
     server
-      .get("/profile")
+      .get("/users/me/profile")
       .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200)
       .end(function (err, res) {
@@ -32,6 +34,8 @@ describe("test cases for get profile", function () {
   it(/*eslint-disable-line no-undef*/ "get request contain valid id ", function (done) {
     server
       .get("/users/1/profile")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -43,6 +47,8 @@ describe("test cases for get profile", function () {
   it(/*eslint-disable-line no-undef*/ "get  request contain invalid id ", function (done) {
     server
       .get("/users/5000/profile")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(404)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -53,7 +59,9 @@ describe("test cases for get profile", function () {
 
   it(/*eslint-disable-line no-undef*/ "get request pass other content ", function (done) {
     server
-      .get("users/t/profile")
+      .get("/users/t/profile")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(400)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
