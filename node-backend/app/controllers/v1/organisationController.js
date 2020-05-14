@@ -39,7 +39,7 @@ const schema = yup.object().shape({
   timezone: yup.string().required({ timezone: "required" }),
 });
 
-exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
+module.exports.create = (req, res) => {
   // Create a Organization
   const organizations = {
     name: req.body.name,
@@ -82,7 +82,7 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
     });
 };
 
-exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
+module.exports.findAll = (req, res) => {
   Organizations.findAll()
     .then((info) => {
       res.status(200).send({
@@ -98,7 +98,7 @@ exports.findAll = /*eslint-disable-line node/exports-style*/ (req, res) => {
     });
 };
 
-exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
+module.exports.findOne = (req, res) => {
   const idSchema = yup.object().shape({
     id: yup.number({ id: "should be number" }).required({ id: "required" }),
   });
@@ -139,7 +139,7 @@ exports.findOne = /*eslint-disable-line node/exports-style*/ (req, res) => {
     });
 };
 
-exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
+module.exports.update = (req, res) => {
   const id = req.params.id;
   const idSchema = yup.object().shape({
     id: yup.number().required(),
