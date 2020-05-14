@@ -13,8 +13,9 @@ type Storer interface {
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
 	GetUser(context.Context, int) (User, error)
 	UpdateUser(context.Context, User, int) (User, error)
+	ResetHi5QuotaBalanceJob() error
 
-	//Create(context.Context, User) error
+	//Create(context.Context, User) errors
 	//GetUser(context.Context) (User, error)
 	//Delete(context.Context, string) error
 }

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"joshsoftware/peerly/config"
+	"joshsoftware/peerly/cronjobs"
 	"joshsoftware/peerly/db"
 	"joshsoftware/peerly/service"
 	"os"
@@ -82,6 +83,8 @@ func startApp() (err error) {
 	// mux router
 	router := service.InitRouter(deps)
 
+	// Start up all the background tasks Peerly depends upon
+	cronjobs.Init(deps)
 	// init web server
 	server := negroni.Classic()
 	server.UseHandler(router)

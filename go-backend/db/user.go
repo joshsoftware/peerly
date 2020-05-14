@@ -2,12 +2,17 @@ package db
 
 import (
 	"context"
+	"time"
 
 	logger "github.com/sirupsen/logrus"
 )
 
 const (
-	getUserQuery = `SELECT id,
+	WeeklyRenewalFrequency  = "WEEKLY"
+	MonthlyRenewalFrequency = "MONTHLY"
+	StartDayOfWeek          = "Monday"
+	FirstDayInMonth         = 1
+	getUserQuery            = `SELECT id,
 		org_id,
 		first_name,
 		last_name,
@@ -28,6 +33,8 @@ const (
 		hi5_quota_balance
 		) = 
 		($1, $2, $3, $4, $5, $6, $7) where id = $8`
+
+	updateHi5QuotaBalanceQuery = `UPDATE users SET hi5_quota_balance=$1 where org_id = $2`
 )
 
 type User struct {
@@ -124,5 +131,52 @@ func (usr *User) Validate() (errorResponse map[string]ErrorResponse, valid bool)
 	}
 	//TODO: Ask what other validations are expected
 
+	return
+}
+
+func (s *pgStore) UpdateHi5QuotaRenewalFrequencyOfUsers(organization Organization) (err error) {
+	_, err = s.db.Exec(
+		updateHi5QuotaBalanceQuery,
+		organization.Hi5Limit,
+		organization.ID,
+	)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error updating organization")
+		return
+	}
+	return
+
+}
+
+//ResetHi5QuotaBalanceJob - called to execute cron job for reset Hi5_quota_balance
+func (s *pgStore) ResetHi5QuotaBalanceJob() (err error) {
+	organizations, err := s.ListOrganizations(context.Background())
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while getting organization list")
+	}
+	for _, organization := range organizations {
+		if organization.Hi5QuotaRenewalFrequency == WeeklyRenewalFrequency {
+			weekday := time.Now().Weekday()
+			if weekday.String() == StartDayOfWeek {
+				err = s.UpdateHi5QuotaRenewalFrequencyOfUsers(organization)
+				if err != nil {
+					logger.WithField("err", err.Error()).Error("Error while getting organization list")
+					return
+				}
+			}
+
+		} else if organization.Hi5QuotaRenewalFrequency == MonthlyRenewalFrequency {
+			year, month, day := time.Now().Date()
+			firstDayOfMonth := time.Date(year, month, FirstDayInMonth, 0, 0, 0, 0, time.Now().Location())
+			currentDay := time.Date(year, month, day, 0, 0, 0, 0, time.Now().Location())
+			if firstDayOfMonth.Equal(currentDay) {
+				err = s.UpdateHi5QuotaRenewalFrequencyOfUsers(organization)
+				if err != nil {
+					logger.WithField("err", err.Error()).Error("Error while getting organization list")
+					return
+				}
+			}
+		}
+	}
 	return
 }
