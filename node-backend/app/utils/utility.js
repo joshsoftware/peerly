@@ -44,3 +44,16 @@ module.exports.getLimitAndOffset = (queryParamsObj) => {
   };
   return limitOffsetObj;
 };
+
+module.exports.validateRole = (inputRoleId, roleTypeToCompare) => {
+  if (
+    (inputRoleId == 1 && roleTypeToCompare == "SuperAdmin") ||
+    (inputRoleId == 2 && roleTypeToCompare == "OrganisationAdmin") ||
+    (inputRoleId == 3 && roleTypeToCompare == "Employee") ||
+    (inputRoleId == 4 && roleTypeToCompare == "Moderator")
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
