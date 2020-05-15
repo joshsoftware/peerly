@@ -1,30 +1,15 @@
-const yup = require("yup");
 const moment = require("moment"); //eslint-disable-line node/no-extraneous-require
 const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
 
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
+const validationSchema = require("./validationSchema/recognitionValidationSchema");
 const Recognitions = db.recognitions;
 const CoreValues = db.coreValues;
 const Users = db.users;
 
-const schema = yup.object().shape({
-  core_value_id: yup
-    .number({ core_value_id: "should be number" })
-    .required({ core_value_id: "required" })
-    .typeError({ core_value_id: "should be number" }),
-  text: yup.string({ text: "should be text" }).required({ text: "required" }),
-  given_for: yup
-    .number()
-    .required({ given_for: "required" })
-    .typeError({ given_for: "should be number" }),
-  given_by: yup.number().typeError({ given_by: "should be number" }),
-  given_at: yup.number().typeError({ given_at: "should be number" }),
-});
-
-const validateCoreValue = async (req, res) => {
-  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+const validateCoreValue = async (req, res, tokenData) => {
   return CoreValues.findByPk(req.body.core_value_id, {
     attributes: ["org_id"],
   })
@@ -55,8 +40,7 @@ const validateCoreValue = async (req, res) => {
     });
 };
 
-const validateGivenFor = async (req, res) => {
-  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+const validateGivenFor = async (req, res, tokenData) => {
   return Users.findByPk(req.body.given_for, { attributes: ["org_id"] })
     .then((data) => {
       if (data === null) {
@@ -101,6 +85,7 @@ const addRecognition = (req, res, recognitions) => {
 };
 
 module.exports.create = async (req, res) => {
+  const schema = validationSchema.insertSchema();
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   // Create a Recognition
   const recognitions = {
@@ -114,8 +99,8 @@ module.exports.create = async (req, res) => {
   schema
     .validate(recognitions, { abortEarly: false })
     .then(async () => {
-      if (await validateCoreValue(req, res)) {
-        if (await validateGivenFor(req, res)) {
+      if (await validateCoreValue(req, res, tokenData)) {
+        if (await validateGivenFor(req, res, tokenData)) {
           await addRecognition(req, res, recognitions);
         }
       }
@@ -132,12 +117,7 @@ module.exports.create = async (req, res) => {
 };
 
 module.exports.findOne = async (req, res) => {
-  const idSchema = yup.object().shape({
-    id: yup
-      .number()
-      .required({ id: "required" })
-      .typeError({ id: "should be number " }),
-  });
+  const idSchema = validationSchema.getByIdSchema();
 
   idSchema
     .validate({ id: req.params.id }, { abortEarly: false })
@@ -177,93 +157,87 @@ module.exports.findOne = async (req, res) => {
 
 const createFilterQuery = (filterData, tokenData) => {
   const sqlQuery = "select * from recognitions where given_for";
+  let whereCondition;
   if (
     filterData.given_for == undefined &&
     filterData.core_value_id == undefined &&
     filterData.given_by == undefined
   ) {
-    return sqlQuery.concat(
-      " in (select id from users where org_id=" + tokenData.orgId + ")"
-    );
+    whereCondition =
+      " in (select id from users where org_id=" + tokenData.orgId + ")";
   } else if (
     filterData.given_for == undefined &&
     filterData.given_for == undefined &&
     filterData.core_value_id != undefined
   ) {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and core_value_id =" +
-        filterData.core_value_id +
-        ""
-    );
+      tokenData.orgId +
+      ") and core_value_id =" +
+      filterData.core_value_id +
+      "";
   } else if (
     filterData.given_by == undefined &&
     filterData.core_value_id == undefined &&
     filterData.given_for != undefined
   ) {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and given_for =" +
-        filterData.given_for +
-        ""
-    );
+      tokenData.orgId +
+      ") and given_for =" +
+      filterData.given_for +
+      "";
   } else if (
     filterData.given_for == undefined &&
     filterData.core_value_id == undefined &&
     filterData.given_by != undefined
   ) {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and given_by =" +
-        filterData.given_by +
-        ""
-    );
+      tokenData.orgId +
+      ") and given_by =" +
+      filterData.given_by +
+      "";
   } else if (filterData.given_for == undefined) {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and core_value_id =" +
-        filterData.core_value_id +
-        " and given_by =" +
-        filterData.given_by +
-        ""
-    );
+      tokenData.orgId +
+      ") and core_value_id =" +
+      filterData.core_value_id +
+      " and given_by =" +
+      filterData.given_by +
+      "";
   } else if (filterData.given_by == undefined) {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and core_value_id =" +
-        filterData.core_value_id +
-        " and given_for =" +
-        filterData.given_for +
-        ""
-    );
+      tokenData.orgId +
+      ") and core_value_id =" +
+      filterData.core_value_id +
+      " and given_for =" +
+      filterData.given_for +
+      "";
   } else if (filterData.core_value_id == undefined) {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and given_for =" +
-        filterData.given_for +
-        " and given_by =" +
-        filterData.given_by +
-        ""
-    );
+      tokenData.orgId +
+      ") and given_for =" +
+      filterData.given_for +
+      " and given_by =" +
+      filterData.given_by +
+      "";
   } else {
-    return sqlQuery.concat(
+    whereCondition =
       " in (select id from users where org_id=" +
-        tokenData.orgId +
-        ") and core_value_id =" +
-        filterData.core_value_id +
-        " and given_for =" +
-        filterData.given_for +
-        " and given_by = " +
-        filterData.given_by +
-        ""
-    );
+      tokenData.orgId +
+      ") and core_value_id =" +
+      filterData.core_value_id +
+      " and given_for =" +
+      filterData.given_for +
+      " and given_by = " +
+      filterData.given_by +
+      "";
   }
+  return sqlQuery.concat(whereCondition);
 };
 
 const getFilterData = (data) => {
@@ -277,27 +251,9 @@ const getFilterData = (data) => {
   return filterData;
 };
 
-const getFilterSchema = () => {
-  return yup.object().shape({
-    core_value_id: yup
-      .number()
-      .typeError({ core_value_id: "should be number" }),
-    given_for: yup.number().typeError({ given_for: "should be number" }),
-    given_by: yup.number().typeError({ given_by: "should be number" }),
-    limit: yup
-      .number()
-      .nullable()
-      .typeError({ given_limit: "should be number" }),
-    offset: yup
-      .number()
-      .nullable()
-      .typeError({ given_offset: "should be number" }),
-  });
-};
-
 module.exports.findAll = async (req, res) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
-  const filterSchema = getFilterSchema();
+  const filterSchema = validationSchema.getFilterSchema();
   const filterData = getFilterData(qs.parse(req.query));
 
   filterSchema
