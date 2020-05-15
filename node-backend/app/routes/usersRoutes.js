@@ -12,4 +12,5 @@ usersRouter.get("/users", async (req, res) => {
   );
   /*eslint-disable no-eval*/ eval(controller).findUsersByOrg(req, res);
 });
+
 module.exports = usersRouter;
