@@ -5,6 +5,7 @@ const cors = require("cors");
 
 require("dotenv").config("./.env");
 require("./app/jwtTokenValidation/deleteExpiredToken.js"); // eslint-disable-line node/no-missing-require
+require("./app/cronJobs/ResetHi5QuotaBalance");
 const indexRoute = require("./app/routes/index");
 const dbConn = require("./app/models/sequelize");
 
