@@ -156,86 +156,23 @@ module.exports.findOne = async (req, res) => {
 };
 
 const createFilterQuery = (filterData, tokenData) => {
-  const sqlQuery = "select * from recognitions where given_for";
-  let whereCondition;
-  if (
-    filterData.given_for == undefined &&
-    filterData.core_value_id == undefined &&
-    filterData.given_by == undefined
-  ) {
-    whereCondition =
-      " in (select id from users where org_id=" + tokenData.orgId + ")";
-  } else if (
-    filterData.given_for == undefined &&
-    filterData.given_for == undefined &&
-    filterData.core_value_id != undefined
-  ) {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and core_value_id =" +
-      filterData.core_value_id +
-      "";
-  } else if (
-    filterData.given_by == undefined &&
-    filterData.core_value_id == undefined &&
-    filterData.given_for != undefined
-  ) {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and given_for =" +
-      filterData.given_for +
-      "";
-  } else if (
-    filterData.given_for == undefined &&
-    filterData.core_value_id == undefined &&
-    filterData.given_by != undefined
-  ) {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and given_by =" +
-      filterData.given_by +
-      "";
-  } else if (filterData.given_for == undefined) {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and core_value_id =" +
-      filterData.core_value_id +
-      " and given_by =" +
-      filterData.given_by +
-      "";
-  } else if (filterData.given_by == undefined) {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and core_value_id =" +
-      filterData.core_value_id +
-      " and given_for =" +
-      filterData.given_for +
-      "";
-  } else if (filterData.core_value_id == undefined) {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and given_for =" +
-      filterData.given_for +
-      " and given_by =" +
-      filterData.given_by +
-      "";
-  } else {
-    whereCondition =
-      " in (select id from users where org_id=" +
-      tokenData.orgId +
-      ") and core_value_id =" +
-      filterData.core_value_id +
-      " and given_for =" +
-      filterData.given_for +
-      " and given_by = " +
-      filterData.given_by +
-      "";
+  const sqlQuery =
+    "select * from recognitions where given_for in (select id from users where org_id=" +
+    tokenData.orgId +
+    ")";
+  let whereCondition = "";
+  if (filterData.given_for) {
+    whereCondition = " and given_for =" + filterData.given_for;
+  }
+  if (filterData.given_by) {
+    whereCondition = whereCondition.concat(
+      " and given_by =" + filterData.given_by
+    );
+  }
+  if (filterData.core_value_id) {
+    whereCondition = whereCondition.concat(
+      " and core_value_id =" + filterData.core_value_id
+    );
   }
   return sqlQuery.concat(whereCondition);
 };
@@ -245,7 +182,7 @@ const getFilterData = (data) => {
     core_value_id: data.core_value_id,
     given_for: data.given_for,
     given_by: data.given_by,
-    limit: data.limit || 100,
+    limit: data.limit || null,
     offset: data.offset || null,
   };
   return filterData;
@@ -255,6 +192,7 @@ module.exports.findAll = async (req, res) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   const filterSchema = validationSchema.getFilterSchema();
   const filterData = getFilterData(qs.parse(req.query));
+  const paginationData = utility.getLimitAndOffset(filterData);
 
   filterSchema
     .validate(filterData, { abortEarly: false })
@@ -263,9 +201,9 @@ module.exports.findAll = async (req, res) => {
         .query(
           createFilterQuery(filterData, tokenData) +
             "limit " +
-            filterData.limit +
+            paginationData.limit +
             " offset " +
-            filterData.offset +
+            paginationData.offset +
             ""
         )
         .then((info) => {
