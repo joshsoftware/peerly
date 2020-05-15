@@ -1,10 +1,10 @@
 package service
 
 import (
+	"database/sql"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io/ioutil"
+	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
 	log "joshsoftware/peerly/util/log"
@@ -13,13 +13,6 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
-
-// Claims - for use with JWT
-type Claims struct {
-	UserID int `json:"user_id"`
-	// ExpirationDate time.Time `json:"expiration_date"`
-	jwt.StandardClaims
-}
 
 // OAuthUser - a struct that represents the "user" we'll get back from Google's /userinfo query
 type OAuthUser struct {
@@ -40,14 +33,6 @@ type OAuthToken struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-// ErrorStruct - a generic struct you can use to create error messages/logs to be converted
-// to JSON or other types of messages/data as you need it
-type ErrorStruct struct {
-	Message string `json:"message"` // Your message to the end user or developer
-	Status  int    `json:"status"`  // HTTP status code that should go with the message/log (if any)
-	Sample  string `json:"sample"`  // A placeholder for any debug logging you want, (e.g. response body or something)
-}
-
 // authBody - a struct we use for marshalling into JSON to send down as the response body after a user has been
 // successfully authenticated and they need their token for using the app in subsequent API requests
 // (see the 'handleAuth' function below).
@@ -55,15 +40,6 @@ type authBody struct {
 	Message string `json:"message"`
 	Token   string `json:"token"`
 }
-
-var errInvalidToken = errors.New("Invalid Token")
-var errNoAuthCode = errors.New("authCode URL parameter missing")
-var errMissingAuthHeader = errors.New("Missing Auth header")
-var errAuthCodeRequestFail = errors.New("Request for OAuth 2.0 authorization token failed")
-var errJSONParseFail = errors.New("Failed to parse JSON response (likely not valid JSON)")
-var errReadingResponseBody = errors.New("Could not read HTTP response body")
-var errHTTPRequest = errors.New("HTTP Request Failed")
-var errNoSigningKey = errors.New("no JWT signing key specified; cannot authenticate users. Define JWT_SECRET in application.yml and restart")
 
 func handleAuth(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
@@ -74,14 +50,10 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		// to exchange for an auth *token* from Google via oauth 2.
 		auth, ok := req.URL.Query()["code"]
 		if !ok || len(auth[0]) < 1 {
-			rw.WriteHeader(http.StatusBadRequest)
-			log.Error(errNoAuthCode, "No 'code' URL parameter provided", req.URL.String())
+			log.Error(ae.ErrNoAuthCode, "No 'code' URL parameter provided", ae.ErrNoAuthCode)
+			ae.JSONError(rw, http.StatusForbidden, ae.ErrNoAuthCode)
 			return
 		}
-
-		// http.Request.URL.Query() returns an array even for only one thing, and we just want
-		// that one value only
-		authCode := auth[0]
 
 		// Now, exchange the authCode for an authentication *token* with the OAuth provider
 		// To do this, we do a POST to https://oauth2.googleapis.com/token which will respond
@@ -89,7 +61,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		// expires_in, token_type, scope and refresh_token
 		resp, err := http.PostForm("https://oauth2.googleapis.com/token",
 			url.Values{
-				"code":          {authCode},
+				"code":          {auth[0]},
 				"client_id":     {config.ReadEnvString("GOOGLE_KEY")},
 				"client_secret": {config.ReadEnvString("GOOGLE_SECRET")},
 				"scope":         {""},
@@ -102,126 +74,111 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		// https://accounts.google.com/o/oauth2/auth?client_id=749817093280-6h2emqcqsi84murdsdr543kuemvrlr9t.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A33001%2Fauth%2Fgoogle&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=state
 
 		if err != nil {
-			// TODO: Handle the error
-			// 1. Log it here
-			// 2. Send an unauthorized http header to our client
-			// 3. Include a JSON message that says the auth provider denied auth code <-> token exchange
-			body, _ := ioutil.ReadAll(resp.Body)
-			log.Error(errAuthCodeRequestFail, "Google didn't like the auth code we sent", string(body))
-			rw.WriteHeader(http.StatusUnauthorized)
-			rw.Write(JSONError(ErrorStruct{Message: errAuthCodeRequestFail.Error(), Status: http.StatusUnauthorized}))
+			log.Error(ae.ErrAuthCodeRequestFail, "Google didn't like the auth code we sent", err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
 
 		var token OAuthToken
 		payload, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			log.Error(errReadingResponseBody, "Error reading response body", string(payload))
+			log.Error(ae.ErrReadingResponseBody, "Error reading response body: "+string(payload), err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
 
 		err = json.Unmarshal(payload, &token)
 		if err != nil {
-			log.Error(errJSONParseFail, "Error when running json.Unmarshal on payload", string(payload))
-			rw.Write(JSONError(ErrorStruct{Message: errJSONParseFail.Error(), Sample: string(payload)}))
-			// TODO: Handle error - unable to decode JSON received from OAuth provider
+			log.Error(ae.ErrJSONParseFail, "json.Unmarshal error on payload "+string(payload), err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
 
-		// If we get here, we have valid data in the token struct,
-		// Use it to get information with the userinfo.email scope
-		// TODO
-		// GET https://www.googleapis.com/oauth2/v2/userinfo
-		// Authorization: Bearer <token>
-		//
-		// { picture, verified_email, id, hd(domain), email }
 		client := &http.Client{}
 		req, _ = http.NewRequest("GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
 		req.Header.Set("Authorization", "Bearer "+token.AccessToken)
 		resp, err = client.Do(req)
 		if err != nil {
-			log.Error(errHTTPRequest, "HTTP Request possibly failed", err.Error())
+			log.Error(ae.ErrHTTPRequestFailed, "Failure executing HTTP request to https://www.googleapis.com/oauth2/v2/userinfo", err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
+			return
 		}
 
 		user := OAuthUser{}
 		payload, _ = ioutil.ReadAll(resp.Body)
 		err = json.Unmarshal(payload, &user)
 		if err != nil {
-			log.Error(errJSONParseFail, "Failure parsing JSON in Unmarshalling OAuthUser", string(payload))
+			log.Error(ae.ErrJSONParseFail, "Failure parsing JSON in Unmarshalling OAuthUser"+string(payload), err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 		}
 
-		fmt.Printf(string(payload))
+		// Before going any further, check to see if a domain actually exists on the user object, because
+		// if not, then there's no point in going any further.
+		if len(user.Domain) < 3 { // Shortest possible FQDN would be y.z
+			log.Error(ae.ErrNoUserDomain, "No valid domain associated with user "+user.Email+" (domain: "+user.Domain+")", err)
+			ae.JSONError(rw, http.StatusForbidden, err)
+		}
 
 		// See if there's an existing user that matches the oAuth user
 		existingUser, err := deps.Store.GetUserByEmail(ctx, user.Email)
-		if err != nil {
-			// TODO: Error log, message to user in json
-		}
-		fmt.Printf("%+v\n", existingUser)
-		if existingUser.ID == 0 { // 0 is what is auto-assigned when there's no ID value
+		if err != nil && err != sql.ErrNoRows {
+			log.Error(ae.ErrUnknown, "Unknown/unexpected error while looking for existing user "+user.Email, err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
+			return
+		} else {
 			// Check the OAuth User's domain and see if it's already in our database
 			org, err := deps.Store.GetOrganizationByDomainName(ctx, user.Domain)
 			if err != nil {
-				// TODO: Log error, push out json response
-			}
-			fmt.Printf("%+v\n", org)
-			if &org == nil || &org.ID == nil {
-				// Organization does not exist in our database. Halt the request and deny access.
-				// TODO: Forbidden header, json response body
+				// Log error, push out a JSON response, and halt authentication
+				log.Error(ae.ErrDomainNotRegistered, ("Domain: " + user.Domain + " Email " + user.Email), err)
+				ae.JSONError(rw, http.StatusForbidden, err)
 				return
 			}
-			// Organization DOES exist in the database. Create the user then re-query the db for them
-			// so we can use the same variable going forward.
-			existingUser, err := deps.Store.CreateNewUser(ctx, db.User{
+
+			// Organization DOES exist in the database. Create the user.
+			_, err = deps.Store.CreateNewUser(ctx, db.User{
 				Email:           user.Email,
 				ProfileImageURL: user.PictureURL,
 				OrgID:           org.ID,
 			})
 			if err != nil {
-				// TODO: Log error, push json to client, 500 response code
+				log.Error(ae.ErrUnknown, "Unknown/unexpected error while creating new user "+user.Email, err)
+				ae.JSONError(rw, http.StatusInternalServerError, err)
+				return
 			}
-			tmpOrg, _ := existingUser.Organization(ctx, deps.Store)
-			fmt.Printf("%+v\n", tmpOrg)
-			fmt.Printf("%+v\n", existingUser)
-		} // end if existingUser doesn't exist
+		}
+
+		// Re-query the database for existingUser
+		existingUser, err = deps.Store.GetUserByEmail(ctx, user.Email)
+		if err != nil {
+			// If we can't retrieve the user after we just created them, something very, very weird is going on.
+			log.Error(ae.ErrUnknown, "Unknown/unexpected error while looking up user "+user.Email, err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
+			return
+		}
 
 		// By the time we get here, we definitely have an existingUser object.
 		// Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
 		authToken, err := newJWT(existingUser.Email)
 		if err != nil {
-			// There was a problem generating the token, so they can't be authenticated.
-			// TODO: Log the error here
-			// TODO: Write a 500 header response and a JSON response body expalining the error
+			log.Error(ae.ErrUnknown, "Unknown/unexpected error while creating JWT for "+existingUser.Email, err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
 
 		// If we get this far, we have a valid authToken. Go ahead and return it to the client.
 		respBody, err := json.Marshal(authBody{Message: "Authentication Successful", Token: authToken})
 		if err != nil {
-			// There was a problem with json.Marshal. Cannot continue.
-			// TODO: Log the error
-			// TODO: Write an appropriate header and JSON response body
+			log.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response, token: "+authToken, err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
+		rw.WriteHeader(http.StatusOK)
+		rw.Header().Add("Content-type", "application/json")
+		rw.Header().Add("Authorization", authToken)
 		rw.Write(respBody)
 
 	}) // End HTTP handler
-}
-
-// JSONError - create a JSON string that can be used to report error messages in
-// response bodies or logs.
-// Example usage:
-//	fmt.Printf(JSONError(ErrorStruct{
-//		Message:"thing went wrong",
-//		Status:"400",
-//		Sample:"some debug info, maybe a response body or something"
-//	}))
-func JSONError(errObj ErrorStruct) (payload []byte) {
-	payload, err := json.Marshal(errObj)
-	if err != nil {
-		log.Error(errJSONParseFail, "Failure parsing JSON in service.JSONError()", string(payload))
-	}
-	return
 }
 
 // newJWT() - Creates and returns a new JSON Web Token to be sent to an API consumer on valid
@@ -230,9 +187,7 @@ func JSONError(errObj ErrorStruct) (payload []byte) {
 func newJWT(email string) (newToken string, err error) {
 	signingKey := config.JwtKey()
 	if signingKey == nil {
-		// No signing key? We're screwed. Bail out.
-		// TODO: Log message
-		err = errNoSigningKey
+		log.Error(ae.ErrNoSigningKey, "Application error: No signing key configured", err)
 		return
 	}
 
