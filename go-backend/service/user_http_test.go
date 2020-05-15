@@ -31,6 +31,7 @@ func (suite *UsersHandlerTestSuite) SetupTest() {
 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(UsersHandlerTestSuite))
+	suite.Run(t, new(CoreValueHandlerTestSuite))
 	suite.Run(t, new(OrganizationHandlerTestSuite))
 }
 

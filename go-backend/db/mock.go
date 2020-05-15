@@ -77,6 +77,36 @@ func (m *MockStore) ListOrganizations(ctx context.Context) (organizations []Orga
 	return args.Get(0).([]Organization), args.Error(1)
 }
 
+// ListCoreValues - returns a list of core value objects from the database
+func (m *MockStore) ListCoreValues(ctx context.Context, organisationID int64) (coreValues []CoreValue, err error) {
+	args := m.Called(ctx, organisationID)
+	return args.Get(0).([]CoreValue), args.Error(1)
+}
+
+// GetCoreValue - Mock to retrieve a core value by their organization ID and core value ID
+func (m *MockStore) GetCoreValue(ctx context.Context, organisationID, coreValueID int64) (coreValue CoreValue, err error) {
+	args := m.Called(ctx, organisationID, coreValueID)
+	return args.Get(0).(CoreValue), args.Error(1)
+}
+
+// CreateCoreValue - Creates core value for an organization
+func (m *MockStore) CreateCoreValue(ctx context.Context, organisationID int64, coreValue CoreValue) (CoreValue, error) {
+	args := m.Called(ctx, organisationID, coreValue)
+	return args.Get(0).(CoreValue), args.Error(1)
+}
+
+// DeleteCoreValue - Deletes the core value of the organization
+func (m *MockStore) DeleteCoreValue(ctx context.Context, organisationID, coreValueID int64) (err error) {
+	args := m.Called(ctx, organisationID, coreValueID)
+	return args.Error(0)
+}
+
+// UpdateCoreValue - updates core value for organization
+func (m *MockStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (CoreValue, error) {
+	args := m.Called(ctx, organisationID, coreValueID, coreValue)
+	return args.Get(0).(CoreValue), args.Error(1)
+}
+
 // CreateOrganization - creates an organization
 func (m *MockStore) CreateOrganization(ctx context.Context, org Organization) (updatedOrg Organization, err error) {
 	args := m.Called(ctx, org)
