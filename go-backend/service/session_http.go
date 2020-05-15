@@ -115,8 +115,8 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		// Before going any further, check to see if a domain actually exists on the user object, because
 		// if not, then there's no point in going any further.
 		if len(user.Domain) < 3 { // Shortest possible FQDN would be y.z
-			log.Error(ae.ErrNoUserDomain, "No valid domain associated with user "+user.Email+" (domain: "+user.Domain+")", err)
-			ae.JSONError(rw, http.StatusForbidden, err)
+			log.Error(ae.ErrNoUserDomain, "No valid domain associated with user "+user.Email+" (domain: "+user.Domain+")", ae.ErrNoUserDomain)
+			ae.JSONError(rw, http.StatusForbidden, ae.ErrNoUserDomain)
 			return
 		}
 
