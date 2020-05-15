@@ -1,4 +1,4 @@
-package main
+package cronjobs
 
 import (
 	"time"
@@ -15,6 +15,6 @@ import (
 func Init(deps service.Dependencies) {
 
 	s1 := gocron.NewScheduler(time.UTC)
-	s1.Every(1).Day().At("00:05").Do(deps.Store.ResetHi5QuotaBalanceJob)
+	s1.Every(1).Day().At("00:00").Do(deps.Store.ResetHi5QuotaBalanceJob)
 	s1.Start()
 }

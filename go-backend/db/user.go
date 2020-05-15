@@ -34,7 +34,7 @@ const (
 		) = 
 		($1, $2, $3, $4, $5, $6, $7) where id = $8`
 
-	updateHi5QuotaBalanceQuery = `UPDATE users SET hi5_quota_balance=$1 where org_id = $2`
+	updateHi5QuotaBalanceQuery = `UPDATE users SET hi5_quota_balance=$1 where org_id = $2 AND soft_delete = $3`
 )
 
 type User struct {
@@ -139,6 +139,7 @@ func (s *pgStore) UpdateHi5QuotaRenewalFrequencyOfUsers(organization Organizatio
 		updateHi5QuotaBalanceQuery,
 		organization.Hi5Limit,
 		organization.ID,
+		false,
 	)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error updating organization")
