@@ -1,45 +1,10 @@
-const yup = require("yup");
-
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
+const validationSchema = require("./validationSchema/orgValidationSchema");
 const Organizations = db.organizations;
 
-const schema = yup.object().shape({
-  name: yup.string({ name: "should be text" }).required({ name: "required" }),
-  contact_email: yup.string().email({ contact_email: "should be valid" }),
-  domain_name: yup
-    .string()
-    .matches(
-      {
-        regex: /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g,
-      },
-      { domain_name: "should be valid" }
-    )
-    .required({ domain_name: "required" })
-    .typeError({ domain_name: "should be valid" }),
-  subscription_status: yup
-    .number()
-    .required({ subscription_status: "required" })
-    .typeError({ subscription_status: "should be number" }),
-  subscription_valid_upto: yup
-    .number()
-    .required({ subscription_valid_upto: "required" })
-    .typeError({ subscription_valid_upto: "should be number" }),
-  hi5_limit: yup
-    .number()
-    .required({ hi5_limit: "required" })
-    .typeError({ hi5_limit: "should be number" }),
-  hi5_quota_renewal_frequency: yup
-    .string({
-      hi5_quota_renewal_frequency: "should be string",
-    })
-    .required({
-      hi5_quota_renewal_frequency: "required",
-    }),
-  timezone: yup.string().required({ timezone: "required" }),
-});
-
 module.exports.create = (req, res) => {
+  const schema = validationSchema.insertSchema();
   // Create a Organization
   const organizations = {
     name: req.body.name,
@@ -99,9 +64,7 @@ module.exports.findAll = (req, res) => {
 };
 
 module.exports.findOne = (req, res) => {
-  const idSchema = yup.object().shape({
-    id: yup.number({ id: "should be number" }).required({ id: "required" }),
-  });
+  const idSchema = validationSchema.getByIdSchema();
   idSchema
     .validate({ id: req.params.id }, { abortEarly: false })
     .then(() => {
@@ -141,9 +104,8 @@ module.exports.findOne = (req, res) => {
 
 module.exports.update = (req, res) => {
   const id = req.params.id;
-  const idSchema = yup.object().shape({
-    id: yup.number().required(),
-  });
+  const schema = validationSchema.updateSchema();
+  const idSchema = validationSchema.getByIdSchema();
   idSchema
     .isValid({
       id: req.params.id,
