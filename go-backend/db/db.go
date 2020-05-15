@@ -27,4 +27,11 @@ type Storer interface {
 	// Roles
 	GetRoleByID(context.Context, int) (Role, error)
 	GetRoleByName(context.Context, string) (Role, error)
+
+	// Core values
+	ListCoreValues(context.Context, int64) ([]CoreValue, error)
+	GetCoreValue(context.Context, int64, int64) (CoreValue, error)
+	CreateCoreValue(context.Context, int64, CoreValue) (CoreValue, error)
+	DeleteCoreValue(context.Context, int64, int64) error
+	UpdateCoreValue(context.Context, int64, int64, CoreValue) (CoreValue, error)
 }

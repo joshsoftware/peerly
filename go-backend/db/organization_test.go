@@ -20,6 +20,7 @@ type OrganizationTestSuite struct {
 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(OrganizationTestSuite))
+	suite.Run(t, new(CoreValueTestSuite))
 }
 
 func (suite *OrganizationTestSuite) SetupSuite() {
