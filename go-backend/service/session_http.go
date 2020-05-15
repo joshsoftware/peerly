@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/config"
@@ -115,6 +116,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		// Before going any further, check to see if a domain actually exists on the user object, because
 		// if not, then there's no point in going any further.
 		if len(user.Domain) < 3 { // Shortest possible FQDN would be y.z
+			err = errors.New("no valid domain associated with user")
 			log.Error(ae.ErrNoUserDomain, "No valid domain associated with user "+user.Email+" (domain: "+user.Domain+")", err)
 			ae.JSONError(rw, http.StatusForbidden, err)
 			return
