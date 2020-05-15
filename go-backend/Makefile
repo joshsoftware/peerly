@@ -23,3 +23,6 @@ migrate:
 resetdb:
 	go run main.go rollback `/bin/ls -1 migrations/*down.sql | wc -l`
 	go run main.go migrate
+
+todo:
+	grep -Rin --include="*go" "TODO" * 
