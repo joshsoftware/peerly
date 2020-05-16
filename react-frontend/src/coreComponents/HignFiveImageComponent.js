@@ -2,8 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import ImageComponent from "./ImageComponent";
-import highFiveImage from "assets/images/high-five.png";
-import largeHighFiveImage from "assets/images/high-five@2x.png";
+import { IMAGE_ASSET_PATH } from "constants/appConstants";
 
 const HighFiveImageComponent = ({
   fluid,
@@ -14,7 +13,11 @@ const HighFiveImageComponent = ({
   size,
 }) => (
   <ImageComponent
-    src={size === "lg" ? largeHighFiveImage : highFiveImage}
+    src={
+      size === "lg"
+        ? `${IMAGE_ASSET_PATH}/high-five@2x.png`
+        : `${IMAGE_ASSET_PATH}/high-five.png`
+    }
     className={className}
     fluid={fluid}
     rounded={rounded}

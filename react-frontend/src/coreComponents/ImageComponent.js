@@ -21,7 +21,7 @@ const ImageComponent = ({
 );
 
 ImageComponent.propTypes = {
-  src: PropTypes.oneOf([PropTypes.string, PropTypes.node]).isRequired,
+  src: PropTypes.string.isRequired,
   className: PropTypes.string,
   fluid: PropTypes.bool,
   rounded: PropTypes.bool,
