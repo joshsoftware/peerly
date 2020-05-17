@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { DASHBOARD_ROUTES } from "constants/routeConstants";
 
 function App() {

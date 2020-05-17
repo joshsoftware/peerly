@@ -1,9 +1,8 @@
-import React from "react";
-import { render } from "@testing-library/react";
 import App from "./App";
+import renderWithRouter from "helpers/test-helpers/routeHelper";
 
 test("renders basic app with dashboard link", () => {
-  const { getByText } = render(<App />);
+  const { getByText } = renderWithRouter(App);
   const linkElement = getByText(/dashboard/i);
   expect(linkElement).toBeInTheDocument();
 });

@@ -1,39 +1,47 @@
 import React from "react";
-import { Image } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-const ImageComponent = ({
-  src,
+import ImageComponent from "core-components/ImageComponent";
+import { IMG_BASE_PATH } from "constants/appConstants";
+
+const HighFiveComponent = ({
   fluid,
   rounded,
   roundedCircle,
   thumbnail,
   className,
+  size,
 }) => (
-  <Image
+  <ImageComponent
+    src={
+      size === "lg"
+        ? `${IMG_BASE_PATH}/high-five@2x.png`
+        : `${IMG_BASE_PATH}/high-five.png`
+    }
     className={className}
-    src={src}
     fluid={fluid}
     rounded={rounded}
     roundedCircle={roundedCircle}
     thumbnail={thumbnail}
+    alt="High five recognition"
   />
 );
 
-ImageComponent.propTypes = {
-  src: PropTypes.string.isRequired,
+HighFiveComponent.propTypes = {
   className: PropTypes.string,
   fluid: PropTypes.bool,
   rounded: PropTypes.bool,
   roundedCircle: PropTypes.bool,
   thumbnail: PropTypes.bool,
+  size: PropTypes.oneOf(["md", "lg"]),
 };
 
-ImageComponent.defaultProps = {
+HighFiveComponent.defaultProps = {
   fluid: true,
   rounded: false,
   roundedCircle: false,
   thumbnail: false,
+  size: "md",
 };
 
-export default React.memo(ImageComponent);
+export default React.memo(HighFiveComponent);
