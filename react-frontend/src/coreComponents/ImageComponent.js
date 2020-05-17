@@ -30,11 +30,10 @@ ImageComponent.propTypes = {
 };
 
 ImageComponent.defaultProps = {
-  className: "",
-  fluid: false,
+  fluid: true,
   rounded: false,
   roundedCircle: false,
   thumbnail: false,
 };
 
-export default ImageComponent;
+export default React.memo(ImageComponent);

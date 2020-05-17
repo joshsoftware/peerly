@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import ImageComponent from "./ImageComponent";
-import { IMAGE_ASSET_PATH } from "constants/appConstants";
+import ImageComponent from "ImageComponent";
+import { IMG_BASE_PATH } from "constants/appConstants";
 
-const HighFiveImageComponent = ({
+const HighFiveComponent = ({
   fluid,
   rounded,
   roundedCircle,
@@ -15,8 +15,8 @@ const HighFiveImageComponent = ({
   <ImageComponent
     src={
       size === "lg"
-        ? `${IMAGE_ASSET_PATH}/high-five@2x.png`
-        : `${IMAGE_ASSET_PATH}/high-five.png`
+        ? `${IMG_BASE_PATH}/high-five@2x.png`
+        : `${IMG_BASE_PATH}/high-five.png`
     }
     className={className}
     fluid={fluid}
@@ -26,7 +26,7 @@ const HighFiveImageComponent = ({
   />
 );
 
-HighFiveImageComponent.propTypes = {
+HighFiveComponent.propTypes = {
   className: PropTypes.string,
   fluid: PropTypes.bool,
   rounded: PropTypes.bool,
@@ -35,13 +35,12 @@ HighFiveImageComponent.propTypes = {
   size: PropTypes.oneOf(["md", "lg"]),
 };
 
-HighFiveImageComponent.defaultProps = {
-  className: "",
-  fluid: false,
+HighFiveComponent.defaultProps = {
+  fluid: true,
   rounded: false,
   roundedCircle: false,
   thumbnail: false,
   size: "md",
 };
 
-export default HighFiveImageComponent;
+export default React.memo(HighFiveComponent);
