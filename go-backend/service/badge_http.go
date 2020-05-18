@@ -111,7 +111,7 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		bdg_id, err := strconv.Atoi(vars["id"])
+		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
@@ -144,7 +144,7 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 		var updatedBadge db.Badge
 
 		badge.OrganizationID = org_id
-		badge.ID = bdg_id
+		badge.ID = badge_id
 		updatedBadge, err = deps.Store.UpdateBadge(req.Context(), badge)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
@@ -175,7 +175,7 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		bdg_id, err := strconv.Atoi(vars["id"])
+		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
@@ -185,7 +185,7 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 		var latestbadge db.Badge
 
 		latestbadge.OrganizationID = org_id
-		latestbadge.ID = bdg_id
+		latestbadge.ID = badge_id
 		latestbadge, err = deps.Store.ShowBadge(req.Context(), latestbadge)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
@@ -216,14 +216,14 @@ func deleteBadgeHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		bdg_id, err := strconv.Atoi(vars["id"])
+		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		err = deps.Store.DeleteBadge(req.Context(), org_id, bdg_id)
+		err = deps.Store.DeleteBadge(req.Context(), org_id, badge_id)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while deleting badge")
 			rw.WriteHeader(http.StatusInternalServerError)

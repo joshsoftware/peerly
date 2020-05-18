@@ -25,7 +25,7 @@ func (suite *OrganizationTestSuite) SetupBadgeSuite() {
 	config.Load("application_test")
 
 	err := RunMigrations()
-	if err!=nil {
+	if err != nil {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 	}
 
@@ -34,37 +34,37 @@ func (suite *OrganizationTestSuite) SetupBadgeSuite() {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 		return
 	}
-  suite.dbStore = store
+	suite.dbStore = store
 }
 
 func (suite *OrganizationTestSuite) TestBadgeSuccess() {
 
-// test create badge
- 	expectedBdg := Badge{
+	// test create badge
+	expectedBadge := Badge{
 		Name:             "test badges",
 		OrganizationID:   999,
 		Hi5CountRequired: 5,
 		Hi5Frequency:     "2",
 	}
 	var err error
-	createdBadge, err := suite.dbStore.CreateBadge(context.Background(), expectedBdg)
+	createdBadge, err := suite.dbStore.CreateBadge(context.Background(), expectedBadge)
 
 	assert.Nil(suite.T(), err)
 
-	expectedBdg.ID = createdBadge.ID
+	expectedBadge.ID = createdBadge.ID
 
-	assert.Equal(suite.T(), expectedBdg, createdBadge)
+	assert.Equal(suite.T(), expectedBadge, createdBadge)
 
 	// test list badge
 	var badgeList []Badge
-	badgeList, err = suite.dbStore.ListBadges(context.Background(),expectedBdg.OrganizationID)
+	badgeList, err = suite.dbStore.ListBadges(context.Background(), expectedBadge.OrganizationID)
 
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), badgeList, []Badge{createdBadge})
 
 	// test get badge
 	var badgeData Badge
-	badgeData, err = suite.dbStore.ShowBadge(context.Background(),expectedBdg)
+	badgeData, err = suite.dbStore.ShowBadge(context.Background(), expectedBadge)
 
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), badgeData, createdBadge)
@@ -79,8 +79,7 @@ func (suite *OrganizationTestSuite) TestBadgeSuccess() {
 	assert.Equal(suite.T(), updatedOrg, createdBadge)
 
 	//test delete badge
-	err = suite.dbStore.DeleteBadge(context.Background(),createdBadge.OrganizationID, createdBadge.ID)
+	err = suite.dbStore.DeleteBadge(context.Background(), createdBadge.OrganizationID, createdBadge.ID)
 
 	assert.Nil(suite.T(), err)
 }
-
