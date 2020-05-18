@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/config"
@@ -131,16 +132,18 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 			return
 		} else {
 			// Check the OAuth User's domain and see if it's already in our database
+			// TODO - We need a way to test this both programmatically and by hand.
+			// That necessitates a Google account associated w/ a domain that isn't Josh Software
 			org, err := deps.Store.GetOrganizationByDomainName(ctx, user.Domain)
 			if err != nil {
 				// Log error, push out a JSON response, and halt authentication
-				log.Error(ae.ErrDomainNotRegistered, ("Domain: " + user.Domain + " Email " + user.Email), err)
+				log.Error(ae.ErrDomainNotRegistered(user.Email), ("Domain: " + user.Domain + " Email " + user.Email), err)
 				ae.JSONError(rw, http.StatusForbidden, err)
 				return
 			}
 
 			// Organization DOES exist in the database. Create the user.
-			_, err = deps.Store.CreateNewUser(ctx, db.User{
+			existingUser, err = deps.Store.CreateNewUser(ctx, db.User{
 				Email:           user.Email,
 				ProfileImageURL: user.PictureURL,
 				OrgID:           org.ID,
@@ -150,15 +153,6 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 				ae.JSONError(rw, http.StatusInternalServerError, err)
 				return
 			}
-		}
-
-		// Re-query the database for existingUser
-		existingUser, err = deps.Store.GetUserByEmail(ctx, user.Email)
-		if err != nil {
-			// If we can't retrieve the user after we just created them, something very, very weird is going on.
-			log.Error(ae.ErrUnknown, "Unknown/unexpected error while looking up user "+user.Email, err)
-			ae.JSONError(rw, http.StatusInternalServerError, err)
-			return
 		}
 
 		// By the time we get here, we definitely have an existingUser object.
@@ -195,7 +189,14 @@ func newJWT(userID int) (newToken string, err error) {
 		return
 	}
 
-	expiryTime := time.Now().Add(time.Hour * time.Duration(config.JwtExpiryDuration)).Unix()
+	expirationHours, err := time.ParseDuration(fmt.Sprintf("%vh", config.JwtExpiryDurationHours()))
+	if err != nil {
+		// Either the config option isn't set, or it's nil/0. We're going to hard-code 672
+		// (the number of hours in a month) as a reasonable default here.
+		log.Error(ae.ErrKeyNotSet("JWT_EXPIRY_DURATION_HOURS"), "Configuration error: set the key in $APP_ROOT/application.yml", err)
+	}
+
+	expiryTime := time.Now().Add(expirationHours).Unix()
 	claims := &jwt.StandardClaims{
 		ExpiresAt: expiryTime,
 		Issuer:    "joshsoftware.com",

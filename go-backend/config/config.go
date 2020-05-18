@@ -1,18 +1,18 @@
 package config
 
 import (
-	"errors"
 	"fmt"
+	ae "joshsoftware/peerly/apperrors"
 	"strconv"
 
 	"github.com/spf13/viper"
 )
 
 var (
-	appName           string
-	appPort           int
-	jwtKey            string
-	jwtExpiryDuration int
+	appName                string
+	appPort                int
+	jwtKey                 string
+	jwtExpiryDurationHours int
 )
 
 // Load - loads all the environment variables and/or params in application.yml
@@ -53,12 +53,12 @@ func JwtKey() []byte {
 	return []byte(jwtKey)
 }
 
-// JwtExpiryDuration - returns duration for jwt expiry in int
-func JwtExpiryDuration() int {
-	if jwtExpiryDuration == 0 {
-		jwtExpiryDuration = ReadEnvInt("JWT_EXPIRY_DURATION")
+// JwtExpiryDurationHours - returns duration for jwt expiry in int
+func JwtExpiryDurationHours() int {
+	if jwtExpiryDurationHours == 0 {
+		jwtExpiryDurationHours = ReadEnvInt("JWT_EXPIRY_DURATION_HOURS")
 	}
-	return jwtExpiryDuration
+	return int(jwtExpiryDurationHours)
 }
 
 // ReadEnvInt - reads an environment variable as an integer
@@ -85,7 +85,7 @@ func ReadEnvBool(key string) bool {
 
 func checkIfSet(key string) {
 	if !viper.IsSet(key) {
-		err := errors.New(fmt.Sprintf("Key %s is not set", key))
-		panic(err)
+		// err := errors.New(fmt.Sprintf("Key %s is not set", key))
+		panic(ae.ErrKeyNotSet(key))
 	}
 }
