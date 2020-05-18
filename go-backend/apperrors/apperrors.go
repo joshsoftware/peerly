@@ -86,3 +86,6 @@ var ErrDomainNotRegistered = errors.New("the domain name is unregistered (unknow
 
 // ErrUnknown - Used when an unknown/unexpected error has ocurred. Try to avoid over-using this.
 var ErrUnknown = errors.New("unknown/unexpected error has occurred")
+
+// ErrFailedToCreate - Failed to create record in database
+var ErrFailedToCreate = errors.New("Failed to create record")

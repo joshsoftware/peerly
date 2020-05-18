@@ -9,9 +9,10 @@ import (
 )
 
 var (
-	appName string
-	appPort int
-	jwtKey  string
+	appName           string
+	appPort           int
+	jwtKey            string
+	jwtExpiryDuration int
 )
 
 // Load - loads all the environment variables and/or params in application.yml
@@ -50,6 +51,14 @@ func JwtKey() []byte {
 		jwtKey = ReadEnvString("JWT_SECRET")
 	}
 	return []byte(jwtKey)
+}
+
+// JwtExpiryDuration - returns duration for jwt expiry in int
+func JwtExpiryDuration() int {
+	if jwtExpiryDuration == 0 {
+		jwtExpiryDuration = ReadEnvInt("JWT_EXPIRY_DURATION")
+	}
+	return jwtExpiryDuration
 }
 
 // ReadEnvInt - reads an environment variable as an integer

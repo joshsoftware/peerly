@@ -10,6 +10,8 @@ import (
 	log "joshsoftware/peerly/util/log"
 	"net/http"
 	"net/url"
+	"strconv"
+	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
@@ -106,6 +108,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 
 		user := OAuthUser{}
 		payload, _ = ioutil.ReadAll(resp.Body)
+
 		err = json.Unmarshal(payload, &user)
 		if err != nil {
 			log.Error(ae.ErrJSONParseFail, "Failure parsing JSON in Unmarshalling OAuthUser"+string(payload), err)
@@ -160,7 +163,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 
 		// By the time we get here, we definitely have an existingUser object.
 		// Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
-		authToken, err := newJWT(existingUser.Email)
+		authToken, err := newJWT(existingUser.ID)
 		if err != nil {
 			log.Error(ae.ErrUnknown, "Unknown/unexpected error while creating JWT for "+existingUser.Email, err)
 			ae.JSONError(rw, http.StatusInternalServerError, err)
@@ -185,18 +188,19 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 // newJWT() - Creates and returns a new JSON Web Token to be sent to an API consumer on valid
 // authentication, so they can re-use it by sending it in the Authorization header on subsequent
 // requests.
-func newJWT(email string) (newToken string, err error) {
+func newJWT(userID int) (newToken string, err error) {
 	signingKey := config.JwtKey()
 	if signingKey == nil {
 		log.Error(ae.ErrNoSigningKey, "Application error: No signing key configured", err)
 		return
 	}
 
+	expiryTime := time.Now().Add(time.Hour * time.Duration(config.JwtExpiryDuration)).Unix()
 	claims := &jwt.StandardClaims{
-		ExpiresAt: 15000,
+		ExpiresAt: expiryTime,
 		Issuer:    "joshsoftware.com",
-		IssuedAt:  9999, // TODO: What should actually go here? time.Now() * time.Second? Seconds since UNIX epoch?
-		Subject:   email,
+		IssuedAt:  time.Now().Unix(),
+		Subject:   strconv.Itoa(userID),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -208,84 +212,35 @@ func newJWT(email string) (newToken string, err error) {
 	return
 }
 
-/*
-type Claims struct {
-	UserID         int       `json:"user_id"`
-	ExpirationDate time.Time `json:"expiration_date"`
-	jwt.StandardClaims
-}
-*/
-
-/*
-func getClaims(token string) (claims *Claims, err error) {
-	// Initialize a new instance of `Claims`
-	claims = &Claims{}
-
-	var newTkn *jwt.Token
-	newTkn, err = jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
-		return config.JwtKey(), nil
-	})
-
-	if err != nil {
-		// TODO: Log that jwt.ParseWithClaims failed somehow
-		return
-	}
-
-	if !newTkn.Valid {
-		err = errInvalidToken
-	}
-
-	return
-}
-*/
-
-/*
 func handleLogout(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		token := req.Header.Get(authHeader)
-		if token == "" {
-			rw.WriteHeader(http.StatusBadRequest)
-			log.Error(errMissingAuthHeader, "Auth header is missing", req.Header.Get(authHeader))
-			return
-		}
+		parsedToken := req.Context().Value("user").(*jwt.Token)
+		claims := parsedToken.Claims.(jwt.MapClaims)
 
-		claims, err := getClaims(token)
+		userID, err := strconv.Atoi(claims["sub"].(string))
 		if err != nil {
-			if err == jwt.ErrSignatureInvalid {
-				rw.WriteHeader(http.StatusUnauthorized)
-				return
-			} else if err == errInvalidToken {
-				rw.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-			rw.WriteHeader(http.StatusBadRequest)
+			log.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
 
+		expirationTimeStamp := int64(claims["exp"].(float64))
+
+		expirationDate := time.Unix(expirationTimeStamp, 0)
 		userBlackListedToken := db.UserBlacklistedToken{
-			UserID:         claims.UserID,
-			ExpirationDate: claims.ExpirationDate,
-			Token:          token,
+			UserID:         userID,
+			ExpirationDate: expirationDate,
+			Token:          parsedToken.Raw,
 		}
-		log.Info(token)
 
 		err = deps.Store.CreateUserBlacklistedToken(req.Context(), userBlackListedToken)
 		if err != nil {
-			respBytes, _ := json.Marshal(struct {
-				status  int
-				message string
-			}{
-				status:  http.StatusInternalServerError,
-				message: "Internal server error inserting token into blacklisted tokens table",
-			})
-
-			rw.WriteHeader(http.StatusInternalServerError)
+			log.Error(ae.ErrFailedToCreate, "Error creating blaclisted token record", err)
 			rw.Header().Add("Content-Type", "application/json")
-			rw.Write(respBytes)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
 		}
-
+		rw.Header().Add("Content-Type", "application/json")
 		return
 	})
 }
-*/

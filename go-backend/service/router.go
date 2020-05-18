@@ -6,7 +6,10 @@ import (
 
 	"joshsoftware/peerly/config"
 
+	jwtmiddleware "github.com/auth0/go-jwt-middleware"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/urfave/negroni"
 )
 
 const (
@@ -17,6 +20,13 @@ const (
 // InitRouter -  The routing mechanism. Mux helps us define handler functions and the access methods
 func InitRouter(deps Dependencies) (router *mux.Router) {
 	router = mux.NewRouter()
+
+	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			return config.JwtKey(), nil
+		},
+		SigningMethod: jwt.SigningMethodHS256,
+	})
 
 	// No version requirement for /ping
 	router.HandleFunc("/ping", pingHandler).Methods(http.MethodGet)
@@ -35,7 +45,10 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/users/{email}", getUserByEmailHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	// Basic logout
-	// router.HandleFunc("/logout", handleLogout(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+	router.Handle("/logout", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(handleLogout(deps))),
+	)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 
 	// TODO: Finish login system
 	router.HandleFunc("/auth/google", handleAuth(deps)).Methods(http.MethodGet)
