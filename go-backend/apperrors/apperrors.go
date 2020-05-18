@@ -24,6 +24,7 @@ package apperrors
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -48,6 +49,11 @@ func JSONError(rw http.ResponseWriter, status int, err error) {
 	rw.Header().Add("Content-Type", "application/json")
 	rw.Write(errJSON)
 	return
+}
+
+// ErrKeyNotSet - Returns error object specific to the key value passed in
+func ErrKeyNotSet(key string) (err error) {
+	return fmt.Errorf("Key not set: %s", key)
 }
 
 // ErrInvalidToken - used when a JSON Web Token ("JWT") cannot be validated
@@ -82,10 +88,16 @@ var ErrNoSigningKey = errors.New("no JWT signing key specified; cannot authentic
 var ErrNoUserDomain = errors.New("the user returned by the oauth provider has no domain name associated with them")
 
 // ErrDomainNotRegistered - Used when a domain name doesn't exist in our database
-var ErrDomainNotRegistered = errors.New("the domain name is unregistered (unknown) to peerly")
+func ErrDomainNotRegistered(email string) (err error) {
+	return fmt.Errorf("No such domain for user %v", email)
+}
+
+// ErrFailedToCreate - Failed to create record in database
+var ErrFailedToCreate = errors.New("Failed to create database record")
+
+// -----
+// Let's make the more "generic" errors dead last in our file
+// -----
 
 // ErrUnknown - Used when an unknown/unexpected error has ocurred. Try to avoid over-using this.
 var ErrUnknown = errors.New("unknown/unexpected error has occurred")
-
-// ErrFailedToCreate - Failed to create record in database
-var ErrFailedToCreate = errors.New("Failed to create record")
