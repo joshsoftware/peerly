@@ -1,3 +1,5 @@
+const jwtValidate = require("../jwtTokenValidation/jwtValidation");
+
 module.exports.getFormattedErrorObj = (
   errorCode,
   errorMessage,
@@ -55,5 +57,22 @@ module.exports.validateRole = (inputRoleId, roleTypeToCompare) => {
     return true;
   } else {
     return false;
+  }
+};
+
+module.exports.authorizedRole = async (req, res, next) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+  if (
+    this.validateRole(tokenData.roleId, "Moderator") ||
+    this.validateRole(tokenData.roleId, "OrganisationAdmin")
+  ) {
+    next();
+  } else {
+    res.status(403).send({
+      error: {
+        code: "access_denied",
+        message: "Permission required",
+      },
+    });
   }
 };
