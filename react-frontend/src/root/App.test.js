@@ -1,5 +1,5 @@
 import App from "./App";
-import renderWithRouter from "helpers/test-helpers/routeHelper";
+import renderWithRouter from "helpers/test-helpers/RouteHelper";
 
 test("renders basic app with dashboard link", () => {
   const { getByText } = renderWithRouter(App);
