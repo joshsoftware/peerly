@@ -9,10 +9,9 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/database/postgres"
 	"github.com/jmoiron/sqlx"
-	// TODO: This repo is archived and they say to use golang-migrate/migrate instead; change?
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database/postgres"
 
 	logger "github.com/sirupsen/logrus"
 
@@ -20,7 +19,7 @@ import (
 	_ "github.com/lib/pq"
 
 	// For database migrations
-	_ "github.com/mattes/migrate/source/file"
+	_ "github.com/golang-migrate/migrate/source/file"
 )
 
 const (
@@ -56,16 +55,19 @@ func RunMigrations() (err error) {
 
 	db, err := sql.Open(dbDriver, uri)
 	if err != nil {
+		// TODO: Log sql.Open failure here
 		return
 	}
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
+		// TODO: Log failure to create driver obj here
 		return
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(getMigrationPath(), dbDriver, driver)
 	if err != nil {
+		// TODO: Log migrate failure here
 		return
 	}
 
