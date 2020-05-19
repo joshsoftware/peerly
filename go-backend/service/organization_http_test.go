@@ -17,11 +17,11 @@ import (
 type OrganizationHandlerTestSuite struct {
 	suite.Suite
 
-	dbMock *db.MockStore
+	dbMock *db.DBMockStore
 }
 
 func (suite *OrganizationHandlerTestSuite) SetupTest() {
-	suite.dbMock = &db.MockStore{}
+	suite.dbMock = &db.DBMockStore{}
 }
 
 func (suite *OrganizationHandlerTestSuite) TestListOrganizationsSuccess() {
