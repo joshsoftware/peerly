@@ -1,6 +1,6 @@
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
-const variables = require("./variables");
+const { setOrgId } = require("./variables");
 // This agent refers to PORT where program is runninng.
 
 const server = supertest.agent("http://localhost:3120");
@@ -30,7 +30,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         // HTTP status should be 200
         res.status.should.equal(201);
         id = res.body.data.id;
-        variables.setOrgId(id);
+        setOrgId(id);
         // Error key should be false.
         done();
       });
@@ -169,32 +169,6 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 404
         res.status.should.equal(404);
-        done();
-      });
-  });
-
-  it(/*eslint-disable-line no-undef*/ "put request for updated orgnisation with write content and url", function (done) {
-    // calling put request for updated orgnisation sucessfully
-    server
-      .put("/organisations/1")
-      .send({
-        name: "Tata",
-        contact_email: "KGF@gmail.com",
-        domain_name: "@kgf.com",
-        subscription_status: 1,
-        subscription_valid_upto: "1587732342",
-        hi5_limit: 5000,
-        hi5_quota_renewal_frequency: "renew",
-        timezone: "india",
-      })
-      .expect("Content-type", /json/)
-      .set("Authorization", "Bearer " + token)
-      .set("Accept", "application/vnd.peerly.v1")
-      .expect(200) // THis is HTTP response
-      .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 200
-        res.status.should.equal(200);
-        // Error key should be false.
         done();
       });
   });

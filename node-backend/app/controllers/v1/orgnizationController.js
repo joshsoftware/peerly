@@ -65,7 +65,7 @@ exports.create = /*eslint-disable-line node/exports-style*/ (req, res) => {
         });
     })
     .catch((err) => {
-      res.status(412).send({
+      res.status(400).send({
         error: {
           code: "invalid organisation",
           message: "Invalid organisation Data",
@@ -143,7 +143,7 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
     })
     .then((valid) => {
       if (!valid) {
-        res.status(412).send({
+        res.status(400).send({
           error: {
             code: "invalid orgnisation",
             message: "Invalid value for parameter id",
@@ -194,7 +194,7 @@ exports.update = /*eslint-disable-line node/exports-style*/ (req, res) => {
               });
           })
           .catch((err) => {
-            res.status(412).send({
+            res.status(400).send({
               error: {
                 code: "invalid organisation",
                 message: "Invalid organisation Data",

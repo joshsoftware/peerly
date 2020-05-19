@@ -10,7 +10,7 @@ coreValueRouter.use(bodyParser.urlencoded({ extended: true }));
 async function authorizedRole(req, res, next) {
   const authHeader = req.headers["authorization"];
   const tokenData = await jwtValidate.getData(authHeader);
-  if (tokenData.roleId == 4) {
+  if (tokenData.roleId == 2) {
     next();
   } else {
     res.status(401).send({
