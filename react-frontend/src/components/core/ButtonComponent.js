@@ -2,22 +2,8 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-const ButtonComponent = ({
-  className,
-  type,
-  onClick,
-  size,
-  text,
-  style,
-  icon,
-}) => (
-  <Button
-    className={className}
-    type={type}
-    onClick={onClick}
-    size={size}
-    style={style}
-  >
+const ButtonComponent = ({ className, type, onClick, size, text, icon }) => (
+  <Button className={className} type={type} onClick={onClick} size={size}>
     {icon}
     {text}
   </Button>
@@ -29,7 +15,6 @@ ButtonComponent.propTypes = {
   onClick: PropTypes.func.isRequired,
   size: PropTypes.oneOf(["sm", "lg"]),
   text: PropTypes.string.isRequired,
-  style: PropTypes.object,
   icon: PropTypes.object,
 };
 
