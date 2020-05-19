@@ -1,6 +1,6 @@
 import App from "root/App";
 import Dashboard from "root/Dashboard";
-import UnauthorisedErrorComponent from "sharedComponents/UnauthorisedErrorComponent";
+import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import { DASHBOARD_ROUTES, ROOT_ROUTES } from "constants/routeConstants";
 
 export default [
