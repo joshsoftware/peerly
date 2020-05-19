@@ -10,11 +10,13 @@
     "plugin:prettier/recommended",
     "plugin:jest/recommended",
     "plugin:jest/style",
-    "plugin:jest-formatting/recommended"
+    "plugin:jest-formatting/recommended",
+    "plugin:jsx-a11y/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
+    "SharedArrayBuffer": "readonly",
+    "process": true
   },
   "parser": "babel-eslint",
   "parserOptions": {
@@ -24,7 +26,7 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["react", "jest", "jest-formatting"],
+  "plugins": ["react", "jest", "jest-formatting", "jsx-a11y"],
   "settings": {
     "react": {
       "pragma": "React",

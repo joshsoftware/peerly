@@ -4,13 +4,16 @@ var dbm;
 var type; // eslint-disable-line no-unused-vars
 var seed; // eslint-disable-line no-unused-vars
 // Recognition_hi5 Table Migration
-exports.setup = function (options, seedLink) {
+exports.setup = /*eslint-disable-line node/exports-style*/ (
+  options,
+  seedLink
+) => {
   dbm = options.dbmigrate;
   type = dbm.dataType; // eslint-disable-line no-undef
   seed = seedLink; // eslint-disable-line no-undef
 };
 
-exports.up = function (db, callback) {
+exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.createTable(
     "recognition_hi5",
     {
@@ -32,7 +35,10 @@ exports.up = function (db, callback) {
         },
         notNull: true,
       },
-      hi5_by: {
+      comment: {
+        type: "text",
+      },
+      given_by: {
         type: "int",
         notNull: true,
         foreignKey: {
@@ -44,8 +50,8 @@ exports.up = function (db, callback) {
           },
         },
       },
-      hi5_given_on_date: {
-        type: "timestamp",
+      given_at: {
+        type: "bigint",
         notNull: true,
       },
     },
@@ -56,10 +62,10 @@ exports.up = function (db, callback) {
   );
 };
 
-exports.down = function (db, callback) {
+exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
   db.dropTable("recognition_hi5", callback);
 };
 
-exports._meta = {
+exports._meta = /*eslint-disable-line node/exports-style*/ {
   version: 1,
 };

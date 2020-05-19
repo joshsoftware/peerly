@@ -5,6 +5,7 @@
 *.so
 *.dylib
 application.yml
+application_test.yml
 peerly
 
 # Test binary, built with `go test -c`
