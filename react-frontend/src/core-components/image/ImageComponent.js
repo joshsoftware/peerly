@@ -10,6 +10,7 @@ const ImageComponent = ({
   thumbnail,
   className,
   alt,
+  ...props
 }) => (
   <Image
     className={className}
@@ -19,6 +20,7 @@ const ImageComponent = ({
     roundedCircle={roundedCircle}
     thumbnail={thumbnail}
     alt={alt}
+    {...props}
   />
 );
 
@@ -30,6 +32,7 @@ ImageComponent.propTypes = {
   roundedCircle: PropTypes.bool,
   thumbnail: PropTypes.bool,
   alt: PropTypes.string.isRequired,
+  props: PropTypes.object,
 };
 
 ImageComponent.defaultProps = {

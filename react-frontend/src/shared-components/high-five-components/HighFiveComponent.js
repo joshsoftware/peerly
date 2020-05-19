@@ -4,6 +4,11 @@ import PropTypes from "prop-types";
 import ImageComponent from "core-components/image/ImageComponent";
 import { IMG_BASE_PATH } from "constants/appConstants";
 
+const getImagePath = (size) =>
+  size === "lg"
+    ? `${IMG_BASE_PATH}/high-five@2x.png`
+    : `${IMG_BASE_PATH}/high-five.png`;
+
 const HighFiveComponent = ({
   fluid,
   rounded,
@@ -11,21 +16,21 @@ const HighFiveComponent = ({
   thumbnail,
   className,
   size,
-}) => (
-  <ImageComponent
-    src={
-      size === "lg"
-        ? `${IMG_BASE_PATH}/high-five@2x.png`
-        : `${IMG_BASE_PATH}/high-five.png`
-    }
-    className={className}
-    fluid={fluid}
-    rounded={rounded}
-    roundedCircle={roundedCircle}
-    thumbnail={thumbnail}
-    alt="High five recognition"
-  />
-);
+}) => {
+  const imagePath = React.useMemo(() => getImagePath(size), [size]);
+
+  return (
+    <ImageComponent
+      src={imagePath}
+      className={className}
+      fluid={fluid}
+      rounded={rounded}
+      roundedCircle={roundedCircle}
+      thumbnail={thumbnail}
+      alt="High five recognition"
+    />
+  );
+};
 
 HighFiveComponent.propTypes = {
   className: PropTypes.string,
