@@ -21,4 +21,7 @@ type Storer interface {
 	CreateCoreValue(context.Context, int64, CoreValue) (CoreValue, error)
 	DeleteCoreValue(context.Context, int64, int64) error
 	UpdateCoreValue(context.Context, int64, int64, CoreValue) (CoreValue, error)
+
+	//Reported Recognition
+	CreateReportedRecognition(context.Context, int64, ReportedRecognition) (ReportedRecognition, error)
 }
