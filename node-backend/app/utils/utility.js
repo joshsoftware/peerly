@@ -63,7 +63,7 @@ module.exports.validateRole = (inputRoleId, roleTypeToCompare) => {
 module.exports.authorizedRole = async (req, res, next) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   if (
-    this.validateRole(tokenData.roleId, "Moderator") ||
+    this.validateRole(tokenData.roleId, "SuperAdmin") ||
     this.validateRole(tokenData.roleId, "OrganisationAdmin")
   ) {
     next();
