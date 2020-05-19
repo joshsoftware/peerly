@@ -3,7 +3,7 @@ import React from "react";
 function TopNavbar() {
   return (
     <div>
-      <p>Top nav placeholder</p>
+      <p>Navbar placeholder</p>
     </div>
   );
 }
