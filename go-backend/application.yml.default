@@ -16,4 +16,5 @@ GOOGLE_REDIRECT: "http://localhost:33001/auth/google"
 MIGRATION_FOLDER_PATH: "./migrations"
 
 # How long should the JWT key be valid for?
+# TODO: Make app crash if not present
 JWT_EXPIRY_DURATION_HOURS: 672 # one month
