@@ -35,6 +35,9 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         },
         notNull: true,
       },
+      comment: {
+        type: "text",
+      },
       given_by: {
         type: "int",
         notNull: true,
