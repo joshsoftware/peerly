@@ -3,7 +3,6 @@ package service
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/config"
@@ -189,14 +188,7 @@ func newJWT(userID int) (newToken string, err error) {
 		return
 	}
 
-	expirationHours, err := time.ParseDuration(fmt.Sprintf("%vh", config.JwtExpiryDurationHours()))
-	if err != nil {
-		// Either the config option isn't set, or it's nil/0. We're going to hard-code 672
-		// (the number of hours in a month) as a reasonable default here.
-		log.Error(ae.ErrKeyNotSet("JWT_EXPIRY_DURATION_HOURS"), "Configuration error: set the key in $APP_ROOT/application.yml", err)
-	}
-
-	expiryTime := time.Now().Add(expirationHours).Unix()
+	expiryTime := time.Now().Add(time.Duration(config.JwtExpiryDurationHours()) * time.Hour).Unix()
 	claims := &jwt.StandardClaims{
 		ExpiresAt: expiryTime,
 		Issuer:    "joshsoftware.com",

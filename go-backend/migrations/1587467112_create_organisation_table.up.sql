@@ -11,8 +11,7 @@ CREATE TABLE IF NOT EXISTS organizations (
 	created_at TIMESTAMP DEFAULT (NOW() AT TIME ZONE 'UTC')
 );
 
--- Add some indexes
--- TODO
+-- TODO Add some indexes
 
 -- Make users(org_id) a foreign key to organizations(id)
 ALTER TABLE IF EXISTS users ADD CONSTRAINT fk_users_org_id_organizations_id FOREIGN KEY (org_id) REFERENCES organizations(id);
