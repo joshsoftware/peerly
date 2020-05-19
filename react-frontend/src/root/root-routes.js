@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch } from "react-router-dom";
 
-import GenerateRoutes from "sharedComponents/GenerateRoutes";
+import GenerateRoutes from "shared-components/routes/GenerateRoutes";
 import rootRoutesConfig from "root/root-routes-config";
 
 function Routes() {

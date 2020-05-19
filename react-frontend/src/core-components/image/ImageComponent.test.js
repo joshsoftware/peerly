@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import ImageComponent from "core-components/ImageComponent";
+import ImageComponent from "core-components/image/ImageComponent";
 import { IMG_BASE_PATH } from "constants/appConstants";
 
 describe("Image component test", () => {

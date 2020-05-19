@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 import withLayout from "HOC/withLayout";
-import SessionTimeoutComponent from "sharedComponents/SessionTimeoutComponent";
+import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 
 const PrivateRoute = ({ route }) => {
   const token = useSelector((state) => state.appReducer.token);

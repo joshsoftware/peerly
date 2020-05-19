@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import ImageComponent from "core-components/ImageComponent";
+import ImageComponent from "core-components/image/ImageComponent";
 import { IMG_BASE_PATH } from "constants/appConstants";
 
 const HighFiveComponent = ({
