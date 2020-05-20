@@ -18,10 +18,9 @@ module.exports.findUsersByOrg = async (req, res) => {
     .validate(obj, { abortEarly: false })
     .then(async () => {
       if (obj.org_id) {
-        let superAdminAuth = await utility.validateRole(
-          userData.roleId,
-          "SuperAdmin"
-        );
+        let superAdminAuth = await utility.validateRole(userData.roleId, [
+          "SuperAdmin",
+        ]);
         if (!superAdminAuth) {
           {
             res.status(403).send({
