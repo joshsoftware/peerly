@@ -2,14 +2,14 @@ package service
 
 import (
 	"errors"
-	"joshsoftware/peerly/db"
-	"net/http"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+	"joshsoftware/peerly/db"
+	"net/http"
 )
 
-type RecognitionHi5HandlerTestSuite struct{
+type RecognitionHi5HandlerTestSuite struct {
 	suite.Suite
 	dbMock *db.DBMockStore
 }
@@ -33,7 +33,7 @@ func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Success() {
 		Hi5QuotaBalance: 5,
 		SoftDeleteBy:    2,
 		SoftDeleteAt:    1588073442241,
-	}, nil,)
+	}, nil)
 
 	body := `{"comment": "testComment", "given_by": 1}`
 
@@ -63,7 +63,7 @@ func (suite *RecognitionHi5HandlerTestSuite) TestCreateRecognitionHi5Failure() {
 		Hi5QuotaBalance: 0,
 		SoftDeleteBy:    2,
 		SoftDeleteAt:    1588073442241,
-	}, nil,)
+	}, nil)
 
 	body := `{"comment": "testComment", "given_by": 1}`
 
@@ -95,7 +95,7 @@ func (suite *RecognitionHi5HandlerTestSuite) TestRecognitionHi5DBFailure() {
 		Hi5QuotaBalance: 2,
 		SoftDeleteBy:    2,
 		SoftDeleteAt:    1588073442241,
-	}, nil,)
+	}, nil)
 
 	body := `{"comment": "testComment", "given_by": 1}`
 

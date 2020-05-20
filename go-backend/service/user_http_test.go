@@ -2,11 +2,11 @@ package service
 
 import (
 	"errors"
-	"joshsoftware/peerly/db"
-	"net/http"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+	"joshsoftware/peerly/db"
+	"net/http"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -59,4 +59,3 @@ func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
 	suite.dbMock.AssertExpectations(suite.T())
 }
-

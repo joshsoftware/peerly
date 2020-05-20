@@ -1,12 +1,12 @@
 package service
 
 import (
-	"testing"
+	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/suite"
 	"net/http"
 	"net/http/httptest"
 	"strings"
-	"github.com/gorilla/mux"
+	"testing"
 )
 
 func TestExampleTestSuite(t *testing.T) {

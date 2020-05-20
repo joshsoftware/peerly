@@ -2,11 +2,11 @@ package service
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
+	logger "github.com/sirupsen/logrus"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
-	"github.com/gorilla/mux"
-	logger "github.com/sirupsen/logrus"
 )
 
 // @Title listOrganizationHandler
@@ -60,7 +60,7 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 				rw.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-	
+
 			rw.Header().Add("Content-Type", "application/json")
 			rw.WriteHeader(http.StatusBadRequest)
 			rw.Write(respBytes)
@@ -93,8 +93,8 @@ func createOrganizationHandler(deps Dependencies) http.HandlerFunc {
 // @Router /organizations/:id [put]
 // @Accept  json
 // @Success 200 {object}
-// @Failure 400 {object}	
-func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
+// @Failure 400 {object}
+func updateOrganizationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		id, err := strconv.Atoi(vars["id"])
@@ -102,8 +102,8 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
 			return
-		}	
-		
+		}
+
 		var organization db.Organization
 		err = json.NewDecoder(req.Body).Decode(&organization)
 		if err != nil {
@@ -120,7 +120,7 @@ func updateOrganizationHandler(deps Dependencies) http.HandlerFunc{
 				rw.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-	
+
 			rw.Header().Add("Content-Type", "application/json")
 			rw.WriteHeader(http.StatusBadRequest)
 			rw.Write(respBytes)

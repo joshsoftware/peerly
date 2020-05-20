@@ -8,14 +8,14 @@ import (
 
 func InitMockDB() (s Storer, sqlConn *sqlx.DB, sqlmockInstance sqlmock.Sqlmock) {
 	mockDB, sqlmock, err := sqlmock.New()
-	if err !=nil {
+	if err != nil {
 		logger.WithField("error in mock init", err).Error("error occurred")
 		return
 	}
 
 	sqlmockInstance = sqlmock
 	sqlxDB := sqlx.NewDb(mockDB, "sqlmock")
-	
+
 	var pgStoreConn pgStore
 	pgStoreConn.db = sqlxDB
 

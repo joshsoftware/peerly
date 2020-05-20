@@ -18,18 +18,18 @@ const (
 )
 
 type RecognitionHi5 struct {
-	Id		int	`db:"id" json:"id"`
-	RecognitionID	int	`db:"recognition_id" json:"recognition_id"`
-	Comment		string	`db:"comment" json:"comment"`
-	GivenBy		int	`db:"given_by" json:"given_by"`
-	GivenAt		int64	`db:"given_at" json:"given_at"`
+	Id            int    `db:"id" json:"id"`
+	RecognitionID int    `db:"recognition_id" json:"recognition_id"`
+	Comment       string `db:"comment" json:"comment"`
+	GivenBy       int    `db:"given_by" json:"given_by"`
+	GivenAt       int64  `db:"given_at" json:"given_at"`
 }
 
-func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse map[string]ErrorResponse){
+func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int) (errorResponse map[string]ErrorResponse) {
 	if hi5Quota <= 0 {
-		errorResponse = map[string]ErrorResponse {
-			"error": ErrorResponse {
-				Code: "insufficient_hi5_quota_balance",
+		errorResponse = map[string]ErrorResponse{
+			"error": ErrorResponse{
+				Code:    "insufficient_hi5_quota_balance",
 				Message: "Insufficient Hi5 quota balance.",
 			},
 		}
@@ -40,13 +40,13 @@ func (reqHi5 *RecognitionHi5) CheckHi5QuotaBalance(hi5Quota int)(errorResponse m
 func (s *pgStore) CreateRecognitionHi5(ctx context.Context, reqHi5 RecognitionHi5, recognitionID int) (err error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
-		logger.WithField("err",err.Error()).Error("Error while initiating transaction")
+		logger.WithField("err", err.Error()).Error("Error while initiating transaction")
 		return
 	}
 
 	_, err = tx.ExecContext(ctx, updateHi5QuotaQuery, reqHi5.GivenBy)
 	if err != nil {
-		logger.WithField("err",err.Error()).Error("Error updating users hi5QuotaBalance")
+		logger.WithField("err", err.Error()).Error("Error updating users hi5QuotaBalance")
 		tx.Rollback()
 		return
 	}
@@ -59,16 +59,16 @@ func (s *pgStore) CreateRecognitionHi5(ctx context.Context, reqHi5 RecognitionHi
 		time.Now().Unix(),
 	)
 	if err != nil {
-		logger.WithField("err",err.Error()).Error("Error creating recognition Hi5")
+		logger.WithField("err", err.Error()).Error("Error creating recognition Hi5")
 		tx.Rollback()
 		return
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		logger.WithField("err",err.Error()).Error("Error while commiting the transaction")
+		logger.WithField("err", err.Error()).Error("Error while commiting the transaction")
 		return
 	}
 
-  return
+	return
 }
