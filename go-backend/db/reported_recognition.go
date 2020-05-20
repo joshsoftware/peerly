@@ -12,8 +12,8 @@ var REPORTED_RECOGNITION_TYPE = []string{"fraud", "not_relevant", "incorrect"}
 
 const (
 	createReportedRecognitionQuery = `INSERT INTO reported_recognitions (recognition_id, type_of_reporting,
-		reason_for_reporting, reported_by, reported_at) VALUES ($1, $2, $3, $4, $5)
-		RETURNING id, recognition_id, type_of_reporting, reason_for_reporting, reported_by, reported_at`
+		reason_for_reporting, reported_by, reported_at, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id, recognition_id, type_of_reporting, reason_for_reporting, reported_by, reported_at, created_at, updated_at`
 )
 
 type ReportedRecognition struct {
@@ -70,6 +70,8 @@ func (s *pgStore) CreateReportedRecognition(ctx context.Context, recognitionID i
 		reportedRecognition.ReasonForReporting,
 		reportedRecognition.ReportedBy,
 		now.Unix(),
+		now,
+		now,
 	)
 	if err != nil {
 		logger.WithFields(logger.Fields{
