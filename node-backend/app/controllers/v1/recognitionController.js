@@ -8,7 +8,6 @@ const validationSchema = require("./validationSchema/recognitionValidationSchema
 const Recognitions = db.recognitions;
 const CoreValues = db.coreValues;
 const Users = db.users;
-const RecognitionHi5 = db.recognition_hi5;
 
 const validateCoreValue = async (req, res, tokenData) => {
   return CoreValues.findByPk(req.body.core_value_id, {
@@ -240,13 +239,19 @@ module.exports.findAll = async (req, res) => {
     });
 };
 
-const validateHi5Count = (req, res, id) => {
-  return Users.findByPk(id, { attributes: ["hi5_quota_balance"] })
+const validateHi5Count = (req, res, id, orgId) => {
+  return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
     .then((data) => {
       if (data === null) {
         res.status(404).send({
           error: {
             message: "User with specified id is not found",
+          },
+        });
+      } else if (data.dataValues.org_id == orgId) {
+        res.status(404).send({
+          error: {
+            message: "User with specified organisation is not found",
           },
         });
       } else if (data.dataValues.hi5_quota_balance > 0) {
@@ -273,7 +278,7 @@ const getHi5Data = (data, recognition_id, given_by) => {
     recognition_id: recognition_id,
     given_by: given_by,
     given_at: moment.utc().unix(),
-    comment: data.comment,
+    comment: data.comment || null,
   };
   return hi5Data;
 };
@@ -301,10 +306,21 @@ const validateRecognition = (req, res, id) => {
 };
 
 const addHi5Entry = (req, res, data) => {
-  RecognitionHi5.create(data)
-    .then((info) => {
+  db.sequelize
+    .query(
+      "INSERT INTO recognition_hi5 (recognition_id,given_by,given_at,comment) VALUES (" +
+        data.recognition_id +
+        "," +
+        data.given_by +
+        "," +
+        data.given_at +
+        "," +
+        data.comment +
+        ")"
+    )
+    .then(() => {
       res.status(201).send({
-        data: info,
+        data: data,
       });
     })
     .catch((err /*eslint-disable-line no-unused-vars*/) => {
@@ -333,7 +349,14 @@ module.exports.giveHi5 = async (req, res) => {
         .validate(hi5Data, { abortEarly: false })
         .then(async () => {
           if (await validateRecognition(req, res, hi5Data.recognition_id)) {
-            if (await validateHi5Count(req, res, hi5Data.given_by)) {
+            if (
+              await validateHi5Count(
+                req,
+                res,
+                hi5Data.given_by,
+                tokenData.orgId
+              )
+            ) {
               await addHi5Entry(req, res, hi5Data);
             }
           }

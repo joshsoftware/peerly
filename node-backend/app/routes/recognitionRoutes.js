@@ -10,7 +10,7 @@ async function authorizedRole(req, res, next) {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   if (
     utility.validateRole(tokenData.roleId, "OrganisationAdmin") ||
-    utility.validateRole(tokenData.roleId, "Moderator")
+    utility.validateRole(tokenData.roleId, "Employee")
   ) {
     next();
   } else {

@@ -57,6 +57,6 @@ module.exports.insertHi5Schema = () => {
       .number()
       .required({ given_at: "required" })
       .typeError({ given_at: "should be number " }),
-    comment: yup.string({ comment: "should be text" }),
+    comment: yup.string({ comment: "should be text" }).nullable(),
   });
 };
