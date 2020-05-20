@@ -21,7 +21,7 @@ routes.use("/", profileRoute);
 routes.use("/", coreValuesRoute);
 routes.use("/", orgRoute);
 routes.use("/", badgesRoute);
-routes.use("/", recognitionRoute);
 routes.use("/", moderationRout);
+routes.use("/", recognitionRoute);
 
 module.exports = routes;
