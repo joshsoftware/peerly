@@ -56,6 +56,9 @@ func ErrKeyNotSet(key string) (err error) {
 	return fmt.Errorf("Key not set: %s", key)
 }
 
+// ErrRecordNotFound - for when a database record isn't found
+var ErrRecordNotFound = errors.New("Database record not found")
+
 // ErrInvalidToken - used when a JSON Web Token ("JWT") cannot be validated
 // by the JWT library
 var ErrInvalidToken = errors.New("Invalid Token")
