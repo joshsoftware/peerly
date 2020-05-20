@@ -48,23 +48,23 @@ module.exports.getLimitAndOffset = (queryParamsObj) => {
 };
 
 module.exports.validateRole = (inputRoleId, roleTypeToCompare) => {
-  if (
-    (inputRoleId == 1 && roleTypeToCompare == "SuperAdmin") ||
-    (inputRoleId == 2 && roleTypeToCompare == "OrganisationAdmin") ||
-    (inputRoleId == 3 && roleTypeToCompare == "Employee") ||
-    (inputRoleId == 4 && roleTypeToCompare == "Moderator")
-  ) {
+  let { [inputRoleId]: role } = {
+    1: "SuperAdmin",
+    2: "OrganisationAdmin",
+    3: "Employee",
+    4: "Moderator",
+  };
+  if (roleTypeToCompare.includes(role)) {
     return true;
   } else {
     return false;
   }
 };
 
-module.exports.authorizedRole = async (req, res, next) => {
+module.exports.authorizeAdmin = async (req, res, next) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   if (
-    this.validateRole(tokenData.roleId, "SuperAdmin") ||
-    this.validateRole(tokenData.roleId, "OrganisationAdmin")
+    this.validateRole(tokenData.roleId, ["SuperAdmin", "OrganisationAdmin"])
   ) {
     next();
   } else {
