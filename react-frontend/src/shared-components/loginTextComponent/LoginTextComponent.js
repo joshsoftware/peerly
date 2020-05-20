@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Col } from "react-bootstrap";
 import LabelComponent from "components/core/Label/LabelComponent";
 
 const LoginTextComponent = ({
@@ -7,12 +8,18 @@ const LoginTextComponent = ({
   orgPrimaryCoreValue,
   encouragementThought,
 }) => (
-  <div className={className} data-testid="LoginTextComponent">
-    <LabelComponent text={orgPrimaryCoreValue} />
+  <Col className={className} data-testid="LoginTextComponent">
+    <LabelComponent text={orgPrimaryCoreValue} className="font-weight-bold" />
     <hr className="w-25 bg-light" />
     <LabelComponent text={encouragementThought} />
-  </div>
+  </Col>
 );
+
+LoginTextComponent.defaultProps = {
+  orgPrimaryCoreValue: "Lets Create the Office Positive",
+  encouragementThought: "Encouragement Driven",
+  className: "text-white text-center bg-dark",
+};
 
 LoginTextComponent.propTypes = {
   className: PropTypes.string,
