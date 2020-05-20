@@ -18,10 +18,10 @@ const (
 
 type ReportedRecognition struct {
 	ID                 int64     `db:"id" json:"id"`
-	RecognitionID      *int64    `db:"recognition_id" json:"recognition_id"`
+	RecognitionID      int64     `db:"recognition_id" json:"recognition_id"`
 	TypeOfReporting    string    `db:"type_of_reporting" json:"mark_as"`
 	ReasonForReporting string    `db:"reason_for_reporting" json:"reason"`
-	ReportedBy         *int64    `db:"reported_by" json:"reported_by"`
+	ReportedBy         int64     `db:"reported_by" json:"reported_by"`
 	ReportedAt         int64     `db:"reported_at" json:"reported_at"`
 	CreatedAt          time.Time `db:"created_at" json:"-"`
 	UpdatedAt          time.Time `db:"updated_at" json:"-"`

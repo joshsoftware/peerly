@@ -33,7 +33,7 @@ func createReportedRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-		reportedRecognition.ReportedBy = &userID
+		reportedRecognition.ReportedBy = userID
 
 		ok, errFields := reportedRecognition.Validate()
 		if !ok {

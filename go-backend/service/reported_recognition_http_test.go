@@ -24,14 +24,12 @@ func (suite *ReportedRecognitionHandlerTestSuite) SetupTest() {
 
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionSuccess() {
 	now := time.Now().Unix()
-	userID := int64(1)
-	recognitionID := int64(1)
 	suite.dbMock.On("CreateReportedRecognition", mock.Anything, mock.Anything, mock.Anything).Return(db.ReportedRecognition{
 		ID:                 1,
-		RecognitionID:      &recognitionID,
+		RecognitionID:      int64(1),
 		TypeOfReporting:    "fraud",
 		ReasonForReporting: "Reason Test",
-		ReportedBy:         &userID,
+		ReportedBy:         int64(1),
 		ReportedAt:         now,
 	}, nil)
 
