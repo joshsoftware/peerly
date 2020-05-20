@@ -15,11 +15,12 @@ height: auto
 
 const FirstRow = Styled(Row)`
 font: Helvetica Neue,Regular;
-height: auto
+height: auto;
+padding-top: 1rem;
 `;
+
 const SignInButtonComponent = Styled(ButtonComponent)`
 border-radius: 25px;
-
 `;
 
 const LoginPanel = ({ buttonText }) => (
