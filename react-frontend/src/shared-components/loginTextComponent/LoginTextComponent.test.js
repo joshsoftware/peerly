@@ -1,7 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-
-import LoginTextComponent from "components/shared/loginTextComponent/LoginTextComponent";
+import LoginTextComponent from "./LoginTextComponent";
 
 it("should equal to value", () => {
   const { getByTestId } = render(
