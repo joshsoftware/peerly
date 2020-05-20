@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -35,12 +36,13 @@ func include(slice []string, val string) bool {
 	return false
 }
 
-func (reportedRecognition ReportedRecognition) Validate() (valid bool, errFields map[string]string) {
+func (reportedRecognition *ReportedRecognition) Validate() (valid bool, errFields map[string]string) {
 	errFields = make(map[string]string)
 
 	if reportedRecognition.TypeOfReporting == "" {
 		errFields["mark_as"] = "Can't be blank"
 	} else {
+		reportedRecognition.TypeOfReporting = strings.ToLower(reportedRecognition.TypeOfReporting)
 		ok := include(REPORTED_RECOGNITION_TYPE, reportedRecognition.TypeOfReporting)
 		if !ok {
 			errFields["mark_as"] = "Invalid reported recognition type"
