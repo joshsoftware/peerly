@@ -1,11 +1,14 @@
 const qs = require(/*eslint-disable  node/no-extraneous-require*/ "qs");
 const moment = require("moment");
+const log4js = require("log4js");
 
+require("../../logger/loggerConfig");
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const Users = db.users;
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validateSchema = require("./validationSchema/UsersValidationSchema");
+const logger = log4js.getLogger();
 
 module.exports.findUsersByOrg = async (req, res) => {
   const authHeader = req.headers["authorization"];
@@ -168,18 +171,23 @@ module.exports.updateUser = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUsers]]) => {
           if (rowsUpdate == 1) {
+            logger.info("updated user with id " + updateUsers.dataValues.id);
             res.status(200).send({
               data: updateUsers,
             });
           } else {
+            logger.error(
+              "user not found for specified id " + updateUsers.dataValues.id
+            );
             res.status(404).send({
               error: {
-                message: "user not found for specified id",
+                message: "user not found for specified id ",
               },
             });
           }
         })
         .catch(() => {
+          logger.error("error accured at updation with id " + userData.userId);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -188,6 +196,9 @@ module.exports.updateUser = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(
+        "error accured due to invalid data by user id " + userData.userId
+      );
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -217,10 +228,19 @@ module.exports.updateUserByAdmin = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUserByAdmin]]) => {
           if (rowsUpdate == 1) {
+            logger.info(
+              "updated user with id " +
+                updateUserByAdmin.dataValues.id +
+                " by admin"
+            );
             res.status(200).send({
               data: updateUserByAdmin,
             });
           } else {
+            logger.error(
+              "user not found for specified id" +
+                updateUserByAdmin.dataValues.id
+            );
             res.status(404).send({
               error: {
                 message: "user not found for specified id",
@@ -229,6 +249,7 @@ module.exports.updateUserByAdmin = async (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("error accured at updation with id " + req.params.id);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -237,6 +258,9 @@ module.exports.updateUserByAdmin = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(
+        "error accured due to invalid data by user id " + req.params.id
+      );
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -263,10 +287,18 @@ module.exports.deleteUser = async (req, res) => {
         returning: true,
         where: { id: req.params.id },
       })
-        .then(() => {
+        .then(([rowsUpdate, [updateUsers]]) => {
+          logger.info(
+            "soft deleted " +
+              rowsUpdate +
+              " user with id " +
+              updateUsers.dataValues.id +
+              " by admin"
+          );
           res.status(200).send();
         })
         .catch(() => {
+          logger.error("error accured at deletion by admin ");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -275,6 +307,7 @@ module.exports.deleteUser = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error("error accured due to invalid data by admin");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
