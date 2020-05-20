@@ -15,8 +15,9 @@ func InitMockDB() (s Storer, sqlConn *sqlx.DB, sqlmockInstance sqlmock.Sqlmock) 
 
 	sqlmockInstance = sqlmock
 	sqlxDB := sqlx.NewDb(mockDB, "sqlmock")
+	
 	var pgStoreConn pgStore
-  pgStoreConn.db = sqlxDB
+	pgStoreConn.db = sqlxDB
 
 	return &pgStoreConn, sqlxDB, sqlmockInstance
 }

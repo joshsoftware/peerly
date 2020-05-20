@@ -108,8 +108,8 @@ func (suite *OrganizationTestSuite) TestGetOrganizationSuccess() {
 func (suite *OrganizationTestSuite) TestDeleteOrganizationSuccess() {
 	suite.sqlmock.ExpectExec("DELETE").
 	WillReturnResult(sqlmock.NewResult(1,1))
-
-  err := suite.dbStore.DeleteOrganization(context.Background(), expectedOrg.ID)
+	
+	err := suite.dbStore.DeleteOrganization(context.Background(), expectedOrg.ID)
 
 	assert.Nil(suite.T(), err)
 }
