@@ -239,7 +239,7 @@ module.exports.findAll = async (req, res) => {
     });
 };
 
-const validateHi5Count = (req, res, id, orgId) => {
+const getValidateHi5Count = (req, res, id, orgId) => {
   return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
     .then((data) => {
       if (data === null) {
@@ -248,14 +248,14 @@ const validateHi5Count = (req, res, id, orgId) => {
             message: "User with specified id is not found",
           },
         });
-      } else if (data.dataValues.org_id == orgId) {
+      } else if (data.dataValues.org_id !== orgId) {
         res.status(404).send({
           error: {
             message: "User with specified organisation is not found",
           },
         });
       } else if (data.dataValues.hi5_quota_balance > 0) {
-        return true;
+        return data.dataValues.hi5_quota_balance;
       } else {
         res.status(404).send({
           error: {
@@ -305,7 +305,53 @@ const validateRecognition = (req, res, id) => {
     });
 };
 
-const addHi5Entry = (req, res, data) => {
+const decrementHi5Count = async (req, res, id, orgId) => {
+  let hi5Count = (await getValidateHi5Count(res, res, id, orgId)) - 1;
+  Users.update(
+    { hi5_quota_balance: hi5Count },
+    {
+      returning: true,
+      where: { id: id },
+    }
+  )
+    .then(([rowsUpdate, [updatedCoreValue]]) => {
+      if (rowsUpdate == 1) {
+        res.status(200).send({
+          data: updatedCoreValue,
+        });
+      } else {
+        res.status(404).send({
+          error: {
+            message: "User with specified id is not found",
+          },
+        });
+      }
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
+const addHi5Entry = async (req, res, data, orgId) => {
+  /* RecognitionHi5.create(data)
+    .then((info) => {
+      res.status(201).send({
+        data: info,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+    */
   db.sequelize
     .query(
       "INSERT INTO recognition_hi5 (recognition_id,given_by,given_at,comment) VALUES (" +
@@ -318,7 +364,8 @@ const addHi5Entry = (req, res, data) => {
         data.comment +
         ")"
     )
-    .then(() => {
+    .then(async () => {
+      await decrementHi5Count(req, res, data.given_by, orgId);
       res.status(201).send({
         data: data,
       });
@@ -350,14 +397,14 @@ module.exports.giveHi5 = async (req, res) => {
         .then(async () => {
           if (await validateRecognition(req, res, hi5Data.recognition_id)) {
             if (
-              await validateHi5Count(
+              await getValidateHi5Count(
                 req,
                 res,
                 hi5Data.given_by,
                 tokenData.orgId
               )
             ) {
-              await addHi5Entry(req, res, hi5Data);
+              await addHi5Entry(req, res, hi5Data, tokenData.orgId);
             }
           }
         })
