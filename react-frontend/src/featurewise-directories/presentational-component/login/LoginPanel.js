@@ -8,33 +8,39 @@ import LogoComponent from "shared-components/peerly-Logo/LogoComponent";
 import ButtonComponent from "core-components/Button/ButtonComponent";
 import LoginTextComponent from "shared-components/loginTextComponent/LoginTextComponent";
 
-const StyledDiv = Styled.div`
-background: #334856
+const Div = Styled.div`
+background: #334856;
+height: auto
 `;
 
 const FirstRow = Styled(Row)`
-font: Helvetica Neue,Regular 
+font: Helvetica Neue,Regular;
+height: auto
 `;
-const ButtonComponent2 = Styled(ButtonComponent)`
-height: 40px
+const SignInButtonComponent = Styled(ButtonComponent)`
+border-radius: 25px;
+
 `;
 
 const LoginPanel = ({ buttonText }) => (
-  <StyledDiv className="h-100">
-    <FirstRow className="h1 text-white">
+  <Div className="h-100 align-items-center">
+    <FirstRow className="h1 text-white ">
       <LogoComponent />
     </FirstRow>
+    <Div className="h-25 d-sm-block d-md-none"></Div>
     <Row className="justify-content-center h-50">
-      <ButtonComponent2
-        className="btn-light "
-        icon={<AiOutlineMail height={15} width={2} />}
-        text={buttonText}
-      />
+      <div className="align-items-center d-flex justify-content-center">
+        <SignInButtonComponent
+          className="btn-light "
+          icon={<AiOutlineMail height={15} width={2} />}
+          text={buttonText}
+        />
+      </div>
     </Row>
-    <Row className="">
+    <Row className="d-none d-md-block h-25">
       <LoginTextComponent className="text-white text-center" />
     </Row>
-  </StyledDiv>
+  </Div>
 );
 
 LoginPanel.propTypes = {
