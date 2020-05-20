@@ -22,7 +22,7 @@ usersRouter.get("/users/me", async (req, res) => {
   /*eslint-disable no-eval*/ eval(controller).getProfile(req, res);
 });
 
-usersRouter.get("/users/:id", utility.authorizedRole, async (req, res) => {
+usersRouter.get("/users/:id", utility.authorizeAdmin, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "usersController"
@@ -38,7 +38,7 @@ usersRouter.put("/users/me", async (req, res) => {
   /*eslint-disable no-eval*/ eval(controller).updateUser(req, res);
 });
 
-usersRouter.put("/users/:id", utility.authorizedRole, async (req, res) => {
+usersRouter.put("/users/:id", utility.authorizeAdmin, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "usersController"
@@ -46,7 +46,7 @@ usersRouter.put("/users/:id", utility.authorizedRole, async (req, res) => {
   /*eslint-disable no-eval*/ eval(controller).updateUserByAdmin(req, res);
 });
 
-usersRouter.delete("/users/:id", utility.authorizedRole, async (req, res) => {
+usersRouter.delete("/users/:id", utility.authorizeAdmin, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
     "usersController"
