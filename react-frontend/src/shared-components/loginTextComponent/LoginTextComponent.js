@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Col } from "react-bootstrap";
-import LabelComponent from "components/core/Label/LabelComponent";
+import LabelComponent from "core-components/Label/LabelComponent";
 
 const LoginTextComponent = ({
   className,
