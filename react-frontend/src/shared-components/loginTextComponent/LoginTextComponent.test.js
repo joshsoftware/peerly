@@ -6,11 +6,11 @@ import LoginTextComponent from "components/shared/loginTextComponent/LoginTextCo
 it("should equal to value", () => {
   const { getByTestId } = render(
     <LoginTextComponent
-      orgPrimaryCoreValue="core value"
+      orgPrimaryCoreValue="Lets Create the Office Positive"
       encouragementThought="positive"
     />
   );
   expect(getByTestId("LoginTextComponent")).toHaveTextContent(
-    "core value positive"
+    "Lets Create the Office Positive positive"
   );
 });
