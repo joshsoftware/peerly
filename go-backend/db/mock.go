@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// MockStore - test mock struct
+// DBMockStore - test mock struct
 type DBMockStore struct {
 	mock.Mock
 }

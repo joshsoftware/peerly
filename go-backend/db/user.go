@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	ae "joshsoftware/peerly/apperrors"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -40,6 +41,9 @@ func (u *User) Role(ctx context.Context, store Storer) (role Role, err error) {
 func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, err error) {
 	err = s.db.Get(&user, `SELECT * FROM users WHERE email=$1 LIMIT 1`, email)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			err = ae.ErrRecordNotFound
+		}
 		// Possible that there's no rows in the result set
 		logger.WithField("err", err.Error()).Error("Error selecting user from database by email " + email)
 		return
@@ -83,8 +87,9 @@ func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
 func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err error) {
 	// First, make sure they're not already in the database because if they are, we can just return that user
 	newUser, err = s.GetUserByEmail(ctx, u.Email)
-	if err != nil && err != sql.ErrNoRows {
-		logger.WithField("err", err.Error()).Error("Error checking for duplicate user in db.CreateNewUser w/ email: " + u.Email)
+	if err == nil {
+		// If there's already a user here err will be nil, so newUser is populated. Just return, don't
+		// bother with all the rest of this function. No need to log an error that doesn't exist, either.
 		return
 	}
 
@@ -102,7 +107,7 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 
 	// Set the user's role; we're going to start by looking up the role for "Employee" (automatically created by
 	// database migrations so we know it's there), then assign the user's RoleID to that role's ID.
-	r, _ := s.GetRoleByName(ctx, "Employee")
+	r, _ := s.GetRoleByName(ctx, "Employee") // TODO: What should we do here if there's no "Employee" role?
 	u.RoleID = r.ID
 
 	tx, err := s.db.Beginx() // Use Beginx instead of MustBegin so process doesn't die if there's an error

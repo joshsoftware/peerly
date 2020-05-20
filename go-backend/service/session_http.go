@@ -1,7 +1,6 @@
 package service
 
 import (
-	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	ae "joshsoftware/peerly/apperrors"
@@ -125,11 +124,13 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 
 		// See if there's an existing user that matches the oAuth user
 		existingUser, err := deps.Store.GetUserByEmail(ctx, user.Email)
-		if err != nil && err != sql.ErrNoRows {
+		if err != nil && err != ae.ErrRecordNotFound {
 			log.Error(ae.ErrUnknown, "Unknown/unexpected error while looking for existing user "+user.Email, err)
 			ae.JSONError(rw, http.StatusInternalServerError, err)
 			return
-		} else {
+		}
+
+		if err == ae.ErrRecordNotFound {
 			// Check the OAuth User's domain and see if it's already in our database
 			// TODO - We need a way to test this both programmatically and by hand.
 			// That necessitates a Google account associated w/ a domain that isn't Josh Software
