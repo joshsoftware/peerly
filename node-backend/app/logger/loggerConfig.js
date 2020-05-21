@@ -10,7 +10,7 @@ module.exports = log4js.configure({
   categories: {
     default: {
       appenders: ["fileAppender"],
-      level: "error",
+      level: ["ALL"],
     },
   },
 });
