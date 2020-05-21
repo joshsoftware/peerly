@@ -26,5 +26,6 @@ db.user_blacklisted_tokens = require("./user_blacklisted_tokens.model")(
 );
 db.recognitions = require("./recognitions.model")(sequelize, Sequelize);
 db.coreValues = require("./core_values.model")(sequelize, Sequelize);
+db.recognition_hi5 = require("./recognition_hi5.model")(sequelize, Sequelize);
 
 module.exports = db;

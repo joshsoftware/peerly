@@ -42,3 +42,21 @@ module.exports.getFilterSchema = () => {
       .typeError({ given_offset: "should be number" }),
   });
 };
+
+module.exports.insertHi5Schema = () => {
+  return yup.object().shape({
+    recognition_id: yup
+      .number()
+      .required({ recognition_id: "required" })
+      .typeError({ recognition_id: "should be number " }),
+    given_by: yup
+      .number()
+      .required({ given_by: "required" })
+      .typeError({ given_by: "should be number " }),
+    given_at: yup
+      .number()
+      .required({ given_at: "required" })
+      .typeError({ given_at: "should be number " }),
+    comment: yup.string({ comment: "should be text" }).nullable(),
+  });
+};
