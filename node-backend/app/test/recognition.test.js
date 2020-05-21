@@ -96,4 +96,40 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         done();
       });
   });
+
+  it(/*eslint-disable-line no-undef*/ "post request for create recognition with wrong Contents,response code is 400 ", function (done) {
+    // post request with wrong contents
+    server
+      .post("/recognitions/")
+      .send({
+        core_value_id: "",
+        text: "good contribution in open source",
+        given_for: 15,
+      })
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect("Content-type", /json/)
+      .expect(400)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(400);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "post request for give hi5 for recognition with wrong Contents, response code is 400", function (done) {
+    // post request with wrong contents
+    server
+      .post("/recognitions/" + sampleData.id + "/hi5")
+      .send({
+        comment: 2,
+      })
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect("Content-type", /json/)
+      .expect(400)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(400);
+        done();
+      });
+  });
 });
