@@ -19,7 +19,7 @@ module.exports = (sequelize, Sequelize) => {
       moderator_comment: {
         type: Sequelize.STRING,
         length: 45,
-        notNull: true,
+        notNull: false,
       },
       moderated_by: {
         type: Sequelize.INTEGER,

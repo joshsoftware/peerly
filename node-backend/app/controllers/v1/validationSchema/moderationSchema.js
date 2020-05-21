@@ -34,7 +34,7 @@ module.exports.reviewSchema = () => {
       .boolean()
       .typeError({ is_inappropriate: "should be boolean value" })
       .required({ is_inappropriate: "required" }),
-    moderator_comment: yup.string().required({ comment: "required" }),
+    moderator_comment: yup.string(),
     moderated_by: yup
       .number()
       .typeError({ moderator_by: "should be number" })
