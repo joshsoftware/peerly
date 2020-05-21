@@ -1,7 +1,7 @@
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 
-const server = supertest.agent("http://localhost:3120");
+const server = supertest.agent(process.env.TEST_URL);
 const token = process.env.TOKEN;
 
 describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation", function () {
