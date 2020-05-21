@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import LoginPanel from "./LoginPanel";
+import LoginPanel from "login/LoginPanel";
 
 test("should equal to value", () => {
   const { getByText } = render(

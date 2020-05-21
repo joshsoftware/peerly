@@ -7,33 +7,29 @@ import Styled from "styled-components";
 import LogoComponent from "shared-components/peerly-logo/LogoComponent";
 import ButtonComponent from "core-components/Button/ButtonComponent";
 import LoginTextComponent from "shared-components/login-text-component/LoginTextComponent";
-import styled from "styled-components";
 
 const Div = Styled.div`
 background: #334856;
 height: auto
-`;
-
-const SecondRow = styled(Row)`
-  height: 33.33%;
-  @media (max-width: 768px) {
-    height: 55.5%;
-  }
-`;
-const ThirdRow = styled(Row)`
-  @media (mix-width: 768px) {
-    height: 33.33%;
-  }
 `;
 const FirstRow = Styled(Row)`
   font: Helvetica Neue,Regular;
   padding-top: 1rem;
   height: 33.33%;
 `;
-
+const SecondRow = Styled(Row)`
+  height: 33.33%;
+  @media (max-width: 769px) {
+    height: 55.5%;
+  }
+`;
+const ThirdRow = Styled(Row)`
+  @media (min-width: 767px) {
+    height: 33.33%;
+  }
+`;
 const SignInButtonComponent = Styled(ButtonComponent)`
   border-radius: 25px;
-  height: auto;
 `;
 
 const LoginPanel = ({
@@ -42,18 +38,18 @@ const LoginPanel = ({
   encouragementThought,
 }) => (
   <Div className="h-100 align-items-center">
-    <FirstRow className="h1 text-white ">
+    <FirstRow className="h1">
       <LogoComponent />
     </FirstRow>
-    <SecondRow className="align-items-center auto-height d-flex justify-content-center">
+    <SecondRow className="align-items-center d-flex justify-content-center">
       <SignInButtonComponent
         className="btn-light "
-        icon={<AiOutlineMail height={15} width={2} fontSize={15} />}
+        icon={<AiOutlineMail fontSize={15} />}
         text={buttonText}
       />
     </SecondRow>
     <div className="d-none d-md-block ">
-      <ThirdRow className="align-items-center d-flex justify-content-center">
+      <ThirdRow>
         <LoginTextComponent
           className="text-white text-center "
           orgPrimaryCoreValue={orgPrimaryCoreValue}
