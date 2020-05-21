@@ -240,7 +240,7 @@ module.exports.findAll = async (req, res) => {
     });
 };
 
-const getValidateHi5Count = (req, res, id, orgId) => {
+const getHi5Count = (req, res, id, orgId) => {
   return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
     .then((data) => {
       if (data === null) {
@@ -307,7 +307,7 @@ const validateRecognition = (req, res, id) => {
 };
 
 const decrementHi5Count = async (req, res, id, orgId) => {
-  let hi5Count = (await getValidateHi5Count(res, res, id, orgId)) - 1;
+  let hi5Count = (await getHi5Count(res, res, id, orgId)) - 1;
   return Users.update(
     { hi5_quota_balance: hi5Count },
     {
@@ -371,12 +371,7 @@ module.exports.giveHi5 = async (req, res) => {
         .then(async () => {
           if (await validateRecognition(req, res, hi5Data.recognition_id)) {
             if (
-              await getValidateHi5Count(
-                req,
-                res,
-                hi5Data.given_by,
-                tokenData.orgId
-              )
+              await getHi5Count(req, res, hi5Data.given_by, tokenData.orgId)
             ) {
               await addHi5Entry(req, res, hi5Data, tokenData.orgId);
             }
