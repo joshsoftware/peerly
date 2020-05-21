@@ -54,12 +54,3 @@ module.exports.updateSchema = () => {
     }),
   });
 };
-
-module.exports.getByIdSchema = () => {
-  return yup.object().shape({
-    id: yup
-      .number()
-      .typeError({ id: "should be number" })
-      .required({ id: "required" }),
-  });
-};
