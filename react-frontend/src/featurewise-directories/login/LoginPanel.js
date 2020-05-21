@@ -23,7 +23,11 @@ const SignInButtonComponent = Styled(ButtonComponent)`
 border-radius: 25px;
 `;
 
-const LoginPanel = ({ buttonText }) => (
+const LoginPanel = ({
+  buttonText,
+  orgPrimaryCoreValue,
+  encouragementThought,
+}) => (
   <Div className="h-100 align-items-center">
     <FirstRow className="h1 text-white ">
       <LogoComponent />
@@ -33,23 +37,29 @@ const LoginPanel = ({ buttonText }) => (
       <div className="align-items-center d-flex justify-content-center">
         <SignInButtonComponent
           className="btn-light "
-          icon={<AiOutlineMail height={15} width={2} />}
+          icon={<AiOutlineMail height={15} width={2} fontSize={15} />}
           text={buttonText}
         />
       </div>
     </Row>
     <Row className="d-none d-md-block h-25">
-      <LoginTextComponent className="text-white text-center" />
+      <LoginTextComponent
+        className="text-white text-center h3"
+        orgPrimaryCoreValue={orgPrimaryCoreValue}
+        encouragementThought={encouragementThought}
+      />
     </Row>
   </Div>
 );
 
 LoginPanel.propTypes = {
   buttonText: PropTypes.string,
+  orgPrimaryCoreValue: PropTypes.string,
+  encouragementThought: PropTypes.string,
 };
 
 LoginPanel.defaultProps = {
-  buttonText: "Sign in with Google",
+  buttonText: " Sign in with Google",
 };
 
 export default LoginPanel;
