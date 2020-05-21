@@ -26,6 +26,11 @@ module.exports.findUsersByOrg = async (req, res) => {
         ]);
         if (!superAdminAuth) {
           {
+            logger.warn(
+              "permission denied user having id " +
+                userData.userId +
+                " trying to access admin credentials"
+            );
             res.status(403).send({
               error: {
                 code: "access_denied",
@@ -47,6 +52,9 @@ module.exports.findUsersByOrg = async (req, res) => {
               });
             })
             .catch(() => {
+              logger.error(
+                "internal server error accured at get users by super admin"
+              );
               res.status(500).send({
                 error: {
                   message: "internal server error",
@@ -68,6 +76,7 @@ module.exports.findUsersByOrg = async (req, res) => {
             });
           })
           .catch(() => {
+            logger.error("internal server error accured at get users");
             res.status(500).send({
               error: {
                 message: "internal server error",
@@ -77,6 +86,10 @@ module.exports.findUsersByOrg = async (req, res) => {
       }
     })
     .catch((err) => {
+      logger.error(
+        "error accured at get users with wrong params input by id " +
+          userData.userId
+      );
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid query params",
@@ -100,6 +113,7 @@ module.exports.getProfile = async (req, res) => {
       });
     })
     .catch(() => {
+      logger.error("internal server error accured at users get profile");
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -126,6 +140,9 @@ module.exports.getProfileById = (req, res) => {
               data: data,
             });
           } else {
+            logger.error(
+              "profile not found error accured at get user by id where id "
+            );
             res.status(404).send({
               error: {
                 message: "profile not found for specified id ",
@@ -134,6 +151,7 @@ module.exports.getProfileById = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("error accured at get user by id where id " + id);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -142,6 +160,9 @@ module.exports.getProfileById = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(
+        "error accured at get user by id admin entered wrong credentials"
+      );
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
