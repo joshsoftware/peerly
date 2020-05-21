@@ -8,7 +8,7 @@ import LogoComponent from "shared-components/peerly-logo/LogoComponent";
 import ButtonComponent from "core-components/Button/ButtonComponent";
 import LoginTextComponent from "shared-components/login-text-component/LoginTextComponent";
 
-const Div = Styled.div`
+const Wrapper = Styled.div`
 background: #334856;
 height: auto
 `;
@@ -37,7 +37,7 @@ const LoginPanel = ({
   orgPrimaryCoreValue,
   encouragementThought,
 }) => (
-  <Div className="h-100 align-items-center">
+  <Wrapper className="h-100 align-items-center">
     <FirstRow className="h1">
       <LogoComponent />
     </FirstRow>
@@ -57,7 +57,7 @@ const LoginPanel = ({
         />
       </ThirdRow>
     </div>
-  </Div>
+  </Wrapper>
 );
 
 LoginPanel.propTypes = {
