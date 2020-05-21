@@ -28,4 +28,32 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         done();
       });
   });
+
+  it(/*eslint-disable-line no-undef*/ "get request for get recognition by id with write url", function (done) {
+    // post request for get Recognition successfully
+    server
+      .get("/recognitions/" + id)
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect("Content-type", /json/)
+      .expect(200)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(200);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "get request for get all recognition  with write url", function (done) {
+    // post request for get Recognition successfully
+    server
+      .get("/recognitions/")
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect("Content-type", /json/)
+      .expect(200)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(200);
+        done();
+      });
+  });
 });
