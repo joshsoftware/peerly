@@ -307,18 +307,16 @@ const validateRecognition = (req, res, id) => {
 
 const decrementHi5Count = async (req, res, id, orgId) => {
   let hi5Count = (await getValidateHi5Count(res, res, id, orgId)) - 1;
-  Users.update(
+  return Users.update(
     { hi5_quota_balance: hi5Count },
     {
       returning: true,
       where: { id: id },
     }
   )
-    .then(([rowsUpdate, [updatedCoreValue]]) => {
+    .then(([rowsUpdate]) => {
       if (rowsUpdate == 1) {
-        res.status(200).send({
-          data: updatedCoreValue,
-        });
+        return true;
       } else {
         res.status(404).send({
           error: {
@@ -336,8 +334,9 @@ const decrementHi5Count = async (req, res, id, orgId) => {
     });
 };
 
-const addHi5Entry = async (req, res, data, orgId) => {
-  /* RecognitionHi5.create(data)
+const addHi5Entry = (req, res, data, orgId) => {
+  /*
+   RecognitionHi5.create(data)
     .then((info) => {
       res.status(201).send({
         data: info,
@@ -365,10 +364,11 @@ const addHi5Entry = async (req, res, data, orgId) => {
         ")"
     )
     .then(async () => {
-      await decrementHi5Count(req, res, data.given_by, orgId);
-      res.status(201).send({
-        data: data,
-      });
+      if (await decrementHi5Count(req, res, data.given_by, orgId)) {
+        res.status(201).send({
+          data: data,
+        });
+      }
     })
     .catch((err /*eslint-disable-line no-unused-vars*/) => {
       res.status(500).send({
