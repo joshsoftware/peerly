@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
+const log4js = require("log4js");
 
+require("../../logger/loggerConfig");
 const db = require("../../models/sequelize");
+const logger = log4js.getLogger();
 const Users = db.users;
 const Organizations = db.organizations;
 module.exports.login = async (req, res) => {
@@ -93,6 +96,7 @@ module.exports.login = async (req, res) => {
             },
           });
         } else {
+          logger.error("unauthorized user");
           res.status(401).send({
             error: {
               message: "unauthorized user",
@@ -101,6 +105,7 @@ module.exports.login = async (req, res) => {
         }
       }
     } else {
+      logger.error("unauthorized user");
       res.status(401).send({
         error: {
           message: "unauthorized user",
@@ -121,7 +126,8 @@ const getUser = async (email) => {
     .then(function (users) {
       result = users;
     })
-    .catch(() => {
+    .catch((err) => {
+      logger.error(err);
       result = "error";
     });
   return result;
@@ -133,7 +139,8 @@ const getOrganization = async (domainName) => {
     .then(function (organizationData) {
       domainResult = organizationData;
     })
-    .catch(() => {
+    .catch((err) => {
+      logger.error(err);
       domainResult = "error";
     });
   return domainResult;
@@ -158,7 +165,8 @@ const insertData = async (
     role_id: 3,
     hi5_quota_balance: hi5QuotaBalance,
   };
-  await Users.create(user).catch(() => {
+  await Users.create(user).catch((err) => {
+    logger.error(err);
     errorCheck = "error";
   });
   return errorCheck;
