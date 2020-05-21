@@ -33,5 +33,6 @@ db.recognition_moderation = require("./recognition_moderation.model")(
   sequelize,
   Sequelize
 );
-
+db.coreValues = require("./core_values.model")(sequelize, Sequelize);
+db.recognition_hi5 = require("./recognition_hi5.model")(sequelize, Sequelize);
 module.exports = db;
