@@ -9,13 +9,10 @@ module.exports.reportSchema = () => {
     type_of_reporting: yup
       .string()
       .oneOf(["fraud", "not_relevant", "incorrect"], {
-        type_of_reporting:
-          "must be the following values: fraud, not_relevant, incorrect",
+        mark_as: "must be the following values: fraud, not_relevant, incorrect",
       })
       .required({ type_of_reporting: "required" }),
-    reason_for_reporting: yup
-      .string()
-      .required({ reason_for_reporting: "required" }),
+    reason_for_reporting: yup.string().required({ reason: "required" }),
     reported_by: yup
       .number()
       .typeError({ reported_by: "should be number" })
@@ -37,7 +34,7 @@ module.exports.reviewSchema = () => {
       .boolean()
       .typeError({ is_inappropriate: "should be boolean value" })
       .required({ is_inappropriate: "required" }),
-    moderator_comment: yup.string().required({ moderator_comment: "required" }),
+    moderator_comment: yup.string().required({ comment: "required" }),
     moderated_by: yup
       .number()
       .typeError({ moderator_by: "should be number" })
