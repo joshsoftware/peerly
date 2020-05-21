@@ -8,6 +8,7 @@ const validationSchema = require("./validationSchema/recognitionValidationSchema
 const Recognitions = db.recognitions;
 const CoreValues = db.coreValues;
 const Users = db.users;
+const RecognitionHi5 = db.recognition_hi5;
 
 const validateCoreValue = async (req, res, tokenData) => {
   return CoreValues.findByPk(req.body.core_value_id, {
@@ -334,35 +335,8 @@ const decrementHi5Count = async (req, res, id, orgId) => {
     });
 };
 
-const addHi5Entry = (req, res, data, orgId) => {
-  /*
-   RecognitionHi5.create(data)
-    .then((info) => {
-      res.status(201).send({
-        data: info,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
-    });
-    */
-  db.sequelize
-    .query(
-      "INSERT INTO recognition_hi5 (recognition_id,given_by,given_at,comment) VALUES (" +
-        data.recognition_id +
-        "," +
-        data.given_by +
-        "," +
-        data.given_at +
-        "," +
-        data.comment +
-        ")"
-    )
+const addHi5Entry = async (req, res, data, orgId) => {
+  RecognitionHi5.create(data)
     .then(async () => {
       if (await decrementHi5Count(req, res, data.given_by, orgId)) {
         res.status(201).send({
@@ -370,7 +344,7 @@ const addHi5Entry = (req, res, data, orgId) => {
         });
       }
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch(() => {
       res.status(500).send({
         error: {
           message: "internal server error",
