@@ -51,10 +51,8 @@ module.exports.findUsersByOrg = async (req, res) => {
                 data: users,
               });
             })
-            .catch(() => {
-              logger.error(
-                "internal server error accured at get users by super admin"
-              );
+            .catch((err) => {
+              logger.error(err);
               res.status(500).send({
                 error: {
                   message: "internal server error",
@@ -75,8 +73,8 @@ module.exports.findUsersByOrg = async (req, res) => {
               data: users,
             });
           })
-          .catch(() => {
-            logger.error("internal server error accured at get users");
+          .catch((err) => {
+            logger.error(err);
             res.status(500).send({
               error: {
                 message: "internal server error",
@@ -86,10 +84,7 @@ module.exports.findUsersByOrg = async (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(
-        "error accured at get users with wrong params input by id " +
-          userData.userId
-      );
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid query params",
@@ -112,8 +107,8 @@ module.exports.getProfile = async (req, res) => {
         data: profile,
       });
     })
-    .catch(() => {
-      logger.error("internal server error accured at users get profile");
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -140,9 +135,6 @@ module.exports.getProfileById = (req, res) => {
               data: data,
             });
           } else {
-            logger.error(
-              "profile not found error accured at get user by id where id "
-            );
             res.status(404).send({
               error: {
                 message: "profile not found for specified id ",
@@ -150,8 +142,8 @@ module.exports.getProfileById = (req, res) => {
             });
           }
         })
-        .catch(() => {
-          logger.error("error accured at get user by id where id " + id);
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -160,9 +152,7 @@ module.exports.getProfileById = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(
-        "error accured at get user by id admin entered wrong credentials"
-      );
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -207,8 +197,8 @@ module.exports.updateUser = async (req, res) => {
             });
           }
         })
-        .catch(() => {
-          logger.error("error accured at updation with id " + userData.userId);
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -217,9 +207,7 @@ module.exports.updateUser = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(
-        "error accured due to invalid data by user id " + userData.userId
-      );
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -269,8 +257,8 @@ module.exports.updateUserByAdmin = async (req, res) => {
             });
           }
         })
-        .catch(() => {
-          logger.error("error accured at updation with id " + req.params.id);
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -279,9 +267,7 @@ module.exports.updateUserByAdmin = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(
-        "error accured due to invalid data by user id " + req.params.id
-      );
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -318,8 +304,8 @@ module.exports.deleteUser = async (req, res) => {
           );
           res.status(200).send();
         })
-        .catch(() => {
-          logger.error("error accured at deletion by admin ");
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -328,7 +314,7 @@ module.exports.deleteUser = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error("error accured due to invalid data by admin");
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
