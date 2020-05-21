@@ -78,4 +78,22 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         done();
       });
   });
+
+  it(/*eslint-disable-line no-undef*/ "post request for give hi5 for recognition with write Contents,url", function (done) {
+    // post request for give hi5 Recognition successfully
+    server
+      .post("/recognitions/" + sampleData.id + "/hi5")
+      .send({
+        comment: "good efforts ",
+      })
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect("Content-type", /json/)
+      .expect(201)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        sampleData = res.body.data;
+        res.status.should.equal(201);
+        done();
+      });
+  });
 });
