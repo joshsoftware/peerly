@@ -5,8 +5,8 @@ import { IMG_BASE_PATH } from "constants/appConstants";
 
 const getImagePath = (size) =>
   size === "lg"
-    ? `${IMG_BASE_PATH}/cat-img@2x.png`
-    : `${IMG_BASE_PATH}/cat-img.png`;
+    ? `${IMG_BASE_PATH}/cat-img.png`
+    : `${IMG_BASE_PATH}/cat-mobile-img.png`;
 
 const PreLoginImageComponent = ({ className, hight, width, size }) => {
   const imagePath = React.useMemo(() => getImagePath(size), [size]);
