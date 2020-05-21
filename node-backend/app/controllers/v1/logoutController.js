@@ -1,6 +1,10 @@
+const log4js = require("log4js");
+
 const db = require("../../models/sequelize");
 const jsonwebtoken = require("../../jwtTokenValidation/jwtValidation");
 const userBlacklistedTokens = db.user_blacklisted_tokens;
+const logger = log4js.getLogger();
+
 module.exports.logout = async (req, res) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
@@ -16,6 +20,7 @@ module.exports.logout = async (req, res) => {
       res.status(200).send();
     })
     .catch(() => {
+      logger.error("internal server error ");
       res.status(500).send({
         error: {
           message: "internal server error",
