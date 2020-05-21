@@ -1,4 +1,8 @@
+const log4js = require("log4js");
+
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
+
+const logger = log4js.getLogger();
 
 module.exports.getFormattedErrorObj = (
   errorCode,
@@ -68,6 +72,11 @@ module.exports.authorizeAdmin = async (req, res, next) => {
   ) {
     next();
   } else {
+    logger.warn(
+      "permission denied user having id " +
+        tokenData.userId +
+        " trying to access admin credentials"
+    );
     res.status(403).send({
       error: {
         code: "access_denied",
