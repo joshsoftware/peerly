@@ -69,7 +69,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
           sampleData.given_by +
           "&limit=1&offset=0"
       )
-      .set("Authorization", "Bearer " + token) //?core_value_id=2&given_for=5&given_by=6
+      .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200)
@@ -123,6 +123,20 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .send({
         comment: 2,
       })
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect("Content-type", /json/)
+      .expect(400)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(400);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "get request for get recognition by id with incorrect id type", function (done) {
+    // provide id as string
+    server
+      .get("/recognitions/abc")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
