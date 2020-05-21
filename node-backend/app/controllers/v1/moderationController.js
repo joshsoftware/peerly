@@ -12,8 +12,8 @@ module.exports.report = async (req, res) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   const reportedRecognition = {
     recognition_id: req.params.recognition_id,
-    type_of_reporting: req.body.type_of_reporting,
-    reason_for_reporting: req.body.reason_for_reporting,
+    type_of_reporting: req.body.mark_as,
+    reason_for_reporting: req.body.reason,
     reported_by: tokenData.userId,
     reported_at: moment.utc().unix(),
   };
@@ -52,7 +52,7 @@ module.exports.review = async (req, res) => {
   const recognitionModeration = {
     recognition_id: req.params.recognition_id,
     is_inappropriate: req.body.is_inappropriate,
-    moderator_comment: req.body.moderator_comment,
+    moderator_comment: req.body.comment,
     moderated_by: tokenData.userId,
     moderated_at: moment.utc().unix(),
   };
