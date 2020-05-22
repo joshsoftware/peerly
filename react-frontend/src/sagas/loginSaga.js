@@ -1,17 +1,21 @@
-import { takeEvery, all } from "redux-saga/effects";
-//import { call } from 'redux-saga/effects';
+import { put, takeEvery, spawn, call } from "redux-saga/effects";
 
-import LoginApi from "utils/postJson";
+import PostJson from "utils/postJson";
 
-function* googleLogin() {
-  LoginApi({ access_token: "" }).then();
-  yield;
+function* userLogin(action) {
+  try {
+    const response = yield call(PostJson, { access_token: action.payload });
+    const responseObj = yield response.json();
+    yield put({ type: "LOGIN_SUCCESS", value: responseObj.data });
+  } catch (error) {
+    yield put({ type: "LOGIN_FAILURE", value: error });
+  }
 }
 
-function* watchIncrementAsync() {
-  yield takeEvery("GOOGLE_LOGIN_SUCCESS", googleLogin);
+function* loginApi() {
+  yield takeEvery("LOGIN_API", userLogin);
 }
 
 export default function* rootSaga() {
-  yield all([watchIncrementAsync()]);
+  yield spawn(loginApi);
 }
