@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import styled from "styled-components";
 import LabelComponent from "core-components/Label/LabelComponent";
 
@@ -13,20 +13,20 @@ const LoginTextComponent = ({
   orgPrimaryCoreValue,
   encouragementThought,
 }) => (
-  <Col className={className} data-testid="LoginTextComponent">
+  <Row className={className} data-testid="LoginTextComponent">
     <LabelComponent
       text={orgPrimaryCoreValue}
-      className="font-weight-bold h3 mx-4"
+      className="font-wight-bold h3 mx-4"
     />
     <HrLine />
     <LabelComponent text={encouragementThought} />
-  </Col>
+  </Row>
 );
 
 LoginTextComponent.defaultProps = {
   orgPrimaryCoreValue: "Lets Create the Office Positive",
   encouragementThought: "Encouragement Driven",
-  className: "text-white text-center ",
+  className: "text-white text-center d-flex flex-column",
 };
 
 LoginTextComponent.propTypes = {
