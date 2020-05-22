@@ -1,9 +1,13 @@
 const moment = require("moment"); //eslint-disable-line node/no-extraneous-require
+const log4js = require("log4js");
 
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
 const validationSchema = require("./validationSchema/moderationSchema");
+require("../../logger/loggerConfig");
+
+const logger = log4js.getLogger();
 const RecognitionModeration = db.recognition_moderation;
 const ReportedRecognitions = db.reported_recognitions;
 
@@ -27,7 +31,8 @@ module.exports.report = async (req, res) => {
             data: data,
           });
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -36,6 +41,7 @@ module.exports.report = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid reported recognition",
@@ -66,7 +72,8 @@ module.exports.review = async (req, res) => {
             data: data,
           });
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -75,6 +82,7 @@ module.exports.review = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid recognition moderation",
