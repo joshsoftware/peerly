@@ -29,7 +29,7 @@ GenerateRoutes.propTypes = {
       isProtected: PropTypes.bool,
       includeNavbar: PropTypes.bool,
       includeSidebar: PropTypes.bool,
-      component: PropTypes.func,
+      component: PropTypes.elementType,
       exact: PropTypes.bool,
     })
   ).isRequired,
