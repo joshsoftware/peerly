@@ -8,6 +8,7 @@ const validationSchema = require("./validationSchema/recognitionValidationSchema
 const Recognitions = db.recognitions;
 const CoreValues = db.coreValues;
 const Users = db.users;
+const RecognitionHi5 = db.recognition_hi5;
 
 const validateCoreValue = async (req, res, tokenData) => {
   return CoreValues.findByPk(req.body.core_value_id, {
@@ -225,6 +226,164 @@ module.exports.findAll = async (req, res) => {
             error: {
               message: "internal server error ",
             },
+          });
+        });
+    })
+    .catch((err) => {
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          "invalid recognition",
+          "invalid recognition Data",
+          err.errors
+        ),
+      });
+    });
+};
+
+const getHi5Count = (req, res, id, orgId) => {
+  return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
+    .then((data) => {
+      if (data === null) {
+        res.status(404).send({
+          error: {
+            message: "User with specified id is not found",
+          },
+        });
+      } else if (data.dataValues.org_id !== orgId) {
+        res.status(404).send({
+          error: {
+            message: "User with specified organisation is not found",
+          },
+        });
+      } else if (data.dataValues.hi5_quota_balance > 0) {
+        return data.dataValues.hi5_quota_balance;
+      } else {
+        res.status(404).send({
+          error: {
+            message: "User hi5 balance is Empty",
+          },
+        });
+      }
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
+const getHi5Data = (data, recognition_id, given_by) => {
+  let hi5Data = {
+    recognition_id: recognition_id,
+    given_by: given_by,
+    given_at: moment.utc().unix(),
+    comment: data.comment || null,
+  };
+  return hi5Data;
+};
+
+const validateRecognition = (req, res, id) => {
+  return Recognitions.findByPk(id)
+    .then(async (data) => {
+      if (data == null /*eslint-disable-line no-eq-null*/) {
+        res.status(404).send({
+          error: {
+            message: "Recognition with specified id is not found",
+          },
+        });
+      } else {
+        return true;
+      }
+    })
+    .catch(() => {
+      res.status(500).send({
+        error: {
+          message: "internal server error ",
+        },
+      });
+    });
+};
+
+const decrementHi5Count = async (req, res, id, orgId) => {
+  let hi5Count = (await getHi5Count(res, res, id, orgId)) - 1;
+  return Users.update(
+    { hi5_quota_balance: hi5Count },
+    {
+      returning: true,
+      where: { id: id },
+    }
+  )
+    .then(([rowsUpdate]) => {
+      if (rowsUpdate == 1) {
+        return true;
+      } else {
+        res.status(404).send({
+          error: {
+            message: "User with specified id is not found",
+          },
+        });
+      }
+    })
+    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
+const addHi5Entry = async (req, res, data, orgId) => {
+  RecognitionHi5.create(data)
+    .then(async () => {
+      if (await decrementHi5Count(req, res, data.given_by, orgId)) {
+        res.status(201).send({
+          data: data,
+        });
+      }
+    })
+    .catch(() => {
+      res.status(500).send({
+        error: {
+          message: "internal server error",
+        },
+      });
+    });
+};
+
+module.exports.giveHi5 = async (req, res) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+  const idSchema = validationSchema.getByIdSchema();
+  const schema = validationSchema.insertHi5Schema();
+  const hi5Data = getHi5Data(
+    req.body,
+    req.params.recognition_id,
+    tokenData.userId
+  );
+
+  idSchema
+    .validate({ id: req.params.recognition_id }, { abortEarly: false })
+    .then(() => {
+      schema
+        .validate(hi5Data, { abortEarly: false })
+        .then(async () => {
+          if (await validateRecognition(req, res, hi5Data.recognition_id)) {
+            if (
+              await getHi5Count(req, res, hi5Data.given_by, tokenData.orgId)
+            ) {
+              await addHi5Entry(req, res, hi5Data, tokenData.orgId);
+            }
+          }
+        })
+        .catch((err) => {
+          res.status(400).send({
+            error: utility.getFormattedErrorObj(
+              "invalid recognition",
+              "invalid recognition Data",
+              err.errors
+            ),
           });
         });
     })

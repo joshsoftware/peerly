@@ -1,22 +1,11 @@
-const yup = require("yup");
-
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
+const validationSchema = require("./validationSchema/coreValueValidationSchema");
 const CoreValue = db.core_value;
 
 module.exports.create = (req, res) => {
   //validation schema
-  const schema = yup.object().shape({
-    org_id: yup
-      .number()
-      .typeError({ org_id: "should be number" })
-      .required({ org_id: "required" }),
-    text: yup.string().required({ text: "required" }),
-    description: yup.string().required({ description: "required" }),
-    parent_core_value_id: yup
-      .number()
-      .typeError({ parent_core_value_id: "should be number" }),
-  });
+  const schema = validationSchema.insertSchema();
   // Create a core value object
   const coreValue = {
     org_id: req.params.organisation_id,
@@ -56,12 +45,7 @@ module.exports.create = (req, res) => {
 //get all core values
 module.exports.findAll = (req, res) => {
   const org_id = req.params.organisation_id;
-  const idSchema = yup.object().shape({
-    org_id: yup
-      .number()
-      .typeError({ org_id: "should be number" })
-      .required({ org_id: "required" }),
-  });
+  const idSchema = validationSchema.findAllSchema();
   idSchema
     .validate({ org_id }, { abortEarly: false })
     .then(() => {
@@ -94,16 +78,7 @@ module.exports.findAll = (req, res) => {
 module.exports.findOne = (req, res) => {
   const id = req.params.id;
   const org_id = req.params.organisation_id;
-  const idSchema = yup.object().shape({
-    id: yup
-      .number()
-      .typeError({ id: "should be number" })
-      .required({ id: "required" }),
-    org_id: yup
-      .number()
-      .typeError({ org_id: "should be number" })
-      .required({ org_id: "required" }),
-  });
+  const idSchema = validationSchema.findOneSchema();
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
     .then(() => {
@@ -147,21 +122,7 @@ module.exports.update = (req, res) => {
   const text = req.body.text;
   const description = req.body.description;
   const parent_core_value_id = req.body.parent_core_value_id;
-  const schema = yup.object().shape({
-    id: yup
-      .number()
-      .typeError({ id: "should be a number" })
-      .required({ id: "required" }),
-    org_id: yup
-      .number()
-      .typeError({ org_id: "should be a number" })
-      .required({ org_id: "required" }),
-    text: yup.string(),
-    description: yup.string(),
-    parent_core_value_id: yup.number().typeError({
-      parent_core_value_id: "should be a number",
-    }),
-  });
+  const schema = validationSchema.updateSchema();
   const coreValue = {
     text: req.body.text,
     description: req.body.description,
@@ -211,12 +172,7 @@ module.exports.update = (req, res) => {
 
 module.exports.getCoreValueById = (req, res) => {
   const id = req.params.id;
-  const idSchema = yup.object().shape({
-    id: yup
-      .number()
-      .typeError({ id: "should be number" })
-      .required({ id: "required" }),
-  });
+  const idSchema = validationSchema.getByIdSchema();
   idSchema
     .validate({ id }, { abortEarly: false })
     .then(() => {
