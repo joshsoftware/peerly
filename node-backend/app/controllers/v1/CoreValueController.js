@@ -1,7 +1,12 @@
+const log4js = require("log4js");
+
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/coreValueValidationSchema");
+require("../../logger/loggerConfig");
+
 const CoreValue = db.core_value;
+const logger = log4js.getLogger();
 
 module.exports.create = (req, res) => {
   //validation schema
@@ -24,7 +29,8 @@ module.exports.create = (req, res) => {
             data: data,
           });
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -33,6 +39,7 @@ module.exports.create = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-core-value",
@@ -55,7 +62,8 @@ module.exports.findAll = (req, res) => {
             data: data,
           });
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -64,6 +72,7 @@ module.exports.findAll = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-core-value",
@@ -96,7 +105,8 @@ module.exports.findOne = (req, res) => {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -105,6 +115,7 @@ module.exports.findOne = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-core-value",
@@ -151,7 +162,8 @@ module.exports.update = (req, res) => {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -160,6 +172,7 @@ module.exports.update = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-core-value",
@@ -199,7 +212,8 @@ module.exports.getCoreValueById = (req, res) => {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -208,6 +222,7 @@ module.exports.getCoreValueById = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-core-value",
@@ -227,7 +242,8 @@ module.exports.getCoreValues = (req, res) => {
         data: info,
       });
     })
-    .catch(() => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
