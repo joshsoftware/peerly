@@ -5,10 +5,11 @@ const log4js = require("log4js");
 require("../../logger/loggerConfig");
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
-const Users = db.users;
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validateSchema = require("./validationSchema/UsersValidationSchema");
+
 const logger = log4js.getLogger();
+const Users = db.users;
 
 module.exports.findUsersByOrg = async (req, res) => {
   const authHeader = req.headers["authorization"];
