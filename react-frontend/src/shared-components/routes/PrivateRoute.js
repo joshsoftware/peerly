@@ -21,7 +21,7 @@ const PrivateRoute = ({ route }) => {
 PrivateRoute.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string,
-    component: PropTypes.func,
+    component: PropTypes.elementType,
     isProtected: PropTypes.bool,
     includeNavbar: PropTypes.bool,
     includeSidebar: PropTypes.bool,
