@@ -1,14 +1,22 @@
 import React from "react";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import createSagaMiddleware from "redux-saga";
 
 import Login from "login/LoginComponent";
 import Reducers from "reducers/loginReducer";
-
-const store = createStore(Reducers);
+import LoginApi from "utils/postJson";
+import sagas from "sagas/loginSaga";
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(Reducers, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(sagas);
 
 const LoginContainer = () => {
-  const responseGoogle = (response) => {
-    store.dispatch(response.tokenObj.access_token);
+  const responseGoogle = async (response) => {
+    store.dispatch({ type: "GOOGLE_LOGIN_SUCCESS" });
+    const a = await (
+      await LoginApi({ access_token: response.tokenObj.access_token })
+    ).json();
+    store.dispatch({ type: "LOGIN_SUCCESS", value: a });
   };
 
   return (
