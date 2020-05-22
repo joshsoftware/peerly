@@ -22,7 +22,7 @@ const PreLoginPanelMobileComponent = ({
   encouragementThought,
 }) => (
   <Container className={classNameContainer} fluid={true}>
-    <RowText className="py-5">
+    <RowText className="py-5 text-white">
       <LogoComponent />
     </RowText>
     <RowImage>
