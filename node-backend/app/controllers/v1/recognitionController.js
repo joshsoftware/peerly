@@ -1,10 +1,14 @@
 const moment = require("moment"); //eslint-disable-line node/no-extraneous-require
 const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
+const log4js = require("log4js");
 
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
 const validationSchema = require("./validationSchema/recognitionValidationSchema");
+require("../../logger/loggerConfig");
+
+const logger = log4js.getLogger();
 const Recognitions = db.recognitions;
 const CoreValues = db.coreValues;
 const Users = db.users;
@@ -32,7 +36,8 @@ const validateCoreValue = async (req, res, tokenData) => {
         });
       }
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -60,7 +65,8 @@ const validateGivenFor = async (req, res, tokenData) => {
         });
       }
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -76,7 +82,8 @@ const addRecognition = (req, res, recognitions) => {
         data: info,
       });
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -107,6 +114,7 @@ module.exports.create = async (req, res) => {
       }
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid recognition",
@@ -137,7 +145,8 @@ module.exports.findOne = async (req, res) => {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error ",
@@ -146,6 +155,7 @@ module.exports.findOne = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid recognition",
@@ -214,6 +224,9 @@ module.exports.findAll = async (req, res) => {
               data: data,
             });
           } else {
+            logger.error(
+              "Recognition with specified organisation is not found"
+            );
             res.status(404).send({
               error: {
                 message: "Recognition with specified organisation is not found",
@@ -221,7 +234,8 @@ module.exports.findAll = async (req, res) => {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          logger.error(err);
           res.status(500).send({
             error: {
               message: "internal server error ",
@@ -230,6 +244,7 @@ module.exports.findAll = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid recognition",
@@ -250,6 +265,7 @@ const getHi5Count = (req, res, id, orgId) => {
           },
         });
       } else if (data.dataValues.org_id !== orgId) {
+        logger.error("User with specified organisation is not found");
         res.status(404).send({
           error: {
             message: "User with specified organisation is not found",
@@ -258,6 +274,7 @@ const getHi5Count = (req, res, id, orgId) => {
       } else if (data.dataValues.hi5_quota_balance > 0) {
         return data.dataValues.hi5_quota_balance;
       } else {
+        logger.error("User hi5 balance is Empty");
         res.status(404).send({
           error: {
             message: "User hi5 balance is Empty",
@@ -265,7 +282,8 @@ const getHi5Count = (req, res, id, orgId) => {
         });
       }
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -297,7 +315,8 @@ const validateRecognition = (req, res, id) => {
         return true;
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error ",
@@ -326,7 +345,8 @@ const decrementHi5Count = async (req, res, id, orgId) => {
         });
       }
     })
-    .catch((err /*eslint-disable-line no-unused-vars*/) => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -344,7 +364,8 @@ const addHi5Entry = async (req, res, data, orgId) => {
         });
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      logger.error(err);
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -378,6 +399,7 @@ module.exports.giveHi5 = async (req, res) => {
           }
         })
         .catch((err) => {
+          logger.error(err);
           res.status(400).send({
             error: utility.getFormattedErrorObj(
               "invalid recognition",
@@ -388,6 +410,7 @@ module.exports.giveHi5 = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(err);
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid recognition",
