@@ -1,0 +1,19 @@
+{
+  "dev": {
+    "driver": {
+      "ENV": "DB_DIALECT"
+    },
+    "host": {
+      "ENV": "DB_HOST"
+    },
+    "user": {
+      "ENV": "DB_USER_NAME"
+    },
+    "password": {
+      "ENV": "DB_PASSWORD"
+    },
+    "database": {
+      "ENV": "DB_DATABASE_NAME"
+    }
+  }
+}
