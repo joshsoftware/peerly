@@ -40,7 +40,7 @@ NotificationBadgeComponent.propTypes = {
 };
 
 NotificationBadgeComponent.defaultProps = {
-  styles: { top: "-5px", right: "15px" },
+  styles: { top: "-6px", right: "12px" },
 };
 
 export default NotificationBadgeComponent;

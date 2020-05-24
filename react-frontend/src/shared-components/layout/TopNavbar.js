@@ -19,7 +19,7 @@ const BrandText = styled(Navbar.Brand)`
 `;
 
 const HighFiveIcon = styled(HighFiveComponent)`
-  height: 34px;
+  height: 28px;
 `;
 
 function TopNavbar() {
@@ -27,9 +27,9 @@ function TopNavbar() {
     <NavbarWrapper>
       <Container>
         <div className="w-100">
-          <BrandText>Peerly</BrandText>
+          <BrandText data-testid="brandHeader">Peerly</BrandText>
           <div className="text-right">
-            <Navbar.Text className="">
+            <Navbar.Text>
               <span className="d-sm-block d-none align-self-center">
                 {"This week's"}
               </span>
