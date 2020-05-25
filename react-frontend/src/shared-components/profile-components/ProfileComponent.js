@@ -26,7 +26,7 @@ const ProfileComponent = ({
 ProfileComponent.propTypes = {
   className: PropTypes.string,
   roundedCircle: PropTypes.bool,
-  profileImage: PropTypes.string.isRequired,
+  profileImage: PropTypes.string,
   profileName: PropTypes.string.isRequired,
 };
 

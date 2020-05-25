@@ -11,7 +11,7 @@ describe("Image component test", () => {
     expect(testImage).toBeInTheDocument();
   });
 
-  test("LabelComponent should equal to submit text", () => {
+  test("LabelComponent should equal to text", () => {
     const { getByText } = render(<LabelComponent text="name" />);
     expect(getByText("name")).toHaveTextContent("name");
   });
