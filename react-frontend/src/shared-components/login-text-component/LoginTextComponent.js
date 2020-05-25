@@ -2,12 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Col } from "react-bootstrap";
 import styled from "styled-components";
+
 import LabelComponent from "core-components/label/LabelComponent";
 
 const HrLine = styled.hr`
   width: 10%;
   background: white;
 `;
+
 const LoginTextComponent = ({
   className,
   orgPrimaryCoreValue,

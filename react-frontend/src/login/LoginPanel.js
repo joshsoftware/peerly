@@ -9,7 +9,7 @@ import LoginTextComponent from "shared-components/login-text-component/LoginText
 import Col from "core-components/col/ColComponent";
 
 const Wrapper = Styled.div`
-background: #334856;
+  background: #334856;
 `;
 const FirstCol = Styled(Col)`
   font: Helvetica Neue,Regular;
