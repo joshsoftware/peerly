@@ -1,14 +1,20 @@
 import React from "react";
-import { Navbar, Container } from "react-bootstrap";
+import Container, { Navbar } from "core-components/layout/LayoutComponent";
 import styled from "styled-components";
 
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import NotificationBadgeComponent from "core-components/notification/NotificationBadgeComponent";
 
+const NotificationWrapper = styled.div`
+  position: relative;
+  top: -8px;
+  right: 28px;
+`;
+
 const NavbarWrapper = styled(Navbar)`
   height: 100px;
   background: var(--white) 0% 0% no-repeat padding-box;
-  box-shadow: 0px 0px 10px #1b1c201a;
+  box-shadow: 0px 0px 10px var(--box-shadow-color);
   opacity: 1;
 `;
 
@@ -35,7 +41,9 @@ function TopNavbar() {
               </span>
             </Navbar.Text>
             <Navbar.Text>
-              <NotificationBadgeComponent count={2} />
+              <NotificationWrapper>
+                <NotificationBadgeComponent count={2} />
+              </NotificationWrapper>
               <HighFiveIcon />
             </Navbar.Text>
           </div>

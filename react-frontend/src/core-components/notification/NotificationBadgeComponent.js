@@ -2,12 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-const NotificationWrapper = styled.div`
-  position: relative;
-`;
-
 const Badge = styled.span`
-  border: 1px solid white;
+  border: 1px solid var(--white);
   position: absolute;
   padding: 1px 5px;
   font-size: 12px;
@@ -18,29 +14,20 @@ const Badge = styled.span`
   vertical-align: baseline;
   background-color: var(--sage);
   border-radius: 10px;
-  top: ${(props) => props.top && props.top};
-  right: ${(props) => props.right && props.right};
-  left: ${(props) => props.left && props.left};
-  bottom: ${(props) => props.bottom && props.bottom};
 `;
 
-const NotificationBadgeComponent = ({ count, styles }) => {
+const NotificationBadgeComponent = ({ count, className, onClick }) => {
   return (
-    <NotificationWrapper>
-      <Badge data-testid="count-display" {...styles}>
-        {count}
-      </Badge>
-    </NotificationWrapper>
+    <Badge onClick={onClick} className={className} data-testid="count-display">
+      {count}
+    </Badge>
   );
 };
 
 NotificationBadgeComponent.propTypes = {
   count: PropTypes.number.isRequired,
-  styles: PropTypes.object,
-};
-
-NotificationBadgeComponent.defaultProps = {
-  styles: { top: "-6px", right: "12px" },
+  className: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 export default NotificationBadgeComponent;
