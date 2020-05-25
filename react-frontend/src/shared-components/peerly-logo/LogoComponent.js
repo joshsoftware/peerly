@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import styled from "styled-components";
 
 import { Label } from "core-components/form/FormComponent";
@@ -51,6 +52,14 @@ const Logo = styled.div`
     left: 50%;
   }
 `;
+=======
+//import { Col, Row } from "react-bootstrap";
+import Styled from "styled-components";
+
+import LabelComponent from "core-components/Label/LabelComponent";
+import Row from "core-components/row/rowComponent";
+import Col from "core-components/col/colComponents";
+>>>>>>> 9962ed6... updated file with style guides
 
 const Logo = Styled.div`
 & {
@@ -58,14 +67,13 @@ const Logo = Styled.div`
   height: 50px;   
   position: absolute;
   top: 10px;
-  align-content: center;
-  transform: rotate(45deg);   
+  transform: rotate(45deg);
 }
 &: before {
   content: "";
-  width: 30px;
-  height: 30px;
-  border: 2px solid #FFFFFF;            
+  width: 20px;
+  height: 20px;
+  border: 2px solid black;              
   position: absolute;
   transform: translate(-50%,-50%);
   top: 50%;
@@ -73,11 +81,11 @@ const Logo = Styled.div`
 }  
 `;
 const PlusSign = Styled.div`
-  position: absolute;
-  top: 55%;
-  left: 55%;
-  transform: translate(-50%, -50%) rotate(-45deg)
-  color: #FFFFFF;
+position: absolute;
+top: 55%;
+left: 55%;
+transform: translate(-50%, -50%) rotate(-45deg);
+color: black;
 `;
 
 const LogoComponent = () => (
@@ -88,9 +96,16 @@ const LogoComponent = () => (
       </Logo>
     </Col>
     <Col>
+<<<<<<< HEAD
       <Label className="text-white h2 mt-5 pt-5 text-center w-100">
         Peerly
       </Label>
+=======
+      <LabelComponent
+        text="Peerly"
+        className="text-black mt-5 pt-1 text-center w-100"
+      />
+>>>>>>> 9962ed6... updated file with style guides
     </Col>
   </Row>
 );
