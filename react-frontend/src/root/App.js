@@ -1,14 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-
-import { DASHBOARD_ROUTES } from "constants/routeConstants";
+import LoginContainer from "login/LoginContainer";
 
 function App() {
   return (
     <div>
       <header>
-        <p>Welcome to Peerly</p>
-        <Link to={DASHBOARD_ROUTES.dashboardIndex}>dashboard</Link>
+        <LoginContainer />
       </header>
     </div>
   );

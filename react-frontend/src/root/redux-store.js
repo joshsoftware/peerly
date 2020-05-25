@@ -4,6 +4,7 @@ import createSagaMiddleware from "redux-saga";
 
 import rootReducer from "reducers/rootReducer.js";
 import rootSaga from "sagas/rootSaga.js";
+import loginSaga from "sagas/loginSaga";
 
 // create the saga middleware
 export const sagaMiddleware = createSagaMiddleware();
@@ -19,3 +20,4 @@ export const store = configureStore();
 
 // run the root saga
 sagaMiddleware.run(rootSaga);
+sagaMiddleware.run(loginSaga);
