@@ -31,6 +31,7 @@ func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(CoreValueHandlerTestSuite))
 	suite.Run(t, new(OrganizationHandlerTestSuite))
 	suite.Run(t, new(ReportedRecognitionHandlerTestSuite))
+	suite.Run(t, new(RecognitionModerationHandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {

@@ -32,6 +32,9 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	//reported recognition
 	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/report", createReportedRecognitionHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 
+	//recognition moderation
+	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/review", createRecognitionModerationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
 	//users
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 

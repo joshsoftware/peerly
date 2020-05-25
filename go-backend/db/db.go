@@ -24,4 +24,7 @@ type Storer interface {
 
 	//Reported Recognition
 	CreateReportedRecognition(context.Context, int64, ReportedRecognition) (ReportedRecognition, error)
+
+	//Recognition Moderation
+	CreateRecognitionModeration(context.Context, int64, RecognitionModeration) (RecognitionModeration, error)
 }
