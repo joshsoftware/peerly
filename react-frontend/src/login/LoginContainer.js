@@ -1,6 +1,6 @@
 import React from "react";
 import { createStore, applyMiddleware } from "redux";
-import { createSagaMiddleware } from "redux-saga";
+import createSagaMiddleware from "redux-saga";
 
 import Login from "login/LoginComponent";
 import Reducers from "reducers/loginReducer";
@@ -11,7 +11,7 @@ const store = createStore(Reducers, applyMiddleware(sagaMiddleware));
 sagaMiddleware.run(sagas);
 
 const LoginContainer = () => {
-  const responseGoogle = async ({ tokenObj }) => {
+  const responseGoogle = ({ tokenObj }) => {
     store.dispatch({ type: "LOGIN_API", payload: tokenObj.access_token });
   };
 
