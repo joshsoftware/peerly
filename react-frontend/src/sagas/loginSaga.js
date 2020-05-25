@@ -4,7 +4,13 @@ import PostJson from "utils/postJson";
 
 function* userLogin(action) {
   try {
-    const response = yield call(PostJson, { access_token: action.payload });
+    const response = yield call(PostJson, {
+      path: "http://localhost:3120/oauth/google",
+      apiToken: "",
+      signal: "",
+      additionalHeaders: "",
+      paramsObj: { access_token: action.payload },
+    });
     const responseObj = yield response.json();
     yield put({ type: "LOGIN_SUCCESS", value: responseObj.data });
   } catch (error) {
