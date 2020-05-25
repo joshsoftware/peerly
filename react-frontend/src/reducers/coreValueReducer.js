@@ -2,9 +2,9 @@ const initialState = [{}];
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "GET_LIST_SUCCESS":
+    case "CREATE_CORE_VALUE_SUCCESS":
       return action.payload;
-    case "GET_LIST_FAILURE":
+    case "CREATE_CORE_VALUE_FAILURE":
       return action.payload;
     default:
       return state;
