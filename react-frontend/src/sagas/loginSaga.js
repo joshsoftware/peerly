@@ -2,7 +2,7 @@ import { put, takeEvery, spawn, call } from "redux-saga/effects";
 
 import PostJson from "utils/postJson";
 
-function* userLogin(action) {
+export function* userLogin(action) {
   try {
     const response = yield call(PostJson, {
       path: "http://localhost:3120/oauth/google",
@@ -18,7 +18,7 @@ function* userLogin(action) {
   }
 }
 
-function* loginApi() {
+export function* loginApi() {
   yield takeEvery("LOGIN_API", userLogin);
 }
 
