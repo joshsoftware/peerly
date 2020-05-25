@@ -1,5 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
+
 import ButtonComponent from "core-components/button/ButtonComponent";
 
 it("ButtonComponent should equal to submit text", () => {
