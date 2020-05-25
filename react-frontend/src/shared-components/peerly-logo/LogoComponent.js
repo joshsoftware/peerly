@@ -17,7 +17,7 @@ const Logo = Styled.div`
   content: "";
   width: 20px;
   height: 20px;
-  border: 2px solid black;              
+  border: 2px solid #FFFFFF;              
   position: absolute;
   transform: translate(-50%,-50%);
   top: 50%;
@@ -29,7 +29,7 @@ position: absolute;
 top: 55%;
 left: 55%;
 transform: translate(-50%, -50%) rotate(-45deg);
-color: black;
+color: #FFFFFF;
 `;
 
 const LogoComponent = () => (
@@ -44,7 +44,7 @@ const LogoComponent = () => (
     <Col>
       <LabelComponent
         text="Peerly"
-        className="text-black mt-5 pt-1 text-center w-100"
+        className="text-white mt-5 pt-1 text-center w-100"
       />
     </Col>
   </Row>
