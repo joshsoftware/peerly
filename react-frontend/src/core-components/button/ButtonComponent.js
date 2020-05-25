@@ -14,7 +14,7 @@ ButtonComponent.propTypes = {
   type: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   size: PropTypes.oneOf(["sm", "lg"]),
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   icon: PropTypes.object,
 };
 
