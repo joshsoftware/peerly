@@ -1,12 +1,12 @@
 import React from "react";
-import { Col } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { AiOutlineMail } from "react-icons/ai";
 import Styled from "styled-components";
 
 import LogoComponent from "shared-components/peerly-logo/LogoComponent";
-import ButtonComponent from "core-components/Button/ButtonComponent";
+import ButtonComponent from "core-components/button/ButtonComponent";
 import LoginTextComponent from "shared-components/login-text-component/LoginTextComponent";
+import Col from "core-components/col/ColComponent";
 
 const Wrapper = Styled.div`
 background: #334856;
@@ -26,7 +26,7 @@ const LoginPanel = ({
   onClick,
 }) => (
   <Wrapper className="h-100 align-items-center d-flex flex-column">
-    <FirstCol className="h1">
+    <FirstCol className="h1 text-white">
       <LogoComponent />
     </FirstCol>
     <Col className="align-items-center d-flex justify-content-center ">
