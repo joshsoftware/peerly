@@ -25,11 +25,11 @@ const Logo = Styled.div`
 }  
 `;
 const PlusSign = Styled.div`
-position: absolute;
-top: 55%;
-left: 55%;
-transform: translate(-50%, -50%) rotate(-45deg);
-color: #FFFFFF;
+  position: absolute;
+  top: 55%;
+  left: 55%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  color: #FFFFFF;
 `;
 
 const LogoComponent = () => (
