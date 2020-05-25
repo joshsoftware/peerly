@@ -1,5 +1,6 @@
 import React from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import styled from "styled-components";
 
 import { Label } from "core-components/form/FormComponent";
@@ -60,6 +61,13 @@ import LabelComponent from "core-components/Label/LabelComponent";
 import Row from "core-components/row/rowComponent";
 import Col from "core-components/col/colComponents";
 >>>>>>> 9962ed6... updated file with style guides
+=======
+import Styled from "styled-components";
+
+import LabelComponent from "core-components/label/LabelComponent";
+import Row from "core-components/row/RowComponent";
+import Col from "core-components/col/ColComponent";
+>>>>>>> 92c7ad4... updated logo component by adding core component wrapper over it
 
 const Logo = Styled.div`
 & {
