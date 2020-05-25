@@ -1,5 +1,5 @@
 import React from "react";
-import LoginContainer from "login/LoginContainer";
+import LoginContainer from "practice/LoginContainer";
 
 function App() {
   return (

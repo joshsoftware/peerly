@@ -1,3 +1,3 @@
 export default {
-  apiBaseUrl: process.env.REACT_APP_API_BASE_URL || "/",
+  apiBaseUrl: "http://localhost:3120/" || "/",
 };
