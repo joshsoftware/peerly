@@ -8,6 +8,7 @@ const HrLine = styled.hr`
   width: 10%;
   background: white;
 `;
+
 const LoginTextComponent = ({
   className,
   orgPrimaryCoreValue,
