@@ -1,11 +1,11 @@
 import React from "react";
-import LoginContainer from "practice/LoginContainer";
+import CoreValueForm from "practice/CoreValueForm";
 
 function App() {
   return (
     <div>
       <header>
-        <LoginContainer />
+        <CoreValueForm />
       </header>
     </div>
   );

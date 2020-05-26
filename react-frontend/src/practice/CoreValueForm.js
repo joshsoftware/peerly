@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
 import { store } from "root/redux-store";
+import { useSelector } from "react-redux";
 
 const CoreValueForm = () => {
   const handleSubmit = (event) => {
@@ -10,10 +11,11 @@ const CoreValueForm = () => {
     let coreValueData = {
       org_id: formData.get("orgId"),
       text: formData.get("text"),
-      describtion: formData.get("describtion"),
+      description: formData.get("description"),
     };
     store.dispatch({ type: "CORE_VALUE_API", payload: coreValueData });
   };
+  let someVar = useSelector((state) => state.coreValueReducer);
 
   return (
     <div>
@@ -40,6 +42,19 @@ const CoreValueForm = () => {
         </Form.Group>
         <Button type="submit">Add Core Values</Button>
       </Form>
+      {someVar.map((el, key) => (
+        <h1 key={key}>
+          id:{el.id}
+          <br />
+          org_id: {el.org_id}
+          <br />
+          text: {el.text}
+          <br />
+          description: {el.description}
+          <br />
+          parent_core_value_id{el.parent_core_value_id}
+        </h1>
+      ))}
     </div>
   );
 };
