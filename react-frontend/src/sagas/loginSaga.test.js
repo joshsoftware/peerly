@@ -10,21 +10,23 @@ describe("SAGAS", () => {
   });
 
   it("should dispatch action 'LOGIN_API' with result from fetch users API", () => {
-    const mockResponse = { access_token: "Some content" };
+    const mockResponse = {
+      type: "LOGIN_API",
+      payload: {
+        access_token: "Some content",
+      },
+    };
     const generator = userLogin(mockResponse);
-    expect(generator.next(mockResponse).value).toEqual(
+    expect(generator.next().value).toEqual(
       call(PostJson, {
         path: "http://localhost:3120/oauth/google",
         apiToken: "",
         signal: "",
         additionalHeaders: "",
-        paramsObj: { access_token: undefined },
+        paramsObj: { access_token: mockResponse.payload },
       })
     );
+    generator.next();
+    expect(generator.next().done).toEqual(true);
   });
 });
-
-/* expect(generator.next().value)
-       .toEqual(put({type:"LOGIN_FAILURE", value: { error: 'user not found' }}))
-      expect(generator.next().done).toBeTruthy();
-    });*/
