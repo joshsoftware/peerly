@@ -17,7 +17,7 @@ describe("Pre Login component test", () => {
     expect(getByTestId("peerlyLogoComponent")).toHaveTextContent("+ Peerly");
   });
 
-  test("should equal to value", () => {
+  test("login text component should equal to value", () => {
     const { getByTestId } = render(
       <LoginTextComponent
         orgPrimaryCoreValue="Lets Create the Office Positive"
