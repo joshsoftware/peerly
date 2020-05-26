@@ -19,10 +19,7 @@ describe("SAGAS", () => {
     const generator = userLogin(mockResponse);
     expect(generator.next().value).toEqual(
       call(PostJson, {
-        path: "http://localhost:3120/oauth/google",
-        apiToken: "",
-        signal: "",
-        additionalHeaders: "",
+        path: "/oauth/google",
         paramsObj: { access_token: mockResponse.payload },
       })
     );
