@@ -1,6 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
-<<<<<<< HEAD
 import styled from "styled-components";
 
 import { Label } from "core-components/form/FormComponent";
@@ -53,21 +51,6 @@ const Logo = styled.div`
     left: 50%;
   }
 `;
-=======
-//import { Col, Row } from "react-bootstrap";
-import Styled from "styled-components";
-
-import LabelComponent from "core-components/Label/LabelComponent";
-import Row from "core-components/row/rowComponent";
-import Col from "core-components/col/colComponents";
->>>>>>> 9962ed6... updated file with style guides
-=======
-import Styled from "styled-components";
-
-import LabelComponent from "core-components/label/LabelComponent";
-import Row from "core-components/row/RowComponent";
-import Col from "core-components/col/ColComponent";
->>>>>>> 92c7ad4... updated logo component by adding core component wrapper over it
 
 const Logo = Styled.div`
 & {
@@ -104,16 +87,9 @@ const LogoComponent = () => (
       </Logo>
     </Col>
     <Col>
-<<<<<<< HEAD
       <Label className="text-white h2 mt-5 pt-5 text-center w-100">
         Peerly
       </Label>
-=======
-      <LabelComponent
-        text="Peerly"
-        className="text-white mt-5 pt-1 text-center w-100"
-      />
->>>>>>> 9962ed6... updated file with style guides
     </Col>
   </Row>
 );
