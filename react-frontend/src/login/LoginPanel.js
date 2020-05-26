@@ -6,7 +6,7 @@ import Styled from "styled-components";
 import LogoComponent from "shared-components/peerly-logo/LogoComponent";
 import ButtonComponent from "core-components/button/ButtonComponent";
 import LoginTextComponent from "shared-components/login-text-component/LoginTextComponent";
-import Col from "core-components/col/ColComponent";
+import { Col } from "core-components/grid/GridComponents";
 
 const Wrapper = Styled.div`
   background: #334856;

@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Col } from "react-bootstrap";
 import styled from "styled-components";
 
 import LabelComponent from "core-components/label/LabelComponent";
+import { Col } from "core-components/grid/GridComponents";
 
 const HrLine = styled.hr`
   width: 10%;
