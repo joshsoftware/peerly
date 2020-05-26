@@ -2,8 +2,7 @@ import React from "react";
 import Styled from "styled-components";
 
 import LabelComponent from "core-components/label/LabelComponent";
-import Row from "core-components/row/RowComponent";
-import Col from "core-components/col/ColComponent";
+import { Row, Col } from "core-components/grid/GridComponents";
 
 const Logo = Styled.div`
 & {
