@@ -1,14 +1,7 @@
 import React from "react";
-import { createStore, applyMiddleware } from "redux";
-import createSagaMiddleware from "redux-saga";
 
 import Login from "login/LoginComponent";
-import Reducers from "reducers/loginReducer";
-import sagas from "sagas/loginSaga";
-
-const sagaMiddleware = createSagaMiddleware();
-const store = createStore(Reducers, applyMiddleware(sagaMiddleware));
-sagaMiddleware.run(sagas);
+import { store } from "root/redux-store";
 
 const LoginContainer = () => {
   const responseGoogle = ({ tokenObj }) => {
