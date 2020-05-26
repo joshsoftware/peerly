@@ -1,14 +1,11 @@
-import { put, takeEvery, spawn, call } from "redux-saga/effects";
+import { put, takeEvery, call } from "redux-saga/effects";
 
 import PostJson from "utils/postJson";
 
 export function* userLogin(action) {
   try {
     const response = yield call(PostJson, {
-      path: "http://localhost:3120/oauth/google",
-      apiToken: "",
-      signal: "",
-      additionalHeaders: "",
+      path: "/oauth/google",
       paramsObj: { access_token: action.payload },
     });
     const responseObj = yield response.json();
@@ -20,8 +17,4 @@ export function* userLogin(action) {
 
 export function* loginApi() {
   yield takeEvery("LOGIN_API", userLogin);
-}
-
-export default function* rootSaga() {
-  yield spawn(loginApi);
 }
