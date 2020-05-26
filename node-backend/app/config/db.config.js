@@ -1,7 +1,7 @@
 /*eslint-disable  no-undef*/
-module.exports = function () {
-  let development = {
-    HOST: process.env.DATABASE_URL,
+module.exports = {
+  development: {
+    HOST: process.env.DB_HOST,
     USER: process.env.DB_USER_NAME,
     PASSWORD: process.env.DB_PASSWORD,
     DB: process.env.DB_NAME,
@@ -12,9 +12,9 @@ module.exports = function () {
       acquire: process.env.SEQUELIZE_CONN_ACQUIRE,
       idle: process.env.SEQUELIZE_CONN_IDLE,
     },
-  };
-  let test = {
-    HOST: process.env.DATABASE_URL,
+  },
+  test: {
+    HOST: process.env.DB_HOST,
     USER: process.env.DB_USER_NAME,
     PASSWORD: process.env.DB_PASSWORD,
     DB: process.env.TEST_DB_NAME,
@@ -25,12 +25,6 @@ module.exports = function () {
       acquire: process.env.SEQUELIZE_CONN_ACQUIRE,
       idle: process.env.SEQUELIZE_CONN_IDLE,
     },
-  };
-  switch (process.env.NODE_TYPE) {
-    case "test":
-      return test;
-    default:
-      return development;
-  }
+  },
 };
 /*eslint-enable  no-undef*/

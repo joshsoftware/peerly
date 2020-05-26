@@ -16,10 +16,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.BOOLEAN,
         notNull: true,
       },
-      moderated_comment: {
+      moderator_comment: {
         type: Sequelize.STRING,
         length: 45,
-        notNull: true,
+        notNull: false,
       },
       moderated_by: {
         type: Sequelize.INTEGER,
@@ -34,6 +34,7 @@ module.exports = (sequelize, Sequelize) => {
       timestamp: false,
       createdAt: false,
       updatedAt: false,
+      freezeTableName: true,
     }
   );
   return Recognition_Moderation;

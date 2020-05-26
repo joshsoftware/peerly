@@ -1,7 +1,8 @@
 const Sequelize = require("sequelize");
 
-const dbConfigFunction = require("../config/db.config.js");
-const dbConfig = dbConfigFunction();
+const env = process.env.NODE_ENV || "development";
+const dbConfig = require("../config/db.config.js")[env];
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -25,4 +26,15 @@ db.user_blacklisted_tokens = require("./user_blacklisted_tokens.model")(
   sequelize,
   Sequelize
 );
+db.recognitions = require("./recognitions.model")(sequelize, Sequelize);
+db.reported_recognitions = require("./reported_recognitions.model")(
+  sequelize,
+  Sequelize
+);
+db.recognition_moderation = require("./recognition_moderation.model")(
+  sequelize,
+  Sequelize
+);
+db.coreValues = require("./core_values.model")(sequelize, Sequelize);
+db.recognition_hi5 = require("./recognition_hi5.model")(sequelize, Sequelize);
 module.exports = db;

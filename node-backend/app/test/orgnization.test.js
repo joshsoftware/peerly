@@ -1,9 +1,10 @@
+let path = require("path");
+let dotEnvPath = path.resolve("../.env");
+require("dotenv").config({ path: dotEnvPath });
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
-const { setOrgId } = require("./variables");
-// This agent refers to PORT where program is runninng.
 
-const server = supertest.agent("http://localhost:3120");
+const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 const token = process.env.TOKEN;
 let id;
 // UNIT test begin
@@ -30,7 +31,6 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
         // HTTP status should be 200
         res.status.should.equal(201);
         id = res.body.data.id;
-        setOrgId(id);
         // Error key should be false.
         done();
       });
