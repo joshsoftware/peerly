@@ -30,12 +30,10 @@ const LoginPanel = ({
       <LogoComponent />
     </FirstCol>
     <Col className="align-items-center d-flex justify-content-center ">
-      <SignInButtonComponent
-        className="btn-light"
-        icon={<AiOutlineMail fontSize={15} />}
-        text={buttonText}
-        onClick={onClick}
-      />
+      <SignInButtonComponent className="btn-light" onClick={onClick}>
+        <AiOutlineMail fontSize={15} />
+        {buttonText}
+      </SignInButtonComponent>
     </Col>
     <Col className="d-none d-md-block d-lg-block">
       <LoginTextComponent
