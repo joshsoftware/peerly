@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 
 import LogoComponent from "shared-components/peerly-Logo/LogoComponent";
 import PreLoginImageComponent from "shared-components/prelogin-image-components/PreLoginImageComponent";
-import LoginTextComponent from "shared-components/login-text-component/LoginTextComponent";
+import PrimaryCoreValueComponent from "shared-components/primary-core-value-components/PrimaryCoreValueComponent";
 
 describe("Pre Login component test", () => {
   test("renders image component with image", () => {
@@ -19,12 +19,12 @@ describe("Pre Login component test", () => {
 
   test("login text component should equal to value", () => {
     const { getByTestId } = render(
-      <LoginTextComponent
+      <PrimaryCoreValueComponent
         orgPrimaryCoreValue="Lets Create the Office Positive"
         encouragementThought="positive"
       />
     );
-    expect(getByTestId("LoginTextComponent")).toHaveTextContent(
+    expect(getByTestId("PrimaryCoreValueComponent")).toHaveTextContent(
       "Lets Create the Office Positive positive"
     );
   });
