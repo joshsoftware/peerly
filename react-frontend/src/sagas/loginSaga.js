@@ -9,7 +9,11 @@ export function* userLogin(action) {
       paramsObj: { access_token: action.payload },
     });
     const responseObj = yield response.json();
-    yield put({ type: "LOGIN_SUCCESS", value: responseObj.data });
+    if (response.status == 200) {
+      yield put({ type: "LOGIN_SUCCESS", value: responseObj.data });
+    } else {
+      yield put({ type: "LOGIN_FAILURE", value: responseObj.error });
+    }
   } catch (error) {
     yield put({ type: "LOGIN_FAILURE", value: error });
   }
