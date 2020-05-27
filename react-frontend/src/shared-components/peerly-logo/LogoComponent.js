@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import LabelComponent from "core-components/label/LabelComponent";
+import { Label } from "core-components/form/FormComponent";
 import { Row, Col } from "core-components/grid/GridComponents";
 
 const PlusSign = styled.div`
@@ -9,7 +9,7 @@ const PlusSign = styled.div`
     content: " ";
     position: absolute;
     display: block;
-    background-color: black;
+    background-color: #fffff;
     width: 3px;
     height: 35px;
     left: 44%;
@@ -22,7 +22,7 @@ const PlusSign = styled.div`
     content: " ";
     position: absolute;
     display: block;
-    background-color: black;
+    background-color: #fffff;
     width: 3px;
     height: 35px;
     left: 45%;
@@ -44,7 +44,7 @@ const Logo = styled.div`
     content: "";
     width: 50px;
     height: 50px;
-    border: 3px solid black;
+    border: 3px solid #fffff;
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -60,10 +60,9 @@ const LogoComponent = () => (
       </Logo>
     </Col>
     <Col>
-      <LabelComponent
-        text="Peerly"
-        className="text-black h2 mt-5 pt-5 text-center w-100"
-      />
+      <Label className="text-white h2 mt-5 pt-5 text-center w-100">
+        Peerly
+      </Label>
     </Col>
   </Row>
 );
