@@ -12,7 +12,7 @@ const onclickMenuButton = () => {
 };
 
 const Img = styled.div`
-  hight: 12vh;
+  width: 12vh;
 `;
 
 const RecognitionTopBarComponent = (props) => {
