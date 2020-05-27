@@ -9,12 +9,12 @@ const HrLine = styled.hr`
   background: white;
 `;
 
-const LoginTextComponent = ({
+const PrimaryCoreValueComponent = ({
   className,
   orgPrimaryCoreValue,
   encouragementThought,
 }) => (
-  <Row className={className} data-testid="LoginTextComponent">
+  <Row className={className} data-testid="PrimaryCoreValueComponent">
     <LabelComponent
       text={orgPrimaryCoreValue}
       className="font-wight-bold h3 mx-4"
@@ -24,16 +24,16 @@ const LoginTextComponent = ({
   </Row>
 );
 
-LoginTextComponent.defaultProps = {
+PrimaryCoreValueComponent.defaultProps = {
   orgPrimaryCoreValue: "Lets Create the Office Positive",
   encouragementThought: "Encouragement Driven",
   className: "text-white text-center d-flex flex-column",
 };
 
-LoginTextComponent.propTypes = {
+PrimaryCoreValueComponent.propTypes = {
   className: PropTypes.string,
   orgPrimaryCoreValue: PropTypes.string.isRequired,
   encouragementThought: PropTypes.string.isRequired,
 };
 
-export default LoginTextComponent;
+export default React.memo(PrimaryCoreValueComponent);
