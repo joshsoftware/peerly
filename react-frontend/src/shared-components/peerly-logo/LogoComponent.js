@@ -1,49 +1,68 @@
 import React from "react";
-import Styled from "styled-components";
+import styled from "styled-components";
 
 import LabelComponent from "core-components/label/LabelComponent";
 import { Row, Col } from "core-components/grid/GridComponents";
 
-const Logo = Styled.div`
-& {
-  width: 50px;
-  height: 50px;   
-  position: absolute;
-  top: 10px;
-  transform: rotate(45deg);
-}
-&: before {
-  content: "";
-  width: 20px;
-  height: 20px;
-  border: 2px solid #FFFFFF;              
-  position: absolute;
-  transform: translate(-50%,-50%);
-  top: 50%;
-  left: 50%;
-}  
+const PlusSign = styled.div`
+  &: after {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: black;
+    width: 3px;
+    height: 35px;
+    left: 44%;
+    top: 14%;
+    bottom: 4%;
+    z-index: 9;
+    transform: rotate(135deg);
+  }
+  &: before {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: black;
+    width: 3px;
+    height: 35px;
+    left: 45%;
+    top: 14%;
+    bottom: 4%;
+    z-index: 9;
+    transform: rotate(45deg);
+  }
 `;
-const PlusSign = Styled.div`
-  position: absolute;
-  top: 55%;
-  left: 55%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  color: #FFFFFF;
+const Logo = styled.div`
+  & {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 32px;
+    transform: rotate(45deg);
+  }
+  &: before {
+    content: "";
+    width: 50px;
+    height: 50px;
+    border: 3px solid black;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
 `;
 
 const LogoComponent = () => (
   <Row className="d-flex flex-column" data-testid="peerlyLogoComponent">
     <Col className="d-flex justify-content-center">
       <Logo>
-        <PlusSign>
-          <LabelComponent text="+" className="text-center w-100" />
-        </PlusSign>
+        <PlusSign />
       </Logo>
     </Col>
     <Col>
       <LabelComponent
         text="Peerly"
-        className="text-white mt-5 pt-1 text-center w-100"
+        className="text-black h2 mt-5 pt-5 text-center w-100"
       />
     </Col>
   </Row>
