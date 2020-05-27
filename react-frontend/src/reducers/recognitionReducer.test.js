@@ -18,4 +18,15 @@ describe("recognition reducer", () => {
       error: {},
     });
   });
+
+  it("recognition reducer should handle 'GET_RECOGNITION_LIST_FAILURE' action", () => {
+    let reducerData = reducer(undefined, {
+      type: "GET_RECOGNITION_LIST_FAILURE",
+      payload: { code: "invalid token" },
+    });
+    expect(reducerData).toEqual({
+      list: [{}],
+      error: { code: "invalid token" },
+    });
+  });
 });
