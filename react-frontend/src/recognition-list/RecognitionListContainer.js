@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-
-import { store } from "root/redux-store";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const RecognnitionListContainer = () => {
   const recognitionList = useSelector((state) => state.recognitionReducer);
-  const [ListStatus, setListStatus] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!ListStatus) {
-      store.dispatch({ type: "RECOGNITION_GET_API", payload: {} });
-      setListStatus(true);
-    }
-  }, [ListStatus]);
+    dispatch({ type: "RECOGNITION_GET_API" });
+  }, [dispatch]);
+
+  if (recognitionList[0].code == "invalid_token") {
+    return <h1>unauthorised user</h1>;
+  } else if (recognitionList[0].code == "access_denied") {
+    return <h1>Permission required</h1>;
+  }
 
   return (
     <div>
       {recognitionList.map((el, key) => (
-        <h3 key={key}>{el.id}</h3>
+        <h3 key={key}>{el.text}</h3>
       ))}
     </div>
   );
