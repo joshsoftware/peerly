@@ -25,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:nowatch": "CI=true react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -59,7 +60,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:nowatch"
     }
   },
   "lint-staged": {
