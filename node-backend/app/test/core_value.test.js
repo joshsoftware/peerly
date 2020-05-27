@@ -12,7 +12,9 @@ let id;
 let orgId;
 
 describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function () {
-  /*eslint-disable-line no-undef*/ before(function () {
+  /*eslint-disable-line no-undef*/ before((done) => {
+    this.timeout(100);
+    setTimeout(done, 100);
     server
       .post("/organisations")
       .send({
@@ -28,16 +30,14 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(201) // THis is HTTP response
+      .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 200
         res.status.should.equal(201);
         orgId = res.body.data.id;
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create core value with right Contents,url", function (done) {
-    // post request for create core value successfully
     server
       .post(`/organisations/${orgId}/core_values`)
       .send({

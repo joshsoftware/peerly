@@ -1,41 +1,40 @@
+let path = require("path");
+let dotEnvPath = path.resolve("../.env");
+require("dotenv").config({ path: dotEnvPath });
+
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
-// This agent refers to PORT where program is runninng.
 
-const server = supertest.agent("http://localhost:3120");
+const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 const token = process.env.TOKEN;
 let id;
 let orgId;
 // UNIT test begin
 
 describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
-  /*eslint-disable-line no-undef*/ before(function () {
-    it(/*eslint-disable-line no-undef*/ "post request for create organisation with write Contents,url", function (done) {
-      // post request for create organisation successfully
-      server
-        .post("/organisations")
-        .send({
-          name: "Tata",
-          contact_email: "KGF@gmail.com",
-          domain_name: "@kgf.com",
-          subscription_status: 1,
-          subscription_valid_upto: "1587731342",
-          hi5_limit: 5000,
-          hi5_quota_renewal_frequency: "renew",
-          timezone: "india",
-        })
-        .expect("Content-type", /json/)
-        .set("Authorization", "Bearer " + token)
-        .set("Accept", "application/vnd.peerly.v1")
-        .expect(201) // THis is HTTP response
-        .end(function (err /*eslint-disable-line no-undef*/, res) {
-          // HTTP status should be 200
-          res.status.should.equal(201);
-          orgId = res.body.data.id;
-          // Error key should be false.
-          done();
-        });
-    });
+  /*eslint-disable-line no-undef*/ before((done) => {
+    this.timeout(100);
+    setTimeout(done, 100);
+    server
+      .post("/organisations")
+      .send({
+        name: "Tata",
+        contact_email: "KGF@gmail.com",
+        domain_name: "@kgf.com",
+        subscription_status: 1,
+        subscription_valid_upto: "1587731342",
+        hi5_limit: 5000,
+        hi5_quota_renewal_frequency: "renew",
+        timezone: "india",
+      })
+      .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect(201)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(201);
+        orgId = res.body.data.id;
+      });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for badges value with right Contents,url", function (done) {
