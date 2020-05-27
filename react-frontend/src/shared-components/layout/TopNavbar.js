@@ -1,7 +1,7 @@
 import React from "react";
-import Container, { Navbar } from "core-components/layout/LayoutComponent";
 import styled from "styled-components";
 
+import Container, { Navbar } from "core-components/navbar/NavbarComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import NotificationBadgeComponent from "core-components/notification/NotificationBadgeComponent";
 
