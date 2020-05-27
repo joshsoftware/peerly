@@ -6,7 +6,7 @@ export function* getRecognitionList(action) {
     const response = yield call(GetJson, {
       path: "recognitions",
       apiToken:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJub2RlLnBlZXJseS5jb20iLCJzdWIiOjE4LCJhdWQiOiJwZWVybHkuY29tIiwibmJmIjoxNTkwNDY1MDM0LCJodHRwczovL3BlZXJseS5jb20iOnsicm9sZUlkIjozLCJvcmdJZCI6Mywib3JnTmFtZSI6Impvc2gifSwiaWF0IjoxNTkwNDY1MDM0LCJleHAiOjE1OTA1MDEwMzR9.on9odD7zsg4sjoEX_iEhY5A9u5oaqJANIN5B4_pJAHM",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJub2RlLnBlZXJseS5jb20iLCJzdWIiOjE5LCJhdWQiOiJwZWVybHkuY29tIiwibmJmIjoxNTkwNTQ3MzA1LCJodHRwczovL3BlZXJseS5jb20iOnsicm9sZUlkIjozLCJvcmdJZCI6Mywib3JnTmFtZSI6Impvc2gifSwiaWF0IjoxNTkwNTQ3MzA1LCJleHAiOjE1OTA1ODMzMDV9.5zNi8j6IZHa0Y1lGBFjeyaNvUrh82Gf0kmOAZQHvuXg",
       paramsObj: action.payload,
     });
     const responseObj = yield response.json();
@@ -18,11 +18,11 @@ export function* getRecognitionList(action) {
     } else {
       yield put({
         type: "GET_RECOGNITION_LIST_FAILURE",
-        payload: responseObj.error,
+        payload: [responseObj.error],
       });
     }
   } catch (error) {
-    yield put({ type: "GET_RECOGNITION_LIST_FAILURE", payload: error });
+    yield put({ type: "GET_RECOGNITION_LIST_FAILURE", payload: [error] });
   }
 }
 
@@ -30,6 +30,6 @@ export function* recognitionApi() {
   yield takeEvery("RECOGNITION_GET_API", getRecognitionList);
 }
 
-export default function* rootSaga() {
+export default function* rootRecognitionSaga() {
   yield spawn(recognitionApi);
 }
