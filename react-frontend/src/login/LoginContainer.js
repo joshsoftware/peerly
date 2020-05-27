@@ -4,13 +4,20 @@ import Login from "login/LoginComponent";
 import { store } from "root/redux-store";
 
 const LoginContainer = () => {
-  const responseGoogle = ({ tokenObj }) => {
+  const responseGoogleOnSuccess = ({ tokenObj }) => {
     store.dispatch({ type: "LOGIN_API", payload: tokenObj.access_token });
+  };
+
+  const responseGoogleOnFailure = (error) => {
+    store.dispatch({ type: "LOGIN_FAILURE", value: error });
   };
 
   return (
     <div data-testid="LoginContainer">
-      <Login responseGoogle={responseGoogle} />
+      <Login
+        responseGoogleOnSuccess={responseGoogleOnSuccess}
+        responseGoogleOnFailure={responseGoogleOnFailure}
+      />
     </div>
   );
 };
