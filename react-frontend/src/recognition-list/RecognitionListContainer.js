@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
+import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
+
 const RecognnitionListContainer = () => {
   const recognitionList = useSelector((state) => state.recognitionReducer);
   const dispatch = useDispatch();
@@ -9,15 +12,15 @@ const RecognnitionListContainer = () => {
     dispatch({ type: "RECOGNITION_GET_API" });
   }, [dispatch]);
 
-  if (recognitionList[0].code == "invalid_token") {
-    return <h1>unauthorised user</h1>;
-  } else if (recognitionList[0].code == "access_denied") {
-    return <h1>Permission required</h1>;
+  if (recognitionList.error.code === "invalid_token") {
+    return <SessionTimeoutComponent />;
+  } else if (recognitionList.error.code === "access_denied") {
+    return <UnauthorisedErrorComponent />;
   }
 
   return (
     <div>
-      {recognitionList.map((el, key) => (
+      {recognitionList.list.map((el, key) => (
         <h3 key={key}>{el.text}</h3>
       ))}
     </div>
