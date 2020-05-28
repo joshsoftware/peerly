@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
 
 import appReducer from "reducers/appReducer.js";
-import recognitionReducer from "reducers/recognitionReducer";
+import listRecognitionReducer from "reducers/listRecognitionReducer";
 
 export default combineReducers({
   appReducer,
-  recognitionReducer,
+  listRecognitionReducer,
 });
