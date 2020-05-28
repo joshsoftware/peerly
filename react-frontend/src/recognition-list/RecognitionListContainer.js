@@ -5,11 +5,11 @@ import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 
 const RecognnitionListContainer = () => {
-  const recognitionList = useSelector((state) => state.recognitionReducer);
+  const recognitionList = useSelector((state) => state.listRecognitionReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: "RECOGNITION_GET_API" });
+    dispatch({ type: "LIST_RECOGNITION_API" });
   }, [dispatch]);
 
   if (recognitionList.error.code === "invalid_token") {
