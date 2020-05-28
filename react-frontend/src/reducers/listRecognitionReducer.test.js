@@ -1,7 +1,7 @@
 import reducer, { defaultState } from "reducers/listRecognitionReducer";
 import actionGenerator from "utils/actionGenerator";
 
-describe("recognition reducer", () => {
+describe("list recognition reducer", () => {
   const status = actionGenerator("LIST_RECOGNITION");
 
   it("recognition reducer should return the initial state", () => {
@@ -11,7 +11,7 @@ describe("recognition reducer", () => {
     });
   });
 
-  it("recognition reducer should handle 'GET_RECOGNITION_LIST_SUCCESS' action", () => {
+  it("recognition reducer should handle success action", () => {
     let reducerData = reducer(defaultState, {
       type: status.success,
       payload: [{ id: 1 }],
@@ -22,7 +22,7 @@ describe("recognition reducer", () => {
     });
   });
 
-  it("recognition reducer should handle 'GET_RECOGNITION_LIST_FAILURE' action", () => {
+  it("recognition reducer should handle failure action", () => {
     let reducerData = reducer(defaultState, {
       type: status.failure,
       payload: { code: "invalid token" },
