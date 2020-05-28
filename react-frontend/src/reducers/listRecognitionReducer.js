@@ -1,6 +1,6 @@
 import actionGenerator from "utils/actionGenerator";
 
-const defaultState = {
+export const defaultState = {
   list: [{}],
   error: {},
 };
