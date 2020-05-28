@@ -16,7 +16,7 @@ const Img = styled.div`
 `;
 
 const RecognitionTopBarComponent = (props) => {
-  const { recognition_on, recognition_for, core_value } = props;
+  const { recognitionOn, recognitionFor, coreValue } = props;
   return (
     <Col>
       <Row className="d-flex justify-content-end">
@@ -29,32 +29,32 @@ const RecognitionTopBarComponent = (props) => {
       <Row className="d-flex flex-column-left">
         <Img>
           <ImageComponent
-            src={recognition_for.image}
+            src={recognitionFor.name}
             roundedCircle="true"
             alt="profile"
           />
         </Img>
         <Row className="d-flex flex-column text-start ml-4">
           <LabelComponent
-            text={recognition_for.name}
+            text={recognitionFor.image}
             className="font-weight-bold "
           />
           <Row className="d-flex flex-row">
             <LabelComponent text="got a high five for" />
             <LabelComponent
-              text={core_value}
+              text={coreValue}
               className="font-weight-bold ml-1"
             />
           </Row>
-          <LabelComponent text={recognition_on} className="text-muted" />
+          <LabelComponent text={recognitionOn} className="text-muted" />
         </Row>
       </Row>
     </Col>
   );
 };
 RecognitionTopBarComponent.propTypes = {
-  recognition_for: PropTypes.object.isRequired,
-  recognition_on: PropTypes.string.isRequired,
-  core_value: PropTypes.string.isRequired,
+  recognitionFor: PropTypes.object.isRequired,
+  recognitionOn: PropTypes.string.isRequired,
+  coreValue: PropTypes.string.isRequired,
 };
 export default React.memo(RecognitionTopBarComponent);
