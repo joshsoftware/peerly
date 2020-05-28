@@ -1,13 +1,16 @@
+import actionGenerator from "utils/actionGenerator";
+
 const defaultState = {
   list: [{}],
   error: {},
 };
+const status = actionGenerator("LIST_RECOGNITION");
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case "GET_RECOGNITION_LIST_SUCCESS":
+    case status.success:
       return { ...state, list: action.payload };
-    case "GET_RECOGNITION_LIST_FAILURE":
+    case status.failure:
       return { ...state, error: action.payload };
     default:
       return state;
