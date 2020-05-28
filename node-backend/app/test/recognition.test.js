@@ -1,14 +1,17 @@
 let path = require("path");
 let dotEnvPath = path.resolve("../.env");
 require("dotenv").config({ path: dotEnvPath });
+const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 const token = process.env.TOKEN;
+
+let tokenData = jwtValidate.getData("barear " + token);
 // UNIT test begin
-let orgId;
+let orgId = tokenData.orgId;
 let core_value_id;
 let sampleData;
 
@@ -17,16 +20,11 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
     this.timeout(200);
     setTimeout(done, 200);
     server
-      .post("/organisations")
+      .post(`/organisations/${orgId}/core_values`)
       .send({
-        name: "Tata",
-        contact_email: "KGF@gmail.com",
-        domain_name: "@kgf.com",
-        subscription_status: 1,
-        subscription_valid_upto: "1587731342",
-        hi5_limit: 5000,
-        hi5_quota_renewal_frequency: "renew",
-        timezone: "india",
+        text: "Tata",
+        description: "good",
+        parent_core_value_id: 2,
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -34,23 +32,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         res.status.should.equal(201);
-        orgId = res.body.data.id;
-
-        server
-          .post(`/organisations/${orgId}/core_values`)
-          .send({
-            text: "Tata",
-            description: "good",
-            parent_core_value_id: 2,
-          })
-          .expect("Content-type", /json/)
-          .set("Authorization", "Bearer " + token)
-          .set("Accept", "application/vnd.peerly.v1")
-          .expect(201)
-          .end(function (err /*eslint-disable-line no-undef*/, res) {
-            res.status.should.equal(201);
-            core_value_id = res.body.data.id;
-          });
+        core_value_id = res.body.data.id;
       });
   });
 
