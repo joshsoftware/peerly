@@ -29,5 +29,3 @@ CoreValueComponent.propTypes = {
 };
 
 export default CoreValueComponent;
-
-/**<Icon className={IconClassName} /> */
