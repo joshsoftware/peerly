@@ -1,12 +1,12 @@
 const defaultState = {
-  token: null,
-  error: "null",
+  data: { token: null },
+  error: { message: null },
 };
 
 export default function access_token(state = defaultState, action) {
   switch (action.type) {
     case "LOGIN_SUCCESS":
-      return { ...state, token: action.value };
+      return { ...state, data: action.value };
     case "LOGIN_FAILURE":
       return { ...state, error: action.value };
     default:
