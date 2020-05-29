@@ -68,4 +68,4 @@ const LogoComponent = () => (
   </Row>
 );
 
-export default LogoComponent;
+export default React.memo(LogoComponent);
