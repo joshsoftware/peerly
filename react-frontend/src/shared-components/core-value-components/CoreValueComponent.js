@@ -10,30 +10,28 @@ const HrLine = styled.hr`
   background: white;
 `;
 
-const PrimaryCoreValueComponent = ({
+const CoreValueComponent = ({
   className,
-  orgPrimaryCoreValue,
+  orgCoreValue,
   encouragementThought,
 }) => (
-  <Row className={className} data-testid="PrimaryCoreValueComponent">
-    <Form.Label className="font-wight-bold h3 mx-4">
-      {orgPrimaryCoreValue}
-    </Form.Label>
+  <Row className={className} data-testid="CoreValueComponent">
+    <Form.Label className="font-wight-bold h3 mx-4">{orgCoreValue}</Form.Label>
     <HrLine />
     <Form.Label>{encouragementThought}</Form.Label>
   </Row>
 );
 
-PrimaryCoreValueComponent.defaultProps = {
-  orgPrimaryCoreValue: "Lets Create the Office Positive",
+CoreValueComponent.defaultProps = {
+  orgCoreValue: "Lets Create the Office Positive",
   encouragementThought: "Encouragement Driven",
   className: "text-white bg-dark text-center d-flex flex-column",
 };
 
-PrimaryCoreValueComponent.propTypes = {
+CoreValueComponent.propTypes = {
   className: PropTypes.string,
-  orgPrimaryCoreValue: PropTypes.string.isRequired,
+  orgCoreValue: PropTypes.string.isRequired,
   encouragementThought: PropTypes.string.isRequired,
 };
 
-export default React.memo(PrimaryCoreValueComponent);
+export default React.memo(CoreValueComponent);
