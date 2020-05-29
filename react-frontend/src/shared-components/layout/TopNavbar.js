@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Navbar } from "core-components/navbar/NavbarComponent";
 import { Container } from "core-components/grid/GridComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
-import NotificationBadgeComponent from "core-components/notification/NotificationBadgeComponent";
+import NotificationBadgeComponent from "shared-components/notification/NotificationBadgeComponent";
 
 const NotificationWrapper = styled.div`
   position: relative;
