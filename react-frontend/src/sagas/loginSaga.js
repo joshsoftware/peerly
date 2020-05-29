@@ -15,7 +15,6 @@ export function* userLogin(action) {
       yield put({ type: "LOGIN_FAILURE", value: responseObj.error });
     }
   } catch (error) {
-    //net::ERR_CONNECTION_REFUSED TypeError: Failed to fetch
     yield put({ type: "LOGIN_FAILURE", value: error });
   }
 }
