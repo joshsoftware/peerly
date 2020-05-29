@@ -52,7 +52,6 @@ const Logo = styled.div`
   }
 `;
 
-
 const LogoComponent = () => (
   <Row className="d-flex flex-column" data-testid="peerlyLogoComponent">
     <Col className="d-flex justify-content-center">
