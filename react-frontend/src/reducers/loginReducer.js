@@ -1,6 +1,6 @@
 const defaultState = {
   token: null,
-  error: null,
+  error: "null",
 };
 
 export default function access_token(state = defaultState, action) {
