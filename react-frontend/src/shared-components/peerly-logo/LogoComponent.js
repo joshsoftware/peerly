@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Label } from "core-components/form/FormComponent";
-import { Row, Col } from "core-components/grid/GridComponents";
+import { Form } from "core-components/form/FormComponent";
+import { Row, Col } from "core-components/grid/GridComponent";
 
 const PlusSign = styled.div`
   &: after {
@@ -61,9 +61,9 @@ const LogoComponent = () => (
       </Logo>
     </Col>
     <Col>
-      <Label className="text-white h2 mt-5 pt-5 text-center w-100">
+      <Form.Label className="text-white h2 mt-5 pt-5 text-center w-100">
         Peerly
-      </Label>
+      </Form.Label>
     </Col>
   </Row>
 );
