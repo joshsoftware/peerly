@@ -3,18 +3,27 @@ import expect from "expect";
 
 describe("post reducer", () => {
   it("should return the initial state", () => {
-    expect(reducer(undefined, {})).toEqual({ token: null });
+    expect(reducer(undefined, {})).toEqual({
+      data: { token: null },
+      error: { message: null },
+    });
   });
 
   it("should handle 'LOGIN_SUCCESS' action", () => {
-    expect(reducer({}, { type: "LOGIN_SUCCESS", value: "token" })).toEqual(
-      "token"
-    );
+    expect(
+      reducer({}, { type: "LOGIN_SUCCESS", value: { token: "token" } })
+    ).toEqual({
+      data: {
+        token: "token",
+      },
+    });
   });
 
   it("should handle 'LOGIN_FAILURE' action", () => {
-    expect(reducer({}, { type: "LOGIN_FAILURE", value: "error" })).toEqual(
-      "error"
-    );
+    expect(
+      reducer({}, { type: "LOGIN_FAILURE", value: { message: "error" } })
+    ).toEqual({
+      error: { message: "error" },
+    });
   });
 });
