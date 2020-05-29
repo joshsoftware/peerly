@@ -1,26 +1,26 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { Badge } from "core-components/badge/BadgeComponent";
 
-const Badge = styled.span`
+const NotificationBadge = styled(Badge)`
   border: 1px solid var(--white);
   position: absolute;
-  padding: 1px 5px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
   color: var(--white);
-  text-align: center;
-  vertical-align: baseline;
   background-color: var(--sage);
-  border-radius: 10px;
+  font-size: 60%;
 `;
 
 const NotificationBadgeComponent = ({ count, className, onClick }) => {
   return (
-    <Badge onClick={onClick} className={className} data-testid="count-display">
+    <NotificationBadge
+      onClick={onClick}
+      className={className}
+      data-testid="count-display"
+      pill
+    >
       {count}
-    </Badge>
+    </NotificationBadge>
   );
 };
 

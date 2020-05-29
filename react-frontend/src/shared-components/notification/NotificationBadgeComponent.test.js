@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import NotificationBadgeComponent from "core-components/notification/NotificationBadgeComponent";
+import NotificationBadgeComponent from "shared-components/notification/NotificationBadgeComponent";
 
 describe("Show count in notification test", () => {
   test("renders count notification ", () => {
