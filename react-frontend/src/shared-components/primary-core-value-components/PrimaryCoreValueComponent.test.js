@@ -6,7 +6,7 @@ it("login text component should equal to value", () => {
   const { getByTestId } = render(
     <PrimaryCoreValueComponent
       orgPrimaryCoreValue="Lets Create the Office Positive"
-      encouragementThought="positive"
+      encouragementThought=" positive"
     />
   );
   expect(getByTestId("PrimaryCoreValueComponent")).toHaveTextContent(
