@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Row } from "react-bootstrap";
-import LabelComponent from "core-components/label/LabelComponent";
+import { Row } from "core-components/grid/GridComponent";
+import { Form } from "core-components/form/FormComponent";
 import ImageComponent from "core-components/image/ImageComponent";
 
 const Border = styled.fieldset`
@@ -23,28 +23,35 @@ const Img = styled.div`
   margin-right: 5%;
 `;
 
-const RecognitionTextComponent = ({ recognitionText, recognitionBy }) => (
+const RecognitionTextComponent = ({
+  recognitionText,
+  recognitionByName,
+  recognitionByImage,
+}) => (
   <Row className="d-flex flex-column">
     <Border>
       <Legend>“</Legend>
-      <LabelComponent text={recognitionText} className="px-2 pb-2 pt-0" />
+      <Form.Label className="px-2 pb-2 pt-0">{recognitionText}</Form.Label>
     </Border>
     <Row className="d-flex justify-content-end">
-      <LabelComponent
-        text={recognitionBy.name}
-        className="font-weight-bold text-dark"
-      />
+      <Form.Label className="font-weight-bold text-dark">
+        {recognitionByName}
+      </Form.Label>
       <Img>
-        <ImageComponent src={recognitionBy.image} roundedCircle="true" />
+        <ImageComponent src={recognitionByImage} roundedCircle="true" />
       </Img>
     </Row>
   </Row>
 );
 
 RecognitionTextComponent.propTypes = {
-  className: PropTypes.string,
   recognitionText: PropTypes.string.isRequired,
-  recognitionBy: PropTypes.object.isRequired,
+  recognitionByName: PropTypes.string.isRequired,
+  recognitionByImage: PropTypes.string.isRequired,
+};
+
+RecognitionTextComponent.defaultProps = {
+  recognitionByImage: "https://i.picsum.photos/id/2/200/200.jpg",
 };
 
 export default React.memo(RecognitionTextComponent);

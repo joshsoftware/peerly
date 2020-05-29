@@ -1,16 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Row, Card, Col } from "react-bootstrap";
+
+import { Row, Col } from "core-components/grid/GridComponent";
+import { Card } from "core-components/card/CardComponent";
 import ImageComponent from "core-components/image/ImageComponent";
 import RecognitionTopBarComponent from "./RecognitionTopBarComponent";
 import RecognitionTextComponent from "./RecognitionTextComponent";
 import CoreValueIconComponent from "shared-components/core-value-icon-components/CoreValueIconComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 
+const giveHighFive = () => {
+  //to to for give high five
+};
+
 const ImgD = styled.div`
   border-radius: 20px;
-  height: 70%;
+  height: auto;
   width: auto;
   overflow: hidden;
 `;
@@ -27,15 +33,7 @@ const HighFive = styled.div`
   bottom: 50px;
 `;
 
-const RecognitionCardComponent = ({
-  recognitionFor,
-  recognitionBy,
-  recognitionOn,
-  recognitionText,
-  coreValue,
-  highFiveCount,
-  image,
-}) => (
+const RecognitionCardComponent = ({ recognition }) => (
   <Card
     className="my-4 mx-2 shadow p-3 mb-4 border border-secondary bg-light grey"
     style={{ borderRadius: "36px" }}
@@ -44,23 +42,25 @@ const RecognitionCardComponent = ({
       <Row>
         <Col sm="12" md="7">
           <RecognitionTopBarComponent
-            recognitionFor={recognitionFor}
-            recognitionOn={recognitionOn}
-            coreValue={coreValue}
+            recognitionForName={recognition.recognitionForName}
+            recognitionForImage={recognition.recognitionForImage}
+            recognitionOn={recognition.recognitionOn}
+            coreValue={recognition.coreValue}
           />
           <ImgM className="bg-dark d-sm-block d-md-none mt-2">
-            <ImageComponent src={image} />
+            <ImageComponent src={recognition.coreValueImage} />
           </ImgM>
           <RecognitionTextComponent
-            recognitionText={recognitionText}
-            recognitionBy={recognitionBy}
+            recognitionText={recognition.recognitionText}
+            recognitionByName={recognition.recognitionByName}
+            recognitionByImage={recognition.recognitionByImage}
           />
         </Col>
         <Col className="d-none d-md-block">
           <Col className=" d-flex  justify-content-center">
             <Row className="d-flex flex-column">
               <ImgD>
-                <ImageComponent src={image} />
+                <ImageComponent src={recognition.coreValueImage} />
               </ImgD>
               <Col className="d-flex justify-content-center align-items-center">
                 <CoreValueIconComponent size="50px" color="red" />
@@ -69,25 +69,25 @@ const RecognitionCardComponent = ({
           </Col>
         </Col>
       </Row>
-      <HighFive>
+      <HighFive onClick={giveHighFive}>
         <HighFiveComponent />
       </HighFive>
     </Card.Body>
     <Card.Footer className="bg-light grey">
       <span className="font-weight-bold text-muted">+</span>
-      <span className="font-weight-bold text-dark">{highFiveCount}</span>
+      <span className="font-weight-bold text-dark">
+        {recognition.highFiveCount}
+      </span>
     </Card.Footer>
   </Card>
 );
 
 RecognitionCardComponent.propTypes = {
-  recognitionFor: PropTypes.object.isRequired,
-  recognitionBy: PropTypes.object.isRequired,
-  recognitionOn: PropTypes.string.isRequired,
-  recognitionText: PropTypes.string.isRequired,
-  coreValue: PropTypes.string.isRequired,
-  highFiveCount: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
+  recognition: PropTypes.object.isRequired,
+};
+
+RecognitionCardComponent.defaultProps = {
+  coreValueImage: "https://i.picsum.photos/id/654/300/200.jpg",
 };
 
 export default React.memo(RecognitionCardComponent);
