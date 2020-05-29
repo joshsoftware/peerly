@@ -10,9 +10,11 @@ const organizations = require("../models/organizations.model")(
   sequelize,
   Sequelize
 );
+const users = require("../models/users.model")(sequelize, Sequelize);
 const badges = require("../models/badges.model")(sequelize, Sequelize);
 describe(/*eslint-disable-line no-undef*/ "remove data from test db", function () {
   /*eslint-disable-line no-undef*/ before(function () {
+    users.destroy({ where: {} });
     organizations.destroy({ where: {} });
     core_value.destroy({ where: {} });
     badges.destroy({ where: {} });
