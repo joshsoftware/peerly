@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import Container, { Navbar } from "core-components/navbar/NavbarComponent";
+import { Navbar } from "core-components/navbar/NavbarComponent";
+import { Container } from "core-components/grid/GridComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import NotificationBadgeComponent from "core-components/notification/NotificationBadgeComponent";
 
