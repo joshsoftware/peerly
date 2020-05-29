@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Row } from "react-bootstrap";
 import styled from "styled-components";
-import LabelComponent from "core-components/Label/LabelComponent";
+
+import { Row } from "core-components/grid/GridComponent";
+import { Form } from "core-components/form/FormComponent";
 
 const HrLine = styled.hr`
   width: 10%;
@@ -15,19 +16,18 @@ const PrimaryCoreValueComponent = ({
   encouragementThought,
 }) => (
   <Row className={className} data-testid="PrimaryCoreValueComponent">
-    <LabelComponent
-      text={orgPrimaryCoreValue}
-      className="font-wight-bold h3 mx-4"
-    />
+    <Form.Label className="font-wight-bold h3 mx-4">
+      {orgPrimaryCoreValue}
+    </Form.Label>
     <HrLine />
-    <LabelComponent text={encouragementThought} />
+    <Form.Label>{encouragementThought}</Form.Label>
   </Row>
 );
 
 PrimaryCoreValueComponent.defaultProps = {
   orgPrimaryCoreValue: "Lets Create the Office Positive",
   encouragementThought: "Encouragement Driven",
-  className: "text-white text-center d-flex flex-column",
+  className: "text-white bg-dark text-center d-flex flex-column",
 };
 
 PrimaryCoreValueComponent.propTypes = {
