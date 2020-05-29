@@ -10,7 +10,7 @@ describe("RECOGNITION SAGAS", () => {
       takeEvery("LIST_RECOGNITION_API", getRecognitionList)
     );
     const status = generator.next().done;
-    expect(status).toBeTruthy();
+    expect(status).toEqual(true);
   });
 
   it("should dispatch action 'LIST_RECOGNITION_API' for fetch list", () => {
@@ -22,6 +22,6 @@ describe("RECOGNITION SAGAS", () => {
       })
     );
     expect(generator.next().done).toEqual(false);
-    expect(generator.next().done).toBeTruthy();
+    expect(generator.next().done).toEqual(true);
   });
 });
