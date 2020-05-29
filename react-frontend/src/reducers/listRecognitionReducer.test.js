@@ -4,14 +4,14 @@ import actionGenerator from "utils/actionGenerator";
 describe("list recognition reducer", () => {
   const status = actionGenerator("LIST_RECOGNITION");
 
-  it("recognition reducer should return the initial state", () => {
+  it("list recognition reducer should return the initial state", () => {
     expect(reducer(defaultState, {})).toEqual({
       list: [{}],
       error: {},
     });
   });
 
-  it("recognition reducer should handle success action", () => {
+  it("list recognition reducer should handle success action", () => {
     let reducerData = reducer(defaultState, {
       type: status.success,
       payload: [{ id: 1 }],
@@ -22,7 +22,7 @@ describe("list recognition reducer", () => {
     });
   });
 
-  it("recognition reducer should handle failure action", () => {
+  it("list recognition reducer should handle failure action", () => {
     let reducerData = reducer(defaultState, {
       type: status.failure,
       payload: { code: "invalid token" },

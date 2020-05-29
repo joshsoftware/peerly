@@ -1,6 +1,6 @@
 import { put, takeEvery, spawn, call } from "redux-saga/effects";
-import getJson from "utils/getJson";
 
+import getJson from "utils/getJson";
 import actionGenerator from "utils/actionGenerator";
 
 export function* getRecognitionList() {
