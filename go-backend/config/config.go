@@ -27,6 +27,10 @@ func Load(configFile string) {
 	viper.AddConfigPath("./../..")
 	viper.ReadInConfig()
 	viper.AutomaticEnv()
+
+	// Check for the presence of JWT_KEY and JWT_EXPIRY_DURATION_HOURS
+	JWTKey()
+	JWTExpiryDurationHours()
 }
 
 // AppName - returns the app name
@@ -45,20 +49,14 @@ func AppPort() int {
 	return appPort
 }
 
-// JwtKey - returns the JSON Web Token key
-func JwtKey() []byte {
-	if jwtKey == "" {
-		jwtKey = ReadEnvString("JWT_SECRET")
-	}
-	return []byte(jwtKey)
+// JWTKey - returns the JSON Web Token key
+func JWTKey() []byte {
+	return []byte(ReadEnvString("JWT_SECRET"))
 }
 
-// JwtExpiryDurationHours - returns duration for jwt expiry in int
-func JwtExpiryDurationHours() int {
-	if jwtExpiryDurationHours == 0 {
-		jwtExpiryDurationHours = ReadEnvInt("JWT_EXPIRY_DURATION_HOURS")
-	}
-	return int(jwtExpiryDurationHours)
+// JWTExpiryDurationHours - returns duration for jwt expiry in int
+func JWTExpiryDurationHours() int {
+	return int(ReadEnvInt("JWT_EXPIRY_DURATION_HOURS"))
 }
 
 // ReadEnvInt - reads an environment variable as an integer
