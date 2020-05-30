@@ -54,6 +54,7 @@ func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, 
 	err = s.db.Get(&org, `SELECT * FROM organizations WHERE id=$1 LIMIT 1`, user.OrgID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user's organization from database by email and id " + email + " " + string(user.OrgID))
+		return
 	}
 	return
 }
@@ -70,6 +71,7 @@ func (s *pgStore) GetUserByID(ctx context.Context, id int) (user User, err error
 	err = s.db.Get(&org, `SELECT * FROM organizations WHERE id=$1`, user.OrgID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user's organization from database by user id and org id " + string(id) + " " + string(user.OrgID))
+		return
 	}
 	return
 }
@@ -79,6 +81,7 @@ func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
 	err = s.db.Select(&users, "SELECT * FROM users ORDER BY name ASC")
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing users")
+		return
 	}
 	return
 }
@@ -114,16 +117,19 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 	if err != nil {
 		// FAIL: Could not begin database transaction
 		logger.WithField("err", err.Error()).Error("Error beginning user insert transaction in db.CreateNewUser with email " + u.Email)
+		return
 	}
 	_, err = tx.NamedExec(q, u)
 	if err != nil {
 		// FAIL: Could not run insert query
 		logger.WithField("err", err.Error()).Error("Error inserting user into database: " + u.Email)
+		return
 	}
 	err = tx.Commit()
 	if err != nil {
 		// FAIL: Transaction commit failed. Will automatically roll back.
 		logger.WithField("err", err.Error()).Error("Error commiting transaction inserting user into database: " + u.Email)
+		return
 	}
 
 	// If we make it this far we've successfully inserted a new user into the database.
@@ -131,6 +137,7 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 	newUser, err = s.GetUserByEmail(ctx, u.Email)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user from database with email: " + u.Email)
+		return
 	}
 	return
 }
