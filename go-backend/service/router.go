@@ -23,7 +23,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 
 	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return config.JwtKey(), nil
+			return config.JWTKey(), nil
 		},
 		SigningMethod: jwt.SigningMethodHS256,
 	})

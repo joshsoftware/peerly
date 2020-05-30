@@ -183,13 +183,13 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 // authentication, so they can re-use it by sending it in the Authorization header on subsequent
 // requests.
 func newJWT(userID int) (newToken string, err error) {
-	signingKey := config.JwtKey()
+	signingKey := config.JWTKey()
 	if signingKey == nil {
 		log.Error(ae.ErrNoSigningKey, "Application error: No signing key configured", err)
 		return
 	}
 
-	expiryTime := time.Now().Add(time.Duration(config.JwtExpiryDurationHours()) * time.Hour).Unix()
+	expiryTime := time.Now().Add(time.Duration(config.JWTExpiryDurationHours()) * time.Hour).Unix()
 	claims := &jwt.StandardClaims{
 		ExpiresAt: expiryTime,
 		Issuer:    "joshsoftware.com",
