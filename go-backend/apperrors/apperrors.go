@@ -25,6 +25,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"joshsoftware/peerly/util/log"
 	"net/http"
 )
 
@@ -44,7 +45,10 @@ func JSONError(rw http.ResponseWriter, status int, err error) {
 		Status:  status,
 	}
 
-	errJSON, _ := json.Marshal(&errObj)
+	errJSON, err := json.Marshal(&errObj)
+	if err != nil {
+		log.Warn(err, "Error in AppErrors marshalling JSON", err)
+	}
 	rw.WriteHeader(status)
 	rw.Header().Add("Content-Type", "application/json")
 	rw.Write(errJSON)
@@ -55,6 +59,10 @@ func JSONError(rw http.ResponseWriter, status int, err error) {
 func ErrKeyNotSet(key string) (err error) {
 	return fmt.Errorf("Key not set: %s", key)
 }
+
+// ErrInvalidConfig - used when the user's configuration doesn't have everything
+// it needs to launch the app (e.g. missing JWT_KEY)
+var ErrInvalidConfig = errors.New("Problem with application.yml config file (see .example version)")
 
 // ErrRecordNotFound - for when a database record isn't found
 var ErrRecordNotFound = errors.New("Database record not found")
