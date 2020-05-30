@@ -53,11 +53,7 @@ func Init() (s Storer, err error) {
 func RunMigrations() (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
-	db, err := sql.Open(dbDriver, uri)
-	if err != nil {
-		// TODO: Log sql.Open failure here
-		return
-	}
+	db, _ := sql.Open(dbDriver, uri)
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
