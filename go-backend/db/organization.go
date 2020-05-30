@@ -188,6 +188,9 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 	}
 
 	err = s.db.Get(&updatedOrganization, getOrganizationQuery, organizationID)
+	if err != nil {
+		log.Error(ae.ErrRecordNotFound, "Cannot find organization id "+string(organizationID), err)
+	}
 
 	return
 }
