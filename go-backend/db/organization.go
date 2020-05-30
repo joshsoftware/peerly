@@ -225,6 +225,7 @@ func (s *pgStore) GetOrganizationByDomainName(ctx context.Context, domainName st
 	err = s.db.Get(&organization, getOrganizationByDomainNameQuery, domainName)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting organization by domain name: " + domainName)
+		return
 	}
 	return
 }
