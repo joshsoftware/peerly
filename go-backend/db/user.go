@@ -37,6 +37,14 @@ func (u *User) Role(ctx context.Context, store Storer) (role Role, err error) {
 	return
 }
 
+const insertUserQuery = `INSERT INTO users (
+	id, name, org_id, email, display_name, profile_image_url, soft_delete, role_id, hi5_quota_balance,
+	soft_delete_by, soft_delete_on, created_at
+) VALUES (
+	DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
+	0, NULL, :created_at
+)`
+
 // GetUserByEmail - Given an email address, return that user.
 func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, err error) {
 	err = s.db.Get(&user, `SELECT * FROM users WHERE email=$1 LIMIT 1`, email)
@@ -96,15 +104,6 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 		return
 	}
 
-	// If we made it this far, they don't appear to be in the database yet.
-	q := `INSERT INTO users (
-    id, name, org_id, email, display_name, profile_image_url, soft_delete, role_id, hi5_quota_balance,
-    soft_delete_by, soft_delete_on, created_at
-  ) VALUES (
-    DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
-    0, NULL, :created_at
-	)`
-
 	// Set the created_at time property on u so that it doesn't default to some weird value over 2000 years ago
 	u.CreatedAt = time.Now().UTC()
 
@@ -119,7 +118,7 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 		logger.WithField("err", err.Error()).Error("Error beginning user insert transaction in db.CreateNewUser with email " + u.Email)
 		return
 	}
-	_, err = tx.NamedExec(q, u)
+	_, err = tx.NamedExec(insertUserQuery, u)
 	if err != nil {
 		// FAIL: Could not run insert query
 		logger.WithField("err", err.Error()).Error("Error inserting user into database: " + u.Email)
