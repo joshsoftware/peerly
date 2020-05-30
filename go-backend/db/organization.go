@@ -3,6 +3,8 @@ package db
 import (
 	"context"
 	"database/sql"
+	ae "joshsoftware/peerly/apperrors"
+	"joshsoftware/peerly/util/log"
 	"regexp"
 	"time"
 
@@ -157,6 +159,7 @@ func (s *pgStore) CreateOrganization(ctx context.Context, org Organization) (cre
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// TODO: Log that we can't find the organization even though it's just been created
+			log.Error(ae.ErrRecordNotFound, "Just created an Organization, but can't find it!", err)
 		}
 	}
 	return
