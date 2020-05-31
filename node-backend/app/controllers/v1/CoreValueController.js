@@ -3,7 +3,7 @@ const log4js = require("log4js");
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/coreValueValidationSchema");
-require("../../logger/loggerConfig");
+require("../../config/loggerConfig");
 
 const CoreValue = db.core_value;
 const logger = log4js.getLogger();
