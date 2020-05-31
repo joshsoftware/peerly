@@ -9,6 +9,19 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+const (
+	getUserByEmailQuery = `SELECT * FROM users WHERE email=$1 LIMIT 1`
+	getUserByIDQuery    = `SELECT * FROM users WHERE id=$1 LIMIT 1`
+	listUsersQuery      = `SELECT * FROM users ORDER BY name ASC`
+	insertUserQuery     = `INSERT INTO users (
+		id, name, org_id, email, display_name, profile_image_url, soft_delete, role_id, hi5_quota_balance,
+		soft_delete_by, soft_delete_on, created_at
+	) VALUES (
+		DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
+		0, NULL, :created_at
+	)`
+)
+
 // User - basic struct representing a User
 type User struct {
 	ID              int           `db:"id" json:"id"`
@@ -37,17 +50,9 @@ func (u *User) Role(ctx context.Context, store Storer) (role Role, err error) {
 	return
 }
 
-const insertUserQuery = `INSERT INTO users (
-	id, name, org_id, email, display_name, profile_image_url, soft_delete, role_id, hi5_quota_balance,
-	soft_delete_by, soft_delete_on, created_at
-) VALUES (
-	DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
-	0, NULL, :created_at
-)`
-
 // GetUserByEmail - Given an email address, return that user.
 func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, err error) {
-	err = s.db.Get(&user, `SELECT * FROM users WHERE email=$1 LIMIT 1`, email)
+	err = s.db.Get(&user, getUserByEmailQuery, email)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			err = ae.ErrRecordNotFound
@@ -59,7 +64,7 @@ func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, 
 
 	// Populate the user's organization data
 	org := Organization{}
-	err = s.db.Get(&org, `SELECT * FROM organizations WHERE id=$1 LIMIT 1`, user.OrgID)
+	err = s.db.Get(&org, getOrganizationByIDQuery, user.OrgID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user's organization from database by email and id " + email + " " + string(user.OrgID))
 		return
@@ -69,14 +74,14 @@ func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, 
 
 // GetUserByID - Given the database ID for that user, look them up.
 func (s *pgStore) GetUserByID(ctx context.Context, id int) (user User, err error) {
-	err = s.db.Get(&user, `SELECT * FROM users WHERE id=$1 LIMIT 1`, id)
+	err = s.db.Get(&user, getUserByIDQuery, id)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user from database by id " + string(id))
 		return
 	}
 	// Populate the user's organization data
 	org := Organization{}
-	err = s.db.Get(&org, `SELECT * FROM organizations WHERE id=$1`, user.OrgID)
+	err = s.db.Get(&org, getOrganizationByIDQuery, user.OrgID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user's organization from database by user id and org id " + string(id) + " " + string(user.OrgID))
 		return
@@ -86,7 +91,7 @@ func (s *pgStore) GetUserByID(ctx context.Context, id int) (user User, err error
 
 // ListUsers - retrieves all users from the database. Could be a very large result set...
 func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
-	err = s.db.Select(&users, "SELECT * FROM users ORDER BY name ASC")
+	err = s.db.Select(&users, listUsersQuery)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing users")
 		return

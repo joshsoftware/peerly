@@ -6,6 +6,11 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+const (
+	getRoleByIDQuery   = `SELECT * FROM roles WHERE id=$1 LIMIT 1`
+	getRoleByNameQuery = `SELECT * FROM roles WHERE name=$1 LIMIT 1`
+)
+
 // Role - the main struct for a Role object, represents a single role row in the database
 type Role struct {
 	ID   int    `db:"id" json:"id"`
@@ -14,7 +19,7 @@ type Role struct {
 
 // GetRoleByID - given an ID, retrieve the role object
 func (s *pgStore) GetRoleByID(ctx context.Context, id int) (role Role, err error) {
-	err = s.db.Get(&role, `SELECT * FROM roles WHERE id=$1 LIMIT 1`, id)
+	err = s.db.Get(&role, getRoleByIDQuery, id)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting role from database in GetRoleByID for id ", string(id))
 		return
@@ -23,7 +28,7 @@ func (s *pgStore) GetRoleByID(ctx context.Context, id int) (role Role, err error
 }
 
 func (s *pgStore) GetRoleByName(ctx context.Context, name string) (role Role, err error) {
-	err = s.db.Get(&role, `SELECT * FROM roles WHERE name=$1 LIMIT 1`, name)
+	err = s.db.Get(&role, getRoleByNameQuery, name)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting role from database in GetRoleByName for name ", name)
 		return

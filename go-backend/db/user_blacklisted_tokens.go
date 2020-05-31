@@ -16,12 +16,13 @@ type UserBlacklistedToken struct {
 	ExpirationDate time.Time `db:"expiration_date" json:"expiration_date"`
 }
 
-var deleteExpiredToken = "DELETE FROM user_blacklisted_tokens WHERE expiration_date >= $1"
-
-const insertBlacklistedToken = `INSERT INTO user_blacklisted_tokens
+const (
+	deleteExpiredToken     = `DELETE FROM user_blacklisted_tokens WHERE expiration_date >= $1`
+	insertBlacklistedToken = `INSERT INTO user_blacklisted_tokens
 	(user_id, token, expiration_date)
 	VALUES ($1, $2, $3)
 	`
+)
 
 // CleanBlacklistedTokens - this function (to be executed in a goroutine) is responsible for
 // purging old blacklisted session tokens so the database doesn't fill up with junk data
