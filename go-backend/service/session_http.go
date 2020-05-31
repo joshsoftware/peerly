@@ -96,7 +96,13 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		}
 
 		client := &http.Client{}
-		req, _ = http.NewRequest("GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
+		req, err = http.NewRequest("GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
+		if err != nil {
+			log.Error(ae.ErrHTTPRequestFailed, "Failed to create oauth request", err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
+			return
+		}
+
 		req.Header.Set("Authorization", "Bearer "+token.AccessToken)
 		resp, err = client.Do(req)
 		if err != nil {
@@ -106,7 +112,12 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		}
 
 		user := OAuthUser{}
-		payload, _ = ioutil.ReadAll(resp.Body)
+		payload, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Error(ae.ErrReadingResponseBody, "Error reading response body: "+string(payload), err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
+			return
+		}
 
 		err = json.Unmarshal(payload, &user)
 		if err != nil {
@@ -200,8 +211,8 @@ func newJWT(userID int) (newToken string, err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	newToken, err = token.SignedString(signingKey)
 	if err != nil {
-		// Error signing the token for some reason.
-		// TODO: Log the error
+		log.Error(ae.ErrSignedString, "Failed to get signed string", err)
+		return
 	}
 	return
 }

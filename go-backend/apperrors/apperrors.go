@@ -71,6 +71,9 @@ var ErrRecordNotFound = errors.New("Database record not found")
 // by the JWT library
 var ErrInvalidToken = errors.New("Invalid Token")
 
+// ErrSignedString - failed to sign the token string
+var ErrSignedString = errors.New("Failed to sign token string")
+
 // ErrNoAuthCode - The URL-encoded variable 'code' is missing from the request URL
 var ErrNoAuthCode = errors.New("'code' URL parameter missing")
 
