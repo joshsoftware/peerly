@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const log4js = require("log4js");
 
 const db = require("../models/sequelize");
-require("../logger/loggerConfig");
+require("../config/loggerConfig");
 
 const UserBlacklistedTokens = db.user_blacklisted_tokens;
 const logger = log4js.getLogger();
@@ -11,7 +11,7 @@ module.exports.autheticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null /*eslint-disable-line no-eq-null*/) {
-    logger.error("unauthorised user");
+    logger.error("unauthorised user with undefined acess token");
     res.status(401).send({
       error: {
         message: "unauthorised user",
@@ -20,7 +20,7 @@ module.exports.autheticateToken = (req, res, next) => {
   } else {
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
       if (err) {
-        logger.error(err);
+        logger.error("unauthorised user by rejecting access token");
         res.status(401).send({
           error: {
             message: "unauthorised user",
