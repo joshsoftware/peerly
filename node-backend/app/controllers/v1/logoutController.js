@@ -3,7 +3,7 @@ const log4js = require("log4js");
 const db = require("../../models/sequelize");
 const jsonwebtoken = require("../../jwtTokenValidation/jwtValidation");
 const userBlacklistedTokens = db.user_blacklisted_tokens;
-require("../../logger/loggerConfig");
+require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 
