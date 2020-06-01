@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import Image from "core-components/image/ImageComponent";
 import { Form } from "core-components/form/FormComponent";
-import { Row } from "core-components/grid/GridComponent";
+import { Col, Row } from "core-components/grid/GridComponent";
 
 const ImageComponent = styled(Image)`
   height: inherit;
@@ -13,20 +13,19 @@ const ImageComponent = styled(Image)`
 `;
 
 const SingleElementComponent = ({ className, text, imageSrc }) => (
-  <div className={className}>
-    <Row className="h-25 w-50">
+  <Row className={className}>
+    <Col className="h-100 w-25">
       <ImageComponent
         src={imageSrc}
-        className="hometown"
         alt="single element of filter"
         fluid={false}
         roundedCircle={true}
       />
-    </Row>
-    <Row className="h-50 d-flex justify-content-center align-items-center">
+    </Col>
+    <Col className="h-100 w-75 d-flex justify-content-start align-items-center">
       <Form.Label>{text}</Form.Label>
-    </Row>
-  </div>
+    </Col>
+  </Row>
 );
 
 SingleElementComponent.propTypes = {
@@ -37,8 +36,9 @@ SingleElementComponent.propTypes = {
 };
 
 SingleElementComponent.defaultProps = {
-  imageSrc: "submit",
-  text: "element text",
+  imageSrc:
+    "https://public-v2links.adobecc.com/b8bcaf62-377d-428f-41ee-f038352e2a2e/component?params=component_id%3A56bbf9a8-ca91-4410-841a-be1437b42aad&params=version%3A0&token=1591068805_da39a3ee_513e69c3baa158ce3deacf8433e36b59bfbfaaf6&api_key=CometServer1",
+  text: "Employee Name",
 };
 
 export default SingleElementComponent;
