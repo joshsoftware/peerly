@@ -47,7 +47,12 @@ const LogoComponent = () => (
       </Logo>
     </Row>
     <Row className="justify-content-center">
-      <div className="text-white h2 mt-5 pt-5"> Peerly </div>
+      <div
+        className="text-white h2 mt-5 pt-5"
+        data-testid="peerlyLogoComponent"
+      >
+        Peerly
+      </div>
     </Row>
   </>
 );
