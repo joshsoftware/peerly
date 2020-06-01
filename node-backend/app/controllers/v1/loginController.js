@@ -3,11 +3,12 @@ const moment = require("moment");
 const log4js = require("log4js");
 
 const db = require("../../models/sequelize");
-require("../../logger/loggerConfig");
+require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 const Users = db.users;
 const Organizations = db.organizations;
+
 module.exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
