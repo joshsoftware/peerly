@@ -46,7 +46,7 @@ const PeerlyText = styled.div`
 `;
 
 const LogoComponent = () => (
-  <div>
+  <div data-testid="peerlyLogoComponent">
     <Row className="justify-content-center">
       <Logo>
         <Plus>
