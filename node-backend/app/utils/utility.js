@@ -1,6 +1,6 @@
 const log4js = require("log4js");
 
-require("../logger/loggerConfig");
+require("../config/loggerConfig");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 
 const logger = log4js.getLogger();
