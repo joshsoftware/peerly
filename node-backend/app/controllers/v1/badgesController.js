@@ -151,10 +151,12 @@ module.exports.update = (req, res) => {
       })
         .then(([rowsUpdate, [updatedBadges]]) => {
           if (rowsUpdate == 1) {
+            logger.info(updatedBadges);
             res.status(200).send({
               data: updatedBadges,
             });
           } else {
+            logger.error("Badge not found for specified id");
             res.status(404).send({
               error: {
                 message: "Badge not found for specified id",
