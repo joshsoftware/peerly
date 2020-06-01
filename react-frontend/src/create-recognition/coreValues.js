@@ -2,12 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import CoreValue from "shared-components/core-value/coreValue";
-const CoreValues= ({ coreValues }) =>
+
+const CoreValues = ({ coreValues }) =>
   coreValues.map((coreValue, index) => (
-    <CoreValue
-      key={index}
-      coreValueName={coreValue.coreValueName}
-    />
+    <CoreValue key={index} coreValueName={coreValue.coreValueName} />
   ));
 
 CoreValues.propTypes = {
