@@ -25,6 +25,7 @@ module.exports.create = (req, res) => {
       // Save coreValue in the database
       CoreValue.create(coreValue)
         .then((data) => {
+          logger.info(data);
           res.status(201).send({
             data: data,
           });
@@ -151,10 +152,12 @@ module.exports.update = (req, res) => {
       })
         .then(([rowsUpdate, [updatedCoreValue]]) => {
           if (rowsUpdate == 1) {
+            logger.info(updatedCoreValue);
             res.status(200).send({
               data: updatedCoreValue,
             });
           } else {
+            logger.error("core value not found for specified id");
             res.status(404).send({
               error: {
                 message: "core value not found for specified id",
