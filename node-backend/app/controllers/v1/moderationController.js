@@ -5,7 +5,7 @@ const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
 const validationSchema = require("./validationSchema/moderationSchema");
-require("../../logger/loggerConfig");
+require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 const RecognitionModeration = db.recognition_moderation;
