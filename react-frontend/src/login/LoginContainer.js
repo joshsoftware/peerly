@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import Login from "login/LoginComponent"; /*to do this component is depent on other pr */
+import Login from "login/LoginComponent"; /*to do this component is depent on login presentational component */
 import { store } from "root/redux-store";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import InternalServerErrorComponent from "shared-components/InternalServerErrorComponent";
