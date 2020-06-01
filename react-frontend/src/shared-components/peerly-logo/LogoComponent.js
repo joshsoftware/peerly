@@ -1,37 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Form } from "core-components/form/FormComponent";
-import { Row, Col } from "core-components/grid/GridComponent";
+import { Row } from "core-components/grid/GridComponent";
+import PlusSign from "shared-components/plus-sign/PlusSign";
 
-const PlusSign = styled.div`
-  &: after {
-    content: " ";
+const Plus = styled.div`
+  & {
     position: absolute;
-    display: block;
-    background-color: #fffff;
-    width: 3px;
-    height: 35px;
-    left: 44%;
-    top: 14%;
-    bottom: 4%;
-    z-index: 9;
-    transform: rotate(135deg);
-  }
-  &: before {
-    content: " ";
-    position: absolute;
-    display: block;
-    background-color: #fffff;
-    width: 3px;
-    height: 35px;
-    left: 45%;
-    top: 14%;
-    bottom: 4%;
-    z-index: 9;
+    width: 64px;
+    height: 77px;
+    top: 5%;
+    left: 5%;
     transform: rotate(45deg);
+    font-size: 45px;
+    color: var(--black, #ffff);
   }
 `;
+
 const Logo = styled.div`
   & {
     width: 50px;
@@ -41,10 +26,10 @@ const Logo = styled.div`
     transform: rotate(45deg);
   }
   &: before {
-    content: "";
+    content: " ";
     width: 50px;
     height: 50px;
-    border: 3px solid #fffff;
+    border: var(3px solid --black, 3px solid #ffff);
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -53,18 +38,18 @@ const Logo = styled.div`
 `;
 
 const LogoComponent = () => (
-  <Row className="d-flex flex-column" data-testid="peerlyLogoComponent">
-    <Col className="d-flex justify-content-center">
+  <>
+    <Row className="justify-content-center">
       <Logo>
-        <PlusSign />
+        <Plus>
+          <PlusSign />
+        </Plus>
       </Logo>
-    </Col>
-    <Col>
-      <Form.Label className="text-white h2 mt-5 pt-5 text-center w-100">
-        Peerly
-      </Form.Label>
-    </Col>
-  </Row>
+    </Row>
+    <Row className="justify-content-center">
+      <div className="text-white h2 mt-5 pt-5"> Peerly </div>
+    </Row>
+  </>
 );
 
 export default React.memo(LogoComponent);
