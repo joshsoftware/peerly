@@ -1,12 +1,12 @@
-const qs = require(/*eslint-disable  node/no-extraneous-require*/ "qs");
+const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
 const moment = require("moment");
 const log4js = require("log4js");
 
-require("../../logger/loggerConfig");
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validateSchema = require("./validationSchema/UsersValidationSchema");
+require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 const Users = db.users;
@@ -27,11 +27,7 @@ module.exports.findUsersByOrg = async (req, res) => {
         ]);
         if (!superAdminAuth) {
           {
-            logger.warn(
-              "permission denied user having id " +
-                userData.userId +
-                " trying to access admin credentials"
-            );
+            logger.error("access_denied Permission required");
             res.status(403).send({
               error: {
                 code: "access_denied",
@@ -183,14 +179,12 @@ module.exports.updateUser = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUsers]]) => {
           if (rowsUpdate == 1) {
-            logger.info("updated user with id " + updateUsers.dataValues.id);
+            logger.info(updateUsers);
             res.status(200).send({
               data: updateUsers,
             });
           } else {
-            logger.error(
-              "user not found for specified id " + updateUsers.dataValues.id
-            );
+            logger.error("user not found for specified id ");
             res.status(404).send({
               error: {
                 message: "user not found for specified id ",
@@ -238,19 +232,12 @@ module.exports.updateUserByAdmin = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUserByAdmin]]) => {
           if (rowsUpdate == 1) {
-            logger.info(
-              "updated user with id " +
-                updateUserByAdmin.dataValues.id +
-                " by admin"
-            );
+            logger.info(updateUserByAdmin);
             res.status(200).send({
               data: updateUserByAdmin,
             });
           } else {
-            logger.error(
-              "user not found for specified id" +
-                updateUserByAdmin.dataValues.id
-            );
+            logger.error("user not found for specified id");
             res.status(404).send({
               error: {
                 message: "user not found for specified id",
@@ -295,14 +282,8 @@ module.exports.deleteUser = async (req, res) => {
         returning: true,
         where: { id: req.params.id },
       })
-        .then(([rowsUpdate, [updateUsers]]) => {
-          logger.info(
-            "soft deleted " +
-              rowsUpdate +
-              " user with id " +
-              updateUsers.dataValues.id +
-              " by admin"
-          );
+        .then(() => {
+          logger.info("user soft deleted");
           res.status(200).send();
         })
         .catch((err) => {
