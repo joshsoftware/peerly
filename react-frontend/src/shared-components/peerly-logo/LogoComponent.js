@@ -13,7 +13,7 @@ const Plus = styled.div`
     left: 5%;
     transform: rotate(45deg);
     font-size: 45px;
-    color: var(--black, #ffff);
+    color: var(--white);
   }
 `;
 
@@ -29,7 +29,7 @@ const Logo = styled.div`
     content: " ";
     width: 50px;
     height: 50px;
-    border: var(3px solid --black, 3px solid #ffff);
+    border: 3px solid var(--white);
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -37,8 +37,16 @@ const Logo = styled.div`
   }
 `;
 
+const PeerlyText = styled.div`
+  & {
+    position: relative;
+    margin-top: 80px;
+    color: var(--white);
+    font-size: 45px;
+`;
+
 const LogoComponent = () => (
-  <>
+  <div>
     <Row className="justify-content-center">
       <Logo>
         <Plus>
@@ -47,14 +55,9 @@ const LogoComponent = () => (
       </Logo>
     </Row>
     <Row className="justify-content-center">
-      <div
-        className="text-white h2 mt-5 pt-5"
-        data-testid="peerlyLogoComponent"
-      >
-        Peerly
-      </div>
+      <PeerlyText> Peerly </PeerlyText>
     </Row>
-  </>
+  </div>
 );
 
 export default React.memo(LogoComponent);
