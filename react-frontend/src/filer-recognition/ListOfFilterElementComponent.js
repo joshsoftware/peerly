@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 
 import SingleFilterElementComponent from "filer-recognition/SingleFilterElementComponent";
 
-const ListOfFilterElementComponent = ({ className, onClick, list }) => (
+const ListOfFilterElementComponent = ({ className, onClick, list, name }) => (
   <div className={className}>
     {list.map((element, key) => (
-      <div key={key}>
+      <div key={key} name={name}>
         <SingleFilterElementComponent
           imageSrc={element.url}
           onClick={onClick}
@@ -20,6 +20,7 @@ const ListOfFilterElementComponent = ({ className, onClick, list }) => (
 
 ListOfFilterElementComponent.propTypes = {
   className: PropTypes.string,
+  name: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   list: PropTypes.arrayOf(
     PropTypes.objectOf(

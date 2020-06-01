@@ -12,8 +12,8 @@ const ImageComponent = styled(Image)`
 }
 `;
 
-const SingleFilterElementComponent = ({ className, text, imageSrc }) => (
-  <Row className={className}>
+const SingleFilterElementComponent = ({ className, text, imageSrc, key }) => (
+  <Row className={className} key={key}>
     <div className="h-100 w-25">
       <Col>
         <ImageComponent
@@ -35,6 +35,8 @@ SingleFilterElementComponent.propTypes = {
   onClick: PropTypes.func.isRequired,
   imageSrc: PropTypes.string.isRequired,
   text: PropTypes.string,
+  name: PropTypes.string,
+  key: PropTypes.number,
 };
 
 SingleFilterElementComponent.defaultProps = {
