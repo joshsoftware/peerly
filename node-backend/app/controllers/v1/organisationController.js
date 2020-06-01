@@ -4,7 +4,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/orgValidationSchema");
 const Organizations = db.organizations;
-require("../../logger/loggerConfig");
+require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 
@@ -123,6 +123,7 @@ module.exports.update = (req, res) => {
     })
     .then((valid) => {
       if (!valid) {
+        logger.error("invalid orgnisation");
         res.status(400).send({
           error: {
             code: "invalid orgnisation",
@@ -152,6 +153,7 @@ module.exports.update = (req, res) => {
             })
               .then(([rowsUpdate, [updatedCoreValue]]) => {
                 if (rowsUpdate == 1) {
+                  logger.info(updatedCoreValue);
                   res.status(200).send({
                     data: updatedCoreValue,
                   });
