@@ -1,19 +1,19 @@
-//import getRequestUrl from "utils/getReqUrl.js";
+import getRequestUrl from "utils/getReqUrl.js";
 import getDefaultHeaders from "utils/commonHeaders.js";
 
 export default ({
   path,
   paramsObj = {},
   apiToken,
-  //signal,
+  signal,
   additionalHeaders,
   method = "POST",
 }) => {
-  return fetch(path, {
+  return fetch(getRequestUrl(path), {
     method,
     referrer: "no-referrer",
     redirect: "manual",
-    // signal,
+    signal,
     headers: new Headers({
       ...getDefaultHeaders(apiToken),
       ...additionalHeaders,
