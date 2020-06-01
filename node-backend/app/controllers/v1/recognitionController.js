@@ -6,7 +6,7 @@ const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
 const validationSchema = require("./validationSchema/recognitionValidationSchema");
-require("../../logger/loggerConfig");
+require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 const Recognitions = db.recognitions;
@@ -20,6 +20,7 @@ const validateCoreValue = async (req, res, tokenData) => {
   })
     .then((data) => {
       if (data === null) {
+        logger.error("core value not found with specified id");
         res.status(404).send({
           error: {
             message: "core value not found with specified id",
@@ -29,6 +30,7 @@ const validateCoreValue = async (req, res, tokenData) => {
         // CoreValue validate successfully
         return true;
       } else {
+        logger.error("core value not found with specified organisation");
         res.status(404).send({
           error: {
             message: "core value not found with specified organisation",
@@ -50,6 +52,7 @@ const validateGivenFor = async (req, res, tokenData) => {
   return Users.findByPk(req.body.given_for, { attributes: ["org_id"] })
     .then((data) => {
       if (data === null) {
+        logger.error("User with specified id is not found");
         res.status(404).send({
           error: {
             message: "User with specified id is not found",
@@ -58,6 +61,7 @@ const validateGivenFor = async (req, res, tokenData) => {
       } else if (data.dataValues.org_id == tokenData.orgId) {
         return true;
       } else {
+        logger.error("User not found in specified organisation");
         res.status(404).send({
           error: {
             message: "User not found in specified organisation",
@@ -259,6 +263,7 @@ const getHi5Count = (req, res, id, orgId) => {
   return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
     .then((data) => {
       if (data === null) {
+        logger.error("User with specified id is not found");
         res.status(404).send({
           error: {
             message: "User with specified id is not found",
@@ -306,6 +311,7 @@ const validateRecognition = (req, res, id) => {
   return Recognitions.findByPk(id)
     .then(async (data) => {
       if (data == null /*eslint-disable-line no-eq-null*/) {
+        logger.error("Recognition with specified id is not found");
         res.status(404).send({
           error: {
             message: "Recognition with specified id is not found",
