@@ -8,21 +8,23 @@ import { Col, Row } from "core-components/grid/GridComponent";
 
 const ImageComponent = styled(Image)`
   height: inherit;
-  width: auto;
+  width: inherit;
 }
 `;
 
 const SingleFilterElementComponent = ({ className, text, imageSrc }) => (
   <Row className={className}>
-    <Col className="h-100 w-25">
-      <ImageComponent
-        src={imageSrc}
-        alt="single element of filter"
-        fluid={false}
-        roundedCircle={true}
-      />
-    </Col>
-    <Col className="h-100 w-75 d-flex justify-content-start align-items-center">
+    <div className="h-100 w-25">
+      <Col>
+        <ImageComponent
+          src={imageSrc}
+          alt="single element of filter"
+          fluid={false}
+          roundedCircle={true}
+        />
+      </Col>
+    </div>
+    <Col className="w-75 d-flex justify-content-start align-items-center col">
       <Form.Label>{text}</Form.Label>
     </Col>
   </Row>
