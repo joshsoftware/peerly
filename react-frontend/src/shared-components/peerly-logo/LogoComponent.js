@@ -13,7 +13,7 @@ const Plus = styled.div`
     left: 5%;
     transform: rotate(45deg);
     font-size: 45px;
-    color: var(--white);
+    color: var(--peerly-logo);
   }
 `;
 
@@ -29,7 +29,7 @@ const Logo = styled.div`
     content: " ";
     width: 50px;
     height: 50px;
-    border: 3px solid var(--white);
+    border: 3px solid var(--peerly-logo);
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -41,7 +41,7 @@ const PeerlyText = styled.div`
   & {
     position: relative;
     margin-top: 80px;
-    color: var(--white);
+    color: var(--peerly-logo);
     font-size: 45px;
 `;
 
