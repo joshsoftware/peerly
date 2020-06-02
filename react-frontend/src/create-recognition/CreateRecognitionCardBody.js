@@ -1,11 +1,23 @@
 import React from "react";
 import { useState } from "react";
+import styled from "styled-components";
 
 import { Card } from "core-components/card/card";
 import { Form } from "core-components/form/FormComponent";
 import CoreValue from "create-recognition/coreValues";
 import { Row } from "core-components/grid/GridComponent";
 import { Button } from "core-components/button/ButtonComponent";
+
+const Wrapper = styled.section`
+  margin-left: 15%;
+  margin-right: 15%;
+`;
+const WrapperForSelectValue = styled.section`
+  margin-right: 65%;
+`;
+//const WrapperForCoreValues = styled.section`
+
+//`;
 
 const coreValues = [
   {
@@ -33,20 +45,24 @@ const CreateRecognitionCardBody = () => {
   };
   return (
     <Card.Body>
-      <Row className="space-around ml-5"> Select Value </Row>
-      <Row className="justify-content-around mt-4">
-        <CoreValue coreValues={coreValues} />
-      </Row>
-      <Row className="justify-content-center mt-5">
-        {comment ? (
-          <Form.Control as="textarea" rows="3"></Form.Control>
-        ) : (
-          <Button onClick={onClickAddComment}> Add Comments </Button>
-        )}
-      </Row>
-      <Row className="justify-content-center mt-5">
-        <Button> Done </Button>
-      </Row>
+      <Wrapper>
+        <Row className="justify-content-around">
+          <WrapperForSelectValue> Select Value </WrapperForSelectValue>
+        </Row>
+        <Row className="justify-content-around mt-4">
+          <CoreValue coreValues={coreValues} />
+        </Row>
+        <Row className="justify-content-center mt-5">
+          {comment ? (
+            <Form.Control as="textarea" rows="3"></Form.Control>
+          ) : (
+            <Button onClick={onClickAddComment}> Add Comments </Button>
+          )}
+        </Row>
+        <Row className="justify-content-center mt-5">
+          <Button> Done </Button>
+        </Row>
+      </Wrapper>
     </Card.Body>
   );
 };
