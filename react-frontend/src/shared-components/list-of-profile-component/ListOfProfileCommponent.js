@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import SingleFilterElementComponent from "filer-recognition/SingleFilterElementComponent";
+import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
-const ListOfFilterElementComponent = ({ className, onClick, list, name }) => (
+const ListOfProfileComponent = ({ className, onClick, list, name }) => (
   <div className={className}>
     {list.map((element, key) => (
       <div key={key} name={name}>
-        <SingleFilterElementComponent
+        <ProfileComponent
           imageSrc={element.url}
           onClick={onClick}
           key={element.id}
@@ -18,7 +18,7 @@ const ListOfFilterElementComponent = ({ className, onClick, list, name }) => (
   </div>
 );
 
-ListOfFilterElementComponent.propTypes = {
+ListOfProfileComponent.propTypes = {
   className: PropTypes.string,
   name: PropTypes.string,
   onClick: PropTypes.func.isRequired,
@@ -33,4 +33,4 @@ ListOfFilterElementComponent.propTypes = {
   ),
 };
 
-export default ListOfFilterElementComponent;
+export default ListOfProfileComponent;
