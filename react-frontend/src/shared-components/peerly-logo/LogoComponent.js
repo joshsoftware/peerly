@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 import { Row } from "core-components/grid/GridComponent";
 import PlusSign from "shared-components/plus-sign/PlusSign";
@@ -13,7 +14,7 @@ const Plus = styled.div`
     left: 5%;
     transform: rotate(45deg);
     font-size: 45px;
-    color: var(--peerly-logo);
+    color: ${(props) => props.theme.text};
   }
 `;
 
@@ -29,7 +30,7 @@ const Logo = styled.div`
     content: " ";
     width: 50px;
     height: 50px;
-    border: 3px solid var(--peerly-logo);
+    border: 3px solid ${(props) => props.theme.text};
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -41,23 +42,33 @@ const PeerlyText = styled.div`
   & {
     position: relative;
     margin-top: 80px;
-    color: var(--peerly-logo);
+    color: ${(props) => props.theme.text};
     font-size: 45px;
 `;
 
-const LogoComponent = () => (
+const LogoComponent = ({ theme }) => (
   <div data-testid="peerlyLogoComponent">
     <Row className="justify-content-center">
-      <Logo>
-        <Plus>
+      <Logo theme={theme}>
+        <Plus theme={theme}>
           <PlusSign />
         </Plus>
       </Logo>
     </Row>
     <Row className="justify-content-center">
-      <PeerlyText> Peerly </PeerlyText>
+      <PeerlyText theme={theme}> Peerly </PeerlyText>
     </Row>
   </div>
 );
+
+LogoComponent.defaultProps = {
+  theme: {
+    text: "white",
+  },
+};
+
+LogoComponent.propTypes = {
+  theme: PropTypes.object,
+};
 
 export default React.memo(LogoComponent);
