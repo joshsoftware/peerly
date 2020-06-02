@@ -1,65 +1,65 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import AsyncSelect from "react-select/async";
 
-import { Accordion } from "core-components/accordion/AccordionComponent";
 import { Card } from "core-components/grid/GridComponent";
 import { Navbar } from "core-components/navbar/NavbarComponent";
-import ListOfFilterElementComponent from "filer-recognition/ListOfFilterElementComponent";
-import { Button, ButtonGroup } from "core-components/button/ButtonComponent";
+import { Form } from "core-components/form/FormComponent";
+import { Button } from "core-components/button/ButtonComponent";
 
 const CardBody = styled(Card.Body)`
   width: 50vh;
 `;
+
 const NavbarCollapse = styled(Navbar.Collapse)``;
 
-const FilterRecognitionComponent = ({ list }) => (
-  <Navbar bg="light" expand="sm">
-    <Navbar.Brand>Peerly</Navbar.Brand>
+const FilterRecognitionComponent = ({
+  coreValueList,
+  givenForList,
+  givenByList,
+  promiseCoreValueOptions,
+  promiseGivenByOptions,
+  promiseGivenForOptions,
+}) => (
+  <Navbar bg="light" expand="true">
+    <Navbar.Brand className="">Peerly</Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <NavbarCollapse id="basic-navbar-nav">
-      <Accordion>
-        <Card>
-          <Accordion.Toggle as={Card.Header} eventKey="0">
-            Core_value
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="0">
-            <CardBody>
-              <ListOfFilterElementComponent name="core_value" list={list} />
-              <ButtonGroup aria-label="Basic example">
-                <Button variant="secondary">Prev</Button>
-                <Button variant="secondary">Next</Button>
-              </ButtonGroup>
-            </CardBody>
-          </Accordion.Collapse>
-        </Card>
-        <Card>
-          <Accordion.Toggle as={Card.Header} eventKey="1">
-            Given For
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="1">
-            <CardBody>
-              <ListOfFilterElementComponent name="given_for" list={list} />
-            </CardBody>
-          </Accordion.Collapse>
-        </Card>
-        <Card>
-          <Accordion.Toggle as={Card.Header} eventKey="2">
-            Given By
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey="2">
-            <CardBody>
-              <ListOfFilterElementComponent name="given_by" list={list} />
-            </CardBody>
-          </Accordion.Collapse>
-        </Card>
-      </Accordion>
+    <NavbarCollapse id="basic-navbar-nav" horizontal>
+      <Card>
+        <Card.Header>Filter</Card.Header>
+        <CardBody>
+          <Form>
+            <AsyncSelect
+              defaultOptions={coreValueList}
+              loadOptions={promiseCoreValueOptions}
+              name="core_value"
+              placeholder="select Core Value"
+            />
+            <AsyncSelect
+              defaultOptions={givenForList}
+              loadOptions={promiseGivenForOptions}
+              name="given_for"
+              placeholder="select given for"
+            />
+            <AsyncSelect
+              defaultOptions={givenByList}
+              loadOptions={promiseGivenByOptions}
+              name="given_by"
+              placeholder="select given by"
+            />
+            <Button type="submit" className="btn-light mt-2">
+              Add Filter
+            </Button>
+          </Form>
+        </CardBody>
+      </Card>
     </NavbarCollapse>
   </Navbar>
 );
 
 FilterRecognitionComponent.propTypes = {
-  list: PropTypes.arrayOf(
+  coreValueList: PropTypes.arrayOf(
     PropTypes.objectOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -68,6 +68,27 @@ FilterRecognitionComponent.propTypes = {
       })
     )
   ),
+  givenForList: PropTypes.arrayOf(
+    PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        url: PropTypes.string,
+        text: PropTypes.string,
+      })
+    )
+  ),
+  givenByList: PropTypes.arrayOf(
+    PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        url: PropTypes.string,
+        text: PropTypes.string,
+      })
+    )
+  ),
+  promiseCoreValueOptions: PropTypes.func.isRequired,
+  promiseGivenForOptions: PropTypes.func.isRequired,
+  promiseGivenByOptions: PropTypes.func.isRequired,
 };
 
 export default FilterRecognitionComponent;
