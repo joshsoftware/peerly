@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { Navbar } from "core-components/navbar/NavbarComponent";
-import { Container } from "core-components/grid/GridComponent";
+import { Container, Col, Row } from "core-components/grid/GridComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import NotificationBadgeComponent from "shared-components/notification/NotificationBadgeComponent";
 
@@ -13,16 +13,8 @@ const NotificationWrapper = styled.div`
 `;
 
 const NavbarWrapper = styled(Navbar)`
-  height: 100px;
   background: var(--white) 0% 0% no-repeat padding-box;
   box-shadow: 0px 0px 10px var(--box-shadow-color);
-  opacity: 1;
-`;
-
-const BrandText = styled(Navbar.Brand)`
-  position: absolute;
-  left: calc(50% - 27px);
-  right: 50%;
 `;
 
 const HighFiveIcon = styled(HighFiveComponent)`
@@ -32,23 +24,29 @@ const HighFiveIcon = styled(HighFiveComponent)`
 function TopNavbar() {
   return (
     <NavbarWrapper>
-      <Container>
-        <div className="w-100">
-          <BrandText data-testid="brandHeader">Peerly</BrandText>
-          <div className="text-right">
-            <Navbar.Text>
-              <span className="d-sm-block d-none align-self-center">
-                {"This week's"}
-              </span>
-            </Navbar.Text>
-            <Navbar.Text>
-              <NotificationWrapper>
-                <NotificationBadgeComponent count={2} />
-              </NotificationWrapper>
-              <HighFiveIcon />
-            </Navbar.Text>
-          </div>
-        </div>
+      <Container fluid>
+        <Row className="w-100 justify-content-center">
+          <Col md="8" sm="12">
+            <Row>
+              <Col xs="10" className="text-center">
+                <Navbar.Brand>Peerly</Navbar.Brand>
+              </Col>
+              <Col xs="2" className="text-right">
+                <Navbar.Text>
+                  <span className="d-sm-block d-none align-self-center">
+                    {"This week's"}
+                  </span>
+                </Navbar.Text>
+                <Navbar.Text>
+                  <NotificationWrapper>
+                    <NotificationBadgeComponent count={2} />
+                  </NotificationWrapper>
+                  <HighFiveIcon />
+                </Navbar.Text>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
       </Container>
     </NavbarWrapper>
   );

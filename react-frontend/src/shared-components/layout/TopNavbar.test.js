@@ -5,8 +5,10 @@ import TopNavbar from "shared-components/layout/TopNavbar";
 
 describe("Navbar tests", () => {
   test("test brand header to be Peerly", () => {
-    const { getByTestId } = render(<TopNavbar />);
-    expect(getByTestId("brandHeader")).toHaveTextContent("Peerly");
+    const { getByText } = render(<TopNavbar />);
+    let brandText = getByText("Peerly");
+
+    expect(brandText).toBeInTheDocument();
   });
 
   test("test `this week's` text not rendered for mobile responsive", () => {
