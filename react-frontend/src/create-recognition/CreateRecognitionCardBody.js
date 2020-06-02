@@ -2,22 +2,24 @@ import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 
+//import { store } from "root/redux-store";
 import { Card } from "core-components/card/card";
 import { Form } from "core-components/form/FormComponent";
 import CoreValue from "create-recognition/coreValues";
 import { Row } from "core-components/grid/GridComponent";
 import { Button } from "core-components/button/ButtonComponent";
+import Image from "shared-components/user-image-name/UserImageName";
 
 const Wrapper = styled.section`
-  margin-left: 15%;
-  margin-right: 15%;
+  margin-left: 10%;
+  margin-right: 10%;
 `;
 const WrapperForSelectValue = styled.section`
-  margin-right: 65%;
+  margin-left: 10%;
 `;
-//const WrapperForCoreValues = styled.section`
-
-//`;
+const CommentBoxWrapper = styled.div`
+  min-width: 50%;
+`;
 
 const coreValues = [
   {
@@ -43,10 +45,14 @@ const CreateRecognitionCardBody = () => {
   const onClickAddComment = () => {
     addComment(true);
   };
+  const addCommentText = (event) => {
+    addCommentText(event.target.value);
+  };
   return (
     <Card.Body>
+      <Image imageSrc="https://public-v2links.adobecc.com/b8bcaf62-377d-428f-41ee-f038352e2a2e/component?params=component_id%3A4f24bbbe-5873-4fcb-8c68-7b9f653271bc&params=version%3A1&token=1591156621_da39a3ee_3e2c4b5df39ff435dc9cc88b89aff4beba282da9&api_key=CometServer1"></Image>
       <Wrapper>
-        <Row className="justify-content-around">
+        <Row>
           <WrapperForSelectValue> Select Value </WrapperForSelectValue>
         </Row>
         <Row className="justify-content-around mt-4">
@@ -54,7 +60,17 @@ const CreateRecognitionCardBody = () => {
         </Row>
         <Row className="justify-content-center mt-5">
           {comment ? (
-            <Form.Control as="textarea" rows="3"></Form.Control>
+            <CommentBoxWrapper>
+              <Form.Control
+                as="textarea"
+                rows="3"
+                onChange={(event) => {
+                  addCommentText(
+                    event
+                  ); /*store.dispatch({type:"add_comment",payload: event.target.value})*/
+                }}
+              ></Form.Control>
+            </CommentBoxWrapper>
           ) : (
             <Button onClick={onClickAddComment}> Add Comments </Button>
           )}
