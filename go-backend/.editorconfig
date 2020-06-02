@@ -1,0 +1,17 @@
+#
+# Sets configuration options for your editor of choice. You may need a plugin
+# depending on what editor you use.
+#
+# See editorconfig.org for more information.
+#
+
+[*.go]
+trim_trailing_whitespace = true
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = tab
+indent_size = 4
+
+[Makefile]
+indent_style = tab
