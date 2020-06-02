@@ -15,12 +15,7 @@ const Img = styled.div`
   width: 12vh;
 `;
 
-const RecognitionTopBarComponent = ({
-  recognitionOn,
-  recognitionForImage,
-  recognitionForName,
-  coreValue,
-}) => {
+const RecognitionTopBarComponent = ({ given_at, given_for, core_value }) => {
   return (
     <Col>
       <Row className="d-flex justify-content-end">
@@ -34,20 +29,18 @@ const RecognitionTopBarComponent = ({
       <Row className="d-flex flex-column-left">
         <Img>
           <ImageComponent
-            src={recognitionForImage}
-            roundedCircle="true"
-            alt="profile"
+            src="https://i.picsum.photos/id/2/200/200.jpg"
+            roundedCircle={true}
+            alt="Profile"
           />
         </Img>
         <Row className="d-flex flex-column text-start ml-4">
-          <Form.Label className="font-weight-bold ">
-            {recognitionForName}
-          </Form.Label>
+          <Form.Label className="font-weight-bold ">{given_for}</Form.Label>
           <Row className=" d-sm-block d-xs-block d-md-none">
             <Row className="d-flex flex-column ml-2">
               <Form.Label>got a high five for</Form.Label>
               <Form.Label className="font-weight-bold ml-1">
-                {coreValue}
+                {core_value}
               </Form.Label>
             </Row>
           </Row>
@@ -55,25 +48,20 @@ const RecognitionTopBarComponent = ({
             <Row className="d-flex flex-row ml-2">
               <Form.Label>got a high five for</Form.Label>
               <Form.Label className="font-weight-bold ml-1">
-                {coreValue}
+                {core_value}
               </Form.Label>
             </Row>
           </Row>
-          <Form.Label className="text-muted">{recognitionOn}</Form.Label>
+          <Form.Label className="text-muted">{given_at}</Form.Label>
         </Row>
       </Row>
     </Col>
   );
 };
 RecognitionTopBarComponent.propTypes = {
-  recognitionForImage: PropTypes.string.isRequired,
-  recognitionForName: PropTypes.string.isRequired,
-  recognitionOn: PropTypes.string.isRequired,
-  coreValue: PropTypes.string.isRequired,
-};
-
-RecognitionTopBarComponent.defaultProps = {
-  recognitionForImage: "https://i.picsum.photos/id/2/200/200.jpg",
+  given_for: PropTypes.string.isRequired,
+  given_at: PropTypes.string.isRequired,
+  core_value: PropTypes.string.isRequired,
 };
 
 export default React.memo(RecognitionTopBarComponent);

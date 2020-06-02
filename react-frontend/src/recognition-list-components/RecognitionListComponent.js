@@ -10,7 +10,7 @@ const Div = styled.div`
 
 const RecognitionListComponent = ({ recognitionList }) => {
   return (
-    <Div className=" border border-secondary">
+    <Div className=" border border-secondary" data-testid="RecognitionCard">
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
           key={recognition.index}

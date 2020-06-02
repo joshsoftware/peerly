@@ -42,25 +42,29 @@ const RecognitionCardComponent = ({ recognition }) => (
       <Row>
         <Col sm="12" md="7">
           <RecognitionTopBarComponent
-            recognitionForName={recognition.recognitionForName}
-            recognitionForImage={recognition.recognitionForImage}
-            recognitionOn={recognition.recognitionOn}
-            coreValue={recognition.coreValue}
+            given_for={recognition.given_for}
+            given_at={recognition.given_at}
+            core_value={recognition.core_value}
           />
           <ImgM className="bg-dark d-sm-block d-md-none mt-2">
-            <ImageComponent src={recognition.coreValueImage} />
+            <ImageComponent
+              src="https://i.picsum.photos/id/654/300/200.jpg"
+              alt="CoreValueImage"
+            />
           </ImgM>
           <RecognitionTextComponent
-            recognitionText={recognition.recognitionText}
-            recognitionByName={recognition.recognitionByName}
-            recognitionByImage={recognition.recognitionByImage}
+            text={recognition.text}
+            given_by={recognition.given_by}
           />
         </Col>
         <Col className="d-none d-md-block">
           <Col className=" d-flex  justify-content-center">
             <Row className="d-flex flex-column">
               <ImgD>
-                <ImageComponent src={recognition.coreValueImage} />
+                <ImageComponent
+                  src="https://i.picsum.photos/id/654/300/200.jpg"
+                  alt="CoreValueImage"
+                />
               </ImgD>
               <Col className="d-flex justify-content-center align-items-center">
                 <CoreValueIconComponent size="50px" color="red" />
@@ -84,10 +88,6 @@ const RecognitionCardComponent = ({ recognition }) => (
 
 RecognitionCardComponent.propTypes = {
   recognition: PropTypes.object.isRequired,
-};
-
-RecognitionCardComponent.defaultProps = {
-  coreValueImage: "https://i.picsum.photos/id/654/300/200.jpg",
 };
 
 export default React.memo(RecognitionCardComponent);

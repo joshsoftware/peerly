@@ -24,35 +24,28 @@ const Img = styled.div`
   margin-right: 5%;
 `;
 
-const RecognitionTextComponent = ({
-  recognitionText,
-  recognitionByName,
-  recognitionByImage,
-}) => (
+const RecognitionTextComponent = ({ text, given_by }) => (
   <Row className="d-flex flex-column">
     <Border>
       <Legend>“</Legend>
-      <Form.Label className="px-2 pb-2 pt-0">{recognitionText}</Form.Label>
+      <Form.Label className="px-2 pb-2 pt-0">{text}</Form.Label>
     </Border>
     <Row className="d-flex justify-content-end">
-      <Form.Label className="font-weight-bold text-dark">
-        {recognitionByName}
-      </Form.Label>
+      <Form.Label className="font-weight-bold text-dark">{given_by}</Form.Label>
       <Img>
-        <ImageComponent src={recognitionByImage} roundedCircle="true" />
+        <ImageComponent
+          src="https://i.picsum.photos/id/2/200/200.jpg"
+          roundedCircle={true}
+          alt="Profile"
+        />
       </Img>
     </Row>
   </Row>
 );
 
 RecognitionTextComponent.propTypes = {
-  recognitionText: PropTypes.string.isRequired,
-  recognitionByName: PropTypes.string.isRequired,
-  recognitionByImage: PropTypes.string.isRequired,
-};
-
-RecognitionTextComponent.defaultProps = {
-  recognitionByImage: "https://i.picsum.photos/id/2/200/200.jpg",
+  text: PropTypes.string.isRequired,
+  given_by: PropTypes.string.isRequired,
 };
 
 export default React.memo(RecognitionTextComponent);
