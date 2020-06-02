@@ -6,8 +6,8 @@ import CoreValueIcon from "shared-components/core-value-icon/coreValueIconCompon
 import { Row, Container } from "core-components/grid/GridComponent";
 
 const Wrapper = Styled.div`
-  max-width:75px;
-  min-height:75px;
+  max-width: 60px;
+  min-height: 60px;
   border-radius: 10px;
   border: 3px solid black;
   display: flex;
@@ -17,7 +17,7 @@ const Wrapper = Styled.div`
 
 const CoreValueComponent = ({ coreValueName }) => {
   const onClick = () => {
-    onClick(10);
+    // todo
   };
 
   return (
