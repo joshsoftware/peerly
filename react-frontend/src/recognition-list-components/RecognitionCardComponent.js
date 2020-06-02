@@ -4,10 +4,10 @@ import styled from "styled-components";
 
 import { Row, Col } from "core-components/grid/GridComponent";
 import { Card } from "core-components/card/CardComponent";
+import { BsCircle } from "core-components/icon/icons";
 import ImageComponent from "core-components/image/ImageComponent";
 import RecognitionCardHeaderComponent from "recognition-list-components/RecognitionCardHeaderComponent";
 import RecognitionTextComponent from "recognition-list-components/RecognitionTextComponent";
-import CoreValueIconComponent from "shared-components/core-value-icon-components/CoreValueIconComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 
 const giveHighFive = () => {
@@ -71,7 +71,7 @@ const RecognitionCardComponent = ({
                 />
               </ImgD>
               <Col className="d-flex justify-content-center mt-4">
-                <CoreValueIconComponent size="50px" color="red" />
+                <BsCircle size="50px" color="red" />
               </Col>
             </Row>
           </Col>

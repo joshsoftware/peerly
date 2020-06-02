@@ -25,12 +25,12 @@ const Img = styled.div`
 `;
 
 const RecognitionTextComponent = ({ text, given_by }) => (
-  <Row className="d-flex flex-column">
+  <Row>
     <Border>
       <Legend>“</Legend>
       <Form.Label className="px-2 pb-2 pt-0">{text}</Form.Label>
     </Border>
-    <Row className="d-flex justify-content-end">
+    <Row className="d-flex justify-content-end w-100">
       <Form.Label className="font-weight-bold text-dark">{given_by}</Form.Label>
       <Img>
         <ImageComponent
