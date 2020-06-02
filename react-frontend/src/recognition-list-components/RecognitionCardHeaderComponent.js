@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { Row, Col } from "core-components/grid/GridComponent";
+import { Row } from "core-components/grid/GridComponent";
 import { Form } from "core-components/form/FormComponent";
 import { Button } from "core-components/button/ButtonComponent";
 import ImageComponent from "core-components/image/ImageComponent";
@@ -15,9 +15,13 @@ const Img = styled.div`
   width: 12vh;
 `;
 
-const RecognitionTopBarComponent = ({ given_at, given_for, core_value }) => {
+const RecognitionCardHeaderComponent = ({
+  given_at,
+  given_for,
+  core_value,
+}) => {
   return (
-    <Col>
+    <Row>
       <Row className="d-flex justify-content-end">
         <Button
           className="bg-white font-weight-bold text-dark btn-outline-light grey"
@@ -55,13 +59,13 @@ const RecognitionTopBarComponent = ({ given_at, given_for, core_value }) => {
           <Form.Label className="text-muted">{given_at}</Form.Label>
         </Row>
       </Row>
-    </Col>
+    </Row>
   );
 };
-RecognitionTopBarComponent.propTypes = {
+RecognitionCardHeaderComponent.propTypes = {
   given_for: PropTypes.string.isRequired,
   given_at: PropTypes.string.isRequired,
   core_value: PropTypes.string.isRequired,
 };
 
-export default React.memo(RecognitionTopBarComponent);
+export default React.memo(RecognitionCardHeaderComponent);

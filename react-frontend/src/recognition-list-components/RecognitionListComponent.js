@@ -14,7 +14,12 @@ const RecognitionListComponent = ({ recognitionList }) => {
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
           key={recognition.index}
-          recognition={recognition}
+          given_by={recognition.given_by}
+          given_for={recognition.given_for}
+          given_at={recognition.given_at}
+          text={recognition.text}
+          core_value={recognition.core_value}
+          high_five_count={recognition.high_five_count}
         />
       ))}
     </Div>

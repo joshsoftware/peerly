@@ -1,12 +1,12 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import RecognitionTopBarComponent from "recognition-list-components/RecognitionTopBarComponent";
+import RecognitionCardHeaderComponent from "recognition-list-components/RecognitionCardHeaderComponent";
 
 describe("Recognition TopBar Component test", () => {
   test("should equal to recognition name", () => {
     const { getByText } = render(
-      <RecognitionTopBarComponent
+      <RecognitionCardHeaderComponent
         given_at="today 3:00 AM"
         given_for="avinash"
         core_value="positive"
@@ -17,7 +17,7 @@ describe("Recognition TopBar Component test", () => {
 
   test("should equal to recognition time", () => {
     const { getByText } = render(
-      <RecognitionTopBarComponent
+      <RecognitionCardHeaderComponent
         given_at="today 3:00 AM"
         given_for="avinash"
         core_value="positive"
@@ -28,7 +28,7 @@ describe("Recognition TopBar Component test", () => {
 
   test("render image component", () => {
     const { getByAltText } = render(
-      <RecognitionTopBarComponent
+      <RecognitionCardHeaderComponent
         given_at="today 3:00 AM"
         given_for="avinash"
         core_value="positive"
