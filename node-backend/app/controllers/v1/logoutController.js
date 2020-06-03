@@ -19,10 +19,13 @@ module.exports.logout = async (req, res) => {
   userBlacklistedTokens
     .create(user)
     .then(() => {
+      logger.info("user logout");
+      logger.info("=========================================");
       res.status(200).send();
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
+      logger.error("internal server error");
+      logger.info("=========================================");
       res.status(500).send({
         error: {
           message: "internal server error",
