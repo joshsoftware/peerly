@@ -21,6 +21,7 @@ const FilterRecognitionComponent = ({
   promiseCoreValueOptions,
   promiseGivenByOptions,
   promiseGivenForOptions,
+  onSubmit,
 }) => (
   <Navbar bg="light" expand="true">
     <Navbar.Brand className="">Peerly</Navbar.Brand>
@@ -29,7 +30,7 @@ const FilterRecognitionComponent = ({
       <Card>
         <Card.Header>Filter</Card.Header>
         <CardBody>
-          <Form>
+          <Form onSubmit={onSubmit}>
             <AsyncSelect
               defaultOptions={coreValueList}
               loadOptions={promiseCoreValueOptions}
@@ -89,6 +90,7 @@ FilterRecognitionComponent.propTypes = {
   promiseCoreValueOptions: PropTypes.func.isRequired,
   promiseGivenForOptions: PropTypes.func.isRequired,
   promiseGivenByOptions: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default FilterRecognitionComponent;
