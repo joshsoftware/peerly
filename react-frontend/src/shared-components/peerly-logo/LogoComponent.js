@@ -63,7 +63,7 @@ const LogoComponent = ({ theme }) => (
 
 LogoComponent.defaultProps = {
   theme: {
-    text: "white",
+    text: "var(--white)",
   },
 };
 
