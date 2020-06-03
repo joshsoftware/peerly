@@ -7,8 +7,7 @@ const PlusSignWrapper = styled.div`
     transform: ${({ transform }) => transform};
     font-size: ${({ fontSize }) => fontSize};
     color: ${({ theme }) =>
-      (theme.variant === "dark" && "var(--white)") ||
-      (theme.variant === "light" && "var(--black)")};
+      theme === "dark" ? "var(--white)" : "var(--black)"};
   }
 `;
 
@@ -24,16 +23,12 @@ const PlusSign = ({ theme, transform, fontSize }) => (
 );
 
 PlusSign.defaultProps = {
-  theme: {
-    variant: "dark",
-  },
+  theme: "dark",
   fontSize: "48px",
 };
 
 PlusSign.propTypes = {
-  theme: PropTypes.shape({
-    text: PropTypes.oneOf(["dark", "light"]),
-  }),
+  theme: PropTypes.oneOf(["dark", "light"]),
   transform: PropTypes.string,
   fontSize: PropTypes.string,
 };
