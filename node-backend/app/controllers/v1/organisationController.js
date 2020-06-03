@@ -29,12 +29,16 @@ module.exports.create = (req, res) => {
       // Save Organization in the database
       Organizations.create(organizations)
         .then((info) => {
+          logger.info("executing create organisation");
+          logger.info(JSON.stringify(info));
+          logger.info("=========================================");
           res.status(201).send({
             data: info,
           });
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -43,7 +47,9 @@ module.exports.create = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid organisation",
@@ -61,8 +67,9 @@ module.exports.findAll = (req, res) => {
         data: info,
       });
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
+      logger.error("internal server error");
+      logger.info("=========================================");
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -85,6 +92,7 @@ module.exports.findOne = (req, res) => {
             });
           } else {
             logger.error("Organisation with specified id not found");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "Organisation with specified id not found",
@@ -92,8 +100,9 @@ module.exports.findOne = (req, res) => {
             });
           }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -102,7 +111,9 @@ module.exports.findOne = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid orgnisation",
@@ -124,6 +135,7 @@ module.exports.update = (req, res) => {
     .then((valid) => {
       if (!valid) {
         logger.error("invalid orgnisation");
+        logger.info("=========================================");
         res.status(400).send({
           error: {
             code: "invalid orgnisation",
@@ -153,12 +165,16 @@ module.exports.update = (req, res) => {
             })
               .then(([rowsUpdate, [updatedCoreValue]]) => {
                 if (rowsUpdate == 1) {
-                  logger.info(updatedCoreValue);
+                  logger.info("executing update organisation");
+                  logger.info("organisation id: " + id);
+                  logger.info(JSON.stringify(updatedCoreValue));
+                  logger.info("=========================================");
                   res.status(200).send({
                     data: updatedCoreValue,
                   });
                 } else {
                   logger.error("Organisation with specified id is not found");
+                  logger.info("=========================================");
                   res.status(404).send({
                     error: {
                       message: "Organisation with specified id is not found",
@@ -166,8 +182,9 @@ module.exports.update = (req, res) => {
                   });
                 }
               })
-              .catch((err) => {
-                logger.error(err);
+              .catch(() => {
+                logger.error("internal server error");
+                logger.info("=========================================");
                 res.status(500).send({
                   error: {
                     message: "internal server error",
@@ -176,7 +193,9 @@ module.exports.update = (req, res) => {
               });
           })
           .catch((err) => {
-            logger.error(err);
+            logger.error("validation error");
+            logger.error(JSON.stringify(err));
+            logger.info("=========================================");
             res.status(400).send({
               error: utility.getFormattedErrorObj(
                 "invalid orgnisation",
