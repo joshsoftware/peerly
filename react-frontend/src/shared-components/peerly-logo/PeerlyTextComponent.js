@@ -5,11 +5,9 @@ import PropTypes from "prop-types";
 const PeerlyText = styled.div`
    {
     color: ${({ theme }) =>
-      (theme.variant === "dark" && "var(--white)") ||
-      (theme.variant === "light" && "var(--black)")};
+      theme === "dark" ? "var(--white)" : "var(--black)"};
     background-color: ${({ theme }) =>
-      (theme.variant === "dark" && "var(--black)") ||
-      (theme.variant === "light" && "var(--white)")};
+      theme === "dark" ? "var(--black)" : "var(--white)"};
     font-size: ${({ fontSize }) => fontSize};
   }
 `;
@@ -25,16 +23,12 @@ const PeerlyTextComponent = ({ theme, fontSize }) => (
 );
 
 PeerlyTextComponent.defaultProps = {
-  theme: {
-    variant: "dark",
-  },
+  theme: "dark",
   fontSize: "48px",
 };
 
 PeerlyTextComponent.propTypes = {
-  theme: PropTypes.shape({
-    variant: PropTypes.oneOf(["dark", "light"]),
-  }),
+  theme: PropTypes.oneOf(["dark", "light"]),
   fontSize: PropTypes.string,
 };
 
