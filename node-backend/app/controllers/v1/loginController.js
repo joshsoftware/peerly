@@ -74,6 +74,10 @@ module.exports.login = async (req, res) => {
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
+          logger.info("executing create user");
+          logger.info("user id: " + getUserResult[0][0].id);
+          logger.info(JSON.stringify(getUserResult[0][0]));
+          logger.info("=========================================");
           expTime = {
             expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
           };
@@ -99,6 +103,7 @@ module.exports.login = async (req, res) => {
           });
         } else {
           logger.error("unauthorized user");
+          logger.info("=========================================");
           res.status(401).send({
             error: {
               message: "unauthorized user",
@@ -108,6 +113,7 @@ module.exports.login = async (req, res) => {
       }
     } else {
       logger.error("unauthorized user");
+      logger.info("=========================================");
       res.status(401).send({
         error: {
           message: "unauthorized user",
@@ -128,8 +134,9 @@ const getUser = async (email) => {
     .then(function (users) {
       result = users;
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
+      logger.error("internal server error");
+      logger.info("=========================================");
       result = "error";
     });
   return result;
@@ -141,8 +148,9 @@ const getOrganization = async (domainName) => {
     .then(function (organizationData) {
       domainResult = organizationData;
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
+      logger.error("internal server error");
+      logger.info("=========================================");
       domainResult = "error";
     });
   return domainResult;
@@ -167,8 +175,9 @@ const insertData = async (
     role_id: 3,
     hi5_quota_balance: hi5QuotaBalance,
   };
-  await Users.create(user).catch((err) => {
-    logger.error(err);
+  await Users.create(user).catch(() => {
+    logger.error("internal server error");
+    logger.info("=========================================");
     errorCheck = "error";
   });
   return errorCheck;
