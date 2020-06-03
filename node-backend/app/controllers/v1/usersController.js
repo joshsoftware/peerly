@@ -27,7 +27,9 @@ module.exports.findUsersByOrg = async (req, res) => {
         ]);
         if (!superAdminAuth) {
           {
-            logger.error("access_denied Permission required");
+            logger.error("find user by orrganisaiton access denied");
+            logger.error("user id: " + userData.userId);
+            logger.info("=========================================");
             res.status(403).send({
               error: {
                 code: "access_denied",
@@ -48,8 +50,9 @@ module.exports.findUsersByOrg = async (req, res) => {
                 data: users,
               });
             })
-            .catch((err) => {
-              logger.error(err);
+            .catch(() => {
+              logger.error("internal server error");
+              logger.info("=========================================");
               res.status(500).send({
                 error: {
                   message: "internal server error",
@@ -70,8 +73,9 @@ module.exports.findUsersByOrg = async (req, res) => {
               data: users,
             });
           })
-          .catch((err) => {
-            logger.error(err);
+          .catch(() => {
+            logger.error("internal server error");
+            logger.info("=========================================");
             res.status(500).send({
               error: {
                 message: "internal server error",
@@ -81,7 +85,9 @@ module.exports.findUsersByOrg = async (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid query params",
@@ -104,8 +110,9 @@ module.exports.getProfile = async (req, res) => {
         data: profile,
       });
     })
-    .catch((err) => {
-      logger.error(err);
+    .catch(() => {
+      logger.error("internal server error");
+      logger.info("=========================================");
       res.status(500).send({
         error: {
           message: "internal server error",
@@ -132,6 +139,8 @@ module.exports.getProfileById = (req, res) => {
               data: data,
             });
           } else {
+            logger.error("user not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "profile not found for specified id ",
@@ -139,8 +148,9 @@ module.exports.getProfileById = (req, res) => {
             });
           }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -149,7 +159,9 @@ module.exports.getProfileById = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -179,12 +191,16 @@ module.exports.updateUser = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUsers]]) => {
           if (rowsUpdate == 1) {
-            logger.info(updateUsers);
+            logger.info("executing update user by admin");
+            logger.info("user id: " + userData.userId);
+            logger.info(JSON.stringify(updateUsers));
+            logger.info("=========================================");
             res.status(200).send({
               data: updateUsers,
             });
           } else {
-            logger.error("user not found for specified id ");
+            logger.error("user not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "user not found for specified id ",
@@ -192,8 +208,9 @@ module.exports.updateUser = async (req, res) => {
             });
           }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -202,7 +219,9 @@ module.exports.updateUser = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -232,12 +251,16 @@ module.exports.updateUserByAdmin = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUserByAdmin]]) => {
           if (rowsUpdate == 1) {
-            logger.info(updateUserByAdmin);
+            logger.info("executing update user by admin");
+            logger.info("user id: " + req.params.id);
+            logger.info(JSON.stringify(updateUserByAdmin));
+            logger.info("=========================================");
             res.status(200).send({
               data: updateUserByAdmin,
             });
           } else {
             logger.error("user not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "user not found for specified id",
@@ -245,8 +268,9 @@ module.exports.updateUserByAdmin = async (req, res) => {
             });
           }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -255,7 +279,9 @@ module.exports.updateUserByAdmin = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
@@ -282,12 +308,26 @@ module.exports.deleteUser = async (req, res) => {
         returning: true,
         where: { id: req.params.id },
       })
-        .then(() => {
-          logger.info("user soft deleted");
-          res.status(200).send();
+        .then(([rowsDelete, [deleteUserByAdmin]]) => {
+          if (rowsDelete) {
+            logger.info("executing soft delete user");
+            logger.info("user id: " + userData.userId);
+            logger.info(JSON.stringify(deleteUserByAdmin));
+            logger.info("=========================================");
+            res.status(200).send();
+          } else {
+            logger.error("user not found for specified id");
+            logger.info("=========================================");
+            res.status(404).send({
+              error: {
+                message: "user not found for specified id",
+              },
+            });
+          }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -296,7 +336,9 @@ module.exports.deleteUser = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-user",
