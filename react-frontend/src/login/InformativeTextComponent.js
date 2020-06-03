@@ -4,12 +4,14 @@ import styled from "styled-components";
 
 const HrLine = styled.hr`
   width: 10%;
-  background: ${({ theme }) => (theme === "dark" ? "white" : "black")};
+  background: ${({ theme }) =>
+    theme === "dark" ? "var(--white)" : "var(--black)"};
 `;
 
 const Div = styled.div`
-  color: ${({ theme }) => (theme === "dark" ? "white" : "black")};
-  background-color: ${({ theme }) => (theme === "dark" ? "black" : "white")};
+  color: ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
+  background-color: ${({ theme }) =>
+    theme === "dark" ? "var(--black)" : "var(--white)"};
 `;
 
 const InformativeTextComponent = ({
