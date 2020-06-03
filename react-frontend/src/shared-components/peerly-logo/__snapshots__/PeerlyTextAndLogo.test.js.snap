@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should equal to Peerly text 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="peerlyLogoComponent"
+  >
+    <div
+      class="sc-AxirZ jslGpW mx-auto"
+    >
+      <div
+        class="sc-AxjAm cALtHb"
+        data-testid="plusSignText"
+        font-size="48px"
+        transform="rotate(45deg)"
+      >
+        +
+      </div>
+    </div>
+  </div>
+  <div
+    class="text-center"
+  >
+    <div
+      class="sc-AxiKw dMkHOi"
+      data-testid="PeerlyTextComponents"
+      font-size="48px"
+    >
+      Peerly
+    </div>
+  </div>
+</DocumentFragment>
+`;
