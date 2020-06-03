@@ -16,7 +16,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .send({
         name: "Tata",
         contact_email: "KGF@gmail.com",
-        domain_name: "@kgf.com",
+        domain_name: "@joshsoftware.com",
         subscription_status: 1,
         subscription_valid_upto: "1587731342",
         hi5_limit: 5000,
@@ -73,7 +73,7 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .send({
         name: "Tata",
         contact_email: "KGF@gmail.com",
-        domain_name: "@kgf.com",
+        domain_name: "joshsoftware.com",
         subscription_status: 1,
         subscription_valid_upto: "1587732342",
         hi5_limit: 5000,

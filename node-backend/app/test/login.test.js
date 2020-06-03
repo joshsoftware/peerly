@@ -10,6 +10,30 @@ const token = process.env.ACCESS_TOKEN;
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
 describe("test cases for login", function () {
+  /*eslint-disable-line no-undef*/ before((done) => {
+    this.timeout(100);
+    setTimeout(done, 100);
+    server
+      .post("/organisations")
+      .send({
+        name: "Tata",
+        contact_email: "KGF@gmail.com",
+        domain_name: "joshsoftware.com",
+        subscription_status: 1,
+        subscription_valid_upto: "1587731342",
+        hi5_limit: 5000,
+        hi5_quota_renewal_frequency: "renew",
+        timezone: "india",
+      })
+      .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect(201)
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        res.status.should.equal(201);
+      });
+  });
+
   it("should give ok status", function (done) {
     server
       .post("/oauth/google")
