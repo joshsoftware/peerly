@@ -1,5 +1,5 @@
 import React from "react";
 
-const PlusSign = () => <>+</>;
+const PlusSign = () => <div data-testid="peerlyplussign">+</div>;
 
 export default React.memo(PlusSign);
