@@ -2,13 +2,15 @@ const log4js = require("log4js");
 
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
+const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validationSchema = require("./validationSchema/badgesValidationSchema");
 require("../../config/loggerConfig");
 
 const Badges = db.badges;
 const logger = log4js.getLogger();
 
-module.exports.create = (req, res) => {
+module.exports.create = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   //validation schema
   const schema = validationSchema.insertSchema();
   // Create a badges object
@@ -25,12 +27,17 @@ module.exports.create = (req, res) => {
       // Save badges in the database
       Badges.create(badges)
         .then((data) => {
+          logger.info("executing create badges");
+          logger.info("user id:" + userData.userId);
+          logger.info(JSON.stringify(data));
+          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -39,7 +46,9 @@ module.exports.create = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
@@ -62,8 +71,9 @@ module.exports.findAll = (req, res) => {
             data: data,
           });
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -72,7 +82,9 @@ module.exports.findAll = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
@@ -98,6 +110,8 @@ module.exports.findOne = (req, res) => {
               data: data,
             });
           } else {
+            logger.error("Badge not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "Badge not found for specified id",
@@ -105,8 +119,9 @@ module.exports.findOne = (req, res) => {
             });
           }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -115,7 +130,8 @@ module.exports.findOne = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
@@ -127,7 +143,8 @@ module.exports.findOne = (req, res) => {
 };
 
 //update badges with id
-module.exports.update = (req, res) => {
+module.exports.update = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const name = req.body.name;
@@ -151,12 +168,16 @@ module.exports.update = (req, res) => {
       })
         .then(([rowsUpdate, [updatedBadges]]) => {
           if (rowsUpdate == 1) {
-            logger.info(updatedBadges);
+            logger.info("executing update badges");
+            logger.info("user id:" + userData.userId);
+            logger.info(JSON.stringify(updatedBadges));
+            logger.info("=========================================");
             res.status(200).send({
               data: updatedBadges,
             });
           } else {
             logger.error("Badge not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "Badge not found for specified id",
@@ -164,8 +185,9 @@ module.exports.update = (req, res) => {
             });
           }
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -174,7 +196,9 @@ module.exports.update = (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
