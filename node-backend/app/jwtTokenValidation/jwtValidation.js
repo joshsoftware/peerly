@@ -12,6 +12,7 @@ module.exports.autheticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null /*eslint-disable-line no-eq-null*/) {
     logger.error("unauthorised user with undefined acess token");
+    logger.info("=========================================");
     res.status(401).send({
       error: {
         message: "unauthorised user",
@@ -21,6 +22,7 @@ module.exports.autheticateToken = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
       if (err) {
         logger.error("unauthorised user by rejecting access token");
+        logger.info("=========================================");
         res.status(401).send({
           error: {
             message: "unauthorised user",
@@ -33,6 +35,7 @@ module.exports.autheticateToken = (req, res, next) => {
               next();
             } else {
               logger.error("unauthorised user");
+              logger.info("=========================================");
               res.status(401).send({
                 error: {
                   message: "unauthorised user",
