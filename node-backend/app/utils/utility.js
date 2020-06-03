@@ -68,9 +68,7 @@ module.exports.validateRole = (inputRoleId, roleTypeToCompare) => {
 
 module.exports.authorizeAdmin = async (req, res, next) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
-  if (
-    this.validateRole(tokenData.roleId, ["SuperAdmin", "OrganisationAdmin"])
-  ) {
+  if (this.validateRole(tokenData.roleId, ["SuperAdmin", "Employee"])) {
     next();
   } else {
     logger.warn(
@@ -78,6 +76,7 @@ module.exports.authorizeAdmin = async (req, res, next) => {
         tokenData.userId +
         " trying to access admin credentials"
     );
+    logger.info("=========================================");
     res.status(403).send({
       error: {
         code: "access_denied",
