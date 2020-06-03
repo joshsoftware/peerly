@@ -9,7 +9,7 @@ exports[`should equal to Peerly text 1`] = `
       class="sc-AxirZ jslGpW mx-auto"
     >
       <div
-        class="sc-AxjAm cALtHb"
+        class="sc-AxjAm bQWSzX"
         data-testid="plusSignText"
         font-size="48px"
         transform="rotate(45deg)"
@@ -22,7 +22,7 @@ exports[`should equal to Peerly text 1`] = `
     class="text-center"
   >
     <div
-      class="sc-AxiKw dMkHOi"
+      class="sc-AxiKw vYHoW"
       data-testid="PeerlyTextComponents"
       font-size="48px"
     >
