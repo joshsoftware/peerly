@@ -16,16 +16,12 @@ const PeerlyTextAndLogo = ({ theme, fontSize }) => (
 );
 
 PeerlyTextAndLogo.defaultProps = {
-  theme: {
-    variant: "dark",
-  },
+  theme: "dark",
   fontSize: "48px",
 };
 
 PeerlyTextAndLogo.propTypes = {
-  theme: PropTypes.shape({
-    variant: PropTypes.oneOf(["dark", "light"]),
-  }),
+  theme: PropTypes.oneOf(["dark", "light"]),
   fontSize: PropTypes.string,
 };
 
