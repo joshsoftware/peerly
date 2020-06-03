@@ -27,12 +27,17 @@ module.exports.report = async (req, res) => {
     .then(() => {
       ReportedRecognitions.create(reportedRecognition)
         .then((data) => {
+          logger.info("executing report recognition");
+          logger.info("reported by: " + tokenData.userId);
+          logger.info(JSON.stringify(data));
+          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -41,7 +46,9 @@ module.exports.report = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid reported recognition",
@@ -68,12 +75,17 @@ module.exports.review = async (req, res) => {
     .then(() => {
       RecognitionModeration.create(recognitionModeration)
         .then((data) => {
+          logger.info("executing review moderation");
+          logger.info("moderated by: " + tokenData.userId);
+          logger.info(JSON.stringify(data));
+          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
         })
-        .catch((err) => {
-          logger.error(err);
+        .catch(() => {
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -82,7 +94,9 @@ module.exports.review = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error(err);
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid recognition moderation",
