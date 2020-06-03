@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render informative text component 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-AxirZ dcUVlX"
+  >
+    <h3>
+      Lets Create the Office Positive
+    </h3>
+    <hr
+      class="sc-AxjAm eYDyoD"
+    />
+    <h6>
+      thought
+    </h6>
+  </div>
+</DocumentFragment>
+`;
