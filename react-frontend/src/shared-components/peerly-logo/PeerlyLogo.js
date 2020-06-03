@@ -1,0 +1,40 @@
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+
+import PlusSign from "shared-components/plus-sign/PlusSign";
+
+const Logo = styled.div`
+    width: 83px;
+    height: 83px;
+    border: 3px solid ${({ theme }) =>
+      (theme.variant === "dark" && "var(--white)") ||
+      (theme.variant === "light" && "var(--black)")};
+    background-color: ${({ theme }) =>
+      (theme.variant === "dark" && "var(--black)") ||
+      (theme.variant === "light" && "var(--white)")};
+    transform: rotate(45deg);
+  }
+`;
+
+const PeerlyLogo = ({ theme, fontSize }) => (
+  <Logo theme={theme} className="mx-auto">
+    <PlusSign theme={theme} transform="rotate(45deg)" fontSize={fontSize} />
+  </Logo>
+);
+
+PeerlyLogo.defaultProps = {
+  theme: {
+    variant: "dark",
+  },
+  fontSize: "48px",
+};
+
+PeerlyLogo.propTypes = {
+  theme: PropTypes.shape({
+    variant: PropTypes.oneOf(["dark", "light"]),
+  }),
+  fontSize: PropTypes.string,
+};
+
+export default React.memo(PeerlyLogo);
