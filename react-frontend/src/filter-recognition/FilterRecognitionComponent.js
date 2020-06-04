@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import AsyncSelect from "react-select/async";
 
 import { Card } from "core-components/grid/GridComponent";
 import { Navbar } from "core-components/navbar/NavbarComponent";
 import { Form } from "core-components/form/FormComponent";
 import { Button } from "core-components/button/ButtonComponent";
+import AsyncSelect from "core-components/autocomplete/AutoCompleteComponent";
 
 const CardBody = styled(Card.Body)`
   width: 50vh;
