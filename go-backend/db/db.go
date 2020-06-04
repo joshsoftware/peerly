@@ -22,6 +22,8 @@ type Storer interface {
 	CreateOrganization(context.Context, Organization) (Organization, error)
 	DeleteOrganization(context.Context, int) error
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
+	GetUser(context.Context, int) (User, error)
+	UpdateUser(context.Context, User, int) (User, error)
 	GetOrganizationByDomainName(context.Context, string) (Organization, error)
 
 	// Roles

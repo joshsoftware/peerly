@@ -10,6 +10,25 @@ import (
 )
 
 const (
+	getUserQuery = `SELECT id,
+		org_id,
+		name,
+		email,
+		display_name,
+		profile_image_url,
+		role_id,
+		hi5_quota_balance
+		FROM users WHERE id=$1 AND soft_delete = $2 `
+
+	updateUserQuery = `UPDATE users SET (
+		name,
+		email,
+		display_name,
+		profile_image_url,
+		role_id,
+		hi5_quota_balance
+		) = 
+		($1, $2, $3, $4, $5, $6) where id = $7 AND soft_delete = $8`
 	getUserByEmailQuery = `SELECT * FROM users WHERE email=$1 LIMIT 1`
 	getUserByIDQuery    = `SELECT * FROM users WHERE id=$1 LIMIT 1`
 	listUsersQuery      = `SELECT * FROM users ORDER BY name ASC`
@@ -30,11 +49,11 @@ type User struct {
 	Email           string        `db:"email" json:"email"`
 	DisplayName     string        `db:"display_name" json:"display_name"`
 	ProfileImageURL string        `db:"profile_image_url" json:"profile_image_url"`
-	SoftDelete      bool          `db:"soft_delete" json:"soft_delete"`
+	SoftDelete      bool          `db:"soft_delete" json:"soft_delete,omitempty"`
 	RoleID          int           `db:"role_id" json:"role_id"`
 	Hi5QuotaBalance int           `db:"hi5_quota_balance" json:"hi5_quota_balance"`
-	SoftDeleteBy    sql.NullInt64 `db:"soft_delete_by" json:"soft_delete_by"`
-	SoftDeleteOn    sql.NullTime  `db:"soft_delete_on" json:"soft_delete_on"`
+	SoftDeleteBy    sql.NullInt64 `db:"soft_delete_by" json:"soft_delete_by,omitempty"`
+	SoftDeleteOn    sql.NullTime  `db:"soft_delete_on" json:"soft_delete_on,omitempty"`
 	CreatedAt       time.Time     `db:"created_at" json:"created_at"`
 }
 
@@ -91,6 +110,7 @@ func (s *pgStore) GetUserByID(ctx context.Context, id int) (user User, err error
 
 // ListUsers - retrieves all users from the database. Could be a very large result set...
 func (s *pgStore) ListUsers(ctx context.Context) (users []User, err error) {
+	err = s.db.Select(&users, "SELECT * FROM users WHERE soft_delete = false  ORDER BY first_name ASC")
 	err = s.db.Select(&users, listUsersQuery)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error listing users")
@@ -143,5 +163,74 @@ func (s *pgStore) CreateNewUser(ctx context.Context, u User) (newUser User, err 
 		logger.WithField("err", err.Error()).Error("Error selecting user from database with email: " + u.Email)
 		return
 	}
+	return
+}
+
+func (s *pgStore) GetUser(ctx context.Context, userID int) (user User, err error) {
+	err = s.db.Get(&user, getUserQuery, userID, false)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error fetching user")
+		return
+	}
+	return
+}
+
+func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) (updatedUser User, err error) {
+	var dbUser User
+	err = s.db.Get(&dbUser, getUserQuery, userID, false)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while getting user profile")
+		return
+	}
+	_, err = s.db.Exec(
+		updateUserQuery,
+		userProfile.Name,
+		userProfile.Email,
+		userProfile.DisplayName,
+		userProfile.ProfileImageURL,
+		userProfile.RoleID,
+		userProfile.Hi5QuotaBalance,
+		userID,
+		false,
+	)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error updating user profile")
+		return
+	}
+
+	err = s.db.Get(&updatedUser, getUserQuery, userID, false)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while getting user profile")
+		return
+	}
+	return
+}
+
+func (user *User) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
+	fieldErrors := make(map[string]string)
+
+	if user.Name == "" {
+		fieldErrors["name"] = "Can't be blank"
+	}
+	if user.DisplayName == "" {
+		fieldErrors["display_name"] = "Can't be blank"
+	}
+
+	if !emailRegex.MatchString(user.Email) {
+		fieldErrors["email"] = "Please enter a valid email"
+	}
+	if len(fieldErrors) == 0 {
+		valid = true
+		return
+	}
+
+	errorResponse = map[string]ErrorResponse{"error": ErrorResponse{
+		Code:    "invalid_data",
+		Message: "Please provide valid user's data",
+		Fields:  fieldErrors,
+	},
+	}
+	//TODO: Ask what other validations are expected
+
 	return
 }
