@@ -3,15 +3,16 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 const PlusSignWrapper = styled.div`
-  transform: ${({ transform }) => transform};
+  transform: ${({ cross }) =>
+    cross === true ? "rotate(45deg)" : "rotate(0deg)"};
   font-size: ${({ fontSize }) => fontSize};
   color: ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
 `;
 
-const PlusSign = ({ theme, transform, fontSize }) => (
+const PlusSign = ({ theme, cross, fontSize }) => (
   <PlusSignWrapper
     theme={theme}
-    transform={transform}
+    cross={cross}
     fontSize={fontSize}
     data-testid="plusSignText"
   >
@@ -22,11 +23,12 @@ const PlusSign = ({ theme, transform, fontSize }) => (
 PlusSign.defaultProps = {
   theme: "dark",
   fontSize: "48px",
+  cross: false,
 };
 
 PlusSign.propTypes = {
   theme: PropTypes.oneOf(["dark", "light"]),
-  transform: PropTypes.string,
+  cross: PropTypes.bool,
   fontSize: PropTypes.string,
 };
 
