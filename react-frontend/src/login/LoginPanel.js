@@ -1,21 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { AiOutlineMail } from "react-icons/ai";
 import Styled from "styled-components";
 
 import LogoComponent from "shared-components/peerly-logo/LogoComponent";
-import ButtonComponent from "core-components/button/ButtonComponent";
 import LoginTextComponent from "shared-components/login-text-component/LoginTextComponent";
-import { Col } from "core-components/grid/GridComponents";
+import { Col, Row } from "core-components/grid/GridComponent";
+import GoogleLoginButton from "login/GoogleLoginButton";
 
-const Wrapper = Styled.div`
-  background: #334856;
+const RowComponent = Styled(Row)`
+  height: calc(100%/3);
 `;
+
 const FirstCol = Styled(Col)`
   font: Helvetica Neue,Regular;
   padding-top: 1rem;
 `;
-const SignInButtonComponent = Styled(ButtonComponent)`
+
+const GoogleButton = Styled(GoogleLoginButton)`
   border-radius: 25px;
 `;
 
@@ -23,33 +24,60 @@ const LoginPanel = ({
   buttonText,
   orgPrimaryCoreValue,
   encouragementThought,
-  onClick,
+  responseGoogleOnSuccess,
+  responseGoogleOnFailure,
 }) => (
-  <Wrapper className="h-100 align-items-center d-flex flex-column">
-    <FirstCol className="h1 text-white">
-      <LogoComponent />
-    </FirstCol>
-    <Col className="align-items-center d-flex justify-content-center ">
-      <SignInButtonComponent className="btn-light" onClick={onClick}>
-        <AiOutlineMail fontSize={15} />
-        {buttonText}
-      </SignInButtonComponent>
-    </Col>
-    <Col className="d-none d-md-block d-lg-block">
-      <LoginTextComponent
-        className="text-white text-center "
-        orgPrimaryCoreValue={orgPrimaryCoreValue}
-        encouragementThought={encouragementThought}
-      />
-    </Col>
-  </Wrapper>
+  <>
+    <div className="d-sm-none d-md-block h-100">
+      <RowComponent>
+        <FirstCol className="h1 text-white">
+          <LogoComponent />
+        </FirstCol>
+      </RowComponent>
+      <RowComponent>
+        <Col className="text-center m-auto">
+          <GoogleButton
+            responseGoogleOnSuccess={responseGoogleOnSuccess}
+            responseGoogleOnFailure={responseGoogleOnFailure}
+            buttonText={buttonText}
+          ></GoogleButton>
+        </Col>
+      </RowComponent>
+      <RowComponent className="d-none d-md-block">
+        <Col>
+          <LoginTextComponent
+            className="text-white text-center "
+            orgPrimaryCoreValue={orgPrimaryCoreValue}
+            encouragementThought={encouragementThought}
+          />
+        </Col>
+      </RowComponent>
+    </div>
+    <div className="d-none d-sm-block d-md-none h-100">
+      <Row className="h-50">
+        <FirstCol className="h1 text-white">
+          <LogoComponent />
+        </FirstCol>
+      </Row>
+      <Row className="h-50">
+        <Col className="text-center m-auto">
+          <GoogleButton
+            responseGoogleOnSuccess={responseGoogleOnSuccess}
+            responseGoogleOnFailure={responseGoogleOnFailure}
+            buttonText={buttonText}
+          ></GoogleButton>
+        </Col>
+      </Row>
+    </div>
+  </>
 );
 
 LoginPanel.propTypes = {
   buttonText: PropTypes.string,
   orgPrimaryCoreValue: PropTypes.string,
   encouragementThought: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  responseGoogleOnSuccess: PropTypes.func.isRequired,
+  responseGoogleOnFailure: PropTypes.func.isRequired,
 };
 
 LoginPanel.defaultProps = {
