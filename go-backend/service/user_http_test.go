@@ -1,13 +1,16 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"joshsoftware/peerly/db"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/bxcodec/faker/v3"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -28,25 +31,21 @@ func (suite *UsersHandlerTestSuite) SetupTest() {
 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(UsersHandlerTestSuite))
+	suite.Run(t, new(CoreValueHandlerTestSuite))
 	suite.Run(t, new(OrganizationHandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
-	suite.dbMock.On("ListUsers", mock.Anything).Return(
-		[]db.User{
-			db.User{
-				ID:              1,
-				OrgID:           1,
-				FirstName:       "test1",
-				LastName:        "test2",
-				Email:           "test@gmail.com",
-				DisplayName:     "test",
-				ProfileImage:    "test.jpg",
-				RoleID:          10,
-				Hi5QuotaBalance: 5},
-		},
-		nil,
-	)
+	// Start by declaring a fakeUser of type db.User, then have faker shove fake data into it
+	fakeUser := db.User{}
+	faker.FakeData(&fakeUser)
+
+	// Declare an array of db.User and append the fakeUser onto it for use on the dbMock
+	fakeUsers := []db.User{}
+	fakeUsers = append(fakeUsers, fakeUser)
+
+	// When calling ListUsers with any args, always return that fakeUsers array and no error
+	suite.dbMock.On("ListUsers", mock.Anything).Return(fakeUsers, nil)
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
@@ -56,10 +55,35 @@ func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 		listUsersHandler(Dependencies{Store: suite.dbMock}),
 	)
 
+	var users []db.User
+	err := json.Unmarshal(recorder.Body.Bytes(), &users)
+	if err != nil {
+		log.Fatal("Error converting HTTP body from listUsersHandler into User object in json.Unmarshal")
+	}
+
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"id":1,"org_id":1,"first_name":"test1","last_name":"test2","email":"test@gmail.com","display_name":"test","profile_image":"test.jpg","role_id":10,"hi5_quota_balance":5}]`, recorder.Body.String())
+	assert.NotNil(suite.T(), users[0].ID)
 	suite.dbMock.AssertExpectations(suite.T())
 }
+
+// func (suite *UsersHandlerTestSuite) TestGetUserByEmailSuccess() {
+// 	fakeUser := db.User{}
+// 	faker.FakeData(&fakeUser)
+// 	suite.dbMock.On("GetUserByEmail", mock.Anything).Return(fakeUser, nil)
+// 	recorder := makeHTTPCall(
+// 		http.MethodGet,
+// 		"users/{email}",
+// 		("/users/" + fakeUser.Email),
+// 		"",
+// 		getUserByEmailHandler(Dependencies{Store: suite.dbMock}),
+// 	)
+
+// 	var org db.Organization
+// 	err := json.Unmarshal(recorder.Body.Bytes(), &org)
+// 	if err != nil {
+// 		log.Fatal("Error in json.Unmarshal on TestGetUserByEmailSuccess (email: " + org.)
+// 	}
+// }
 
 func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 	suite.dbMock.On("ListUsers", mock.Anything).Return(

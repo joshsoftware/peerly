@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const utility = require("../utils/utility");
-const /*eslint-disable no-unused-vars*/ organisationControllerV1 = require("../controllers/v1/orgnizationController");
+const /*eslint-disable no-unused-vars*/ organisationControllerV1 = require("../controllers/v1/organisationController");
 const orgRouter = express.Router();
 orgRouter.use(bodyParser.urlencoded({ extended: true }));
 /*eslint-disable  no-eval*/

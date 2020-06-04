@@ -7,13 +7,6 @@ const Organizations = db.organizations;
 module.exports.login = async (req, res) => {
   let profile = req.user;
   let email = profile.emails[0].value;
-  let firstName = profile.name.givenName;
-  let lastName = profile.name.familyName;
-  let displayName = profile.displayName;
-  let userId;
-  let roleId;
-  let orgName;
-  let orgId;
   let expTime;
   let result = await getUser(email);
   if (result == "error") {
@@ -23,23 +16,19 @@ module.exports.login = async (req, res) => {
       },
     });
   } else if (result[1].rowCount) {
-    userId = result[0][0].id;
-    roleId = result[0][0].roleid;
-    orgName = result[0][0].name;
-    orgId = result[0][0].orgid;
     expTime = {
       expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
     };
     const token = jwt.sign(
       {
         iss: "node.peerly.com",
-        sub: userId,
+        sub: result[0][0].id,
         aud: "peerly.com",
         nbf: moment.utc().unix(),
         "https://peerly.com": {
-          roleId: roleId,
-          orgId: orgId,
-          orgName: orgName,
+          roleId: result[0][0].roleid,
+          orgId: result[0][0].orgid,
+          orgName: result[0][0].name,
         },
       },
       process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
@@ -48,7 +37,7 @@ module.exports.login = async (req, res) => {
         expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
       }
     );
-    res.send({
+    res.status(200).send({
       data: {
         token: token,
       },
@@ -63,13 +52,13 @@ module.exports.login = async (req, res) => {
         },
       });
     } else if (domainResult) {
-      let orgId = domainResult.id;
       let checkerror = await insertData(
-        orgId,
-        firstName,
-        lastName,
+        domainResult.id,
+        profile.name.givenName,
+        profile.name.familyName,
         email,
-        displayName
+        profile.displayName,
+        domainResult.hi5_limit
       );
       if (checkerror == "error") {
         res.status(500).send({
@@ -80,29 +69,25 @@ module.exports.login = async (req, res) => {
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
-          userId = getUserResult[0][0].id;
-          roleId = getUserResult[0][0].roleid;
-          orgName = getUserResult[0][0].name;
-          orgId = getUserResult[0][0].orgid;
           expTime = {
             expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
           };
           const token = jwt.sign(
             {
               iss: "node.peerly.com",
-              sub: userId,
+              sub: getUserResult[0][0].id,
               aud: "peerly.com",
               nbf: moment.utc().unix(),
               "https://peerly.com": {
-                roleId: roleId,
-                orgId: orgId,
-                orgName: orgName,
+                roleId: getUserResult[0][0].roleid,
+                orgId: getUserResult[0][0].orgid,
+                orgName: getUserResult[0][0].name,
               },
             },
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
             expTime
           );
-          res.send({
+          res.status(200).send({
             data: {
               token: token,
             },
@@ -129,7 +114,7 @@ const getUser = async (email) => {
   let result;
   await db.sequelize
     .query(
-      "select roles.id as roleId,organizations.id as orgId,users.id,organizations.name from users,roles,organizations where users.email = '" +
+      "SELECT  roles.id as roleId,organizations.id as orgId,users.id,organizations.name FROM users INNER JOIN organizations ON users.org_id = organizations.id INNER JOIN roles ON users.role_id = roles.id WHERE users.email= '" +
         email +
         "'"
     )
@@ -154,7 +139,14 @@ const getOrganization = async (domainName) => {
   return domainResult;
 };
 
-const insertData = async (orgId, firstName, lastName, email, displayName) => {
+const insertData = async (
+  orgId,
+  firstName,
+  lastName,
+  email,
+  displayName,
+  hi5QuotaBalance
+) => {
   let errorCheck;
   const user = {
     org_id: orgId,
@@ -163,8 +155,8 @@ const insertData = async (orgId, firstName, lastName, email, displayName) => {
     email: email,
     display_name: displayName,
     soft_delete: false,
-    role_id: 2,
-    hi5_quota_balance: 5,
+    role_id: 3,
+    hi5_quota_balance: hi5QuotaBalance,
   };
   await Users.create(user).catch(() => {
     errorCheck = "error";

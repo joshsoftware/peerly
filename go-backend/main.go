@@ -9,6 +9,7 @@ import (
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
 	"joshsoftware/peerly/service"
+	"joshsoftware/peerly/tasks"
 	"os"
 	"strconv"
 
@@ -78,6 +79,9 @@ func startApp() (err error) {
 	deps := service.Dependencies{
 		Store: store,
 	}
+
+	// Start up all the background tasks Peerly depends upon
+	tasks.Init(deps)
 
 	// mux router
 	router := service.InitRouter(deps)

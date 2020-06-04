@@ -1,0 +1,20 @@
+APP_NAME: "peerly_test"
+APP_PORT: "33001"
+
+# Postgres
+DB_URI: "postgresql://user:password@localhost:5432/dbname?sslmode=disable"
+
+# JWT_SECRET
+JWT_SECRET: "some secret"
+
+# Google OAuth
+GOOGLE_KEY: "Get me from https://console.developers.google.com/apis/credentials"
+GOOGLE_SECRET: "Get me from https://console.developers.google.com/apis/credentials"
+GOOGLE_REDIRECT: "http://localhost:33001/auth/google"
+
+# Migrations Path Configuration
+MIGRATION_FOLDER_PATH: "./../migrations"
+
+# How long should the JWT key be valid for?
+# TODO: Make app crash if not present
+JWT_EXPIRY_DURATION_HOURS: 672 # one month

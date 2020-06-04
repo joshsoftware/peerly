@@ -8,6 +8,8 @@ const coreValuesRoute = require("./coreValuesRoutes");
 const orgRoute = require("./organisationsRoutes");
 const badgesRoute = require("./badgesRoutes");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
+const recognitionRoute = require("./recognitionRoutes");
+const moderationRoute = require("./moderationRoutes");
 
 routes.use(bodyParser.urlencoded({ extended: true }));
 
@@ -17,5 +19,7 @@ routes.use("/", usersRoute);
 routes.use("/", coreValuesRoute);
 routes.use("/", orgRoute);
 routes.use("/", badgesRoute);
+routes.use("/", moderationRoute);
+routes.use("/", recognitionRoute);
 
 module.exports = routes;
