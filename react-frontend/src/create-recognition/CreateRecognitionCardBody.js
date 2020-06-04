@@ -10,6 +10,7 @@ import { Form } from "core-components/form/FormComponent";
 import CoreValue from "create-recognition/coreValues";
 import { Button } from "core-components/button/ButtonComponent";
 import Image from "shared-components/user-image-name/UserImageName";
+import AddRecognition from "create-recognition/AddRecognitionPopup";
 
 const Wrapper = styled.section`
   margin-left: 10%;
@@ -19,9 +20,6 @@ const Wrapper = styled.section`
 const WrapperForSelectValue = styled.section`
   margin-left: 18%;
   margin-right: 18%;
-`;
-const CommentBoxWrapper = styled.div`
-  max-width: 50%;
 `;
 
 const coreValues = [
@@ -49,11 +47,14 @@ const CreateRecognitionCardBody = ({
   Hi5Image,
 }) => {
   const [comment, addComment] = useState(false);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const onClickAddComment = () => {
     addComment(true);
   };
   const addCommentText = (event) => {
-    addCommentText(event.target.value);
+    addCommentText(event.target);
   };
   return (
     <Card>
@@ -68,23 +69,27 @@ const CreateRecognitionCardBody = ({
         </ListGroup>
         <div className="text-center">
           {comment ? (
-            <CommentBoxWrapper>
-              <Form.Control
-                as="textarea"
-                rows="3"
-                onChange={(event) => {
-                  addCommentText(event);
-                }}
-              ></Form.Control>
-            </CommentBoxWrapper>
+            <Form.Control
+              as="textarea"
+              rows="3"
+              onChange={(event) => {
+                addCommentText(event);
+              }}
+            ></Form.Control>
           ) : (
             <Button onClick={onClickAddComment}> Add Comments </Button>
           )}
         </div>
         <div className="text-center">
-          <Button> Done </Button>
+          <Button onClick={handleShow}> Done </Button>
         </div>
       </Wrapper>
+      <AddRecognition
+        show={show}
+        handleClose={handleClose}
+        EmployeeImage={EmployeeImage}
+        EmployeeName={EmployeeName}
+      />
     </Card>
   );
 };
