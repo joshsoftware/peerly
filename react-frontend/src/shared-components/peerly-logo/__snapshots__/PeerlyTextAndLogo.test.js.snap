@@ -12,7 +12,6 @@ exports[`should equal to Peerly text 1`] = `
         class="sc-AxjAm btUXNN"
         data-testid="plusSignText"
         font-size="48px"
-        transform="rotate(45deg)"
       >
         +
       </div>
