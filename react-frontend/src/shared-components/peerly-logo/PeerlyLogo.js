@@ -16,7 +16,7 @@ const Logo = styled.div`
 
 const PeerlyLogo = ({ theme, fontSize }) => (
   <Logo theme={theme} className="mx-auto">
-    <PlusSign theme={theme} transform="rotate(45deg)" fontSize={fontSize} />
+    <PlusSign theme={theme} cross fontSize={fontSize} />
   </Logo>
 );
 
