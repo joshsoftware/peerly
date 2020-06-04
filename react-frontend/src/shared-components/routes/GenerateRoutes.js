@@ -2,7 +2,7 @@ import React from "react";
 import { Route } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import PrivateRoute from "sharedComponents/PrivateRoute";
+import PrivateRoute from "shared-components/routes/PrivateRoute";
 
 const getRoutes = (config) =>
   config.map((route) =>
@@ -29,7 +29,7 @@ GenerateRoutes.propTypes = {
       isProtected: PropTypes.bool,
       includeNavbar: PropTypes.bool,
       includeSidebar: PropTypes.bool,
-      component: PropTypes.func,
+      component: PropTypes.elementType,
       exact: PropTypes.bool,
     })
   ).isRequired,

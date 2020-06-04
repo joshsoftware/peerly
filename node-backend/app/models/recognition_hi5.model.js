@@ -28,6 +28,7 @@ module.exports = (sequelize, Sequelize) => {
       timestamp: false,
       createdAt: false,
       updatedAt: false,
+      freezeTableName: true,
     }
   );
   return Recognition_hi5;

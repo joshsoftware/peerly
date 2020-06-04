@@ -37,7 +37,7 @@ module.exports.login = async (req, res) => {
         expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
       }
     );
-    res.send({
+    res.status(200).send({
       data: {
         token: token,
       },
@@ -87,7 +87,7 @@ module.exports.login = async (req, res) => {
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
             expTime
           );
-          res.send({
+          res.status(200).send({
             data: {
               token: token,
             },

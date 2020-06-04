@@ -25,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:nowatch": "CI=true react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -59,7 +60,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:nowatch"
     }
   },
   "lint-staged": {
@@ -68,6 +70,8 @@
     ]
   },
   "engines": {
-    "node": ">=12.13.0"
+    "node": "12.16.3",
+    "npm": "6.14.4",
+    "yarn": "1.22.4"
   }
 }

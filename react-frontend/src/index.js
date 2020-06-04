@@ -7,6 +7,7 @@ import { store } from "root/redux-store";
 import Routes from "root/root-routes";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "index.css";
 
 ReactDOM.render(
   <React.StrictMode>

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 import withLayout from "HOC/withLayout";
-import SessionTimeoutComponent from "sharedComponents/SessionTimeoutComponent";
+import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 
 const PrivateRoute = ({ route }) => {
   const token = useSelector((state) => state.appReducer.token);
@@ -21,7 +21,7 @@ const PrivateRoute = ({ route }) => {
 PrivateRoute.propTypes = {
   route: PropTypes.shape({
     path: PropTypes.string,
-    component: PropTypes.func,
+    component: PropTypes.elementType,
     isProtected: PropTypes.bool,
     includeNavbar: PropTypes.bool,
     includeSidebar: PropTypes.bool,

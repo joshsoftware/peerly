@@ -40,7 +40,7 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
       moderator_comment: {
         type: "string",
         length: 45,
-        notNull: true,
+        notNull: false,
       },
       moderated_by: {
         type: "int",
