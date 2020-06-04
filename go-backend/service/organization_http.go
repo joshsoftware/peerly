@@ -9,6 +9,26 @@ import (
 	"strconv"
 )
 
+func getOrganizationByDomainNameHandler(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
+		org, err := deps.Store.GetOrganizationByDomainName(req.Context(), vars["domainName"])
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error retrieving organization by domain name: " + vars["domainName"])
+			rw.WriteHeader(http.StatusNotFound)
+			return
+		}
+		respBytes, err := json.Marshal(org)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error marshaling organization by domain name: " + org.DomainName)
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		rw.Header().Add("Content-Type", "application/json")
+		rw.Write(respBytes)
+	})
+}
+
 // @Title listOrganizationHandler
 // @Description list all Organizations
 // @Router /organizations [get]

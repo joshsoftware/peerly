@@ -50,4 +50,16 @@ recRouter.get("/recognitions/", authorizedRole, async (req, res) => {
   eval(controller).findAll(req, res);
 });
 
+recRouter.post(
+  "/recognitions/:recognition_id/hi5",
+  authorizedRole,
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "recognitionController"
+    );
+    eval(controller).giveHi5(req, res);
+  }
+);
+
 module.exports = recRouter;

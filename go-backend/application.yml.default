@@ -1,12 +1,20 @@
-APP_NAME: "samplemgr"
+APP_NAME: "peerly"
 APP_PORT: "33001"
-
-# MongoDB URI
-#DB_URI: "mongodb://user:password@localhost:27017/dbname?authMechanism=SCRAM-SHA-1"
-#DB_NAME: "dbname"
 
 # Postgres
 DB_URI: "postgresql://user:password@localhost:5432/dbname?sslmode=disable"
 
-# MIGRATION_FOLDER_PATH: "./migrations" // for application.yml
-# MIGRATION_FOLDER_PATH: "./../migrations" //for application_test.yml
+# JWT_SECRET
+JWT_SECRET: "some secret"
+
+# Google OAuth
+GOOGLE_KEY: "Get me from https://console.developers.google.com/apis/credentials"
+GOOGLE_SECRET: "Get me from https://console.developers.google.com/apis/credentials"
+GOOGLE_REDIRECT: "http://localhost:33001/auth/google"
+
+# Migrations Path Configuration
+MIGRATION_FOLDER_PATH: "./migrations"
+
+# How long should the JWT key be valid for?
+# TODO: Make app crash if not present
+JWT_EXPIRY_DURATION_HOURS: 672 # one month

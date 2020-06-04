@@ -18,6 +18,7 @@ const (
 		($1, $2, $3) where id = $4 and org_id = $5 RETURNING id, org_id, text, description, parent_id`
 )
 
+// CoreValue - struct representing a core value object
 type CoreValue struct {
 	ID          int64     `db:"id" json:"id"`
 	OrgID       int64     `db:"org_id" json:"org_id"`
@@ -43,6 +44,7 @@ func validateParentCoreValue(ctx context.Context, storer Storer, organisationID,
 	return true
 }
 
+// Validate - ensures the core value object has all the info it needs
 func (coreValue CoreValue) Validate(ctx context.Context, storer Storer, organisationID int64) (valid bool, errFields map[string]string) {
 	errFields = make(map[string]string)
 

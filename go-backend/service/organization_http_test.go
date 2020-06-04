@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -22,7 +23,6 @@ func (suite *OrganizationHandlerTestSuite) SetupTest() {
 }
 
 func (suite *OrganizationHandlerTestSuite) TestListOrganizationsSuccess() {
-
 	suite.dbMock.On("ListOrganizations", mock.Anything).Return(
 		[]db.Organization{
 			db.Organization{
@@ -35,6 +35,7 @@ func (suite *OrganizationHandlerTestSuite) TestListOrganizationsSuccess() {
 				Hi5Limit:                 5,
 				Hi5QuotaRenewalFrequency: "2",
 				Timezone:                 "IST",
+				CreatedAt:                time.Now().UTC(),
 			},
 		},
 		nil,
@@ -46,8 +47,12 @@ func (suite *OrganizationHandlerTestSuite) TestListOrganizationsSuccess() {
 		"",
 		listOrganizationHandler(Dependencies{Store: suite.dbMock}))
 
+	// Create a test org to compare against
+	testOrgs := []db.Organization{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &testOrgs)
+
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `[{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}]`, recorder.Body.String())
+	assert.Equal(suite.T(), 1, len(testOrgs))
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -133,7 +138,7 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 
 	suite.dbMock.On("UpdateOrganization", mock.Anything, mock.Anything, mock.Anything).Return(db.Organization{
 		ID:                       1,
-		Name:                     "test organization",
+		Name:                     "test organization (updated)",
 		ContactEmail:             "test@gmail.com",
 		DomainName:               "www.testdomain.com",
 		SubscriptionStatus:       1,
@@ -152,8 +157,12 @@ func (suite *OrganizationHandlerTestSuite) TestUpdateOrganizationSuccess() {
 		updateOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
+	// Declare test Organization object to test equality
+	testOrg := db.Organization{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &testOrg)
+
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`, recorder.Body.String())
+	assert.Equal(suite.T(), "test organization (updated)", testOrg.Name)
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -212,8 +221,11 @@ func (suite *OrganizationHandlerTestSuite) TestGetOrganizationSuccess() {
 		getOrganizationHandler(Dependencies{Store: suite.dbMock}),
 	)
 
+	testOrg := db.Organization{}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &testOrg)
+
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`, recorder.Body.String())
+	assert.Equal(suite.T(), 1, testOrg.ID)
 
 	suite.dbMock.AssertExpectations(suite.T())
 }
