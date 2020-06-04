@@ -126,16 +126,15 @@ func (suite *UsersHandlerTestSuite) TestUpdateUserSuccess() {
 	suite.dbMock.On("UpdateUser", mock.Anything, mock.Anything, mock.Anything).Return(db.User{
 		ID:              1,
 		OrgID:           1,
-		FirstName:       "test1",
-		LastName:        "test2",
+		Name:            "test2",
 		Email:           "test@gmail.com",
 		DisplayName:     "test user",
-		ProfileImage:    "test.jpg",
+		ProfileImageURL: "test.jpg",
 		RoleID:          10,
 		Hi5QuotaBalance: 5,
 	}, nil)
 
-	body := `{"org_id":1,"first_name":"test1","last_name":"test2","email":"test@gmail.com","display_name":"test user","profile_image":"test.jpg","role_id":10,"hi5_quota_balance":5}`
+	body := `{"org_id":1,"full_name":"test2","email":"test@gmail.com","display_name":"test user","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5}`
 
 	recorder := makeHTTPCall(http.MethodPut,
 		"/users/{id:[0-9]+}",
@@ -145,14 +144,14 @@ func (suite *UsersHandlerTestSuite) TestUpdateUserSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"org_id":1,"first_name":"test1","last_name":"test2","email":"test@gmail.com","display_name":"test user","profile_image":"test.jpg","role_id":10,"hi5_quota_balance":5}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"id":1,"full_name":"test2","org_id":1,"email":"test@gmail.com","display_name":"test user","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5,"soft_delete_by":{"Int64":0,"Valid":false},"soft_delete_on":{"Time":"0001-01-01T00:00:00Z","Valid":false},"created_at":"0001-01-01T00:00:00Z"}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
 func (suite *UsersHandlerTestSuite) TestUpdateUserDbFailure() {
 	suite.dbMock.On("UpdateUser", mock.Anything, mock.Anything, mock.Anything).Return(db.User{}, errors.New("Error while updating user"))
 
-	body := `{"org_id":1,"first_name":"test1", "last_name":"test2", "email":"test@gmail.com", "display_name": "test user", "profile_image": "test.jpg", "role_id": 10, "hi5_quota_balance": 5}`
+	body := `{"org_id":1,"full_name":"test2", "email":"test@gmail.com", "display_name": "test user", "profile_image_url": "test.jpg", "role_id": 10, "hi5_quota_balance": 5}`
 
 	recorder := makeHTTPCall(http.MethodPut,
 		"/users/{id:[0-9]+}",
@@ -171,11 +170,10 @@ func (suite *UsersHandlerTestSuite) TestGetUserSuccess() {
 		db.User{
 			ID:              1,
 			OrgID:           1,
-			FirstName:       "test1",
-			LastName:        "test2",
+			Name:            "test2",
 			Email:           "test@gmail.com",
 			DisplayName:     "test",
-			ProfileImage:    "test.jpg",
+			ProfileImageURL: "test.jpg",
 			RoleID:          10,
 			Hi5QuotaBalance: 5,
 		}, nil,
@@ -189,7 +187,7 @@ func (suite *UsersHandlerTestSuite) TestGetUserSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"org_id":1,"first_name":"test1","last_name":"test2","email":"test@gmail.com","display_name":"test","profile_image":"test.jpg","role_id":10,"hi5_quota_balance":5}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"id":1,"full_name":"test2","org_id":1,"email":"test@gmail.com","display_name":"test","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5,"soft_delete_by":{"Int64":0,"Valid":false},"soft_delete_on":{"Time":"0001-01-01T00:00:00Z","Valid":false},"created_at":"0001-01-01T00:00:00Z"}`, recorder.Body.String())
 
 	suite.dbMock.AssertExpectations(suite.T())
 }
