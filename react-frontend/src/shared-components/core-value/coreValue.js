@@ -2,38 +2,42 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styled from "styled-components";
 
-import CoreValueIcon from "shared-components/core-value-icon/coreValueIconComponent";
-import { Row, Container } from "core-components/grid/GridComponent";
+import CoreValueIcon from "shared-components/core-value-icon/coreValueIconComponent"; //todo: will work after core value addition
+import CoreValueText from "shared-components/core-value/CoreValueText";
 
 const Wrapper = Styled.div`
-  max-width: 60px;
-  min-height: 60px;
+  max-width: 70px;
+  min-height: 100px;
   border-radius: 10px;
-  border: 3px solid black;
-  display: flex;
   text-align: center;
-  font-size: 0.75em;
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  opacity: 1;
 `;
 
-const CoreValueComponent = ({ coreValueName }) => {
+const CoreValueComponent = ({ coreValueName, fontSize, backgroundColor }) => {
   const onClick = () => {
     // todo
   };
-
   return (
-    <Wrapper onClick={onClick}>
-      <Container>
-        <Row className="justify-content-center mt-1">
-          <CoreValueIcon size="30" color="red" />
-        </Row>
-        <Row className="justify-content-center mt-2">{coreValueName}</Row>
-      </Container>
+    <Wrapper
+      className="m-auto"
+      onClick={onClick}
+      backgroundColor={backgroundColor}
+    >
+      <CoreValueIcon size="50" color="red" />
+      <CoreValueText coreValueName={coreValueName} fontSize={fontSize} />
     </Wrapper>
   );
 };
 
+CoreValueComponent.defaultProps = {
+  backgroundColor: "var(--rust)",
+};
+
 CoreValueComponent.propTypes = {
   coreValueName: PropTypes.string.isRequired,
+  fontSize: PropTypes.string,
+  backgroundColor: PropTypes.string,
 };
 
 export default CoreValueComponent;
