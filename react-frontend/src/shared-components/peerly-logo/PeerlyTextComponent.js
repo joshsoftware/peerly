@@ -3,13 +3,10 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 const PeerlyText = styled.div`
-   {
-    color: ${({ theme }) =>
-      theme === "dark" ? "var(--white)" : "var(--black)"};
-    background-color: ${({ theme }) =>
-      theme === "dark" ? "var(--black)" : "var(--white)"};
-    font-size: ${({ fontSize }) => fontSize};
-  }
+  color: ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
+  background-color: ${({ theme }) =>
+    theme === "dark" ? "var(--black)" : "var(--white)"};
+  font-size: ${({ fontSize }) => fontSize};
 `;
 
 const PeerlyTextComponent = ({ theme, fontSize }) => (

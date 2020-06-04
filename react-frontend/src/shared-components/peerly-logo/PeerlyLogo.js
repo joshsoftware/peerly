@@ -5,14 +5,13 @@ import PropTypes from "prop-types";
 import PlusSign from "shared-components/plus-sign/PlusSign";
 
 const Logo = styled.div`
-    width: 83px;
-    height: 83px;
-    border: 3px solid ${({ theme }) =>
-      theme === "dark" ? "var(--white)" : "var(--black)"};
-    background-color: ${({ theme }) =>
-      theme === "dark" ? "var(--black)" : "var(--white)"};
-    transform: rotate(45deg);
-  }
+  width: 83px;
+  height: 83px;
+  border: 3px solid
+    ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
+  background-color: ${({ theme }) =>
+    theme === "dark" ? "var(--black)" : "var(--white)"};
+  transform: rotate(45deg);
 `;
 
 const PeerlyLogo = ({ theme, fontSize }) => (

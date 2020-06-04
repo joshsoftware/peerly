@@ -3,12 +3,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 
 const PlusSignWrapper = styled.div`
-   {
-    transform: ${({ transform }) => transform};
-    font-size: ${({ fontSize }) => fontSize};
-    color: ${({ theme }) =>
-      theme === "dark" ? "var(--white)" : "var(--black)"};
-  }
+  transform: ${({ transform }) => transform};
+  font-size: ${({ fontSize }) => fontSize};
+  color: ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
 `;
 
 const PlusSign = ({ theme, transform, fontSize }) => (
