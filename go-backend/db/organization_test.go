@@ -6,7 +6,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-	"time"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -17,8 +16,6 @@ type OrganizationTestSuite struct {
 	db      *sqlx.DB
 	sqlmock sqlmock.Sqlmock
 }
-
-var testTime, _ = time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
 
 var mockedRows *sqlmock.Rows
 

@@ -72,7 +72,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		)
 
 		// TEST URL (FXIME: Delete this from final prod code, leaving it here for future debugging if needed)
-		// https://accounts.google.com/o/oauth2/auth?client_id=244301571738-1ge59u0bbik89uvalb27job1tkpo9hgp.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A33001%2Fauth%2Fgoogle&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=state
+		// https://accounts.google.com/o/oauth2/auth?client_id=749817093280-6h2emqcqsi84murdsdr543kuemvrlr9t.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A33001%2Fauth%2Fgoogle&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&state=state
 
 		if err != nil {
 			log.Error(ae.ErrAuthCodeRequestFail, "Google didn't like the auth code we sent", err)

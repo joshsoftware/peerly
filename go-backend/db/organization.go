@@ -45,7 +45,7 @@ const (
 		hi5_limit,
 		hi5_quota_renewal_frequency,
 		timezone,
-	  created_at FROM organizations WHERE id=$1`
+		created_at FROM organizations WHERE id=$1`
 
 	listOrganizationsQuery = `SELECT id,
 		name,
