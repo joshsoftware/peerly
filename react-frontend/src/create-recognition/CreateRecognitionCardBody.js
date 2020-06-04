@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 //import { store } from "root/redux-store";
+import ImageComponent from "core-components/image/ImageComponent";
 import { Card } from "core-components/card/card";
 import { Form } from "core-components/form/FormComponent";
 import CoreValue from "create-recognition/coreValues";
@@ -15,12 +17,19 @@ const Wrapper = styled.section`
   margin-right: 10%;
 `;
 const WrapperForSelectValue = styled.section`
-  margin-left: 10%;
+  margin-left: 18%;
+  margin-right: 18%;
 `;
 const CommentBoxWrapper = styled.div`
   min-width: 50%;
 `;
+/*const CardWrapper = styled.section`
 
+  borderRadius: "36px 36px 0px 0px",
+  minHeight: "100vh",
+  width: "206px",
+  background: "linear-gradient(#00000 100px, var(--white) 0%)",
+`;*/
 const coreValues = [
   {
     id: 1,
@@ -40,7 +49,11 @@ const coreValues = [
   },
 ];
 
-const CreateRecognitionCardBody = () => {
+const CreateRecognitionCardBody = ({
+  EmployeeName,
+  EmployeeImage,
+  Hi5Image,
+}) => {
   const [comment, addComment] = useState(false);
   const onClickAddComment = () => {
     addComment(true);
@@ -49,12 +62,20 @@ const CreateRecognitionCardBody = () => {
     addCommentText(event.target.value);
   };
   return (
-    <Card.Body>
-      <Image imageSrc="https://public-v2links.adobecc.com/b8bcaf62-377d-428f-41ee-f038352e2a2e/component?params=component_id%3A4f24bbbe-5873-4fcb-8c68-7b9f653271bc&params=version%3A1&token=1591156621_da39a3ee_3e2c4b5df39ff435dc9cc88b89aff4beba282da9&api_key=CometServer1"></Image>
-      <Wrapper>
-        <Row>
-          <WrapperForSelectValue> Select Value </WrapperForSelectValue>
+    <Card>
+      <WrapperForSelectValue>
+        <Row className="ml-5">
+          <Image imageSrc={EmployeeImage} EmployeeName={EmployeeName}></Image>
         </Row>
+        <Row className="justify-content-end">
+          <ImageComponent
+            img={Hi5Image}
+            src="https://public-v2links.adobecc.com/b8bcaf62-377d-428f-41ee-f038352e2a2e/component?params=component_id%3Aa1fd8594-6956-447e-91fa-99c68e40d839&params=version%3A0&token=1591203478_da39a3ee_406848fd8fdd42120d43532f41101c504e61f5cb&api_key=CometServer1"
+          />
+        </Row>
+        <Row> Select Value </Row>
+      </WrapperForSelectValue>
+      <Wrapper>
         <Row className="justify-content-around mt-4">
           <CoreValue coreValues={coreValues} />
         </Row>
@@ -79,8 +100,22 @@ const CreateRecognitionCardBody = () => {
           <Button> Done </Button>
         </Row>
       </Wrapper>
-    </Card.Body>
+    </Card>
   );
 };
 
+CreateRecognitionCardBody.propTypes = {
+  EmployeeName: PropTypes.string,
+  EmployeeImage: PropTypes.string,
+  Hi5Image: PropTypes.string,
+};
+
 export default CreateRecognitionCardBody;
+
+/**
+ * borderRadius: "36px 36px 0px 0px",
+        minHeight: "100vh",
+        width: "206px",
+        background: "linear-gradient(var(--sage) 100px, var(--white) 0%)",
+ *
+*/
