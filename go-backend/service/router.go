@@ -55,6 +55,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	// TODO: Finish login system
 	router.HandleFunc("/auth/google", handleAuth(deps)).Methods(http.MethodGet)
 
+	//TODO fix this route as it is conflicting with GET organization by id
 	router.HandleFunc("/organizations/{domainName}", getOrganizationByDomainNameHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	router.HandleFunc("/organizations", listOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
@@ -62,7 +63,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", deleteOrganizationHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", updateOrganizationHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
-	
+
 	// Recognition routes
 	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/hi5", createRecognitionHi5Handler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	return

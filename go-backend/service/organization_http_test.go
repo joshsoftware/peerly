@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"joshsoftware/peerly/db"
 	"net/http"
+	"time"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -75,6 +76,7 @@ func (suite *OrganizationHandlerTestSuite) TestListOrganizationsDBFailure() {
 
 func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationSuccess() {
 
+	testTime, _ := time.Parse(time.RFC3339, "2006-01-02T15:04:05Z")
 	suite.dbMock.On("CreateOrganization", mock.Anything, mock.Anything).Return(db.Organization{
 		ID:                       1,
 		Name:                     "test organization",
@@ -85,6 +87,7 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationSuccess() {
 		Hi5Limit:                 5,
 		Hi5QuotaRenewalFrequency: "2",
 		Timezone:                 "IST",
+		CreatedAt:                testTime,
 	}, nil)
 
 	body := `{"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`
@@ -97,7 +100,7 @@ func (suite *OrganizationHandlerTestSuite) TestCreateOrganizationSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusCreated, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST"}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"id":1,"name":"test organization","email":"test@gmail.com","domain_name":"www.testdomain.com","subscription_status":1,"subscription_valid_upto":1588073442241,"hi5_limit":5,"hi5_quota_renewal_frequency":"2","timezone":"IST","created_at":"2006-01-02T15:04:05Z"}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 

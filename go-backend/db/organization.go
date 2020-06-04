@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/util/log"
-	"regexp"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -45,7 +44,8 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone FROM organizations WHERE id=$1`
+		timezone,
+	  created_at FROM organizations WHERE id=$1`
 
 	listOrganizationsQuery = `SELECT id,
 		name,
@@ -55,7 +55,8 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone FROM organizations ORDER BY name ASC`
+		timezone,
+		created_at FROM organizations ORDER BY name ASC`
 
 	getOrganizationByDomainNameQuery = `SELECT * FROM organizations WHERE domain_name=$1 LIMIT 1`
 	getOrganizationByIDQuery         = `SELECT * FROM organizations WHERE id=$1 LIMIT 1`
@@ -165,7 +166,6 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 		reqOrganization.Hi5Limit,
 		reqOrganization.Hi5QuotaRenewalFrequency,
 		reqOrganization.Timezone,
-		reqOrganization.CreatedAt,
 		organizationID,
 	)
 	if err != nil {
