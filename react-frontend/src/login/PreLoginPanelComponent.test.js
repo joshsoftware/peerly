@@ -21,11 +21,11 @@ describe("Pre Login component test", () => {
     const { getByTestId } = render(
       <PrimaryCoreValueComponent
         orgPrimaryCoreValue="Lets Create the Office Positive"
-        encouragementThought="positive"
+        encouragementThought="thought"
       />
     );
     expect(getByTestId("PrimaryCoreValueComponent")).toHaveTextContent(
-      "Lets Create the Office Positive positive"
+      "Lets Create the Office Positive thought"
     );
   });
 });

@@ -1,36 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Image } from "react-bootstrap";
 import { IMG_BASE_PATH } from "constants/appConstants";
+import ImageComponent from "core-components/image/ImageComponent";
 
 const getImagePath = (size) =>
   size === "lg"
     ? `${IMG_BASE_PATH}/cat-img.png`
     : `${IMG_BASE_PATH}/cat-mobile-img.png`;
 
-const PreLoginImageComponent = ({ className, hight, width, size }) => {
+const LoginImageComponent = ({ className, size }) => {
   const imagePath = React.useMemo(() => getImagePath(size), [size]);
 
   return (
-    <Image
-      src={imagePath}
-      className={className}
-      hight={hight}
-      width={width}
-      alt="pre login image"
-    />
+    <ImageComponent src={imagePath} className={className} alt="login image" />
   );
 };
 
-PreLoginImageComponent.propTypes = {
+LoginImageComponent.propTypes = {
   className: PropTypes.string,
-  hight: PropTypes.string,
-  width: PropTypes.string,
   size: PropTypes.oneOf(["md", "lg"]),
 };
 
-PreLoginImageComponent.defaultProps = {
+LoginImageComponent.defaultProps = {
   size: "md",
 };
 
-export default PreLoginImageComponent;
+export default LoginImageComponent;

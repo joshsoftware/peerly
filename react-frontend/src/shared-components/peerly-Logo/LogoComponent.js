@@ -2,7 +2,7 @@ import React from "react";
 
 import { Col, Row } from "react-bootstrap";
 
-import LabelComponent from "core-components/core/Label/LabelComponent";
+import LabelComponent from "core-components/Label/LabelComponent";
 
 const LogoComponent = () => (
   <Col data-testid="peerlyLogoComponent">
