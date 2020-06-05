@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import PlusSign from "shared-components/plus-sign/PlusSign";
 
 const Logo = styled.div`
+  text-align: center;
+  margin-top: 15px;
   width: 83px;
   height: 83px;
   border: 3px solid
@@ -15,7 +17,7 @@ const Logo = styled.div`
 `;
 
 const PeerlyLogo = ({ theme, fontSize }) => (
-  <Logo theme={theme} className="mx-auto">
+  <Logo theme={theme} className="mx-auto" data-testid="Logo">
     <PlusSign theme={theme} cross fontSize={fontSize} />
   </Logo>
 );
