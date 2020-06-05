@@ -47,7 +47,7 @@ const FilterRecognitionCard = ({
             placeholder="select Core Value"
           />
         </Form.Group>
-        <Form.Group controlId="formBasicPassword">
+        <Form.Group controlId="filterGivenFor">
           <Form.Label>Given For</Form.Label>
           <AsyncSelect
             defaultOptions={givenForList}
@@ -57,7 +57,7 @@ const FilterRecognitionCard = ({
           />
         </Form.Group>
 
-        <Form.Group controlId="formBasicPassword">
+        <Form.Group controlId="filterGivenBy">
           <Form.Label>Given By</Form.Label>
           <AsyncSelect
             defaultOptions={givenByList}
@@ -68,7 +68,7 @@ const FilterRecognitionCard = ({
         </Form.Group>
         <div className="text-center">
           <Button type="submit" variant="success">
-            Add Filter
+            Apply Filter
           </Button>
         </div>
       </Form>
