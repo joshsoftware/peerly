@@ -45,6 +45,7 @@ const CreateRecognitionCardBody = ({
   EmployeeName,
   EmployeeImage,
   Hi5Image,
+  recognitionToImage,
 }) => {
   const [comment, addComment] = useState(false);
   const [show, setShow] = useState(false);
@@ -54,7 +55,7 @@ const CreateRecognitionCardBody = ({
     addComment(true);
   };
   const addCommentText = (event) => {
-    addCommentText(event.target);
+    addComment(event.target.value);
   };
   return (
     <Card>
@@ -87,8 +88,9 @@ const CreateRecognitionCardBody = ({
       <AddRecognition
         show={show}
         handleClose={handleClose}
-        EmployeeImage={EmployeeImage}
+        recognitionToImage={recognitionToImage}
         EmployeeName={EmployeeName}
+        addComment={addComment}
       />
     </Card>
   );
@@ -97,6 +99,8 @@ const CreateRecognitionCardBody = ({
 CreateRecognitionCardBody.propTypes = {
   EmployeeName: PropTypes.string,
   EmployeeImage: PropTypes.string,
+  recognitionToImage: PropTypes.string,
+  comment: PropTypes.string,
   Hi5Image: PropTypes.string,
 };
 
