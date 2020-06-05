@@ -20,9 +20,9 @@ const InformativeTextComponent = ({
   informativeText,
   encouragementThought,
 }) => (
-  <Div theme={theme} className={className}>
+  <Div theme={theme} className={className} data-testid="info">
     <h3>{informativeText}</h3>
-    <HrLine theme={theme} />
+    <HrLine theme={theme} data-testid="hrLine" />
     <h6>{encouragementThought}</h6>
   </Div>
 );
