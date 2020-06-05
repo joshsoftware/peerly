@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should equal to Peerly text 1`] = `
+exports[`should render PeerlyLogo Component 1`] = `
 <DocumentFragment>
   .c1 {
   -webkit-transform: rotate(45deg);
@@ -23,36 +23,15 @@ exports[`should equal to Peerly text 1`] = `
 }
 
 <div
-    data-testid="peerlyLogoComponent"
+    class="c0 mx-auto"
+    data-testid="Logo"
   >
     <div
-      class="c0 mx-auto"
-      data-testid="Logo"
-    >
-      <div
-        class="c1"
-        data-testid="plusSignText"
-        font-size="48px"
-      >
-        +
-      </div>
-    </div>
-  </div>
-  .c0 {
-  color: var(--white);
-  background-color: var(--black);
-  font-size: 48px;
-}
-
-<div
-    class="text-center"
-  >
-    <div
-      class="c0"
-      data-testid="PeerlyTextComponents"
+      class="c1"
+      data-testid="plusSignText"
       font-size="48px"
     >
-      Peerly
+      +
     </div>
   </div>
 </DocumentFragment>
