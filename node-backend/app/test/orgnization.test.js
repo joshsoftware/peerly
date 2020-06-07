@@ -1,14 +1,25 @@
 let path = require("path");
 let dotEnvPath = path.resolve("../.env");
 require("dotenv").config({ path: dotEnvPath });
+const db = require("./dbConnection");
+const Organizations = db.organizations;
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
-
+const { createToken } = require("./jwtTokenGenration");
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
-const token = process.env.TOKEN;
+let token;
 let id;
 // UNIT test begin
-describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
+describe(/*eslint-disable-line no-undef*/ "test case for organisation", function () {
+  /*eslint-disable-line no-undef*/ before((done) => {
+    token = createToken(3, 2, 1);
+    done();
+  });
+
+  /*eslint-disable-line no-undef*/ after(() => {
+    Organizations.destroy({ where: {} });
+  });
+
   it(/*eslint-disable-line no-undef*/ "post request for create organisation with write Contents,url", function (done) {
     // post request for create organisation successfully
     server

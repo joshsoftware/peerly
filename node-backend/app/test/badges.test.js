@@ -1,40 +1,32 @@
 let path = require("path");
 let dotEnvPath = path.resolve("../.env");
 require("dotenv").config({ path: dotEnvPath });
+const db = require("./dbConnection");
+const data = require("./data");
+const { createToken } = require("./jwtTokenGenration");
 
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
-const token = process.env.TOKEN;
+let token;
 let id;
 let orgId;
+
 // UNIT test begin
 
-describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
+describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
-    this.timeout(100);
-    setTimeout(done, 100);
-    server
-      .post("/organisations")
-      .send({
-        name: "Tata",
-        contact_email: "KGF@gmail.com",
-        domain_name: "@kgf.com",
-        subscription_status: 1,
-        subscription_valid_upto: "1587731342",
-        hi5_limit: 5000,
-        hi5_quota_renewal_frequency: "renew",
-        timezone: "india",
-      })
-      .expect("Content-type", /json/)
-      .set("Authorization", "Bearer " + token)
-      .set("Accept", "application/vnd.peerly.v1")
-      .expect(201)
-      .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(201);
-        orgId = res.body.data.id;
-      });
+    db.organizations.create(data.organizations).then((data) => {
+      orgId = data.id;
+      token = createToken(2, 3, 1);
+      done();
+    });
+  });
+
+  /*eslint-disable-line no-undef*/ after(async () => {
+    await db.badges.destroy({ where: {} });
+    await db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for badges value with right Contents,url", function (done) {

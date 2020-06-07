@@ -5,12 +5,32 @@ const should = require("should"); //eslint-disable-line node/no-unpublished-requ
 let path = require("path");
 let dotEnvPath = path.resolve("../.env");
 require("dotenv").config({ path: dotEnvPath });
+const db = require("./dbConnection");
+const data = require("./data");
+const { createToken } = require("./jwtTokenGenration");
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
-const token = process.env.TOKEN;
+let token;
 
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
 describe("test cases for logout", function () {
+  /*eslint-disable-line no-undef*/ before((done) => {
+    db.organizations.create(data.organizations).then((res) => {
+      data.user.org_id = res.id;
+      data.user.role_id = 3;
+      db.users.create(data.user).then((res) => {
+        token = createToken(3, 2, res.id);
+        done();
+      });
+    });
+  });
+
+  /*eslint-disable-line no-undef*/ after(async () => {
+    await db.user_blacklisted_tokens.destroy({ where: {} });
+    await db.users.destroy({ where: {} });
+    await db.organizations.destroy({ where: {} });
+  });
+
   it("should give ok status", function (done) {
     server
       .post("/logout")

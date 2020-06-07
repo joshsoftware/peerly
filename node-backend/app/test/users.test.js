@@ -1,12 +1,39 @@
+let path = require("path");
+let dotEnvPath = path.resolve("../.env");
+require("dotenv").config({ path: dotEnvPath });
 /*eslint-disable  no-unused-vars */
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should"); //eslint-disable-line node/no-unpublished-require
-const server = supertest.agent(process.env.TEST_URL);
-const employeeToken = process.env.EMPLOYEE_TOKEN;
-const superAdminToken = process.env.SUPER_ADMIN_TOKEN;
+const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
+const { createToken } = require("./jwtTokenGenration");
+const db = require("./dbConnection");
+const data = require("./data");
+
+let employeeToken;
+let superAdminToken;
+let userId;
+let orgId;
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
-describe("test cases for users listing for organization", function () {
+describe("test cases for users", function () {
+  /*eslint-disable-line no-undef*/ before((done) => {
+    db.organizations.create(data.organizations).then((res) => {
+      data.user.org_id = res.id;
+      data.user.role_id = 3;
+      db.users.create(data.user).then((res) => {
+        userId = res.id;
+        employeeToken = createToken(3, 2, userId);
+        superAdminToken = createToken(1, 2, userId);
+        done();
+      });
+    });
+  });
+
+  /*eslint-disable-line no-undef*/ after(async () => {
+    await db.users.destroy({ where: {} });
+    await db.organizations.destroy({ where: {} });
+  });
+
   it("/users get method should give status 200", function (done) {
     server
       .get("/users")
@@ -93,7 +120,7 @@ describe("test cases for users listing for organization", function () {
   });
   it("/users/:id get method should give status 200", function (done) {
     server
-      .get("/users/18")
+      .get(`/users/${userId}`)
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
@@ -225,7 +252,7 @@ describe("test cases for users listing for organization", function () {
   });
   it("/users/:id put method should give status 200", function (done) {
     server
-      .put("/users/15")
+      .put(`/users/${userId}`)
       .send({
         role_id: "3",
       })

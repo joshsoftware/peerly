@@ -1,77 +1,32 @@
-const faker = require("faker");
 const path = require("path");
-const Sequelize = require("sequelize");
-
 const dotEnvPath = path.resolve("../.env");
 require("dotenv").config({ path: dotEnvPath });
-const dbConfig = require("../config/db.config")["test"];
-const jwtValidate = require("../jwtTokenValidation/jwtValidation");
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  dialect: "postgres",
-});
-const core_value = require("../models/core_values.model")(sequelize, Sequelize);
-const Users = require("../models/users.model")(sequelize, Sequelize);
-const Recognitions = require("../models/recognitions.model")(
-  sequelize,
-  Sequelize
-);
-const Recognition_hi5 = require("../models/recognition_hi5.model")(
-  sequelize,
-  Sequelize
-);
-const Organizations = require("../models/organizations.model")(
-  sequelize,
-  Sequelize
-);
+const db = require("./dbConnection");
+const data = require("./data");
+const { createToken } = require("./jwtTokenGenration");
 
 const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
-const token = process.env.TOKEN;
+let token;
 let orgId;
 let userId;
 let coreValueId;
-let roleId;
 let id;
 
-describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
+describe(/*eslint-disable-line no-undef*/ "test cases for recognitions", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
-    let tokenData = jwtValidate.getData("barear " + token);
-    orgId = tokenData.orgId;
-    userId = tokenData.userId;
-    roleId = tokenData.roleId;
-    const organizations = {
-      id: orgId,
-      name: faker.name.firstName(),
-      contact_email: faker.internet.email(),
-      domain_name: faker.internet.domainName(),
-      subscription_status: faker.random.number(1),
-      subscription_valid_upto: faker.random.number(7),
-      hi5_limit: faker.random.number(1),
-      hi5_quota_renewal_frequency: faker.lorem.words(1),
-      timezone: faker.address.city(),
-    };
-    Organizations.create(organizations).then(() => {
-      const coreValue = {
-        org_id: orgId,
-        text: faker.lorem.words(7),
-        description: faker.lorem.words(5),
-        parent_core_value_id: faker.random.number(1),
-      };
-      core_value.create(coreValue).then((data) => {
-        coreValueId = data.id;
-        const user = {
-          id: userId,
-          org_id: orgId,
-          first_name: faker.name.firstName(),
-          email: faker.internet.email(),
-          role_id: roleId,
-          soft_delete: false,
-          hi5_quota_balance: faker.random.number(1),
-        };
-        Users.create(user).then(() => {
+    db.organizations.create(data.organizations).then((res) => {
+      orgId = res.id;
+      data.user.org_id = orgId;
+      data.user.role_id = 3;
+      db.users.create(data.user).then((res) => {
+        userId = res.id;
+        data.coreValue.org_id = orgId;
+        db.core_value.create(data.coreValue).then((res) => {
+          coreValueId = res.id;
+          token = createToken(3, orgId, userId);
           done();
         });
       });
@@ -79,11 +34,11 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
   });
 
   /*eslint-disable-line no-undef*/ after((done) => {
-    Recognition_hi5.destroy({ where: {} });
-    Recognitions.destroy({ where: {} });
-    Users.destroy({ where: {} });
-    core_value.destroy({ where: {} });
-    Organizations.destroy({ where: {} });
+    db.recognition_hi5.destroy({ where: {} });
+    db.recognitions.destroy({ where: {} });
+    db.users.destroy({ where: {} });
+    db.core_value.destroy({ where: {} });
+    db.organizations.destroy({ where: {} });
     done();
   });
 
@@ -169,7 +124,6 @@ describe(/*eslint-disable-line no-undef*/ "SAMPLE unit test", function () {
       .expect("Content-type", /json/)
       .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        id = res.body.data.id;
         res.status.should.equal(201);
         done();
       });
