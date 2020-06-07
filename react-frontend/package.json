@@ -25,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:nowatch": "CI=true react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,13 +54,15 @@
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.19.0",
     "husky": "^4.2.5",
+    "jest-styled-components": "^7.0.2",
     "lint-staged": "^10.1.3",
     "prettier": "^2.0.4",
     "redux-devtools-extension": "^2.13.8"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:nowatch"
     }
   },
   "lint-staged": {
