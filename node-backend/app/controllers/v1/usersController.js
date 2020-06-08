@@ -28,7 +28,7 @@ module.exports.findUsersByOrg = async (req, res) => {
         if (!superAdminAuth) {
           {
             logger.error("find user by orrganisaiton access denied");
-            logger.error("user id: " + userData.userId);
+            logger.info("user id: " + userData.userId);
             logger.info("=========================================");
             res.status(403).send({
               error: {
@@ -51,6 +51,8 @@ module.exports.findUsersByOrg = async (req, res) => {
               });
             })
             .catch(() => {
+              logger.error("Error executing find users by organisation");
+              logger.info("user id: " + userData.userId);
               logger.error("internal server error");
               logger.info("=========================================");
               res.status(500).send({
@@ -74,6 +76,8 @@ module.exports.findUsersByOrg = async (req, res) => {
             });
           })
           .catch(() => {
+            logger.error("Error executing find users by organisation");
+            logger.info("user id: " + userData.userId);
             logger.error("internal server error");
             logger.info("=========================================");
             res.status(500).send({
@@ -100,6 +104,7 @@ module.exports.findUsersByOrg = async (req, res) => {
 
 module.exports.getProfile = async (req, res) => {
   let userData = await jwtToken.getData(req.headers["authorization"]);
+
   Users.findByPk(userData.userId, {
     attributes: {
       exclude: ["soft_delete", "soft_delete_by", "soft_delete_at"],
@@ -111,6 +116,8 @@ module.exports.getProfile = async (req, res) => {
       });
     })
     .catch(() => {
+      logger.error("executing getProfile");
+      logger.info("user id: " + userData.userId);
       logger.error("internal server error");
       logger.info("=========================================");
       res.status(500).send({
@@ -121,9 +128,11 @@ module.exports.getProfile = async (req, res) => {
     });
 };
 
-module.exports.getProfileById = (req, res) => {
+module.exports.getProfileById = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const idSchema = validateSchema.getProfileById();
+
   idSchema
     .validate({ id }, { abortEarly: false })
     .then(() => {
@@ -140,6 +149,7 @@ module.exports.getProfileById = (req, res) => {
             });
           } else {
             logger.error("user not found for specified id");
+            logger.info("user id: " + userData.userId);
             logger.info("=========================================");
             res.status(404).send({
               error: {
@@ -149,6 +159,8 @@ module.exports.getProfileById = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("Error in getProfileById");
+          logger.info("user id: " + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -181,6 +193,10 @@ module.exports.updateUser = async (req, res) => {
     display_name: req.body.display_name,
     profile_image_url: req.body.profile_image_url,
   };
+  logger.info("executing update user");
+  logger.info("user id: " + userData.userId);
+  logger.info(JSON.stringify(updateUser));
+  logger.info("=========================================");
 
   schema
     .validate(updateUser, { abortEarly: false })
@@ -191,15 +207,12 @@ module.exports.updateUser = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUsers]]) => {
           if (rowsUpdate == 1) {
-            logger.info("executing update user by admin");
-            logger.info("user id: " + userData.userId);
-            logger.info(JSON.stringify(updateUsers));
-            logger.info("=========================================");
             res.status(200).send({
               data: updateUsers,
             });
           } else {
             logger.error("user not found for specified id");
+            logger.info("user id: " + userData.userId);
             logger.info("=========================================");
             res.status(404).send({
               error: {
@@ -209,6 +222,8 @@ module.exports.updateUser = async (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("Error in updating user");
+          logger.info("user id: " + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -233,6 +248,7 @@ module.exports.updateUser = async (req, res) => {
 };
 
 module.exports.updateUserByAdmin = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const schema = validateSchema.updateUserByAdmin();
   const updateUserByAdmin = {
     role_id: req.body.role_id,
@@ -241,6 +257,10 @@ module.exports.updateUserByAdmin = async (req, res) => {
     role_id: req.body.role_id,
     userId: req.params.id,
   };
+  logger.info("executing update user by admin");
+  logger.info("user id: " + userData.userId);
+  logger.info(JSON.stringify(updateUserValidation));
+  logger.info("=========================================");
 
   schema
     .validate(updateUserValidation, { abortEarly: false })
@@ -251,15 +271,12 @@ module.exports.updateUserByAdmin = async (req, res) => {
       })
         .then(([rowsUpdate, [updateUserByAdmin]]) => {
           if (rowsUpdate == 1) {
-            logger.info("executing update user by admin");
-            logger.info("user id: " + req.params.id);
-            logger.info(JSON.stringify(updateUserByAdmin));
-            logger.info("=========================================");
             res.status(200).send({
               data: updateUserByAdmin,
             });
           } else {
             logger.error("user not found for specified id");
+            logger.info("user id: " + userData.userId);
             logger.info("=========================================");
             res.status(404).send({
               error: {
@@ -269,6 +286,8 @@ module.exports.updateUserByAdmin = async (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("Error in updating user");
+          logger.info("user id: " + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -301,6 +320,11 @@ module.exports.deleteUser = async (req, res) => {
     soft_delete_by: userData.userId,
     soft_delete_at: moment.utc().unix(),
   };
+  logger.info("executing soft delete user");
+  logger.info("user id: " + userData.userId);
+  logger.info(JSON.stringify(softDeleteUser));
+  logger.info("=========================================");
+
   schema
     .validate({ id: req.params.id }, { abortEarly: false })
     .then(() => {
@@ -308,15 +332,13 @@ module.exports.deleteUser = async (req, res) => {
         returning: true,
         where: { id: req.params.id },
       })
-        .then(([rowsDelete, [deleteUserByAdmin]]) => {
+        .then(([rowsDelete]) => {
           if (rowsDelete) {
-            logger.info("executing soft delete user");
-            logger.info("user id: " + userData.userId);
-            logger.info(JSON.stringify(deleteUserByAdmin));
-            logger.info("=========================================");
             res.status(200).send();
           } else {
-            logger.error("user not found for specified id");
+            logger.error("error at executing soft delete user");
+            logger.info("user id: " + userData.userId);
+            logger.error("user not found for specified id " + req.params.id);
             logger.info("=========================================");
             res.status(404).send({
               error: {
@@ -326,6 +348,8 @@ module.exports.deleteUser = async (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("error at executing soft delete user");
+          logger.error("user id: " + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -336,7 +360,8 @@ module.exports.deleteUser = async (req, res) => {
         });
     })
     .catch((err) => {
-      logger.error("validation error");
+      logger.error("validation error at soft delete user");
+      logger.info("user id: " + userData.userId);
       logger.error(JSON.stringify(err));
       logger.info("=========================================");
       res.status(400).send({
