@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Container } from "react-bootstrap";
+import { Col, Row, Container } from "core-components/grid/GridComponent";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -10,7 +10,7 @@ import LoginImageComponent from "login/LoginImageComponent";
 const Wrapper = styled(Container)`
   height: 100vh;
   background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--black)" : "var(--white)"};
+    theme === "dark" ? "var(--atomic)" : "var(--white)"};
 `;
 
 const RowComponent = styled(Row)`

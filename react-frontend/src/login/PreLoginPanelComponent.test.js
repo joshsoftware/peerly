@@ -13,7 +13,7 @@ describe("pre login panel component test", () => {
     expect(asFragment()).toMatchSnapshot();
     expect(getByTestId("officeInfo")).toHaveStyleRule(
       "background-color",
-      "var(--black)"
+      "var(--atomic)"
     );
   });
 

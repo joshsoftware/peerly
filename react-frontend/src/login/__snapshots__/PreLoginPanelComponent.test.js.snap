@@ -40,7 +40,7 @@ exports[`pre login panel component test should render pre login panel component 
 
 .c0 {
   height: 100vh;
-  background-color: var(--black);
+  background-color: var(--atomic);
 }
 
 .c1 {
