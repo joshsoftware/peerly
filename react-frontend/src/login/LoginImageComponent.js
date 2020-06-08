@@ -25,4 +25,4 @@ LoginImageComponent.defaultProps = {
   size: "md",
 };
 
-export default LoginImageComponent;
+export default React.memo(LoginImageComponent);

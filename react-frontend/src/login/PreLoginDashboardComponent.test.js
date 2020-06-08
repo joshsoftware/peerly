@@ -1,11 +1,11 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import PreLoginPanelComponent from "login/PreLoginPanelComponent";
+import PreLoginDashboardComponent from "login/PreLoginDashboardComponent";
 
 describe("pre login panel component test", () => {
   test("should render pre login panel component", () => {
     const { asFragment, getByTestId } = render(
-      <PreLoginPanelComponent
+      <PreLoginDashboardComponent
         informativeText="Lets Create the Office Positive"
         encouragementThought="thought"
       />
@@ -19,7 +19,7 @@ describe("pre login panel component test", () => {
 
   test("test case for style and classes", () => {
     const { getByTestId } = render(
-      <PreLoginPanelComponent
+      <PreLoginDashboardComponent
         theme="light"
         className="text-uppercase"
         informativeText="Lets Create the Office Positive"

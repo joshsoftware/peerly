@@ -9,4 +9,10 @@ describe("Image component test", () => {
     const testImage = getByAltText("login image");
     expect(testImage).toBeInTheDocument();
   });
+
+  // test("render image with correct size", () => {
+  //   const { getAllByTestId } = render(<LoginImageComponent size="lg" />);
+  //   const testImage = getByAltText("login image");
+  //   expect(testImage).toHaveTextContent("cat-img.png");
+  // });
 });

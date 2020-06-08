@@ -17,7 +17,7 @@ const RowComponent = styled(Row)`
   height: calc(100% / 3);
 `;
 
-const PreLoginPanelComponent = ({
+const PreLoginDashboardComponent = ({
   theme,
   className,
   informativeText,
@@ -50,15 +50,15 @@ const PreLoginPanelComponent = ({
   </Wrapper>
 );
 
-PreLoginPanelComponent.propTypes = {
+PreLoginDashboardComponent.propTypes = {
   informativeText: PropTypes.string.isRequired,
   encouragementThought: PropTypes.string.isRequired,
   theme: PropTypes.oneOf(["dark", "light"]),
   className: PropTypes.string,
 };
 
-PreLoginPanelComponent.defaultProps = {
+PreLoginDashboardComponent.defaultProps = {
   theme: "dark",
 };
 
-export default React.memo(PreLoginPanelComponent);
+export default React.memo(PreLoginDashboardComponent);
