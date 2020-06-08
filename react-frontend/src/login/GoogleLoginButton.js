@@ -8,7 +8,7 @@ const GoogleLoginButtonComponent = ({
   buttonText,
 }) => (
   <GoogleLogin
-    clientId="907716014506-306rlfo0dobiib8ee07870g1ct66910d.apps.googleusercontent.com"
+    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
     buttonText={buttonText}
     onSuccess={responseGoogleOnSuccess}
     onFailure={responseGoogleOnFailure}

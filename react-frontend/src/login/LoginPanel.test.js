@@ -1,17 +1,23 @@
 import React from "react";
 import { render } from "@testing-library/react";
+
 import LoginPanel from "login/LoginPanel";
 
-test("should equal to value", () => {
-  const { getByText } = render(
+test("LoginPanel should pass a snapshot", () => {
+  const responseCheckFunction = () => {
+    return true;
+  };
+
+  const { asFragment } = render(
     <LoginPanel
-      orgPrimaryCoreValue="Let Create"
+      informativeText="Let Create"
       buttonText="Google Sign in"
       encouragementThought="office positive"
+      theme="dark"
+      responseGoogleOnFailure={responseCheckFunction}
+      responseGoogleOnSuccess={responseCheckFunction}
     />
   );
-  expect(getByText("Peerly")).toHaveTextContent("Peerly");
-  expect(getByText("Let Create")).toHaveTextContent("Let Create");
-  expect(getByText("office positive")).toHaveTextContent("office positive");
-  expect(getByText("Google Sign in")).toHaveTextContent("Google Sign in");
+
+  expect(asFragment()).toMatchSnapshot();
 });
