@@ -20,7 +20,7 @@ const InformativeTextComponent = ({
   informativeText,
   encouragementThought,
 }) => (
-  <Div theme={theme} className={"text-center " + className} data-testid="info">
+  <Div theme={theme} className={`text-center ${className}`} data-testid="info">
     <h3>{informativeText}</h3>
     <HrLine theme={theme} data-testid="hrLine" />
     <h6>{encouragementThought}</h6>
