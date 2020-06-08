@@ -21,7 +21,7 @@ module.exports.create = async (req, res) => {
     parent_core_value_id: req.body.parent_core_value_id,
   };
 
-  logger.info("executing create core values");
+  logger.info("executing create core value");
   logger.info("user id:" + userData.userId);
   logger.info(JSON.stringify(coreValue));
   logger.info("=========================================");
@@ -37,6 +37,8 @@ module.exports.create = async (req, res) => {
           });
         })
         .catch(() => {
+          logger.error("executing create core value");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
