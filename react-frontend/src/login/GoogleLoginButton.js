@@ -12,7 +12,7 @@ const GoogleLoginButtonComponent = ({
     buttonText={buttonText}
     onSuccess={responseGoogleOnSuccess}
     onFailure={responseGoogleOnFailure}
-    cookiePolicy={"single_host_origin"}
+    cookiePolicy={process.env.REACT_APP_GOOGLE_COOKIE_POLICY}
   />
 );
 
