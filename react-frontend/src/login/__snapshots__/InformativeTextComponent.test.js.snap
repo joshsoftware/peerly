@@ -13,7 +13,7 @@ exports[`informative Text component test should render informative text componen
 }
 
 <div
-    class="c0"
+    class="c0 text-center undefined"
     data-testid="info"
   >
     <h3>

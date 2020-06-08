@@ -40,11 +40,11 @@ describe("informative Text component test", () => {
   test("test case for classes", () => {
     const { getByTestId } = render(
       <InformativeTextComponent
-        className="text-center"
+        className="text-uppercase"
         informativeText="Lets Create the Office Positive"
         encouragementThought="thought"
       />
     );
-    expect(getByTestId("info")).toHaveClass("text-center");
+    expect(getByTestId("info")).toHaveClass("text-uppercase");
   });
 });
