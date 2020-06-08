@@ -93,6 +93,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
+        thumbnail_url: "image.jpg",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -114,6 +115,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: "xyz",
+        thumbnail_url: "image.jpg",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -134,6 +136,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
+        thumbnail_url: "image.jpg",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -154,6 +157,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
+        thumbnail_url: "image.jpg",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -175,6 +179,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: "xyz",
+        thumbnail_url: "image.jpg",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -195,6 +200,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
+        thumbnail_url: "image.jpg",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
