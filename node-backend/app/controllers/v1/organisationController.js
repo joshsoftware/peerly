@@ -3,12 +3,14 @@ const log4js = require("log4js");
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/orgValidationSchema");
+const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const Organizations = db.organizations;
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 
-module.exports.create = (req, res) => {
+module.exports.create = async (req, res) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
   const schema = validationSchema.insertSchema();
   // Create a Organization
   const organizations = {
@@ -21,6 +23,10 @@ module.exports.create = (req, res) => {
     hi5_quota_renewal_frequency: req.body.hi5_quota_renewal_frequency,
     timezone: req.body.timezone,
   };
+  logger.info("executing create organisation");
+  logger.info("user id: " + userData.userId);
+  logger.info(JSON.stringify(organizations));
+  logger.info("=========================================");
 
   // Validate request
   schema
@@ -29,14 +35,13 @@ module.exports.create = (req, res) => {
       // Save Organization in the database
       Organizations.create(organizations)
         .then((info) => {
-          logger.info("executing create organisation");
-          logger.info(JSON.stringify(info));
-          logger.info("=========================================");
           res.status(201).send({
             data: info,
           });
         })
         .catch(() => {
+          logger.error("executing find All in organisation");
+          logger.info("user id: " + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -60,7 +65,8 @@ module.exports.create = (req, res) => {
     });
 };
 
-module.exports.findAll = (req, res) => {
+module.exports.findAll = async (req, res) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
   Organizations.findAll()
     .then((info) => {
       res.status(200).send({
@@ -68,6 +74,8 @@ module.exports.findAll = (req, res) => {
       });
     })
     .catch(() => {
+      logger.error("executing find All in organisation");
+      logger.info("user id: " + userData.userId);
       logger.error("internal server error");
       logger.info("=========================================");
       res.status(500).send({
@@ -78,7 +86,8 @@ module.exports.findAll = (req, res) => {
     });
 };
 
-module.exports.findOne = (req, res) => {
+module.exports.findOne = async (req, res) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
   const idSchema = validationSchema.getByIdSchema();
   idSchema
     .validate({ id: req.params.id }, { abortEarly: false })
@@ -91,6 +100,8 @@ module.exports.findOne = (req, res) => {
               data: info,
             });
           } else {
+            logger.error("executing find one in organisation");
+            logger.info("user id: " + userData.userId);
             logger.error("Organisation with specified id not found");
             logger.info("=========================================");
             res.status(404).send({
@@ -101,6 +112,8 @@ module.exports.findOne = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing find one in organisation");
+          logger.info("user id: " + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -124,7 +137,8 @@ module.exports.findOne = (req, res) => {
     });
 };
 
-module.exports.update = (req, res) => {
+module.exports.update = async (req, res) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
   const id = req.params.id;
   const schema = validationSchema.updateSchema();
   const idSchema = validationSchema.getByIdSchema();
@@ -134,6 +148,8 @@ module.exports.update = (req, res) => {
     })
     .then((valid) => {
       if (!valid) {
+        logger.error("executing update organisation");
+        logger.info("organisation id: " + id);
         logger.error("invalid orgnisation");
         logger.info("=========================================");
         res.status(400).send({
@@ -156,6 +172,11 @@ module.exports.update = (req, res) => {
           hi5_quota_renewal_frequency: req.body.hi5_quota_renewal_frequency,
           timezone: req.body.timezone,
         };
+        logger.info("executing update organisation");
+        logger.info("organisation id: " + id);
+        logger.info(JSON.stringify(organizations));
+        logger.info("=========================================");
+
         schema
           .validate(organizations, { abortEarly: false })
           .then(() => {
@@ -165,14 +186,12 @@ module.exports.update = (req, res) => {
             })
               .then(([rowsUpdate, [updatedCoreValue]]) => {
                 if (rowsUpdate == 1) {
-                  logger.info("executing update organisation");
-                  logger.info("organisation id: " + id);
-                  logger.info(JSON.stringify(updatedCoreValue));
-                  logger.info("=========================================");
                   res.status(200).send({
                     data: updatedCoreValue,
                   });
                 } else {
+                  logger.error("Error executing update organisation");
+                  logger.info("user id: " + userData.userId);
                   logger.error("Organisation with specified id is not found");
                   logger.info("=========================================");
                   res.status(404).send({
@@ -183,6 +202,8 @@ module.exports.update = (req, res) => {
                 }
               })
               .catch(() => {
+                logger.error("Error executing update organisation");
+                logger.info("user id: " + userData.userId);
                 logger.error("internal server error");
                 logger.info("=========================================");
                 res.status(500).send({
