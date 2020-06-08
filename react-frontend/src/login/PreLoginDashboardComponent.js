@@ -17,12 +17,7 @@ const RowComponent = styled(Row)`
   height: calc(100% / 3);
 `;
 
-const PreLoginDashboardComponent = ({
-  theme,
-  className,
-  informativeText,
-  encouragementThought,
-}) => (
+const PreLoginDashboardComponent = ({ theme, className }) => (
   <Wrapper
     theme={theme}
     className={`d-sm-block d-xs-block d-md-none ${className}`}
@@ -42,8 +37,8 @@ const PreLoginDashboardComponent = ({
       <Col className="m-auto">
         <InformativeTextComponent
           theme={theme}
-          informativeText={informativeText}
-          encouragementThought={encouragementThought}
+          informativeText="Lets Create the Office Positive"
+          encouragementThought="Encouragement Driven"
         />
       </Col>
     </RowComponent>
@@ -51,8 +46,6 @@ const PreLoginDashboardComponent = ({
 );
 
 PreLoginDashboardComponent.propTypes = {
-  informativeText: PropTypes.string.isRequired,
-  encouragementThought: PropTypes.string.isRequired,
   theme: PropTypes.oneOf(["dark", "light"]),
   className: PropTypes.string,
 };

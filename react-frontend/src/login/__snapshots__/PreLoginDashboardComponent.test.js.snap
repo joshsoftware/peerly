@@ -118,7 +118,7 @@ exports[`pre login panel component test should render pre login panel component 
             data-testid="hrLine"
           />
           <h6>
-            thought
+            Encouragement Driven
           </h6>
         </div>
       </div>
