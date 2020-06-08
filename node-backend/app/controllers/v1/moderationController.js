@@ -21,21 +21,23 @@ module.exports.report = async (req, res) => {
     reported_by: tokenData.userId,
     reported_at: moment.utc().unix(),
   };
+  logger.info("executing report in moderation");
+  logger.info("reported by: " + tokenData.userId);
+  logger.info(JSON.stringify(reportedRecognition));
+  logger.info("=========================================");
   // Validate request
   schema
     .validate(reportedRecognition, { abortEarly: false })
     .then(() => {
       ReportedRecognitions.create(reportedRecognition)
         .then((data) => {
-          logger.info("executing report recognition");
-          logger.info("reported by: " + tokenData.userId);
-          logger.info(JSON.stringify(data));
-          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
         })
         .catch(() => {
+          logger.error("executing report in moderation");
+          logger.info("user id: " + tokenData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -69,21 +71,23 @@ module.exports.review = async (req, res) => {
     moderated_by: tokenData.userId,
     moderated_at: moment.utc().unix(),
   };
+  logger.info("executing review moderation");
+  logger.info("moderated by: " + tokenData.userId);
+  logger.info(JSON.stringify(recognitionModeration));
+  logger.info("=========================================");
   // Validate request
   schema
     .validate(recognitionModeration, { abortEarly: false })
     .then(() => {
       RecognitionModeration.create(recognitionModeration)
         .then((data) => {
-          logger.info("executing review moderation");
-          logger.info("moderated by: " + tokenData.userId);
-          logger.info(JSON.stringify(data));
-          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
         })
         .catch(() => {
+          logger.error("executing review moderation");
+          logger.info("user id: " + tokenData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
