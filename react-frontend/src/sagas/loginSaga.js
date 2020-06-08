@@ -10,9 +10,21 @@ export function* userLogin(action) {
     });
     const responseObj = yield response.json();
     if (response.status === 200) {
-      yield put({ type: "LOGIN_SUCCESS", value: responseObj.data });
+      yield put({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          status: response.status,
+          value: responseObj.data,
+        },
+      });
     } else {
-      yield put({ type: "LOGIN_FAILURE", value: responseObj.error });
+      yield put({
+        type: "LOGIN_FAILURE",
+        payload: {
+          status: response.status,
+          value: responseObj.data,
+        },
+      });
     }
   } catch (error) {
     yield put({ type: "LOGIN_FAILURE", value: error });
