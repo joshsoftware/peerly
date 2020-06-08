@@ -6,16 +6,27 @@ import (
 
 	"joshsoftware/peerly/config"
 
+	jwtmiddleware "github.com/auth0/go-jwt-middleware"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/urfave/negroni"
 )
 
 const (
 	versionHeader = "Accept"
+	authHeader    = "X-Auth-Token"
 )
 
-/* The routing mechanism. Mux helps us define handler functions and the access methods */
+// InitRouter -  The routing mechanism. Mux helps us define handler functions and the access methods
 func InitRouter(deps Dependencies) (router *mux.Router) {
 	router = mux.NewRouter()
+
+	jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
+		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+			return config.JWTKey(), nil
+		},
+		SigningMethod: jwt.SigningMethodHS256,
+	})
 
 	// No version requirement for /ping
 	router.HandleFunc("/ping", pingHandler).Methods(http.MethodGet)
@@ -31,11 +42,26 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 
 	//users
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/users/{id:[0-9]+}", getUserHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/users/{id:[0-9]+}", updateUserHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+	router.HandleFunc("/users/{email}", getUserByEmailHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	// Basic logout
+	router.Handle("/logout", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(handleLogout(deps))),
+	)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+
+	// TODO: Finish login system
+	router.HandleFunc("/auth/google", handleAuth(deps)).Methods(http.MethodGet)
+
+	router.HandleFunc("/organizations/{domainName}", getOrganizationByDomainNameHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	router.HandleFunc("/organizations", listOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", getOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", deleteOrganizationHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", updateOrganizationHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+
 	return
 }
