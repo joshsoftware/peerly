@@ -21,16 +21,17 @@ module.exports.create = async (req, res) => {
     parent_core_value_id: req.body.parent_core_value_id,
   };
 
+  logger.info("executing create core values");
+  logger.info("user id:" + userData.userId);
+  logger.info(JSON.stringify(coreValue));
+  logger.info("=========================================");
+
   schema
     .validate(coreValue, { abortEarly: false })
     .then(() => {
       // Save coreValue in the database
       CoreValue.create(coreValue)
         .then((data) => {
-          logger.info("executing create core values");
-          logger.info("user id:" + userData.userId);
-          logger.info(JSON.stringify(data));
-          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
@@ -59,7 +60,8 @@ module.exports.create = async (req, res) => {
     });
 };
 //get all core values
-module.exports.findAll = (req, res) => {
+module.exports.findAll = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const org_id = req.params.organisation_id;
   const idSchema = validationSchema.findAllSchema();
   idSchema
@@ -72,6 +74,8 @@ module.exports.findAll = (req, res) => {
           });
         })
         .catch(() => {
+          logger.error("executing findAll core value");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -96,7 +100,8 @@ module.exports.findAll = (req, res) => {
 };
 
 //get core value with id
-module.exports.findOne = (req, res) => {
+module.exports.findOne = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = validationSchema.findOneSchema();
@@ -110,6 +115,8 @@ module.exports.findOne = (req, res) => {
               data: data,
             });
           } else {
+            logger.error("executing findOne core value");
+            logger.info("user id:" + userData.userId);
             logger.error("core value not found for specified id");
             logger.info("=========================================");
             res.status(404).send({
@@ -120,6 +127,8 @@ module.exports.findOne = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing findOne core value");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -157,6 +166,11 @@ module.exports.update = async (req, res) => {
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
   };
+
+  logger.info("executing update core values");
+  logger.info("user id:" + userData.userId);
+  logger.info(JSON.stringify(coreValue));
+  logger.info("=========================================");
   schema
     .validate(
       { id, org_id, text, description, parent_core_value_id },
@@ -169,14 +183,12 @@ module.exports.update = async (req, res) => {
       })
         .then(([rowsUpdate, [updatedCoreValue]]) => {
           if (rowsUpdate == 1) {
-            logger.info("executing update core values");
-            logger.info("user id:" + userData.userId);
-            logger.info(JSON.stringify(updatedCoreValue));
-            logger.info("=========================================");
             res.status(200).send({
               data: updatedCoreValue,
             });
           } else {
+            logger.error("executing update in core value");
+            logger.info("user id:" + userData.userId);
             logger.error("core value not found for specified id");
             logger.info("=========================================");
             res.status(404).send({
@@ -187,6 +199,8 @@ module.exports.update = async (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing update in core value");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -210,7 +224,8 @@ module.exports.update = async (req, res) => {
     });
 };
 
-module.exports.getCoreValueById = (req, res) => {
+module.exports.getCoreValueById = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const idSchema = validationSchema.getByIdSchema();
   idSchema
@@ -232,6 +247,8 @@ module.exports.getCoreValueById = (req, res) => {
               data: data,
             });
           } else {
+            logger.error("executing getCoreValueById");
+            logger.info("user id:" + userData.userId);
             logger.error("core value not found for specified id");
             logger.info("=========================================");
             res.status(404).send({
@@ -242,6 +259,8 @@ module.exports.getCoreValueById = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing getCoreValueById");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -265,7 +284,8 @@ module.exports.getCoreValueById = (req, res) => {
     });
 };
 
-module.exports.getCoreValues = (req, res) => {
+module.exports.getCoreValues = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   CoreValue.findAll({
     attributes: ["id", "description", "text", "parent_core_value_id", "org_id"],
   })
@@ -275,6 +295,8 @@ module.exports.getCoreValues = (req, res) => {
       });
     })
     .catch(() => {
+      logger.error("executing getCoreValues");
+      logger.info("user id:" + userData.userId);
       logger.error("internal server error");
       logger.info("=========================================");
       res.status(500).send({
