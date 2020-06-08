@@ -20,6 +20,10 @@ module.exports.create = async (req, res) => {
     hi5_count_required: req.body.hi5_count_required,
     hi5_frequency: req.body.hi5_frequency,
   };
+  logger.info("executing create badges");
+  logger.info("user id:" + userData.userId);
+  logger.info(JSON.stringify(badges));
+  logger.info("=========================================");
 
   schema
     .validate(badges, { abortEarly: false })
@@ -27,15 +31,13 @@ module.exports.create = async (req, res) => {
       // Save badges in the database
       Badges.create(badges)
         .then((data) => {
-          logger.info("executing create badges");
-          logger.info("user id:" + userData.userId);
-          logger.info(JSON.stringify(data));
-          logger.info("=========================================");
           res.status(201).send({
             data: data,
           });
         })
         .catch(() => {
+          logger.error("executing create badges");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -59,7 +61,8 @@ module.exports.create = async (req, res) => {
     });
 };
 //get all badges
-module.exports.findAll = (req, res) => {
+module.exports.findAll = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const org_id = req.params.organisation_id;
   const idSchema = validationSchema.findAllSchema();
   idSchema
@@ -72,6 +75,8 @@ module.exports.findAll = (req, res) => {
           });
         })
         .catch(() => {
+          logger.error("executing findAll badges");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -96,7 +101,8 @@ module.exports.findAll = (req, res) => {
 };
 
 //get badges with id
-module.exports.findOne = (req, res) => {
+module.exports.findOne = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = validationSchema.findOneSchema();
@@ -110,6 +116,8 @@ module.exports.findOne = (req, res) => {
               data: data,
             });
           } else {
+            logger.error("executing findOne badge");
+            logger.info("user id:" + userData.userId);
             logger.error("Badge not found for specified id");
             logger.info("=========================================");
             res.status(404).send({
@@ -120,6 +128,8 @@ module.exports.findOne = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing findOne badge");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
@@ -156,6 +166,10 @@ module.exports.update = async (req, res) => {
     hi5_count_required: req.body.hi5_count_required,
     hi5_frequency: req.body.hi5_frequency,
   };
+  logger.info("executing update badges");
+  logger.info("user id:" + userData.userId);
+  logger.info(JSON.stringify(badges));
+  logger.info("=========================================");
   schema
     .validate(
       { id, org_id, name, hi5_count_required, hi5_frequency },
@@ -168,14 +182,12 @@ module.exports.update = async (req, res) => {
       })
         .then(([rowsUpdate, [updatedBadges]]) => {
           if (rowsUpdate == 1) {
-            logger.info("executing update badges");
-            logger.info("user id:" + userData.userId);
-            logger.info(JSON.stringify(updatedBadges));
-            logger.info("=========================================");
             res.status(200).send({
               data: updatedBadges,
             });
           } else {
+            logger.error("executing update badges");
+            logger.info("user id:" + userData.userId);
             logger.error("Badge not found for specified id");
             logger.info("=========================================");
             res.status(404).send({
@@ -186,6 +198,8 @@ module.exports.update = async (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing update badges");
+          logger.info("user id:" + userData.userId);
           logger.error("internal server error");
           logger.info("=========================================");
           res.status(500).send({
