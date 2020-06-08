@@ -15,7 +15,7 @@ const FirstCol = styled(Col)`
 `;
 const Wrapper = styled.div`
   background-color: ${({ theme }) =>
-    theme === "dark" ? "#334856" : "var(--white)"};
+    theme === "dark" ? "var(--atomic)" : "var(--white)"};
 `;
 
 const LoginPanel = ({

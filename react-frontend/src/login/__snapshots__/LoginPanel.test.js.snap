@@ -47,7 +47,7 @@ exports[`LoginPanel should pass a snapshot 1`] = `
 }
 
 .c0 {
-  background-color: #334856;
+  background-color: var(--atomic);
 }
 
 <div
@@ -197,7 +197,7 @@ exports[`LoginPanel should pass a snapshot 1`] = `
 }
 
 .c0 {
-  background-color: #334856;
+  background-color: var(--atomic);
 }
 
 <div
