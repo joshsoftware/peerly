@@ -10,60 +10,54 @@ import GoogleLoginButton from "login/GoogleLoginButton";
 const RowComponent = styled(Row)`
   height: calc(100% / 3);
 `;
-const FirstCol = styled(Col)`
-  padding-top: 1rem;
-`;
 const Wrapper = styled.div`
-  background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--atomic)" : "var(--white)"};
+  background-color: var(--atomic);
 `;
 
 const LoginPanel = ({
-  buttonText,
   informativeText,
   encouragementThought,
   responseGoogleOnSuccess,
   responseGoogleOnFailure,
-  theme,
 }) => (
   <>
-    <Wrapper className="d-none d-md-block  h-100" theme={theme}>
+    <Wrapper className="d-none d-md-block  h-100">
       <RowComponent>
-        <FirstCol>
-          <PeerlyTextAndLogo theme={theme} />
-        </FirstCol>
+        <Col className="pt-3">
+          <PeerlyTextAndLogo theme="dark" />
+        </Col>
       </RowComponent>
       <RowComponent>
         <Col className="text-center m-auto">
           <GoogleLoginButton
             responseGoogleOnSuccess={responseGoogleOnSuccess}
             responseGoogleOnFailure={responseGoogleOnFailure}
-            buttonText={buttonText}
+            buttonText="Google sign in"
           ></GoogleLoginButton>
         </Col>
       </RowComponent>
       <RowComponent>
-        <Col>
+        <Col className="my-auto">
           <InformativeTextComponent
             informativeText={informativeText}
             encouragementThought={encouragementThought}
-            theme={theme}
+            theme="dark"
           />
         </Col>
       </RowComponent>
     </Wrapper>
-    <Wrapper className="d-block d-sm-block d-md-none h-100" theme={theme}>
-      <Row className="h-50">
-        <FirstCol>
-          <PeerlyTextAndLogo theme={theme} />
-        </FirstCol>
+    <Wrapper className="d-block d-sm-block d-md-none h-100">
+      <Row className="h-50 pt-3">
+        <Col className="p-1">
+          <PeerlyTextAndLogo theme="dark" />
+        </Col>
       </Row>
       <Row className="h-50">
         <Col className="text-center m-auto">
           <GoogleLoginButton
             responseGoogleOnSuccess={responseGoogleOnSuccess}
             responseGoogleOnFailure={responseGoogleOnFailure}
-            buttonText={buttonText}
+            buttonText="Google sign in"
           ></GoogleLoginButton>
         </Col>
       </Row>
@@ -72,17 +66,10 @@ const LoginPanel = ({
 );
 
 LoginPanel.propTypes = {
-  buttonText: PropTypes.string,
   informativeText: PropTypes.string,
   encouragementThought: PropTypes.string,
   responseGoogleOnSuccess: PropTypes.func.isRequired,
   responseGoogleOnFailure: PropTypes.func.isRequired,
-  theme: PropTypes.oneOf(["dark", "light"]),
-};
-
-LoginPanel.defaultProps = {
-  buttonText: " Sign in with Google",
-  theme: "dark",
 };
 
 export default React.memo(LoginPanel);
