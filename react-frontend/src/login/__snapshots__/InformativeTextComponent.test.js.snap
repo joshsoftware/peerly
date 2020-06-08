@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`informative Text component test should render informative text component 1`] = `
+<DocumentFragment>
+  .c1 {
+  width: 10%;
+  background: var(--white);
+}
+
+.c0 {
+  color: var(--white);
+  background-color: var(--black);
+}
+
+<div
+    class="c0 text-center undefined"
+    data-testid="info"
+  >
+    <h3>
+      Lets Create the Office Positive
+    </h3>
+    <hr
+      class="c1"
+      data-testid="hrLine"
+    />
+    <h6>
+      thought
+    </h6>
+  </div>
+</DocumentFragment>
+`;
