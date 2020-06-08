@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const bodyParser = require("body-parser");
+const log4js = require("log4js");
 
 const utility = require("../utils/utility");
 const loginController = require("../controllers/v1/loginController");
@@ -8,7 +9,9 @@ require("../google_auth/google_auth")();
 const tokenValidation = require("../jwtTokenValidation/jwtValidation");
 const /*eslint-disable no-unused-vars*/ logoutControllerV1 = require("../controllers/v1/logoutController");
 const validateSchema = require("../controllers/v1/validationSchema/loginValidation");
+require("../config/loggerConfig");
 
+const logger = log4js.getLogger();
 const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -25,6 +28,9 @@ router.post(
         next();
       })
       .catch((err) => {
+        logger.error("validation error");
+        logger.error(JSON.stringify(err));
+        logger.info("=========================================");
         res.status(400).send({
           error: utility.getFormattedErrorObj(
             "invalid-token",

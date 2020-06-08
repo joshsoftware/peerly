@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render PeerlyTextComponent 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: var(--white);
+  background-color: var(--black);
+  font-size: 48px;
+}
+
+<div
+    class="c0"
+    data-testid="PeerlyTextComponents"
+    font-size="48px"
+  >
+    Peerly
+  </div>
+</DocumentFragment>
+`;
