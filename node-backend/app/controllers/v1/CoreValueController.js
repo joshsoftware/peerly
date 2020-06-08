@@ -12,6 +12,7 @@ module.exports.create = (req, res) => {
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
+    thumbnail_url: req.body.thumbnail_url,
   };
 
   schema
@@ -121,16 +122,18 @@ module.exports.update = (req, res) => {
   const org_id = req.params.organisation_id;
   const text = req.body.text;
   const description = req.body.description;
+  const thumbnail_url = req.body.thumbnail_url;
   const parent_core_value_id = req.body.parent_core_value_id;
   const schema = validationSchema.updateSchema();
   const coreValue = {
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
+    thumbnail_url: req.body.thumbnail_url,
   };
   schema
     .validate(
-      { id, org_id, text, description, parent_core_value_id },
+      { id, org_id, text, description, parent_core_value_id, thumbnail_url },
       { abortEarly: false }
     )
     .then(() => {
@@ -184,6 +187,7 @@ module.exports.getCoreValueById = (req, res) => {
           "text",
           "parent_core_value_id",
           "org_id",
+          "thumbnail_url",
         ],
       })
         .then((data) => {
@@ -220,7 +224,14 @@ module.exports.getCoreValueById = (req, res) => {
 
 module.exports.getCoreValues = (req, res) => {
   CoreValue.findAll({
-    attributes: ["id", "description", "text", "parent_core_value_id", "org_id"],
+    attributes: [
+      "id",
+      "description",
+      "text",
+      "parent_core_value_id",
+      "org_id",
+      "thumbnail_url",
+    ],
   })
     .then((info) => {
       res.status(200).send({
