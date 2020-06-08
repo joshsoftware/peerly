@@ -68,7 +68,9 @@ module.exports.validateRole = (inputRoleId, roleTypeToCompare) => {
 
 module.exports.authorizeAdmin = async (req, res, next) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
-  if (this.validateRole(tokenData.roleId, ["SuperAdmin", "Employee"])) {
+  if (
+    this.validateRole(tokenData.roleId, ["SuperAdmin", "OrganisationAdmin"])
+  ) {
     next();
   } else {
     logger.warn(
