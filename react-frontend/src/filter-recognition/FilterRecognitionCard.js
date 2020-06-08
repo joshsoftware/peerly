@@ -17,6 +17,7 @@ const Header = styled.div`
   height: 20%;
   background: #87bcbf;
   border-radius: 50px 50px 0px 0px;
+  text-align: center;
 `;
 
 const FilterCard = styled(Card)`
@@ -34,10 +35,8 @@ const FilterRecognitionCard = ({
 }) => (
   <FilterCard className="h-100">
     <CardBody>
-      <Header className="d-flex align-content-center justify-content-center flex-wrap h3">
-        Filter
-      </Header>
-      <Form className="p-3" onSubmit={onSubmit}>
+      <Header className="text -center h4">Filter</Header>
+      <Form className="p-3" onSubmit={onSubmit} data-testid="filterform">
         <Form.Group controlId="filterCoreValue">
           <Form.Label>Core Value</Form.Label>
           <AsyncSelect
