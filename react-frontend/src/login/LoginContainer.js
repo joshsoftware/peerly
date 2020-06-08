@@ -16,21 +16,19 @@ const LoginContainer = () => {
   const responseGoogleOnFailure = (error) => {
     store.dispatch({ type: "LOGIN_FAILURE", value: error });
   };
-
-  if (loginAuthorization.error.message === "unauthorized user") {
+  if (loginAuthorization.status === 401) {
     return <UnauthorisedErrorComponent />;
   } else if (loginAuthorization.error.error === "popup_closed_by_user") {
     return <UnauthorisedErrorComponent />;
-  } else if (loginAuthorization.error.message === "internal server error") {
+  } else if (loginAuthorization.error.message === 500) {
     return <InternalServerErrorComponent />;
   }
   return (
-    <div data-testid="LoginContainer">
-      <Login
-        responseGoogleOnSuccess={responseGoogleOnSuccess}
-        responseGoogleOnFailure={responseGoogleOnFailure}
-      />
-    </div>
+    <Login
+      data-testid="LoginContainer"
+      responseGoogleOnSuccess={responseGoogleOnSuccess}
+      responseGoogleOnFailure={responseGoogleOnFailure}
+    />
   );
 };
 
