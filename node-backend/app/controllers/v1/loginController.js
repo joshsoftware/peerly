@@ -37,10 +37,7 @@ module.exports.login = async (req, res) => {
         },
       },
       process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
-      expTime,
-      {
-        expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
-      }
+      expTime
     );
     res.status(200).send({
       data: {
@@ -96,26 +93,30 @@ module.exports.login = async (req, res) => {
             process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
             expTime
           );
-          res.status(200).send({
+          res.status(201).send({
             data: {
               token: token,
             },
           });
         } else {
+          logger.error("executing login");
           logger.error("unauthorized user");
           logger.info("=========================================");
           res.status(401).send({
             error: {
+              code: "invalid_organization",
               message: "unauthorized user",
             },
           });
         }
       }
     } else {
+      logger.error("executing login");
       logger.error("unauthorized user");
       logger.info("=========================================");
       res.status(401).send({
         error: {
+          code: "invalid_organization",
           message: "unauthorized user",
         },
       });
@@ -135,6 +136,8 @@ const getUser = async (email) => {
       result = users;
     })
     .catch(() => {
+      logger.error("executing get user in login");
+      logger.info("user email: " + email);
       logger.error("internal server error");
       logger.info("=========================================");
       result = "error";
@@ -149,6 +152,7 @@ const getOrganization = async (domainName) => {
       domainResult = organizationData;
     })
     .catch(() => {
+      logger.error("executing get organisation in login");
       logger.error("internal server error");
       logger.info("=========================================");
       domainResult = "error";
@@ -175,7 +179,12 @@ const insertData = async (
     role_id: 3,
     hi5_quota_balance: hi5QuotaBalance,
   };
+  logger.info("executing create user");
+  logger.info(JSON.stringify(user));
+  logger.info("=========================================");
+
   await Users.create(user).catch(() => {
+    logger.error("executing create user");
     logger.error("internal server error");
     logger.info("=========================================");
     errorCheck = "error";
