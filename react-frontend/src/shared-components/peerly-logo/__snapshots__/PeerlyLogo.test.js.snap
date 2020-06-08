@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render PeerlyLogo Component 1`] = `
+<DocumentFragment>
+  .c1 {
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  font-size: 48px;
+  color: var(--white);
+}
+
+.c0 {
+  text-align: center;
+  margin-top: 15px;
+  width: 83px;
+  height: 83px;
+  border: 3px solid var(--white);
+  background-color: var(--black);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+<div
+    class="c0 mx-auto"
+    data-testid="Logo"
+  >
+    <div
+      class="c1"
+      data-testid="plusSignText"
+      font-size="48px"
+    >
+      +
+    </div>
+  </div>
+</DocumentFragment>
+`;
