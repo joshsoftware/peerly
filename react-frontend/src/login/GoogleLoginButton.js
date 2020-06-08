@@ -26,4 +26,4 @@ GoogleLoginButtonComponent.propTypes = {
   buttonText: PropTypes.string,
 };
 
-export default GoogleLoginButtonComponent;
+export default React.memo(GoogleLoginButtonComponent);

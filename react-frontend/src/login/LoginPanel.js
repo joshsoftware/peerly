@@ -85,4 +85,4 @@ LoginPanel.defaultProps = {
   theme: "dark",
 };
 
-export default LoginPanel;
+export default React.memo(LoginPanel);
