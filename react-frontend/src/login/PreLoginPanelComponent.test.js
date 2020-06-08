@@ -1,31 +1,35 @@
 import React from "react";
 import { render } from "@testing-library/react";
+import PreLoginPanelComponent from "login/PreLoginPanelComponent";
 
-import LogoComponent from "shared-components/peerly-Logo/LogoComponent";
-import PreLoginImageComponent from "shared-components/prelogin-image-components/PreLoginImageComponent";
-import PrimaryCoreValueComponent from "shared-components/primary-core-value-components/PrimaryCoreValueComponent";
-
-describe("Pre Login component test", () => {
-  test("renders image component with image", () => {
-    const { getByAltText } = render(<PreLoginImageComponent />);
-    const testImage = getByAltText("pre login image");
-    expect(testImage).toBeInTheDocument();
-  });
-
-  test("should equal to + Peerly text", () => {
-    const { getByTestId } = render(<LogoComponent />);
-    expect(getByTestId("peerlyLogoComponent")).toHaveTextContent("+ Peerly");
-  });
-
-  test("login text component should equal to value", () => {
-    const { getByTestId } = render(
-      <PrimaryCoreValueComponent
-        orgPrimaryCoreValue="Lets Create the Office Positive"
+describe("pre login panel component test", () => {
+  test("should render pre login panel component", () => {
+    const { asFragment, getByTestId } = render(
+      <PreLoginPanelComponent
+        informativeText="Lets Create the Office Positive"
         encouragementThought="thought"
       />
     );
-    expect(getByTestId("PrimaryCoreValueComponent")).toHaveTextContent(
-      "Lets Create the Office Positive thought"
+    expect(asFragment()).toMatchSnapshot();
+    expect(getByTestId("officeInfo")).toHaveStyleRule(
+      "background-color",
+      "var(--black)"
     );
+  });
+
+  test("test case for style and classes", () => {
+    const { getByTestId } = render(
+      <PreLoginPanelComponent
+        theme="light"
+        className="text-uppercase"
+        informativeText="Lets Create the Office Positive"
+        encouragementThought="thought"
+      />
+    );
+    expect(getByTestId("officeInfo")).toHaveStyleRule(
+      "background-color",
+      "var(--white)"
+    );
+    expect(getByTestId("officeInfo")).toHaveClass("text-uppercase");
   });
 });
