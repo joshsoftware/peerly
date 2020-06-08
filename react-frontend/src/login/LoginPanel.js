@@ -14,12 +14,7 @@ const Wrapper = styled.div`
   background-color: var(--atomic);
 `;
 
-const LoginPanel = ({
-  informativeText,
-  encouragementThought,
-  responseGoogleOnSuccess,
-  responseGoogleOnFailure,
-}) => (
+const LoginPanel = ({ responseGoogleOnSuccess, responseGoogleOnFailure }) => (
   <>
     <Wrapper className="d-none d-md-block  h-100">
       <RowComponent>
@@ -33,16 +28,12 @@ const LoginPanel = ({
             responseGoogleOnSuccess={responseGoogleOnSuccess}
             responseGoogleOnFailure={responseGoogleOnFailure}
             buttonText="Google sign in"
-          ></GoogleLoginButton>
+          />
         </Col>
       </RowComponent>
       <RowComponent>
         <Col className="my-auto">
-          <InformativeTextComponent
-            informativeText={informativeText}
-            encouragementThought={encouragementThought}
-            theme="dark"
-          />
+          <InformativeTextComponent theme="dark" />
         </Col>
       </RowComponent>
     </Wrapper>
@@ -66,8 +57,6 @@ const LoginPanel = ({
 );
 
 LoginPanel.propTypes = {
-  informativeText: PropTypes.string,
-  encouragementThought: PropTypes.string,
   responseGoogleOnSuccess: PropTypes.func.isRequired,
   responseGoogleOnFailure: PropTypes.func.isRequired,
 };

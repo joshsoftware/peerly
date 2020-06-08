@@ -149,14 +149,14 @@ exports[`LoginPanel should pass a snapshot 1`] = `
           data-testid="info"
         >
           <h3>
-            Let Create
+            Lets Create the Office Positive
           </h3>
           <hr
             class="c6"
             data-testid="hrLine"
           />
           <h6>
-            office positive
+            Encouragement Driven
           </h6>
         </div>
       </div>
