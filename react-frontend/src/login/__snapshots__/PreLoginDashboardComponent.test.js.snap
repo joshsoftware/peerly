@@ -2,7 +2,7 @@
 
 exports[`pre login panel component test should render pre login panel component 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c2 {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
@@ -10,7 +10,7 @@ exports[`pre login panel component test should render pre login panel component 
   color: var(--white);
 }
 
-.c2 {
+.c1 {
   text-align: center;
   margin-top: 15px;
   width: 83px;
@@ -22,18 +22,18 @@ exports[`pre login panel component test should render pre login panel component 
   transform: rotate(45deg);
 }
 
-.c4 {
+.c3 {
   color: var(--white);
   background-color: var(--black);
   font-size: 48px;
 }
 
-.c6 {
+.c5 {
   width: 10%;
   background: var(--white);
 }
 
-.c5 {
+.c4 {
   color: var(--white);
   background-color: var(--black);
 }
@@ -43,85 +43,58 @@ exports[`pre login panel component test should render pre login panel component 
   background-color: var(--atomic);
 }
 
-.c1 {
-  height: calc(100% / 3);
-}
-
 <div
-    class="c0 d-sm-block d-xs-block d-md-none undefined container"
+    class="c0 d-sm-block d-xs-block d-md-none flex-column d-flex justify-content-around undefined"
     data-testid="officeInfo"
-    theme="dark"
   >
-    <div
-      class="c1 row"
-    >
+    <div>
       <div
-        class="m-auto col"
+        data-testid="peerlyLogoComponent"
       >
         <div
-          data-testid="peerlyLogoComponent"
+          class="c1 mx-auto"
+          data-testid="Logo"
         >
           <div
-            class="c2 mx-auto"
-            data-testid="Logo"
-          >
-            <div
-              class="c3"
-              data-testid="plusSignText"
-              font-size="48px"
-            >
-              +
-            </div>
-          </div>
-        </div>
-        <div
-          class="text-center"
-        >
-          <div
-            class="c4"
-            data-testid="PeerlyTextComponents"
+            class="c2"
+            data-testid="plusSignText"
             font-size="48px"
           >
-            Peerly
+            +
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="c1 overflow-hidden row"
-    >
       <div
-        class="p-0 col"
-      >
-        <img
-          alt="login image"
-          class="img-fluid img-fluid"
-          src="/assets/images//cat-mobile-img.png"
-        />
-      </div>
-    </div>
-    <div
-      class="c1 row"
-    >
-      <div
-        class="m-auto col"
+        class="text-center"
       >
         <div
-          class="c5 text-center undefined"
-          data-testid="info"
+          class="c3"
+          data-testid="PeerlyTextComponents"
+          font-size="48px"
         >
-          <h3>
-            Lets Create the Office Positive
-          </h3>
-          <hr
-            class="c6"
-            data-testid="hrLine"
-          />
-          <h6>
-            Encouragement Driven
-          </h6>
+          Peerly
         </div>
       </div>
+    </div>
+    <img
+      alt="login image"
+      class="img-fluid"
+      src="/assets/images//cat-mobile-img.png"
+    />
+    <div
+      class="c4 text-center undefined"
+      data-testid="info"
+    >
+      <h3>
+        Lets Create the Office Positive
+      </h3>
+      <hr
+        class="c5"
+        data-testid="hrLine"
+      />
+      <h6>
+        Encouragement Driven
+      </h6>
     </div>
   </div>
 </DocumentFragment>
