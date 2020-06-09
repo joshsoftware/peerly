@@ -2,12 +2,30 @@
 
 exports[`Recognition text Component test should equal snapshot 1`] = `
 <DocumentFragment>
-  <div>
+  .c0 {
+  border: 1px solid lightgrey;
+  border-radius: 11px;
+  opacity: 1;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.c1 {
+  width: auto;
+  margin-left: 10%;
+}
+
+.c2 {
+  width: 7vh;
+  margin-right: 5%;
+}
+
+<div>
     <fieldset
-      class="sc-AxjAm cQYgKB"
+      class="c0"
     >
       <legend
-        class="sc-AxirZ htcJuF"
+        class="c1"
       >
         “
       </legend>
@@ -27,7 +45,7 @@ exports[`Recognition text Component test should equal snapshot 1`] = `
       </label>
       <img
         alt="Profile"
-        class="sc-AxiKw ilpYXo img-fluid rounded-circle"
+        class="c2 img-fluid rounded-circle"
         src="https://i.picsum.photos/id/2/200/200.jpg"
       />
     </div>

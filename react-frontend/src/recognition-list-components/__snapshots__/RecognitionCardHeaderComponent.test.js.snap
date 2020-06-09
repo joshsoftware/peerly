@@ -2,7 +2,11 @@
 
 exports[`Recognition card header Component test should equal snapshot 1`] = `
 <DocumentFragment>
-  <div>
+  .c0 {
+  width: 12vh;
+}
+
+<div>
     <div
       class="d-flex justify-content-end"
     >
@@ -17,7 +21,7 @@ exports[`Recognition card header Component test should equal snapshot 1`] = `
       class="d-flex flex-row"
     >
       <div
-        class="sc-AxjAm fxHfgf"
+        class="c0"
       >
         <img
           alt="Profile"

@@ -2,8 +2,48 @@
 
 exports[`Recognition Card Component test should equal snapshot 1`] = `
 <DocumentFragment>
-  <div
-    class="sc-AxheI dPJEXg card"
+  .c1 {
+  width: 12vh;
+}
+
+.c3 {
+  border: 1px solid lightgrey;
+  border-radius: 11px;
+  opacity: 1;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.c4 {
+  width: auto;
+  margin-left: 10%;
+}
+
+.c5 {
+  width: 7vh;
+  margin-right: 5%;
+}
+
+.c2 {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.c6 {
+  position: absolute;
+  bottom: 50px;
+}
+
+.c0 {
+  border-radius: 20px;
+  margin: 20px 20px;
+  box-shadow: 0px 5px 20px #505c623b;
+  opacity: 1;
+  background: #ffffff 0% 0% no-repeat padding-box;
+}
+
+<div
+    class="c0 card"
   >
     <div
       class="card-body"
@@ -29,7 +69,7 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
               class="d-flex flex-row"
             >
               <div
-                class="sc-AxjAm fxHfgf"
+                class="c1"
               >
                 <img
                   alt="Profile"
@@ -67,15 +107,15 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
           </div>
           <img
             alt="Core value"
-            class="sc-AxhUy kJQIQs d-sm-block d-md-none mt-2 img-fluid"
+            class="c2 d-sm-block d-md-none mt-2 img-fluid"
             src="https://i.picsum.photos/id/654/300/200.jpg"
           />
           <div>
             <fieldset
-              class="sc-AxirZ ezZqni"
+              class="c3"
             >
               <legend
-                class="sc-AxiKw bKVdiB"
+                class="c4"
               >
                 “
               </legend>
@@ -95,7 +135,7 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
               </label>
               <img
                 alt="Profile"
-                class="sc-AxhCb gqtipY img-fluid rounded-circle"
+                class="c5 img-fluid rounded-circle"
                 src="https://i.picsum.photos/id/2/200/200.jpg"
               />
             </div>
@@ -107,7 +147,7 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
           <div>
             <img
               alt="Core value"
-              class="sc-AxhUy kJQIQs mt-2 img-fluid"
+              class="c2 mt-2 img-fluid"
               src="https://i.picsum.photos/id/654/300/200.jpg"
             />
           </div>
@@ -130,7 +170,7 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
         </div>
       </div>
       <div
-        class="sc-AxgMl dPZjCr"
+        class="c6"
       >
         <img
           alt="High five recognition"

@@ -2,8 +2,15 @@
 
 exports[`Recognition list Component test should equal snapshot 1`] = `
 <DocumentFragment>
-  <div
-    class="sc-Axmtr cRMTYu"
+  .c0 {
+  border: 1px solid lightgrey;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border-radius: 36px;
+  opacity: 1;
+}
+
+<div
+    class="c0"
   />
 </DocumentFragment>
 `;
