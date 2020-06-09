@@ -5,13 +5,14 @@ import styled from "styled-components";
 const HrLine = styled.hr`
   width: 10%;
   background: ${({ theme }) =>
-    theme === "dark" ? "var(--white)" : "var(--black)"};
+    theme === "dark" ? "var(--white)" : "var(--atomic)"};
 `;
 
 const Div = styled.div`
-  color: ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
+  color: ${({ theme }) =>
+    theme === "dark" ? "var(--white)" : "var(--atomic)"};
   background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--black)" : "var(--white)"};
+    theme === "dark" ? "var(--atomic)" : "var(--white)"};
 `;
 
 const InformativeTextComponent = ({
