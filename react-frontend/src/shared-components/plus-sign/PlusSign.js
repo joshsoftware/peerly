@@ -5,7 +5,8 @@ import PropTypes from "prop-types";
 const PlusSignWrapper = styled.div`
   transform: ${({ cross }) => (cross ? "rotate(45deg)" : "rotate(0deg)")};
   font-size: ${({ fontSize }) => fontSize};
-  color: ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
+  color: ${({ theme }) =>
+    theme === "dark" ? "var(--white)" : "var(--atomic)"};
 `;
 
 const PlusSign = ({ theme, cross, fontSize }) => (

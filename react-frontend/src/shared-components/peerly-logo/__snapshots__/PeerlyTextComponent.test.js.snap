@@ -4,7 +4,7 @@ exports[`should render PeerlyTextComponent 1`] = `
 <DocumentFragment>
   .c0 {
   color: var(--white);
-  background-color: var(--black);
+  background-color: var(--atomic);
   font-size: 48px;
 }
 

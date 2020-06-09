@@ -9,7 +9,7 @@ exports[`informative Text component test should render informative text componen
 
 .c0 {
   color: var(--white);
-  background-color: var(--black);
+  background-color: var(--atomic);
 }
 
 <div

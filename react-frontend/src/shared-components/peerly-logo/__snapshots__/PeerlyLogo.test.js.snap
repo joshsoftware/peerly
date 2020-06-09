@@ -16,7 +16,7 @@ exports[`should render PeerlyLogo Component 1`] = `
   width: 83px;
   height: 83px;
   border: 3px solid var(--white);
-  background-color: var(--black);
+  background-color: var(--atomic);
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);

@@ -17,6 +17,6 @@ test("should test color,fontsize and background of Peerly Logo", () => {
   );
   expect(getByTestId("Logo")).toHaveStyleRule(
     "background-color",
-    "var(--black)"
+    "var(--atomic)"
   );
 });

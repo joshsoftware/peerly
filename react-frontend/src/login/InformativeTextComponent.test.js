@@ -14,7 +14,7 @@ describe("informative Text component test", () => {
     expect(getByTestId("info")).toHaveStyleRule("color", "var(--white)");
     expect(getByTestId("info")).toHaveStyleRule(
       "background-color",
-      "var(--black)"
+      "var(--atomic)"
     );
     expect(getByTestId("hrLine")).toHaveStyleRule("width", "10%");
     expect(getByTestId("hrLine")).toHaveStyleRule("background", "var(--white)");
@@ -28,12 +28,15 @@ describe("informative Text component test", () => {
         encouragementThought="thought"
       />
     );
-    expect(getByTestId("info")).toHaveStyleRule("color", "var(--black)");
+    expect(getByTestId("info")).toHaveStyleRule("color", "var(--atomic)");
     expect(getByTestId("info")).toHaveStyleRule(
       "background-color",
       "var(--white)"
     );
-    expect(getByTestId("hrLine")).toHaveStyleRule("background", "var(--black)");
+    expect(getByTestId("hrLine")).toHaveStyleRule(
+      "background",
+      "var(--atomic)"
+    );
     expect(getByTestId("hrLine")).toHaveStyleRule("width", "10%");
   });
 
