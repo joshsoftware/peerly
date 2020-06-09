@@ -10,9 +10,9 @@ const Logo = styled.div`
   width: 83px;
   height: 83px;
   border: 3px solid
-    ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--black)")};
+    ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--atomic)")};
   background-color: ${({ theme }) =>
-    theme === "dark" ? "var(--black)" : "var(--white)"};
+    theme === "dark" ? "var(--atomic)" : "var(--white)"};
   transform: rotate(45deg);
 `;
 
