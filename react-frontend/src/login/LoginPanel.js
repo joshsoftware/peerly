@@ -4,19 +4,25 @@ import styled from "styled-components";
 
 import PeerlyTextAndLogo from "shared-components/peerly-logo/PeerlyTextAndLogo";
 import InformativeTextComponent from "login/InformativeTextComponent";
-import { Col, Row } from "core-components/grid/GridComponent";
+import { Col, Row, Container } from "core-components/grid/GridComponent";
 import GoogleLoginButton from "login/GoogleLoginButton";
 
 const RowComponent = styled(Row)`
   height: calc(100% / 3);
 `;
-const Wrapper = styled.div`
+const Div = styled.div`
   background-color: var(--atomic);
+  height: 100vh;
+`;
+
+const WrapperContainer = styled(Container)`
+  height: 100vh;
+  padding: 0%;
 `;
 
 const LoginPanel = ({ responseGoogleOnSuccess, responseGoogleOnFailure }) => (
-  <>
-    <Wrapper className="d-none d-md-block  h-100">
+  <WrapperContainer fluid={true}>
+    <Div className="d-none d-md-block  h-100">
       <RowComponent>
         <Col className="pt-3">
           <PeerlyTextAndLogo theme="dark" />
@@ -36,8 +42,8 @@ const LoginPanel = ({ responseGoogleOnSuccess, responseGoogleOnFailure }) => (
           <InformativeTextComponent theme="dark" />
         </Col>
       </RowComponent>
-    </Wrapper>
-    <Wrapper className="d-block d-sm-block d-md-none h-100">
+    </Div>
+    <Div className="d-block d-sm-block d-md-none h-100">
       <Row className="h-50 pt-3">
         <Col className="p-1">
           <PeerlyTextAndLogo theme="dark" />
@@ -52,8 +58,8 @@ const LoginPanel = ({ responseGoogleOnSuccess, responseGoogleOnFailure }) => (
           ></GoogleLoginButton>
         </Col>
       </Row>
-    </Wrapper>
-  </>
+    </Div>
+  </WrapperContainer>
 );
 
 LoginPanel.propTypes = {
