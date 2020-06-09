@@ -25,6 +25,6 @@ test("should test color,fontsize and background of Peerly text", () => {
   );
   expect(getByTestId("PeerlyTextComponents")).toHaveStyleRule(
     "background-color",
-    "var(--black)"
+    "var(--atomic)"
   );
 });
