@@ -36,4 +36,7 @@ type Storer interface {
 	CreateCoreValue(context.Context, int64, CoreValue) (CoreValue, error)
 	DeleteCoreValue(context.Context, int64, int64) error
 	UpdateCoreValue(context.Context, int64, int64, CoreValue) (CoreValue, error)
+
+	//Recognition
+	CreateRecognitionHi5(context.Context, RecognitionHi5, int) error
 }
