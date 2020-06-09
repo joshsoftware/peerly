@@ -11,7 +11,7 @@ const (
 	listCoreValuesQuery  = `SELECT id, org_id, text, description, parent_id  FROM core_values WHERE org_id = $1`
 	getCoreValueQuery    = `SELECT id, org_id, text, description, parent_id FROM core_values WHERE org_id = $1 and id = $2`
 	createCoreValueQuery = `INSERT INTO core_values (org_id, text,
-		description, parent_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, org_id, text, description, parent_id`
+		description, parent_id, thumbnail_url, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, org_id, text, description, parent_id, thumbnail_url`
 	deleteSubCoreValueQuery = `DELETE FROM core_values WHERE org_id = $1 and parent_id = $2`
 	deleteCoreValueQuery    = `DELETE FROM core_values WHERE org_id = $1 and id = $2`
 	updateCoreValueQuery    = `UPDATE core_values SET (text, description, updated_at) =
@@ -20,13 +20,14 @@ const (
 
 // CoreValue - struct representing a core value object
 type CoreValue struct {
-	ID          int64     `db:"id" json:"id"`
-	OrgID       int64     `db:"org_id" json:"org_id"`
-	Text        string    `db:"text" json:"text"`
-	Description string    `db:"description" json:"description"`
-	ParentID    *int64    `db:"parent_id" json:"parent_id"`
-	CreatedAt   time.Time `db:"created_at" json:"-"`
-	UpdatedAt   time.Time `db:"updated_at" json:"-"`
+	ID           int64     `db:"id" json:"id"`
+	OrgID        int64     `db:"org_id" json:"org_id"`
+	Text         string    `db:"text" json:"text"`
+	Description  string    `db:"description" json:"description"`
+	ParentID     *int64    `db:"parent_id" json:"parent_id"`
+	ThumbnailURL *string   `db:"thumbnail_url" json:"thumbnail_url"`
+	CreatedAt    time.Time `db:"created_at" json:"-"`
+	UpdatedAt    time.Time `db:"updated_at" json:"-"`
 }
 
 func validateParentCoreValue(ctx context.Context, storer Storer, organisationID, coreValueID int64) (ok bool) {
@@ -116,6 +117,7 @@ func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, cor
 		coreValue.Text,
 		coreValue.Description,
 		coreValue.ParentID,
+		coreValue.ThumbnailURL,
 		now,
 		now,
 	)
