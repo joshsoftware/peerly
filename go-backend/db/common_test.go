@@ -11,7 +11,7 @@ import (
 func InitMockDB() (s Storer, sqlConn *sqlx.DB, sqlmockInstance sqlmock.Sqlmock) {
 	mockDB, sqlmock, err := sqlmock.New()
 	if err != nil {
-		logger.WithField("error in mock init", err).Error("error occurred")
+		logger.WithField("err:", err).Error("error initializing mock db")
 		return
 	}
 
