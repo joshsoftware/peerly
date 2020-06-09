@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Recognition text Component test should equal snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <fieldset
+      class="sc-AxjAm cQYgKB"
+    >
+      <legend
+        class="sc-AxirZ htcJuF"
+      >
+        “
+      </legend>
+      <label
+        class="px-2 pb-2 pt-0 form-label"
+      >
+        give high five
+      </label>
+    </fieldset>
+    <div
+      class="d-flex justify-content-end w-100"
+    >
+      <label
+        class="font-weight-bold text-dark form-label"
+      >
+        Roy
+      </label>
+      <img
+        alt="Profile"
+        class="sc-AxiKw ilpYXo img-fluid rounded-circle"
+        src="https://i.picsum.photos/id/2/200/200.jpg"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

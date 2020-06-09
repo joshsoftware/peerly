@@ -10,21 +10,8 @@ import RecognitionCardHeaderComponent from "recognition-list-components/Recognit
 import RecognitionTextComponent from "recognition-list-components/RecognitionTextComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 
-const giveHighFive = () => {
-  //to to for give high five
-};
-
-const ImgD = styled.div`
+const CoreValueImage = styled(ImageComponent)`
   border-radius: 20px;
-  height: auto;
-  width: auto;
-  overflow: hidden;
-`;
-
-const ImgM = styled.div`
-  border-radius: 20px;
-  height: auto;
-  width: auto;
   overflow: hidden;
 `;
 
@@ -33,68 +20,80 @@ const HighFive = styled.div`
   bottom: 50px;
 `;
 
+const CardComponent = styled(Card)`
+  border-radius: 20px;
+  margin: 20px 20px;
+  box-shadow: 0px 5px 20px #505c623b;
+  opacity: 1;
+  background: #ffffff 0% 0% no-repeat padding-box;
+`;
+
 const RecognitionCardComponent = ({
-  given_by,
-  given_for,
-  given_at,
+  givenByName,
+  givenByImage,
+  givenForName,
+  givenForImage,
+  givenAt,
   text,
-  core_value,
-  high_five_count,
+  coreValue,
+  coreValueImage,
 }) => (
-  <Card
-    className="my-4 mx-2 shadow p-3 mb-4 border border-secondary bg-light grey"
-    style={{ borderRadius: "36px" }}
-  >
+  <CardComponent>
     <Card.Body>
       <Row>
         <Col sm="12" md="7">
           <RecognitionCardHeaderComponent
-            given_for={given_for}
-            given_at={given_at}
-            core_value={core_value}
+            givenAt={givenAt}
+            givenForName={givenForName}
+            coreValue={coreValue}
+            givenForImage={givenForImage}
           />
-          <ImgM className="bg-dark d-sm-block d-md-none mt-2">
-            <ImageComponent
-              src="https://i.picsum.photos/id/654/300/200.jpg"
-              alt="CoreValueImage"
-            />
-          </ImgM>
-          <RecognitionTextComponent text={text} given_by={given_by} />
+          <CoreValueImage
+            src={coreValueImage}
+            alt="Core value"
+            className="d-sm-block d-md-none mt-2"
+          />
+          <RecognitionTextComponent
+            givenByImage={givenByImage}
+            givenByName={givenByName}
+            text={text}
+          />
         </Col>
-        <Col className="d-none d-md-block">
-          <Col className=" d-flex  justify-content-center">
-            <Row className="d-flex flex-column">
-              <ImgD>
-                <ImageComponent
-                  src="https://i.picsum.photos/id/654/300/200.jpg"
-                  alt="CoreValueImage"
-                />
-              </ImgD>
-              <Col className="d-flex justify-content-center mt-4">
-                <BsCircle size="50px" color="red" />
-              </Col>
-            </Row>
-          </Col>
+        <Col className="d-none d-md-block text-center">
+          <div>
+            <CoreValueImage
+              src={coreValueImage}
+              alt="Core value"
+              className="mt-2"
+            />
+          </div>
+          <BsCircle size="50px" className="mt-4" />
         </Col>
       </Row>
-      <HighFive onClick={giveHighFive}>
+      <HighFive>
         <HighFiveComponent />
       </HighFive>
+      <Card.Footer className="bg-white">
+        <span className="font-weight-bold text-muted">+</span>
+        <span className="font-weight-bold text-dark">1</span>
+      </Card.Footer>
     </Card.Body>
-    <Card.Footer className="bg-light grey">
-      <span className="font-weight-bold text-muted">+</span>
-      <span className="font-weight-bold text-dark">{high_five_count}</span>
-    </Card.Footer>
-  </Card>
+  </CardComponent>
 );
 
 RecognitionCardComponent.propTypes = {
-  given_by: PropTypes.string.isRequired,
-  given_for: PropTypes.string.isRequired,
-  given_at: PropTypes.string.isRequired,
+  givenByName: PropTypes.string.isRequired,
+  givenByImage: PropTypes.string,
+  givenForName: PropTypes.string.isRequired,
+  givenForImage: PropTypes.string,
+  givenAt: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
-  core_value: PropTypes.string.isRequired,
-  high_five_count: PropTypes.string.isRequired,
+  coreValue: PropTypes.string.isRequired,
+  coreValueImage: PropTypes.string,
+};
+
+RecognitionCardComponent.defaultProps = {
+  coreValueImage: "https://i.picsum.photos/id/654/300/200.jpg",
 };
 
 export default React.memo(RecognitionCardComponent);
