@@ -160,11 +160,28 @@ module.exports.create = async (req, res) => {
 module.exports.findOne = async (req, res) => {
   const userData = await jwtValidate.getData(req.headers["authorization"]);
   const idSchema = validationSchema.getByIdSchema();
-
   idSchema
     .validate({ id: req.params.id }, { abortEarly: false })
     .then(() => {
-      Recognitions.findByPk(req.params.id)
+      Recognitions.findByPk(req.params.id, {
+        attributes: ["id", "text", "given_at"],
+        include: [
+          {
+            model: db.users,
+            attributes: ["id", "first_name", "last_name", "profile_image_url"],
+            as: "givenFor",
+          },
+          {
+            model: db.users,
+            attributes: ["id", "first_name", "last_name", "profile_image_url"],
+            as: "givenBy",
+          },
+          {
+            model: db.core_value,
+            attributes: ["id", "text", "description"],
+          },
+        ],
+      })
         .then((data) => {
           if (data == null /*eslint-disable-line no-eq-null*/) {
             logger.error("Error executing find one in recognition");
@@ -208,28 +225,6 @@ module.exports.findOne = async (req, res) => {
     });
 };
 
-const createFilterQuery = (filterData, tokenData) => {
-  const sqlQuery =
-    "select * from recognitions where given_for in (select id from users where org_id=" +
-    tokenData.orgId +
-    ")";
-  let whereCondition = "";
-  if (filterData.given_for) {
-    whereCondition = " and given_for =" + filterData.given_for;
-  }
-  if (filterData.given_by) {
-    whereCondition = whereCondition.concat(
-      " and given_by =" + filterData.given_by
-    );
-  }
-  if (filterData.core_value_id) {
-    whereCondition = whereCondition.concat(
-      " and core_value_id =" + filterData.core_value_id
-    );
-  }
-  return sqlQuery.concat(whereCondition);
-};
-
 const getFilterData = (data) => {
   let filterData = {
     core_value_id: data.core_value_id,
@@ -241,6 +236,19 @@ const getFilterData = (data) => {
   return filterData;
 };
 
+const createWhereClause = ({ orgId }, id) => {
+  if (id) {
+    return {
+      org_id: orgId,
+      id: id,
+    };
+  } else {
+    return {
+      org_id: orgId,
+    };
+  }
+};
+
 module.exports.findAll = async (req, res) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
   const filterSchema = validationSchema.getFilterSchema();
@@ -250,20 +258,34 @@ module.exports.findAll = async (req, res) => {
   filterSchema
     .validate(filterData, { abortEarly: false })
     .then(() => {
-      db.sequelize
-        .query(
-          createFilterQuery(filterData, tokenData) +
-            "limit " +
-            paginationData.limit +
-            " offset " +
-            paginationData.offset +
-            ""
-        )
+      Recognitions.findAll({
+        include: [
+          {
+            model: db.users,
+            attributes: ["id", "first_name", "last_name", "profile_image_url"],
+            as: "givenFor",
+            where: createWhereClause(tokenData, filterData.given_for),
+          },
+          {
+            model: db.users,
+            attributes: ["id", "first_name", "last_name", "profile_image_url"],
+            as: "givenBy",
+            where: createWhereClause(tokenData, filterData.given_by),
+          },
+          {
+            model: db.core_value,
+            attributes: ["id", "text", "description"],
+            where: createWhereClause(tokenData, filterData.core_value_id),
+          },
+        ],
+        offset: paginationData.offset,
+        limit: paginationData.limit,
+      })
         .then((info) => {
           let data = info[0];
-          if (data[0] != undefined) {
+          if (data != undefined) {
             res.status(200).send({
-              data: data,
+              data: info,
             });
           } else {
             logger.error("Error executing getHi5Count");
