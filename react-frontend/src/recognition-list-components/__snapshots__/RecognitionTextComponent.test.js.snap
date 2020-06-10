@@ -3,7 +3,7 @@
 exports[`Recognition text Component test should equal snapshot 1`] = `
 <DocumentFragment>
   .c0 {
-  border: 1px solid lightgrey;
+  border: 1px solid var(--grey);
   border-radius: 11px;
   opacity: 1;
   margin-left: 5%;

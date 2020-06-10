@@ -23,9 +23,9 @@ const HighFive = styled.div`
 const CardComponent = styled(Card)`
   border-radius: 20px;
   margin: 20px 20px;
-  box-shadow: 0px 5px 20px #505c623b;
+  box-shadow: 0px 5px 20px var(--box-shadow-color);
   opacity: 1;
-  background: #ffffff 0% 0% no-repeat padding-box;
+  background: var(--white) 0% 0% no-repeat padding-box;
 `;
 
 const RecognitionCardComponent = ({

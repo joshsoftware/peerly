@@ -5,8 +5,8 @@ import styled from "styled-components";
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
 
 const Wrapper = styled.div`
-  border: 1px solid lightgrey;
-  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid var(--grey);
+  background: var(--white) 0% 0% no-repeat padding-box;
   border-radius: 36px;
   opacity: 1;
 `;

@@ -6,7 +6,7 @@ import { Form } from "core-components/form/FormComponent";
 import ImageComponent from "core-components/image/ImageComponent";
 
 const Border = styled.fieldset`
-  border: 1px solid lightgrey;
+  border: 1px solid var(--grey);
   border-radius: 11px;
   opacity: 1;
   margin-left: 5%;
