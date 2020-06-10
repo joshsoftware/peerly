@@ -1,4 +1,5 @@
 const log4js = require("log4js");
+const yup = require("yup");
 
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
@@ -14,12 +15,21 @@ module.exports.create = async (req, res) => {
   //validation schema
   const schema = validationSchema.insertSchema();
   // Create a core value object
+  let thumbnailUrlString;
+  let thumbnailUrl;
+  let thumbnail;
+  (thumbnailUrl = req.body.thumbnail_url), (thumbnail = yup.string().url());
+  try {
+    thumbnailUrlString = await thumbnail.validate(thumbnailUrl);
+  } catch (err) {
+    thumbnailUrlString = null;
+  }
   const coreValue = {
     org_id: req.params.organisation_id,
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
-    thumbnail_url: req.body.thumbnail_url,
+    thumbnail_url: thumbnailUrlString,
   };
 
   logger.info("executing create core value");
@@ -157,19 +167,26 @@ module.exports.findOne = async (req, res) => {
 
 //update core value with id
 module.exports.update = async (req, res) => {
+  let thumbnailUrlString;
   let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const text = req.body.text;
   const description = req.body.description;
-  const thumbnail_url = req.body.thumbnail_url;
+  const thumbnailUrl = req.body.thumbnail_url;
   const parent_core_value_id = req.body.parent_core_value_id;
   const schema = validationSchema.updateSchema();
+  const thumbnail = yup.string().url();
+  try {
+    thumbnailUrlString = await thumbnail.validate(thumbnailUrl);
+  } catch (err) {
+    thumbnailUrlString = null;
+  }
   const coreValue = {
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
-    thumbnail_url: req.body.thumbnail_url,
+    thumbnail_url: thumbnailUrlString,
   };
 
   logger.info("executing update core values");
@@ -178,7 +195,7 @@ module.exports.update = async (req, res) => {
   logger.info("=========================================");
   schema
     .validate(
-      { id, org_id, text, description, parent_core_value_id, thumbnail_url },
+      { id, org_id, text, description, parent_core_value_id },
       { abortEarly: false }
     )
     .then(() => {
