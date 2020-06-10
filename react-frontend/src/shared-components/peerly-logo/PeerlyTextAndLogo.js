@@ -13,7 +13,7 @@ const PeerlyTextAndLogo = ({ theme, fontSize }) => (
 
 PeerlyTextAndLogo.defaultProps = {
   theme: "dark",
-  fontSize: "48px",
+  fontSize: "30px",
 };
 
 PeerlyTextAndLogo.propTypes = {

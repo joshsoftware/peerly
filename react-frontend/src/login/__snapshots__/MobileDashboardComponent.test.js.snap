@@ -6,15 +6,15 @@ exports[`mobile dashboard component test should render  dashboard component 1`] 
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-  font-size: 48px;
+  font-size: 30px;
   color: var(--white);
 }
 
 .c1 {
   text-align: center;
   margin-top: 15px;
-  width: 83px;
-  height: 83px;
+  width: 50px;
+  height: 50px;
   border: 3px solid var(--white);
   background-color: var(--atomic);
   -webkit-transform: rotate(45deg);
@@ -25,7 +25,7 @@ exports[`mobile dashboard component test should render  dashboard component 1`] 
 .c3 {
   color: var(--white);
   background-color: var(--atomic);
-  font-size: 48px;
+  font-size: 30px;
 }
 
 .c5 {
@@ -56,7 +56,7 @@ exports[`mobile dashboard component test should render  dashboard component 1`] 
         <div
           class="c2"
           data-testid="plusSignText"
-          font-size="48px"
+          font-size="30px"
         >
           +
         </div>
@@ -64,7 +64,7 @@ exports[`mobile dashboard component test should render  dashboard component 1`] 
       <div
         class="c3"
         data-testid="PeerlyTextComponents"
-        font-size="48px"
+        font-size="30px"
       >
         Peerly
       </div>
