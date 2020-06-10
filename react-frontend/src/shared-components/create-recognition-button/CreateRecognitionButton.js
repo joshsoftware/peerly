@@ -28,8 +28,9 @@ const ButtonComponent = styled.div`
 
 const CreateRecognitionButton = ({ onClick, imageUrl, theme, fontSize }) => {
   return (
-    <WrapperCircle className="m-auto justify-content-center ">
+    <WrapperCircle className="m-auto justify-content-center">
       <ButtonComponent
+        id="create-recognition-button"
         imageUrl={imageUrl}
         className="m-auto text-center"
         onClick={onClick}
