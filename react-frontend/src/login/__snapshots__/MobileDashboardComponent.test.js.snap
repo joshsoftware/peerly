@@ -75,7 +75,7 @@ exports[`mobile dashboard component test should render  dashboard component 1`] 
       src="/assets/images//cat-mobile-img.png"
     />
     <div
-      class="c4 text-center undefined"
+      class="c4 text-center mx-5"
       data-testid="info"
     >
       <h3>

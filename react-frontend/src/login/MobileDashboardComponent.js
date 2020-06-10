@@ -15,6 +15,7 @@ const MobileDashboardComponent = () => (
     <PeerlyTextAndLogo theme="dark" />
     <LoginImageComponent />
     <InformativeTextComponent
+      className="mx-5"
       theme="dark"
       informativeText="Lets Create the Office Positive"
       encouragementThought="Encouragement Driven"
