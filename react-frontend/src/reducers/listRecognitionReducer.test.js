@@ -6,8 +6,16 @@ describe("list recognition reducer", () => {
 
   it("list recognition reducer should return the initial state", () => {
     expect(reducer(defaultState, {})).toEqual({
-      list: [{}],
-      error: {},
+      list: [
+        {
+          core_value: {},
+          givenFor: {},
+          givenBy: {},
+        },
+      ],
+      error: {
+        fields: {},
+      },
     });
   });
 
@@ -18,7 +26,9 @@ describe("list recognition reducer", () => {
     });
     expect(reducerData).toEqual({
       list: [{ id: 1 }],
-      error: {},
+      error: {
+        fields: {},
+      },
     });
   });
 
@@ -28,7 +38,13 @@ describe("list recognition reducer", () => {
       payload: { code: "invalid token" },
     });
     expect(reducerData).toEqual({
-      list: [{}],
+      list: [
+        {
+          core_value: {},
+          givenFor: {},
+          givenBy: {},
+        },
+      ],
       error: { code: "invalid token" },
     });
   });

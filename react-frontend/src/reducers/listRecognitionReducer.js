@@ -1,8 +1,16 @@
 import actionGenerator from "utils/actionGenerator";
 
 export const defaultState = {
-  list: [{}],
-  error: {},
+  list: [
+    {
+      core_value: {},
+      givenFor: {},
+      givenBy: {},
+    },
+  ],
+  error: {
+    fields: {},
+  },
 };
 const status = actionGenerator("LIST_RECOGNITION");
 
