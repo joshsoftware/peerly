@@ -1,18 +1,22 @@
+import actionGenerator from "utils/actionGenerator";
+
+const actionStatus = actionGenerator("LOGIN");
+
 const defaultState = {
   status: null,
   data: { token: null },
   error: { message: null },
 };
 
-export default function access_token(state = defaultState, action) {
+export default (state = defaultState, action) => {
   switch (action.type) {
-    case "LOGIN_SUCCESS":
+    case actionStatus.success:
       return {
         ...state,
         status: action.payload.status,
         data: action.payload.value,
       };
-    case "LOGIN_FAILURE":
+    case actionStatus.failure:
       return {
         ...state,
         status: action.payload.status,
@@ -21,4 +25,4 @@ export default function access_token(state = defaultState, action) {
     default:
       return state;
   }
-}
+};
