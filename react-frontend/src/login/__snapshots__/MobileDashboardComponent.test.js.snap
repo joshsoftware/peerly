@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`pre login dashboard component test should render pre login dashboard component 1`] = `
+exports[`mobile dashboard component test should render  dashboard component 1`] = `
 <DocumentFragment>
   .c2 {
   -webkit-transform: rotate(45deg);
@@ -45,35 +45,28 @@ exports[`pre login dashboard component test should render pre login dashboard co
 
 <div
     class="c0 d-md-none flex-column d-flex justify-content-around"
-    data-testid="officeInfo"
   >
-    <div>
+    <div
+      class="text-center"
+    >
       <div
-        data-testid="peerlyLogoComponent"
+        class="c1 mx-auto"
+        data-testid="Logo"
       >
         <div
-          class="c1 mx-auto"
-          data-testid="Logo"
+          class="c2"
+          data-testid="plusSignText"
+          font-size="48px"
         >
-          <div
-            class="c2"
-            data-testid="plusSignText"
-            font-size="48px"
-          >
-            +
-          </div>
+          +
         </div>
       </div>
       <div
-        class="text-center"
+        class="c3"
+        data-testid="PeerlyTextComponents"
+        font-size="48px"
       >
-        <div
-          class="c3"
-          data-testid="PeerlyTextComponents"
-          font-size="48px"
-        >
-          Peerly
-        </div>
+        Peerly
       </div>
     </div>
     <img

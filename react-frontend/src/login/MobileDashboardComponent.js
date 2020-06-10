@@ -10,14 +10,9 @@ const Wrapper = styled.div`
   background-color: var(--atomic);
 `;
 
-const PreLoginDashboardComponent = () => (
-  <Wrapper
-    className="d-md-none flex-column d-flex justify-content-around"
-    data-testid="officeInfo"
-  >
-    <div>
-      <PeerlyTextAndLogo theme="dark" />
-    </div>
+const MobileDashboardComponent = () => (
+  <Wrapper className="d-md-none flex-column d-flex justify-content-around">
+    <PeerlyTextAndLogo theme="dark" />
     <LoginImageComponent />
     <InformativeTextComponent
       theme="dark"
@@ -27,4 +22,4 @@ const PreLoginDashboardComponent = () => (
   </Wrapper>
 );
 
-export default React.memo(PreLoginDashboardComponent);
+export default React.memo(MobileDashboardComponent);
