@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`pre login panel component test should render pre login panel component 1`] = `
+exports[`pre login dashboard component test should render pre login dashboard component 1`] = `
 <DocumentFragment>
   .c2 {
   -webkit-transform: rotate(45deg);
@@ -16,7 +16,7 @@ exports[`pre login panel component test should render pre login panel component 
   width: 83px;
   height: 83px;
   border: 3px solid var(--white);
-  background-color: var(--black);
+  background-color: var(--atomic);
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
@@ -24,7 +24,7 @@ exports[`pre login panel component test should render pre login panel component 
 
 .c3 {
   color: var(--white);
-  background-color: var(--black);
+  background-color: var(--atomic);
   font-size: 48px;
 }
 
@@ -35,7 +35,7 @@ exports[`pre login panel component test should render pre login panel component 
 
 .c4 {
   color: var(--white);
-  background-color: var(--black);
+  background-color: var(--atomic);
 }
 
 .c0 {
@@ -44,7 +44,7 @@ exports[`pre login panel component test should render pre login panel component 
 }
 
 <div
-    class="c0 d-sm-block d-xs-block d-md-none flex-column d-flex justify-content-around undefined"
+    class="c0 d-md-none flex-column d-flex justify-content-around"
     data-testid="officeInfo"
   >
     <div>
