@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create recognition component should render correctly 1`] = `
+<DocumentFragment>
+  .c2 {
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  font-size: 27px;
+  color: var(--white);
+}
+
+.c0 {
+  background: var(--white) 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px var(--box-shadow-color);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  position: relative;
+}
+
+.c1 {
+  background: transparent url(https://-v2links.adobecc.com/b8bcaf62-377d-428f-41ee-f038352e2a2e/component?params=component_id%3A70b1d921-de80-4024-8b5d-8480a71157aa&params=version%3A0&token=1591695758_da39a3ee_dc4fa851ec242a7a79f7519128480678e0c694ec&api_key=CometServer1) 97% 50% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #0000004e;
+  width: 45px;
+  height: 45px;
+  background-color: var(--rust);
+  border: none;
+  border-radius: 50%;
+}
+
+<div
+    class="c0 m-auto justify-content-center"
+  >
+    <div
+      class="c1 m-auto text-center"
+      id="create-recognition-button"
+    >
+      <div
+        class="c2"
+        data-testid="plusSignText"
+        font-size="27px"
+      >
+        +
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
