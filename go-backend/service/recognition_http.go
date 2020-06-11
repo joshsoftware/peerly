@@ -45,37 +45,76 @@ var decoder = schema.NewDecoder()
 // @Failure 400 {object}
 func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
 		var recognition db.Recognition
-		err := json.NewDecoder(req.Body).Decode(&recognition)
+
+		// validate given organization_id is correct and present or not
+		organizationID, err := strconv.Atoi(vars["orgnization_id"])
 		if err != nil {
+			logger.Error("Error organization_id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
-			logger.WithField("err", err.Error()).Error("Error while decoding recognition data")
 			return
 		}
 
-		err = recognition.ValidateRecognition()
+		// validate that given organization_id is present in database or not
+
+		_, err = deps.Store.GetOrganization(req.Context(), organizationID)
 		if err != nil {
-			rw.WriteHeader(http.StatusBadRequest)
-			logger.WithField("err", err.Error()).Error("Error while creating recognition")
+			logger.WithField("err", err.Error()).Error("Error while fetching given organization")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error while fetching given organization",
+				},
+			})
+			return
+		}
+
+		err = json.NewDecoder(req.Body).Decode(&recognition)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while decoding recognition data")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
+			return
+		}
+
+		// validates that recognition giving user is belongs to current specified organization or not
+		_, err = deps.Store.GetUserByOrganization(req.Context(), recognition.GivenBy, organizationID)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("User is not belongs to given organization")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Error while validating user with given organization",
+				},
+			})
+			return
+		}
+
+		ok, errFields := recognition.ValidateRecognition()
+		if !ok {
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: errorObject{
+					Code:          "invalid-recogintion",
+					Fields:        errFields,
+					messageObject: messageObject{"Invalid recogintion data"},
+				},
+			})
 			return
 		}
 
 		CreateRecognition, err := deps.Store.CreateRecognition(req.Context(), recognition)
 		if err != nil {
-			rw.WriteHeader(http.StatusBadRequest)
 			logger.WithField("err", err.Error()).Error("Error while creating recognition")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal serverdddd error",
+				},
+			})
 			return
 		}
-		respBytes, err := json.Marshal(CreateRecognition)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling recognition data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		rw.Header().Add("Content-Type", "application/json")
-		rw.WriteHeader(http.StatusCreated)
-		rw.Write(respBytes)
+		repsonse(rw, http.StatusCreated, successResponse{Data: CreateRecognition})
 
 	})
 }

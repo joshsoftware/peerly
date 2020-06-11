@@ -39,6 +39,7 @@ const (
 		DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
 		0, NULL, :created_at
 	)`
+	getUserByOrganizationQuery = `SELECT * FROM users WHERE id=$1 AND org_id=$2 AND soft_delete = $3`
 )
 
 // User - basic struct representing a User
@@ -232,5 +233,13 @@ func (user *User) Validate() (errorResponse map[string]ErrorResponse, valid bool
 	}
 	//TODO: Ask what other validations are expected
 
+	return
+}
+func (s *pgStore) GetUserByOrganization(ctx context.Context, userID, orgID int) (user User, err error) {
+	err = s.db.Get(&user, getUserByOrganizationQuery, userID, orgID, false)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error fetching user")
+		return
+	}
 	return
 }

@@ -29,6 +29,7 @@ type Storer interface {
 	GetUser(context.Context, int) (User, error)
 	UpdateUser(context.Context, User, int) (User, error)
 	GetOrganizationByDomainName(context.Context, string) (Organization, error)
+	GetUserByOrganization(context.Context, int, int) (User, error)
 
 	// Roles
 	GetRoleByID(context.Context, int) (Role, error)

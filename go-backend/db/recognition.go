@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"errors"
 
 	logger "github.com/sirupsen/logrus"
 )
@@ -16,7 +15,7 @@ const (
 			given_by,
 			given_at
 		)
-		VALUES ($1, $2, $3, $4, $5)
+		VALUES ($1, $2, $3, $4, $5) returning id
 	`
 	showRecognitionQuery = "SELECT * FROM recognitions WHERE id=$1"
 	listRecognitionQuery = "SELECT * FROM recognitions ORDER BY given_at ASC"
@@ -43,21 +42,26 @@ type Recognition struct {
 	GivenAt     int64  `db:"given_at" json:"given_at"`
 }
 
-func (recognition Recognition) ValidateRecognition() (err error) {
+func (recognition Recognition) ValidateRecognition() (valid bool, errFields map[string]string) {
+	errFields = make(map[string]string)
+
 	if recognition.CoreValueID == 0 {
-		return errors.New("core_value_id must be present in request")
+		errFields["core_value_id"] = "core_value_id must be present in request"
 	}
 
 	if recognition.Text == "" {
-		return errors.New("text must be present in request")
+		errFields["text"] = "text must be present in request"
 	}
 
 	if recognition.GivenFor == 0 {
-		return errors.New("given_for must be present in request")
+		errFields["given_for"] = "given_for must be present in request"
 	}
 
 	if recognition.GivenBy == 0 {
-		return errors.New("given_by must be present in request")
+		errFields["given_by"] = "given_by must be present in request"
+	}
+	if len(errFields) == 0 {
+		valid = true
 	}
 	return
 }
@@ -78,6 +82,10 @@ func (s *pgStore) CreateRecognition(ctx context.Context, recognition Recognition
 	}
 
 	err = s.db.Get(&createdRecognition, showRecognitionQuery, lastInsertId)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error while fetching Recognition")
+		return
+	}
 
 	return
 }
