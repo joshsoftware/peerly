@@ -1,28 +1,34 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import LoginComponent from "login/LoginComponent"; /*TODO: this component is depent on login presentational component */
-import { store } from "root/redux-store";
+import LoginComponent from "login/LoginComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import InternalServerErrorComponent from "shared-components/InternalServerErrorComponent";
 import actionGenerator from "utils/actionGenerator";
+import { LOGIN_API, LOGIN } from "constants/actionConstants";
+import { store } from "root/redux-store";
+import actionObjectGenerator from "actions/actionObjectGenerator";
 
 const LoginContainer = () => {
   const loginAuthorization = useSelector((state) => state.loginReducer);
 
   const responseGoogleOnSuccess = ({ tokenObj }) => {
-    store.dispatch({ type: "LOGIN_API", payload: tokenObj.access_token });
+    const actionStatus = actionGenerator(LOGIN_API);
+    const dispatchObject = actionObjectGenerator(
+      actionStatus.success,
+      tokenObj.access_token
+    );
+    store.dispatch(dispatchObject);
   };
 
   const responseGoogleOnFailure = (message) => {
-    const actionStatus = actionGenerator("LOGIN");
-    store.dispatch({
-      type: actionStatus.failure,
-      payload: {
-        value: { message: message.error },
-      },
+    const actionStatus = actionGenerator(LOGIN);
+    const dispatchObject = actionObjectGenerator(actionStatus.failure, {
+      value: { message: message.error },
     });
+    store.dispatch(dispatchObject);
   };
+
   if (loginAuthorization.status === 401) {
     return <UnauthorisedErrorComponent />;
   } else if (loginAuthorization.status === 500) {
@@ -37,7 +43,7 @@ const LoginContainer = () => {
       responseGoogleOnSuccess={responseGoogleOnSuccess}
       responseGoogleOnFailure={responseGoogleOnFailure}
     />
-  ); //TODO: depends upon login presentational component
+  );
 };
 
 export default React.memo(LoginContainer);
