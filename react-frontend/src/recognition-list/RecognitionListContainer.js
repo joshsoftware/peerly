@@ -3,14 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 
 import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
+import actionObject from "actions/listRecognitionAction";
+import actionGenrator from "utils/actionGenerator";
 
 const RecognnitionListContainer = () => {
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
   const dispatch = useDispatch();
+  const status = actionGenrator("LIST_RECOGNITION_API");
 
   useEffect(() => {
-    dispatch({ type: "LIST_RECOGNITION_API" });
-  }, [dispatch]);
+    dispatch(actionObject(status.success));
+  }, [dispatch, status.success]);
 
   if (recognitionList.error.code === "invalid_token") {
     return <SessionTimeoutComponent />;
