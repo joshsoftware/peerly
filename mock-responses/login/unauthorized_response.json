@@ -1,7 +1,6 @@
- {
+{
   "error": {
     "code": "invalid_organization",
     "message": "unauthorized user"
   }
- }
-
+}
