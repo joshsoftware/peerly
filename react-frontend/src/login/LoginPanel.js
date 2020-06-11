@@ -4,61 +4,35 @@ import styled from "styled-components";
 
 import PeerlyTextAndLogo from "shared-components/peerly-logo/PeerlyTextAndLogo";
 import InformativeTextComponent from "login/InformativeTextComponent";
-import { Col, Row, Container } from "core-components/grid/GridComponent";
+import { Container } from "core-components/grid/GridComponent";
 import GoogleLoginButton from "login/GoogleLoginButton";
-
-const RowComponent = styled(Row)`
-  height: calc(100% / 3);
-`;
-const Div = styled.div`
-  background-color: var(--atomic);
-  height: 100vh;
-`;
 
 const WrapperContainer = styled(Container)`
   height: 100vh;
-  padding: 0%;
+  background-color: var(--atomic);
 `;
 
 const LoginPanel = ({ responseGoogleOnSuccess, responseGoogleOnFailure }) => (
-  <WrapperContainer fluid={true}>
-    <Div className="d-none d-md-block  h-100">
-      <RowComponent>
-        <Col className="pt-3">
-          <PeerlyTextAndLogo theme="dark" />
-        </Col>
-      </RowComponent>
-      <RowComponent>
-        <Col className="text-center m-auto">
-          <GoogleLoginButton
-            responseGoogleOnSuccess={responseGoogleOnSuccess}
-            responseGoogleOnFailure={responseGoogleOnFailure}
-            buttonText="Google sign in"
-          />
-        </Col>
-      </RowComponent>
-      <RowComponent>
-        <Col className="my-auto">
-          <InformativeTextComponent theme="dark" />
-        </Col>
-      </RowComponent>
-    </Div>
-    <Div className="d-block d-sm-block d-md-none h-100">
-      <Row className="h-50 pt-3">
-        <Col className="p-1">
-          <PeerlyTextAndLogo theme="dark" />
-        </Col>
-      </Row>
-      <Row className="h-50">
-        <Col className="text-center m-auto">
-          <GoogleLoginButton
-            responseGoogleOnSuccess={responseGoogleOnSuccess}
-            responseGoogleOnFailure={responseGoogleOnFailure}
-            buttonText="Google sign in"
-          ></GoogleLoginButton>
-        </Col>
-      </Row>
-    </Div>
+  <WrapperContainer
+    className="flex-column justify-content-around d-flex"
+    fluid={true}
+  >
+    <div className="mb-5">
+      <PeerlyTextAndLogo theme="dark" />
+    </div>
+    <div className="text-center mb-3 pb-4">
+      <GoogleLoginButton
+        responseGoogleOnSuccess={responseGoogleOnSuccess}
+        responseGoogleOnFailure={responseGoogleOnFailure}
+        buttonText="Google sign in"
+      ></GoogleLoginButton>
+    </div>
+    <InformativeTextComponent
+      className="d-none d-md-block d-lg-block mt-4"
+      theme="dark"
+      informativeText="Lets Create the Office Positive"
+      encouragementThought="Encouragement Driven"
+    />
   </WrapperContainer>
 );
 
