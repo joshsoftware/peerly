@@ -35,5 +35,6 @@ export function* userLogin(action) {
 }
 
 export function* loginApi() {
-  yield takeLatest(LOGIN_API, userLogin);
+  const actionStatus = actionGenerator(LOGIN_API);
+  yield takeLatest(actionStatus.success, userLogin);
 }
