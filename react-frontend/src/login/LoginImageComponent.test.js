@@ -13,6 +13,6 @@ describe("Image component test", () => {
   test("render image with correct size", () => {
     const { getByAltText } = render(<LoginImageComponent size="lg" />);
     const testImage = getByAltText("login image");
-    expect(testImage.src).toBe("http://localhost/assets/images//cat-img.png");
+    expect(testImage.src.split("/")).toContainEqual("cat-img.png");
   });
 });
