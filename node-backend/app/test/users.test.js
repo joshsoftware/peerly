@@ -13,17 +13,20 @@ let employeeToken;
 let superAdminToken;
 let userId;
 let orgId;
+let superAdminRoleId = 1;
+let employeeRoleId = 3;
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
 describe("test cases for users", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
     db.organizations.create(data.organizations).then((res) => {
       data.user.org_id = res.id;
-      data.user.role_id = 3;
+      orgId = res.id;
+      data.user.role_id = employeeRoleId;
       db.users.create(data.user).then((res) => {
         userId = res.id;
-        employeeToken = createToken(3, 2, userId);
-        superAdminToken = createToken(1, 2, userId);
+        employeeToken = createToken(employeeRoleId, orgId, userId);
+        superAdminToken = createToken(superAdminRoleId, orgId, userId);
         done();
       });
     });

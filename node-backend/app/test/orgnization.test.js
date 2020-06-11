@@ -9,10 +9,13 @@ const { createToken } = require("./jwtTokenGenration");
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let token;
 let id;
+let roleId = 3;
+let orgId = 2;
+let userId = 1;
 // UNIT test begin
 describe(/*eslint-disable-line no-undef*/ "test case for organisation", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
-    token = createToken(3, 2, 1);
+    token = createToken(roleId, orgId, userId);
     done();
   });
 

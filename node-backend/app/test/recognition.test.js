@@ -11,6 +11,7 @@ const should = require("should" /*eslint-disable-line node/no-unpublished-requir
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let token;
 let orgId;
+let roleId = 3;
 let userId;
 let coreValueId;
 let id;
@@ -20,26 +21,25 @@ describe(/*eslint-disable-line no-undef*/ "test cases for recognitions", functio
     db.organizations.create(data.organizations).then((res) => {
       orgId = res.id;
       data.user.org_id = orgId;
-      data.user.role_id = 3;
+      data.user.role_id = roleId;
       db.users.create(data.user).then((res) => {
         userId = res.id;
         data.coreValue.org_id = orgId;
         db.core_value.create(data.coreValue).then((res) => {
           coreValueId = res.id;
-          token = createToken(3, orgId, userId);
+          token = createToken(roleId, orgId, userId);
           done();
         });
       });
     });
   });
 
-  /*eslint-disable-line no-undef*/ after((done) => {
-    db.recognition_hi5.destroy({ where: {} });
-    db.recognitions.destroy({ where: {} });
-    db.users.destroy({ where: {} });
-    db.core_value.destroy({ where: {} });
-    db.organizations.destroy({ where: {} });
-    done();
+  /*eslint-disable-line no-undef*/ after(async () => {
+    await db.recognition_hi5.destroy({ where: {} });
+    await db.recognitions.destroy({ where: {} });
+    await db.users.destroy({ where: {} });
+    await db.core_value.destroy({ where: {} });
+    await db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create recognition with write Contents,url", function (done) {

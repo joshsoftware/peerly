@@ -10,6 +10,8 @@ const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let token;
+let roleId = 3;
+let orgId;
 
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
@@ -17,9 +19,10 @@ describe("test cases for logout", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
     db.organizations.create(data.organizations).then((res) => {
       data.user.org_id = res.id;
-      data.user.role_id = 3;
+      orgId = res.id;
+      data.user.role_id = roleId;
       db.users.create(data.user).then((res) => {
-        token = createToken(3, 2, res.id);
+        token = createToken(roleId, orgId, res.id);
         done();
       });
     });

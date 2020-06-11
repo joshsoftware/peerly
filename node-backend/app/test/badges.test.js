@@ -12,6 +12,8 @@ const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let token;
 let id;
 let orgId;
+let roleId = 2;
+let userId = 1;
 
 // UNIT test begin
 
@@ -19,7 +21,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
     db.organizations.create(data.organizations).then((data) => {
       orgId = data.id;
-      token = createToken(2, 3, 1);
+      token = createToken(roleId, orgId, userId);
       done();
     });
   });

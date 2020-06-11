@@ -10,6 +10,7 @@ const { createToken } = require("./jwtTokenGenration");
 
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let orgId;
+let roleId = 3;
 let userId;
 let coreValueId;
 let recognitionId;
@@ -19,7 +20,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
     db.organizations.create(data.organizations).then((res) => {
       orgId = res.id;
       data.user.org_id = orgId;
-      data.user.role_id = 3;
+      data.user.role_id = roleId;
       db.users.create(data.user).then((res) => {
         userId = res.id;
         data.coreValue.org_id = orgId;
@@ -30,7 +31,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
           data.recognition.given_for = userId;
           db.recognitions.create(data.recognition).then((res) => {
             recognitionId = res.id;
-            token = createToken(3, orgId, userId);
+            token = createToken(roleId, orgId, userId);
             done();
           });
         });
@@ -38,15 +39,14 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
     });
   });
 
-  /*eslint-disable-line no-undef*/ after((done) => {
-    db.reported_recognitions.destroy({ where: {} });
-    db.recognition_moderation.destroy({ where: {} });
-    db.recognition_hi5.destroy({ where: {} });
-    db.recognitions.destroy({ where: {} });
-    db.users.destroy({ where: {} });
-    db.core_value.destroy({ where: {} });
-    db.organizations.destroy({ where: {} });
-    done();
+  /*eslint-disable-line no-undef*/ after(async () => {
+    await db.reported_recognitions.destroy({ where: {} });
+    await db.recognition_moderation.destroy({ where: {} });
+    await db.recognition_hi5.destroy({ where: {} });
+    await db.recognitions.destroy({ where: {} });
+    await db.users.destroy({ where: {} });
+    await db.core_value.destroy({ where: {} });
+    await db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with right Contents and url", function (done) {
