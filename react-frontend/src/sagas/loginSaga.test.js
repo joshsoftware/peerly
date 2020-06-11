@@ -18,8 +18,11 @@ describe("SAGAS test cases", () => {
   };
 
   it("should dispatch action 'LOGIN_API' ", () => {
+    const actionStatus = actionGenerator(LOGIN_API);
     const generator = loginApi();
-    expect(generator.next().value).toEqual(takeLatest(LOGIN_API, userLogin));
+    expect(generator.next().value).toEqual(
+      takeLatest(actionStatus.success, userLogin)
+    );
     expect(generator.next().done).toBeTruthy();
   });
 
