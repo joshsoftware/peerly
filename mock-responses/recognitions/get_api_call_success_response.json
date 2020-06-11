@@ -11,7 +11,7 @@
         "id": 4,
         "first_name": "Avinash",
         "last_name": "mane",
-        "profile_image_url": null
+        "profile_image_url": null 
       },
       "givenBy": {
         "id": 6,
@@ -26,7 +26,7 @@
       }
     },
     {
-      "id": 1,
+      "id": 2,
       "core_value_id": 2,
       "text": "good work",
       "given_for": 4,
