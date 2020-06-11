@@ -15,7 +15,7 @@ const CoreValueImage = styled(ImageComponent)`
   overflow: hidden;
 `;
 
-const HighFive = styled.div`
+const HighFive = styled(HighFiveComponent)`
   position: absolute;
   bottom: 50px;
 `;
@@ -51,7 +51,7 @@ const RecognitionCardComponent = ({
           <CoreValueImage
             src={coreValueImage}
             alt="Core value"
-            className="d-sm-block d-md-none mt-2"
+            className="d-sm-block d-xs-block d-md-none mt-2"
           />
           <RecognitionTextComponent
             givenByImage={givenByImage}
@@ -67,12 +67,10 @@ const RecognitionCardComponent = ({
               className="mt-2"
             />
           </div>
-          <BsCircle size="50px" className="mt-4" />
+          <BsCircle size="50px" className="mt-4" color="red" />
         </Col>
       </Row>
-      <HighFive>
-        <HighFiveComponent />
-      </HighFive>
+      <HighFive />
       <Card.Footer className="bg-white">
         <span className="font-weight-bold text-muted">+</span>
         <span className="font-weight-bold text-dark">1</span>

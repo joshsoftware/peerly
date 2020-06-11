@@ -107,7 +107,7 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
           </div>
           <img
             alt="Core value"
-            class="c2 d-sm-block d-md-none mt-2 img-fluid"
+            class="c2 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
             src="https://i.picsum.photos/id/654/300/200.jpg"
           />
           <div>
@@ -153,10 +153,12 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
           </div>
           <svg
             class="mt-4"
+            color="red"
             fill="currentColor"
             height="50px"
             stroke="currentColor"
             stroke-width="0"
+            style="color: red;"
             viewBox="0 0 16 16"
             width="50px"
             xmlns="http://www.w3.org/2000/svg"
@@ -169,15 +171,11 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
           </svg>
         </div>
       </div>
-      <div
-        class="c6"
-      >
-        <img
-          alt="High five recognition"
-          class="img-fluid"
-          src="/assets/images//high-five.png"
-        />
-      </div>
+      <img
+        alt="High five recognition"
+        class="c6 img-fluid"
+        src="/assets/images//high-five.png"
+      />
       <div
         class="bg-white card-footer"
       >
