@@ -1,5 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
+import path from "path";
 
 import LoginImageComponent from "login/LoginImageComponent";
 
@@ -13,6 +14,6 @@ describe("Image component test", () => {
   test("render image with correct size", () => {
     const { getByAltText } = render(<LoginImageComponent size="lg" />);
     const testImage = getByAltText("login image");
-    expect(testImage.src.split("/")).toContainEqual("cat-img.png");
+    expect(path.parse(testImage.src).base).toBe("cat-img.png");
   });
 });
