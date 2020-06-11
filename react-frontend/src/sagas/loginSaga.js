@@ -1,10 +1,12 @@
-import { put, takeEvery, call } from "redux-saga/effects";
+import { put, takeLatest, call } from "redux-saga/effects";
 
 import PostJson from "utils/postJson";
 import actionGenerator from "utils/actionGenerator";
+import { LOGIN_API, LOGIN } from "constants/actionConstants";
+import actionObjectGenerator from "actions/actionObjectGenerator";
 
 export function* userLogin(action) {
-  const actionStatus = actionGenerator("LOGIN");
+  const actionStatus = actionGenerator(LOGIN);
   try {
     const response = yield call(PostJson, {
       path: "/oauth/google",
@@ -12,27 +14,26 @@ export function* userLogin(action) {
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
-      yield put({
-        type: actionStatus.success,
-        payload: {
-          status: response.status,
-          value: responseObj.data,
-        },
+      const dispatchObject = actionObjectGenerator(actionStatus.success, {
+        status: response.status,
+        value: responseObj.data,
       });
+      yield put(dispatchObject);
     } else {
-      yield put({
-        type: actionStatus.failure,
-        payload: {
-          status: response.status,
-          value: responseObj.data,
-        },
+      const dispatchObject = actionObjectGenerator(actionStatus.failure, {
+        status: response.status,
+        value: responseObj.data,
       });
+      yield put(dispatchObject);
     }
   } catch (error) {
-    yield put({ type: actionStatus.failure, value: error });
+    const dispatchObject = actionObjectGenerator(actionStatus.failure, {
+      value: error,
+    });
+    yield put(dispatchObject);
   }
 }
 
 export function* loginApi() {
-  yield takeEvery("LOGIN_API", userLogin);
+  yield takeLatest(LOGIN_API, userLogin);
 }
