@@ -236,11 +236,11 @@ const getFilterData = (data) => {
   return filterData;
 };
 
-const createWhereClause = ({ orgId }, id) => {
-  if (id) {
+const createWhereClause = ({ orgId }, filterId) => {
+  if (filterId) {
     return {
       org_id: orgId,
-      id: id,
+      id: filterId,
     };
   } else {
     return {
