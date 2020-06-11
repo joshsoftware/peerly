@@ -2,17 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import GoogleLogin from "react-google-login";
 
+import { GOOGLE_CLIENT_ID, GOOGLE_COOKIE_POLICY } from "constants/appConstants";
+
 const GoogleLoginButtonComponent = ({
   responseGoogleOnSuccess,
   responseGoogleOnFailure,
   buttonText,
 }) => (
   <GoogleLogin
-    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+    clientId={GOOGLE_CLIENT_ID}
     buttonText={buttonText}
     onSuccess={responseGoogleOnSuccess}
     onFailure={responseGoogleOnFailure}
-    cookiePolicy={process.env.REACT_APP_GOOGLE_COOKIE_POLICY}
+    cookiePolicy={GOOGLE_COOKIE_POLICY}
   />
 );
 
