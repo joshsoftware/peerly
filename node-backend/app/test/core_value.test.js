@@ -93,7 +93,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
-        thumbnail_url: "image.jpg",
+        thumbnail_url: "https://mail.google.com",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -115,7 +115,28 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: "xyz",
-        thumbnail_url: "image.jpg",
+        thumbnail_url: "https://mail.google.com",
+      })
+      .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect(400) // THis is HTTP response
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        // HTTP status should be 400
+        res.status.should.equal(400);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong thumbnail_url", function (done) {
+    // post request for create core value with wrong Contents
+    server
+      .post("/organisations/1/core_values")
+      .send({
+        text: "Tata",
+        description: "good",
+        parent_core_value_id: 2,
+        thumbnail_url: "mail.google.com",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -136,7 +157,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
-        thumbnail_url: "image.jpg",
+        thumbnail_url: "https://mail.google.com",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -157,7 +178,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
-        thumbnail_url: "image.jpg",
+        thumbnail_url: "https://mail.google.com",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -179,7 +200,28 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: "xyz",
-        thumbnail_url: "image.jpg",
+        thumbnail_url: "https://mail.google.com",
+      })
+      .expect("Content-type", /json/)
+      .set("Authorization", "Bearer " + token)
+      .set("Accept", "application/vnd.peerly.v1")
+      .expect(400) // THis is HTTP response
+      .end(function (err /*eslint-disable-line no-undef*/, res) {
+        // HTTP status should be 400
+        res.status.should.equal(400);
+        done();
+      });
+  });
+
+  it(/*eslint-disable-line no-undef*/ "put request for update core value with wrong thumbnail_url", function (done) {
+    // post request for update core value with wrong Contents
+    server
+      .put("/organisations/1/core_values/2")
+      .send({
+        text: "Tata",
+        description: "good",
+        parent_core_value_id: 2,
+        thumbnail_url: "mail.google.com",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -200,7 +242,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         text: "Tata",
         description: "good",
         parent_core_value_id: 2,
-        thumbnail_url: "image.jpg",
+        thumbnail_url: "https://mail.google.com",
       })
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
