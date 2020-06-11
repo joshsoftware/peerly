@@ -1,4 +1,5 @@
 import { put, takeLatest, call } from "redux-saga/effects";
+
 import { LOGIN_API, LOGIN } from "constants/actionConstants";
 import { loginApi, userLogin } from "sagas/loginSaga";
 import PostJson from "utils/postJson";
@@ -10,7 +11,6 @@ import actionObjectGenerator from "actions/actionObjectGenerator";
 
 describe("SAGAS test cases", () => {
   const actionStatus = actionGenerator(LOGIN);
-
   const mockRequest = {
     payload: {
       access_token: "xxxxx",
