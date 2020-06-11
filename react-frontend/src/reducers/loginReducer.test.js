@@ -1,13 +1,13 @@
 import expect from "expect";
 
-import reducer from "reducers/loginReducer";
+import reducer, { defaultState } from "reducers/loginReducer";
 import actionGenerator from "utils/actionGenerator";
-
+import actionObjectGenerator from "actions/actionObjectGenerator";
 const actionStatus = actionGenerator("LOGIN");
 
-describe("post reducer", () => {
+describe("login reducer test cases", () => {
   it("should return the initial state", () => {
-    expect(reducer(undefined, {})).toEqual({
+    expect(reducer(defaultState, {})).toEqual({
       status: null,
       data: { token: null },
       error: { message: null },
@@ -15,57 +15,39 @@ describe("post reducer", () => {
   });
 
   it("should handle 'LOGIN_SUCCESS' action", () => {
-    expect(
-      reducer(
-        {},
-        {
-          type: actionStatus.success,
-          payload: {
-            status: 200,
-            value: { token: "token" },
-          },
-        }
-      )
-    ).toEqual({
+    const dispatchObject = actionObjectGenerator(actionStatus.success, {
+      status: 200,
+      value: { token: "token" },
+    });
+    expect(reducer(defaultState, dispatchObject)).toEqual({
       status: 200,
       data: {
         token: "token",
       },
+      error: { message: null },
     });
   });
 
   it("should handle 'LOGIN_FAILURE' action with 401 status code", () => {
-    expect(
-      reducer(
-        {},
-        {
-          type: actionStatus.failure,
-          payload: {
-            status: 401,
-            value: { message: "unauthorized user" },
-          },
-        }
-      )
-    ).toEqual({
+    const dispatchObject = actionObjectGenerator(actionStatus.failure, {
       status: 401,
+      value: { message: "unauthorized user" },
+    });
+    expect(reducer(defaultState, dispatchObject)).toEqual({
+      status: 401,
+      data: { token: null },
       error: { message: "unauthorized user" },
     });
   });
 
   it("should handle 'LOGIN_FAILURE' action with 500 status code", () => {
-    expect(
-      reducer(
-        {},
-        {
-          type: actionStatus.failure,
-          payload: {
-            status: 500,
-            value: { message: "internal server error" },
-          },
-        }
-      )
-    ).toEqual({
+    const dispatchObject = actionObjectGenerator(actionStatus.failure, {
       status: 500,
+      value: { message: "internal server error" },
+    });
+    expect(reducer(defaultState, dispatchObject)).toEqual({
+      status: 500,
+      data: { token: null },
       error: { message: "internal server error" },
     });
   });
