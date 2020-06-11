@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         notNull: true,
       },
+      comment: {
+        type: Sequelize.STRING,
+      },
       given_by: {
         type: Sequelize.INTEGER,
         notNull: true,
@@ -25,6 +28,7 @@ module.exports = (sequelize, Sequelize) => {
       timestamp: false,
       createdAt: false,
       updatedAt: false,
+      freezeTableName: true,
     }
   );
   return Recognition_hi5;
