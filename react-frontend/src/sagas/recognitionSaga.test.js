@@ -5,10 +5,14 @@ import getJson from "utils/getJson";
 import actionGenerator from "utils/actionGenerator";
 import success_mockResponse from "../../../mock-responses/recognitions/get_api_call_success_response.json";
 import failure_mockResponse from "../../../mock-responses/recognitions/get_api_call_failure_response.json";
+import {
+  LIST_RECOGNITION_API,
+  LIST_RECOGNITION,
+} from "constants/actionConstants.js";
 
 describe("RECOGNITION SAGAS", () => {
-  const status = actionGenerator("LIST_RECOGNITION");
-  const apiStatus = actionGenerator("LIST_RECOGNITION_API");
+  const status = actionGenerator(LIST_RECOGNITION);
+  const apiStatus = actionGenerator(LIST_RECOGNITION_API);
   const response = { json: () => "success" };
 
   it("should dispatch action 'LIST_RECOGNITION_API' for recognition saga", () => {

@@ -2,9 +2,13 @@ import { put, takeEvery, spawn, call } from "redux-saga/effects";
 
 import getJson from "utils/getJson";
 import actionGenerator from "utils/actionGenerator";
+import {
+  LIST_RECOGNITION,
+  LIST_RECOGNITION_API,
+} from "constants/actionConstants";
 
 export function* getRecognitionList() {
-  const status = actionGenerator("LIST_RECOGNITION");
+  const status = actionGenerator(LIST_RECOGNITION);
   try {
     const response = yield call(getJson, {
       path: "recognitions",
@@ -28,7 +32,7 @@ export function* getRecognitionList() {
 }
 
 export function* recognitionApi() {
-  const status = actionGenerator("LIST_RECOGNITION_API");
+  const status = actionGenerator(LIST_RECOGNITION_API);
   yield takeEvery(status.success, getRecognitionList);
 }
 

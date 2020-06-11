@@ -5,11 +5,12 @@ import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import actionObject from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
+import { LIST_RECOGNITION_API } from "constants/actionConstants";
 
 const RecognnitionListContainer = () => {
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
   const dispatch = useDispatch();
-  const status = actionGenrator("LIST_RECOGNITION_API");
+  const status = actionGenrator(LIST_RECOGNITION_API);
 
   useEffect(() => {
     dispatch(actionObject(status.success));
