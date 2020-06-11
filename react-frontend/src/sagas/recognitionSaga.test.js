@@ -8,12 +8,13 @@ import failure_mockResponse from "../../../mock-responses/recognitions/get_api_c
 
 describe("RECOGNITION SAGAS", () => {
   const status = actionGenerator("LIST_RECOGNITION");
+  const apiStatus = actionGenerator("LIST_RECOGNITION_API");
   const response = { json: () => "success" };
 
   it("should dispatch action 'LIST_RECOGNITION_API' for recognition saga", () => {
     const generator = recognitionApi();
     expect(generator.next().value).toEqual(
-      takeEvery("LIST_RECOGNITION_API", getRecognitionList)
+      takeEvery(apiStatus.success, getRecognitionList)
     );
     const status = generator.next().done;
     expect(status).toEqual(true);

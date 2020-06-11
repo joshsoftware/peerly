@@ -28,7 +28,8 @@ export function* getRecognitionList() {
 }
 
 export function* recognitionApi() {
-  yield takeEvery("LIST_RECOGNITION_API", getRecognitionList);
+  const status = actionGenerator("LIST_RECOGNITION_API");
+  yield takeEvery(status.success, getRecognitionList);
 }
 
 export default function* rootRecognitionSaga() {
