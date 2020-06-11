@@ -6,7 +6,7 @@ import { store } from "root/redux-store";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import InternalServerErrorComponent from "shared-components/InternalServerErrorComponent";
 import actionGenerator from "utils/actionGenerator";
-//import RecognitionList from "recognition-list/RecognitionListContainer"; //todo apply path after recognition list container
+import RecognitionList from "recognition-list/RecognitionListContainer"; //todo apply path after recognition list container
 
 const LoginContainer = () => {
   const loginAuthorization = useSelector((state) => state.loginReducer);
@@ -30,15 +30,18 @@ const LoginContainer = () => {
     return <InternalServerErrorComponent />;
   } else if (loginAuthorization.error.message === "popup_closed_by_user") {
     return <UnauthorisedErrorComponent />;
-  } else if (loginAuthorization.status === 200) {
-    // return <RecognitionList />; //TODO depends upon recognition list container
+  } else if (
+    loginAuthorization.status === 200 ||
+    loginAuthorization.status === 201
+  ) {
+    return <RecognitionList />; //TODO depends upon recognition list container
   }
   return (
     <LoginComponent
       responseGoogleOnSuccess={responseGoogleOnSuccess}
       responseGoogleOnFailure={responseGoogleOnFailure}
     />
-  );
+  ); //TODO depends upon login presentational component
 };
 
 export default React.memo(LoginContainer);
