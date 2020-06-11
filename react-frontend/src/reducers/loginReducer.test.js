@@ -3,7 +3,8 @@ import expect from "expect";
 import reducer, { defaultState } from "reducers/loginReducer";
 import actionGenerator from "utils/actionGenerator";
 import actionObjectGenerator from "actions/actionObjectGenerator";
-const actionStatus = actionGenerator("LOGIN");
+import { LOGIN } from "constants/actionConstants";
+const actionStatus = actionGenerator(LOGIN);
 
 describe("login reducer test cases", () => {
   it("should return the initial state", () => {
