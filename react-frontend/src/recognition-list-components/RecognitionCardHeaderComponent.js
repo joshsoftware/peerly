@@ -10,6 +10,13 @@ const ProfileImage = styled.div`
   width: 12vh;
 `;
 
+const MenuButton = styled(Button)`
+  color: var(--black);
+  background-color: var(--white);
+  font-weight: bold;
+  border: none;
+`;
+
 const RecognitionCardHeaderComponent = ({
   givenAt,
   givenForName,
@@ -19,9 +26,7 @@ const RecognitionCardHeaderComponent = ({
   return (
     <div>
       <div className="d-flex justify-content-end">
-        <Button className="bg-white font-weight-bold text-dark btn-outline-light">
-          ...
-        </Button>
+        <MenuButton>...</MenuButton>
       </div>
       <div className="d-flex flex-row">
         <ProfileImage>

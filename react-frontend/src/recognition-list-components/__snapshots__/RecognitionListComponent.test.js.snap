@@ -2,11 +2,18 @@
 
 exports[`Recognition list Component test should equal snapshot 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c3 {
   width: 12vh;
 }
 
-.c4 {
+.c2 {
+  color: var(--black);
+  background-color: var(--white);
+  font-weight: bold;
+  border: none;
+}
+
+.c5 {
   border: 1px solid var(--grey);
   border-radius: 11px;
   opacity: 1;
@@ -14,22 +21,22 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
   margin-right: 5%;
 }
 
-.c5 {
+.c6 {
   width: auto;
   margin-left: 10%;
 }
 
-.c6 {
+.c7 {
   width: 7vh;
   margin-right: 5%;
 }
 
-.c3 {
+.c4 {
   border-radius: 20px;
   overflow: hidden;
 }
 
-.c7 {
+.c8 {
   position: absolute;
   bottom: 50px;
 }
@@ -69,7 +76,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 class="d-flex justify-content-end"
               >
                 <button
-                  class="bg-white font-weight-bold text-dark btn-outline-light btn btn-primary"
+                  class="c2 btn btn-primary"
                   type="button"
                 >
                   ...
@@ -79,7 +86,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 class="d-flex flex-row"
               >
                 <div
-                  class="c2"
+                  class="c3"
                 >
                   <img
                     alt="Profile"
@@ -117,15 +124,15 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
             </div>
             <img
               alt="Core value"
-              class="c3 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
+              class="c4 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
               src="https://i.picsum.photos/id/654/300/200.jpg"
             />
             <div>
               <fieldset
-                class="c4"
+                class="c5"
               >
                 <legend
-                  class="c5"
+                  class="c6"
                 >
                   “
                 </legend>
@@ -145,7 +152,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 </label>
                 <img
                   alt="Profile"
-                  class="c6 img-fluid rounded-circle"
+                  class="c7 img-fluid rounded-circle"
                   src="https://i.picsum.photos/id/2/200/200.jpg"
                 />
               </div>
@@ -157,7 +164,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
             <div>
               <img
                 alt="Core value"
-                class="c3 mt-2 img-fluid"
+                class="c4 mt-2 img-fluid"
                 src="https://i.picsum.photos/id/654/300/200.jpg"
               />
             </div>
@@ -183,7 +190,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
         </div>
         <img
           alt="High five recognition"
-          class="c7 img-fluid"
+          class="c8 img-fluid"
           src="/assets/images//high-five.png"
         />
         <div
@@ -219,7 +226,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 class="d-flex justify-content-end"
               >
                 <button
-                  class="bg-white font-weight-bold text-dark btn-outline-light btn btn-primary"
+                  class="c2 btn btn-primary"
                   type="button"
                 >
                   ...
@@ -229,7 +236,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 class="d-flex flex-row"
               >
                 <div
-                  class="c2"
+                  class="c3"
                 >
                   <img
                     alt="Profile"
@@ -267,15 +274,15 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
             </div>
             <img
               alt="Core value"
-              class="c3 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
+              class="c4 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
               src="https://i.picsum.photos/id/654/300/200.jpg"
             />
             <div>
               <fieldset
-                class="c4"
+                class="c5"
               >
                 <legend
-                  class="c5"
+                  class="c6"
                 >
                   “
                 </legend>
@@ -295,7 +302,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 </label>
                 <img
                   alt="Profile"
-                  class="c6 img-fluid rounded-circle"
+                  class="c7 img-fluid rounded-circle"
                   src="https://i.picsum.photos/id/2/200/200.jpg"
                 />
               </div>
@@ -307,7 +314,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
             <div>
               <img
                 alt="Core value"
-                class="c3 mt-2 img-fluid"
+                class="c4 mt-2 img-fluid"
                 src="https://i.picsum.photos/id/654/300/200.jpg"
               />
             </div>
@@ -333,7 +340,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
         </div>
         <img
           alt="High five recognition"
-          class="c7 img-fluid"
+          class="c8 img-fluid"
           src="/assets/images//high-five.png"
         />
         <div

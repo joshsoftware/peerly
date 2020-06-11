@@ -2,8 +2,15 @@
 
 exports[`Recognition card header Component test should equal snapshot 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c1 {
   width: 12vh;
+}
+
+.c0 {
+  color: var(--black);
+  background-color: var(--white);
+  font-weight: bold;
+  border: none;
 }
 
 <div>
@@ -11,7 +18,7 @@ exports[`Recognition card header Component test should equal snapshot 1`] = `
       class="d-flex justify-content-end"
     >
       <button
-        class="bg-white font-weight-bold text-dark btn-outline-light btn btn-primary"
+        class="c0 btn btn-primary"
         type="button"
       >
         ...
@@ -21,7 +28,7 @@ exports[`Recognition card header Component test should equal snapshot 1`] = `
       class="d-flex flex-row"
     >
       <div
-        class="c0"
+        class="c1"
       >
         <img
           alt="Profile"
