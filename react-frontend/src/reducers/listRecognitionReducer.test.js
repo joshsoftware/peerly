@@ -1,5 +1,6 @@
 import reducer, { defaultState } from "reducers/listRecognitionReducer";
 import actionGenerator from "utils/actionGenerator";
+import actionObjectGenerator from "actions/listRecognitionAction";
 
 describe("list recognition reducer", () => {
   const status = actionGenerator("LIST_RECOGNITION");
@@ -20,10 +21,10 @@ describe("list recognition reducer", () => {
   });
 
   it("list recognition reducer should handle success action", () => {
-    let reducerData = reducer(defaultState, {
-      type: status.success,
-      payload: [{ id: 1 }],
-    });
+    let reducerData = reducer(
+      defaultState,
+      actionObjectGenerator(status.success, [{ id: 1 }])
+    );
     expect(reducerData).toEqual({
       list: [{ id: 1 }],
       error: {
@@ -33,10 +34,10 @@ describe("list recognition reducer", () => {
   });
 
   it("list recognition reducer should handle failure action", () => {
-    let reducerData = reducer(defaultState, {
-      type: status.failure,
-      payload: { code: "invalid token" },
-    });
+    let reducerData = reducer(
+      defaultState,
+      actionObjectGenerator(status.failure, { code: "invalid token" })
+    );
     expect(reducerData).toEqual({
       list: [
         {
