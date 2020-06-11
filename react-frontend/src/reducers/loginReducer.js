@@ -15,11 +15,13 @@ export default (state = defaultState, action) => {
         ...state,
         status: action.payload.status,
         data: action.payload.value,
+        error: { message: null },
       };
     case actionStatus.failure:
       return {
         ...state,
         status: action.payload.status,
+        data: { token: null },
         error: action.payload.value,
       };
     default:
