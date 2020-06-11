@@ -1,6 +1,6 @@
 import actionGenerator from "utils/actionGenerator";
-
-const actionStatus = actionGenerator("LOGIN");
+import { LOGIN } from "constants/actionConstants";
+const actionStatus = actionGenerator(LOGIN);
 
 const defaultState = {
   status: null,
