@@ -9,6 +9,7 @@ import {
   LIST_RECOGNITION_API,
   LIST_RECOGNITION,
 } from "constants/actionConstants.js";
+import actionObjectGenerator from "actions/listRecognitionAction";
 
 describe("RECOGNITION SAGAS", () => {
   const status = actionGenerator(LIST_RECOGNITION);
@@ -36,10 +37,7 @@ describe("RECOGNITION SAGAS", () => {
     );
     generator.next(response).value;
     expect(generator.next(success_mockResponse).value).toEqual(
-      put({
-        type: status.success,
-        payload: success_mockResponse.data,
-      })
+      put(actionObjectGenerator(status.success, success_mockResponse.data))
     );
     expect(generator.next().done).toEqual(true);
   });
@@ -55,10 +53,7 @@ describe("RECOGNITION SAGAS", () => {
     );
     expect(generator.next(response).value).toEqual("success");
     expect(generator.next(failure_mockResponse).value).toEqual(
-      put({
-        type: status.failure,
-        payload: failure_mockResponse.error,
-      })
+      put(actionObjectGenerator(status.failure, failure_mockResponse.error))
     );
     expect(generator.next().done).toEqual(true);
   });

@@ -1,6 +1,7 @@
 import { put, takeEvery, spawn, call } from "redux-saga/effects";
 
 import getJson from "utils/getJson";
+import actionObjectGenerator from "actions/listRecognitionAction";
 import actionGenerator from "utils/actionGenerator";
 import {
   LIST_RECOGNITION,
@@ -16,18 +17,12 @@ export function* getRecognitionList() {
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
-      yield put({
-        type: status.success,
-        payload: responseObj.data,
-      });
+      yield put(actionObjectGenerator(status.success, responseObj.data));
     } else {
-      yield put({
-        type: status.failure,
-        payload: responseObj.error,
-      });
+      yield put(actionObjectGenerator(status.failure, responseObj.error));
     }
   } catch (error) {
-    yield put({ type: status.failure, payload: error });
+    yield put(actionObjectGenerator(status.failure, error));
   }
 }
 
