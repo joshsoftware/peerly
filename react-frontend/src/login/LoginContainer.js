@@ -2,8 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import LoginComponent from "login/LoginComponent";
-import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
-import InternalServerErrorComponent from "shared-components/InternalServerErrorComponent";
 import actionGenerator from "utils/actionGenerator";
 import { LOGIN_API, LOGIN } from "constants/actionConstants";
 import { store } from "root/redux-store";
@@ -30,11 +28,11 @@ const LoginContainer = () => {
   };
 
   if (loginAuthorization.status === 401) {
-    return <UnauthorisedErrorComponent />;
+    return "Unauthorized user"; //TODO: redirect to unauthorized component
   } else if (loginAuthorization.status === 500) {
-    return <InternalServerErrorComponent />;
+    return "internal server error"; //TODO: redirects to internal server error component
   } else if (loginAuthorization.error.message === "popup_closed_by_user") {
-    return <UnauthorisedErrorComponent />;
+    return "Unauthorized user"; //TODO: redirect to unauthorized component
   } else if (loginAuthorization.status === 200) {
     return "Successful"; //TODO: redirect to dashboard
   }
