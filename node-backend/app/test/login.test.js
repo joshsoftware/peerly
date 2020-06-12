@@ -20,16 +20,16 @@ describe("test cases for login", function () {
         done();
       });
   });
-  it("should give internal server error", function (done) {
+  it("should give bad request error", function (done) {
     server
       .post("/oauth/google")
       .send({
-        access_token: token,
+        access_token: "",
       })
       .expect("Content-type", /json/)
-      .expect(500)
+      .expect(400)
       .end(function (err, res) {
-        res.status.should.equal(500);
+        res.status.should.equal(400);
         done();
       });
   });
