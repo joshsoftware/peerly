@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/util/log"
-	"regexp"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -45,7 +44,8 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone FROM organizations WHERE id=$1`
+		timezone,
+		created_at FROM organizations WHERE id=$1`
 
 	listOrganizationsQuery = `SELECT id,
 		name,
@@ -55,13 +55,11 @@ const (
 		subscription_valid_upto,
 		hi5_limit,
 		hi5_quota_renewal_frequency,
-		timezone FROM organizations ORDER BY name ASC`
+		timezone,
+		created_at FROM organizations ORDER BY name ASC`
 
 	getOrganizationByDomainNameQuery = `SELECT * FROM organizations WHERE domain_name=$1 LIMIT 1`
 	getOrganizationByIDQuery         = `SELECT * FROM organizations WHERE id=$1 LIMIT 1`
-
-	emailRegexString  = `^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$`
-	domainRegexString = `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 )
 
 // Organization - a struct representing an organization object in the database
@@ -77,17 +75,6 @@ type Organization struct {
 	Timezone                 string    `db:"timezone" json:"timezone"`
 	CreatedAt                time.Time `db:"created_at" json:"created_at"`
 }
-
-// ErrorResponse - a struct representing a response for an error
-// TODO how to declare this as reusable
-type ErrorResponse struct {
-	Code    string            `json:"code"`
-	Message string            `json:"message"`
-	Fields  map[string]string `json:"fields"`
-}
-
-var emailRegex = regexp.MustCompile(emailRegexString)
-var domainRegex = regexp.MustCompile(domainRegexString)
 
 // Validate - validates the organization object, making sure it's got all the info it needs
 func (org *Organization) Validate() (errorResponse map[string]ErrorResponse, valid bool) {
@@ -179,7 +166,6 @@ func (s *pgStore) UpdateOrganization(ctx context.Context, reqOrganization Organi
 		reqOrganization.Hi5Limit,
 		reqOrganization.Hi5QuotaRenewalFrequency,
 		reqOrganization.Timezone,
-		reqOrganization.CreatedAt,
 		organizationID,
 	)
 	if err != nil {

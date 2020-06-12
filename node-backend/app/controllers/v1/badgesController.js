@@ -1,9 +1,16 @@
+const log4js = require("log4js");
+
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
+const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validationSchema = require("./validationSchema/badgesValidationSchema");
-const Badges = db.badges;
+require("../../config/loggerConfig");
 
-module.exports.create = (req, res) => {
+const Badges = db.badges;
+const logger = log4js.getLogger();
+
+module.exports.create = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   //validation schema
   const schema = validationSchema.insertSchema();
   // Create a badges object
@@ -13,6 +20,10 @@ module.exports.create = (req, res) => {
     hi5_count_required: req.body.hi5_count_required,
     hi5_frequency: req.body.hi5_frequency,
   };
+  logger.info("executing create badges");
+  logger.info("user id:" + userData.userId);
+  logger.info(JSON.stringify(badges));
+  logger.info("=========================================");
 
   schema
     .validate(badges, { abortEarly: false })
@@ -25,6 +36,10 @@ module.exports.create = (req, res) => {
           });
         })
         .catch(() => {
+          logger.error("executing create badges");
+          logger.info("user id:" + userData.userId);
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -33,6 +48,9 @@ module.exports.create = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
@@ -43,7 +61,8 @@ module.exports.create = (req, res) => {
     });
 };
 //get all badges
-module.exports.findAll = (req, res) => {
+module.exports.findAll = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const org_id = req.params.organisation_id;
   const idSchema = validationSchema.findAllSchema();
   idSchema
@@ -56,6 +75,10 @@ module.exports.findAll = (req, res) => {
           });
         })
         .catch(() => {
+          logger.error("executing findAll badges");
+          logger.info("user id:" + userData.userId);
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -64,6 +87,9 @@ module.exports.findAll = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
@@ -75,7 +101,8 @@ module.exports.findAll = (req, res) => {
 };
 
 //get badges with id
-module.exports.findOne = (req, res) => {
+module.exports.findOne = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const idSchema = validationSchema.findOneSchema();
@@ -89,6 +116,10 @@ module.exports.findOne = (req, res) => {
               data: data,
             });
           } else {
+            logger.error("executing findOne badge");
+            logger.info("user id:" + userData.userId);
+            logger.error("Badge not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "Badge not found for specified id",
@@ -97,6 +128,10 @@ module.exports.findOne = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing findOne badge");
+          logger.info("user id:" + userData.userId);
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -105,6 +140,8 @@ module.exports.findOne = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",
@@ -116,7 +153,8 @@ module.exports.findOne = (req, res) => {
 };
 
 //update badges with id
-module.exports.update = (req, res) => {
+module.exports.update = async (req, res) => {
+  let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
   const org_id = req.params.organisation_id;
   const name = req.body.name;
@@ -128,6 +166,10 @@ module.exports.update = (req, res) => {
     hi5_count_required: req.body.hi5_count_required,
     hi5_frequency: req.body.hi5_frequency,
   };
+  logger.info("executing update badges");
+  logger.info("user id:" + userData.userId);
+  logger.info(JSON.stringify(badges));
+  logger.info("=========================================");
   schema
     .validate(
       { id, org_id, name, hi5_count_required, hi5_frequency },
@@ -144,6 +186,10 @@ module.exports.update = (req, res) => {
               data: updatedBadges,
             });
           } else {
+            logger.error("executing update badges");
+            logger.info("user id:" + userData.userId);
+            logger.error("Badge not found for specified id");
+            logger.info("=========================================");
             res.status(404).send({
               error: {
                 message: "Badge not found for specified id",
@@ -152,6 +198,10 @@ module.exports.update = (req, res) => {
           }
         })
         .catch(() => {
+          logger.error("executing update badges");
+          logger.info("user id:" + userData.userId);
+          logger.error("internal server error");
+          logger.info("=========================================");
           res.status(500).send({
             error: {
               message: "internal server error",
@@ -160,6 +210,9 @@ module.exports.update = (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
           "invalid-badges",

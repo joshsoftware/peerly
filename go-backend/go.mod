@@ -3,6 +3,7 @@ module joshsoftware/peerly
 go 1.12
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.4.1
 	github.com/auth0/go-jwt-middleware v0.0.0-20200507191422-d30d7b9ece63
 	github.com/bxcodec/faker/v3 v3.3.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

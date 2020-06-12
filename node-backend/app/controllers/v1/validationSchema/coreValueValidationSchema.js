@@ -8,6 +8,9 @@ module.exports.insertSchema = () => {
       .required({ org_id: "required" }),
     text: yup.string().required({ text: "required" }),
     description: yup.string().required({ description: "required" }),
+    thumbnail_url: yup
+      .string()
+      .url({ thumbnail_url: "should be valid thumbnail_url" }),
     parent_core_value_id: yup
       .number()
       .typeError({ parent_core_value_id: "should be number" }),
@@ -48,6 +51,9 @@ module.exports.updateSchema = () => {
       .required({ org_id: "required" }),
     text: yup.string(),
     description: yup.string(),
+    thumbnail_url: yup
+      .string()
+      .url({ thumbnail_url: "should be valid thumbnail_url" }),
     parent_core_value_id: yup.number().typeError({
       parent_core_value_id: "should be a number",
     }),
