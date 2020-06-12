@@ -27,10 +27,8 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach((file) => {
-    if (file !== "demo_sequelize.js") {
-      const model = sequelize["import"](path.join(__dirname, file));
-      db[model.name] = model;
-    }
+    const model = sequelize["import"](path.join(__dirname, file));
+    db[model.name] = model;
   });
 
 Object.keys(db).forEach((modelName) => {
