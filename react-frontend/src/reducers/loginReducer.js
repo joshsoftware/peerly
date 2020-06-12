@@ -2,7 +2,7 @@ import actionGenerator from "utils/actionGenerator";
 import { LOGIN } from "constants/actionConstants";
 const actionStatus = actionGenerator(LOGIN);
 
-const defaultState = {
+export const defaultState = {
   status: null,
   data: { token: null },
   error: { message: null },
