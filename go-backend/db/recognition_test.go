@@ -2,9 +2,10 @@ package db
 
 import (
 	"context"
-	"joshsoftware/peerly/config"
+	"time"
 
-	logger "github.com/sirupsen/logrus"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
@@ -14,61 +15,63 @@ import (
 type RecognitionTestSuite struct {
 	suite.Suite
 	dbStore Storer
+	db      *sqlx.DB
+	sqlmock sqlmock.Sqlmock
 }
 
-func (suite *RecognitionTestSuite) SetupSuite() {
-	config.Load("application_test")
-
-	err := RunMigrations()
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
-	}
-
-	store, err := Init()
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
-		return
-	}
-	suite.dbStore = store
+func (suite *RecognitionTestSuite) SetupTest() {
+	dbStore, dbConn, sqlmock := InitMockDB()
+	suite.dbStore = dbStore
+	suite.db = dbConn
+	suite.sqlmock = sqlmock
 }
 
-func (suite *RecognitionTestSuite) TestRecognitionSuccess() {
+func (suite *RecognitionTestSuite) TearDownTest() {
+	suite.db.Close()
+}
 
-	// test create Recognition
-	expectedRec := Recognition{
+func (suite *RecognitionTestSuite) TestCreateRecognitionSuccess() {
+	recognition := Recognition{
 		CoreValueID: 1,
-		Text:        "test Recognition",
-		GivenFor:    10,
+		Text:        "Test Text",
+		GivenFor:    1,
 		GivenBy:     2,
-		GivenAt:     1588073442241,
 	}
-	var err error
-	createdRecognition, err := suite.dbStore.CreateRecognition(context.Background(), expectedRec)
+
+	suite.sqlmock.ExpectBegin()
+
+	suite.sqlmock.ExpectExec("INSERT INTO recognition").
+		WithArgs(1, "Test Text", 1, 2, time.Now().Unix()).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	suite.sqlmock.ExpectCommit()
+
+	result, err := suite.dbStore.CreateRecognition(context.Background(), recognition)
+	assert.Equal(suite.T(), recognition, result)
+	assert.Nil(suite.T(), suite.sqlmock.ExpectationsWereMet())
 
 	assert.Nil(suite.T(), err)
-
-	// test get Recognition
-	var recognitionData Recognition
-	recognitionData, err = suite.dbStore.ShowRecognition(context.Background(), expectedRec.ID)
-
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), recognitionData, createdRecognition)
-
-	// test list Recognition
-	var recognitionList []Recognition
-
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), recognitionList, []Recognition{createdRecognition})
-
-	//test get Recognition with filter query
-	var filters map[string]int
-	filters["core_value_id"] = createdRecognition.CoreValueID
-	filters["given_by"] = createdRecognition.GivenBy
-	recognitionList, err = suite.dbStore.ListRecognitionsWithFilter(context.Background(), filters)
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), recognitionList, []Recognition{createdRecognition})
-
 }
 
-// TODO run migrations conflicts for multiple test files
-// TODO teardown function
+func (suite *RecognitionHi5TestSuite) TestCreateRecognitionFailure() {
+	recognition := Recognition{
+		CoreValueID: 1,
+		Text:        "Test Text",
+		GivenFor:    1,
+		GivenBy:     2,
+	}
+
+	suite.db.Close()
+
+	suite.sqlmock.ExpectBegin()
+
+	suite.sqlmock.ExpectExec("INSERT INTO recognition").
+		WithArgs(1, "Test Text", 1, 2, time.Now().Unix()).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	suite.sqlmock.ExpectRollback()
+
+	result, err := suite.dbStore.CreateRecognition(context.Background(), recognition)
+	assert.NotEqual(suite.T(), recognition, result)
+	assert.NotNil(suite.T(), err)
+}

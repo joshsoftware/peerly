@@ -104,7 +104,7 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		CreateRecognition, err := deps.Store.CreateRecognition(req.Context(), recognition)
+		_, err = deps.Store.CreateRecognition(req.Context(), recognition)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while creating recognition")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -114,8 +114,7 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-		repsonse(rw, http.StatusCreated, successResponse{Data: CreateRecognition})
-
+		rw.WriteHeader(http.StatusCreated)
 	})
 }
 

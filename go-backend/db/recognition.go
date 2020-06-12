@@ -2,6 +2,9 @@ package db
 
 import (
 	"context"
+	"fmt"
+	"strconv"
+	"strings"
 
 	logger "github.com/sirupsen/logrus"
 )
@@ -21,17 +24,17 @@ const (
 	listRecognitionQuery = "SELECT * FROM recognitions ORDER BY given_at ASC"
 )
 
-func listRecognitionsFilterByOneFilterQuery(column_name string) string {
-	return "SELECT * FROM recognitions WHERE " + column_name + "=$1 ORDER BY given_at ASC"
-}
+// func listRecognitionsFilterByOneFilterQuery(column_name string) string {
+// 	return "SELECT * FROM recognitions WHERE " + column_name + "=$1 ORDER BY given_at ASC"
+// }
 
-func listRecognitionsFilterByTwoFilterQuery(column_name_1 string, column_name_2 string) string {
-	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 ORDER BY given_at ASC"
-}
+// func listRecognitionsFilterByTwoFilterQuery(column_name_1 string, column_name_2 string) string {
+// 	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 ORDER BY given_at ASC"
+// }
 
-func listRecognitionsFilterByThreeFilterQuery(column_name_1 string, column_name_2 string, column_name_3 string) string {
-	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 AND " + column_name_3 + "=$3 ORDER BY given_at ASC"
-}
+// func listRecognitionsFilterByThreeFilterQuery(column_name_1 string, column_name_2 string, column_name_3 string) string {
+// 	return "SELECT * FROM recognitions WHERE " + column_name_1 + "=$1 AND " + column_name_2 + "=$2 AND " + column_name_3 + "=$3 ORDER BY given_at ASC"
+// }
 
 type Recognition struct {
 	ID          int    `db:"id" json:"id"`
@@ -67,23 +70,30 @@ func (recognition Recognition) ValidateRecognition() (valid bool, errFields map[
 }
 
 func (s *pgStore) CreateRecognition(ctx context.Context, recognition Recognition) (createdRecognition Recognition, err error) {
-	lastInsertId := 0
-	err = s.db.QueryRow(
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		logger.WithField("err:", err.Error()).Error("Error while initiating transaction")
+		return
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+			return
+		}
+		tx.Commit()
+	}()
+	_, err = tx.ExecContext(ctx,
 		createRecognitionQuery,
 		recognition.CoreValueID,
 		recognition.Text,
 		recognition.GivenFor,
 		recognition.GivenBy,
 		recognition.GivenAt,
-	).Scan(&lastInsertId)
+	)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error creating Recognition")
-		return
-	}
-
-	err = s.db.Get(&createdRecognition, showRecognitionQuery, lastInsertId)
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while fetching Recognition")
 		return
 	}
 
@@ -112,39 +122,16 @@ func (s *pgStore) ListRecognitions(ctx context.Context) (recognitions []Recognit
 }
 
 func (s *pgStore) ListRecognitionsWithFilter(ctx context.Context, filters map[string]int) (recognitions []Recognition, err error) {
-	keys := make([]string, len(filters))
-	values := make([]int, len(filters))
-	i := 0
-	for key, val := range filters {
-		keys[i] = key
-		values[i] = val
-		i++
+	var filterValues, coloumnVals []interface{}
+	var filteredCols []string
+	for k, v := range filters {
+		filterValues = append(filterValues, v)
+		coloumnVals = append(coloumnVals, v)
+		filteredCols = append(filteredCols, fmt.Sprintf(`"%s" = %s`, k, "$"+strconv.Itoa(len(filterValues))))
 	}
-	switch len(filters) {
-	case 1:
-		err = s.db.Select(
-			&recognitions,
-			listRecognitionsFilterByOneFilterQuery(keys[0]),
-			values[0],
-		)
-	case 2:
-		err = s.db.Select(
-			&recognitions,
-			listRecognitionsFilterByTwoFilterQuery(keys[0], keys[1]),
-			values[0],
-			values[1],
-		)
-	case 3:
-		err = s.db.Select(
-			&recognitions,
-			listRecognitionsFilterByThreeFilterQuery(keys[0], keys[1], keys[2]),
-			values[0],
-			values[1],
-			values[2],
-		)
-	}
+	err = s.db.Select(&recognitions, "SELECT * FROM recognitions WHERE "+strings.Join(filteredCols, " AND "), coloumnVals...)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error listing recognitions")
+		logger.WithField("err:", err.Error()).Error("Error listing recognitions")
 		return
 	}
 	return
