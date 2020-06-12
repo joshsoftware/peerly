@@ -44,6 +44,10 @@ exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
         type: "string",
         length: 100,
       },
+      thumbnail_url: {
+        type: "text",
+        notNull: false,
+      },
       parent_core_value_id: {
         type: "int",
         notNull: false,

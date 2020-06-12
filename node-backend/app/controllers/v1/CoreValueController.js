@@ -14,11 +14,13 @@ module.exports.create = async (req, res) => {
   //validation schema
   const schema = validationSchema.insertSchema();
   // Create a core value object
+
   const coreValue = {
     org_id: req.params.organisation_id,
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
+    thumbnail_url: req.body.thumbnail_url,
   };
 
   logger.info("executing create core value");
@@ -161,12 +163,15 @@ module.exports.update = async (req, res) => {
   const org_id = req.params.organisation_id;
   const text = req.body.text;
   const description = req.body.description;
+  const thumbnail_url = req.body.thumbnail_url;
   const parent_core_value_id = req.body.parent_core_value_id;
   const schema = validationSchema.updateSchema();
+
   const coreValue = {
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
+    thumbnail_url: req.body.thumbnail_url,
   };
 
   logger.info("executing update core values");
@@ -175,7 +180,7 @@ module.exports.update = async (req, res) => {
   logger.info("=========================================");
   schema
     .validate(
-      { id, org_id, text, description, parent_core_value_id },
+      { id, org_id, text, description, parent_core_value_id, thumbnail_url },
       { abortEarly: false }
     )
     .then(() => {
@@ -241,6 +246,7 @@ module.exports.getCoreValueById = async (req, res) => {
           "text",
           "parent_core_value_id",
           "org_id",
+          "thumbnail_url",
         ],
       })
         .then((data) => {
@@ -289,7 +295,14 @@ module.exports.getCoreValueById = async (req, res) => {
 module.exports.getCoreValues = async (req, res) => {
   let userData = await jwtToken.getData(req.headers["authorization"]);
   CoreValue.findAll({
-    attributes: ["id", "description", "text", "parent_core_value_id", "org_id"],
+    attributes: [
+      "id",
+      "description",
+      "text",
+      "parent_core_value_id",
+      "org_id",
+      "thumbnail_url",
+    ],
   })
     .then((info) => {
       res.status(200).send({

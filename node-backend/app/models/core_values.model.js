@@ -16,6 +16,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         notNull: true,
       },
+      thumbnail_url: {
+        type: Sequelize.TEXT,
+        notNull: false,
+      },
       description: {
         type: Sequelize.STRING,
         length: 45,
