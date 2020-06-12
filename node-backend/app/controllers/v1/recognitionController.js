@@ -178,7 +178,7 @@ module.exports.findOne = async (req, res) => {
           },
           {
             model: db.core_value,
-            attributes: ["id", "text", "description"],
+            attributes: ["id", "text", "description", "thumbnail_url"],
           },
         ],
       })
@@ -274,7 +274,7 @@ module.exports.findAll = async (req, res) => {
           },
           {
             model: db.core_value,
-            attributes: ["id", "text", "description"],
+            attributes: ["id", "text", "description", "thumbnail_url"],
             where: createWhereClause(tokenData, filterData.core_value_id),
           },
         ],
