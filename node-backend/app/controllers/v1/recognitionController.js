@@ -10,7 +10,7 @@ require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
 const Recognitions = db.recognitions;
-const CoreValues = db.coreValues;
+const CoreValues = db.core_values;
 const Users = db.users;
 const RecognitionHi5 = db.recognition_hi5;
 
@@ -177,7 +177,7 @@ module.exports.findOne = async (req, res) => {
             as: "givenBy",
           },
           {
-            model: db.core_value,
+            model: db.core_values,
             attributes: ["id", "text", "description", "thumbnail_url"],
           },
         ],
@@ -273,7 +273,7 @@ module.exports.findAll = async (req, res) => {
             where: createWhereClause(tokenData, filterData.given_by),
           },
           {
-            model: db.core_value,
+            model: db.core_values,
             attributes: ["id", "text", "description", "thumbnail_url"],
             where: createWhereClause(tokenData, filterData.core_value_id),
           },
