@@ -16,10 +16,10 @@ cron.schedule(process.env.TIME_RESET_HI5_QUOTA, async () => {
     while (iterator < noOfOrganisation + 1) {
       try {
         const organisationObject = await Organizations.findOne({
-          where: { id: iterator },
-          attributes: ["hi5_limit", "hi5_quota_renewal_frequency"],
+          attributes: ["id", "hi5_limit", "hi5_quota_renewal_frequency"],
+          limit: 1,
+          offset: iterator,
         });
-
         let updateHi5Quota = {
           hi5_quota_balance: organisationObject.dataValues.hi5_limit,
         };
@@ -27,17 +27,17 @@ cron.schedule(process.env.TIME_RESET_HI5_QUOTA, async () => {
         if (
           organisationObject.dataValues.hi5_quota_renewal_frequency == "WEEKLY"
         ) {
-          if (now.format("dddd") == "Monday") {
+          if (now.format("dddd") == "Saturday") {
             Users.update(updateHi5Quota, {
-              where: { org_id: iterator },
+              where: { org_id: organisationObject.dataValues.id },
             });
           }
         } else if (
           organisationObject.dataValues.hi5_quota_renewal_frequency == "MONTHLY"
         ) {
-          if (now.format("DD") == 1) {
+          if (now.format("DD") == 13) {
             Users.update(updateHi5Quota, {
-              where: { org_id: iterator },
+              where: { org_id: organisationObject.dataValues.id },
             });
           }
         }
