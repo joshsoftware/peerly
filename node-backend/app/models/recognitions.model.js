@@ -35,5 +35,16 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Recognitions.associate = (models) => {
+    Recognitions.belongsTo(models.users, {
+      foreignKey: "given_for",
+      as: "givenFor",
+    });
+    Recognitions.belongsTo(models.core_values, { foreignKey: "core_value_id" });
+    Recognitions.belongsTo(models.users, {
+      foreignKey: "given_by",
+      as: "givenBy",
+    });
+  };
   return Recognitions;
 };

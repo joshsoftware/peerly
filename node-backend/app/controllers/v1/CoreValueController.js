@@ -6,7 +6,7 @@ const validationSchema = require("./validationSchema/coreValueValidationSchema")
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 require("../../config/loggerConfig");
 
-const CoreValue = db.core_value;
+const CoreValue = db.core_values;
 const logger = log4js.getLogger();
 
 module.exports.create = async (req, res) => {
