@@ -60,8 +60,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          constant.INVALID_CORE_VALUE_CODE,
+          constant.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -102,8 +102,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          constant.INVALID_CORE_VALUE_CODE,
+          constant.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -158,8 +158,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          constant.INVALID_CORE_VALUE_CODE,
+          constant.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -236,8 +236,8 @@ module.exports.update = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          constant.INVALID_CORE_VALUE_CODE,
+          constant.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -300,8 +300,8 @@ module.exports.getCoreValueById = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          constant.INVALID_CORE_VALUE_CODE,
+          constant.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
