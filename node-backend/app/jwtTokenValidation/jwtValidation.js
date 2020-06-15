@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const log4js = require("log4js");
 
-const db = require("../../models/sequelize");
+const db = require("../models/sequelize");
 require("../config/loggerConfig");
 
 const UserBlacklistedTokens = db.user_blacklisted_tokens;
