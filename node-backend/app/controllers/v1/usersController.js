@@ -31,12 +31,14 @@ module.exports.findUsersByOrg = async (req, res) => {
             logger.error("find user by orrganisaiton access denied");
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(403).send({
-              error: {
-                code: "access_denied",
-                message: "Permission required",
-              },
-            });
+            res
+              .status(403)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.ACCESS_DENIED_CODE,
+                  constant.ACCESS_DENIED_MESSAGE
+                )
+              );
           }
         } else {
           Users.findAll({
