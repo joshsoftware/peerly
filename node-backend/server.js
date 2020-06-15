@@ -7,7 +7,7 @@ require("dotenv").config("./.env");
 require("./app/jwtTokenValidation/deleteExpiredToken.js"); // eslint-disable-line node/no-missing-require
 require("./app/cronJobs/ResetHi5QuotaBalance");
 const indexRoute = require("./app/routes/index");
-const dbConn = require("./models/sequelize");
+const dbConn = require("./app/models/sequelize");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
