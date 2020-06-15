@@ -12,7 +12,7 @@ module.exports = {
         "users",
         [
           {
-            org_id: 4,
+            org_id: 1,
             first_name: "admin",
             email: "admin@123",
             soft_delete: false,
