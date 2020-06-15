@@ -35,3 +35,25 @@ module.exports.USER_NOT_FOUND_MESSAGE = "User not found for specified id";
 module.exports.ACCESS_DENIED_CODE = "access_denied";
 
 module.exports.ACCESS_DENIED_MESSAGE = "Permission required";
+
+module.exports.INVALID_RECOGNITION_CODE = "invalid-recognition";
+
+module.exports.INVALID_RECOGNITION_MESSAGE = "Invalid recognition data";
+
+module.exports.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE =
+  "Core value not found with specified organisation";
+
+module.exports.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE =
+  "Core value not found with specified organisation";
+
+module.exports.RECOGNITION_NOT_FOUND_CODE = "recognition-not-found";
+
+module.exports.RECOGNITION_NOT_FOUND_MESSAGE =
+  "Recognition not found for specified id";
+
+module.exports.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE =
+  "Recognition with specified organisation is not found";
+
+module.exports.EMPTY_HI5_BALANCE_CODE = "empty-hi5-balance";
+
+module.exports.EMPTY_HI5_BALANCE_MESSAGE = "User hi5 balance is empty";
