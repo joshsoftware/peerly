@@ -4,6 +4,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/orgValidationSchema");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
+const constant = require("../../constant/responseConstants");
 const Organizations = db.organizations;
 require("../../config/loggerConfig");
 
@@ -42,13 +43,16 @@ module.exports.create = async (req, res) => {
         .catch(() => {
           logger.error("executing find All in organisation");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -76,13 +80,16 @@ module.exports.findAll = async (req, res) => {
     .catch(() => {
       logger.error("executing find All in organisation");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -114,13 +121,16 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("executing find one in organisation");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -204,13 +214,16 @@ module.exports.update = async (req, res) => {
               .catch(() => {
                 logger.error("Error executing update organisation");
                 logger.info("user id: " + userData.userId);
-                logger.error("internal server error");
+                logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
                 logger.info("=========================================");
-                res.status(500).send({
-                  error: {
-                    message: "internal server error",
-                  },
-                });
+                res
+                  .status(500)
+                  .send(
+                    utility.getErrorResponseObject(
+                      constant.INTRENAL_SERVER_ERROR_CODE,
+                      constant.INTRENAL_SERVER_ERROR_MESSAGE
+                    )
+                  );
               });
           })
           .catch((err) => {
