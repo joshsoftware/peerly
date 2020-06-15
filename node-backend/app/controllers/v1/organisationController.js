@@ -109,13 +109,16 @@ module.exports.findOne = async (req, res) => {
           } else {
             logger.error("executing find one in organisation");
             logger.info("user id: " + userData.userId);
-            logger.error("Organisation with specified id not found");
+            logger.error(constant.ORGANISATION_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "Organisation with specified id not found",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.ORGANISATION_NOT_FOUND_CODE,
+                  constant.ORGANISATION_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -160,12 +163,12 @@ module.exports.update = async (req, res) => {
       if (!valid) {
         logger.error("executing update organisation");
         logger.info("organisation id: " + id);
-        logger.error("invalid orgnisation");
+        logger.error(constant.INVALID_ORGANISATION_MESSAGE);
         logger.info("=========================================");
         res.status(400).send({
           error: {
-            code: "invalid orgnisation",
-            message: "Invalid value for parameter id",
+            code: constant.INVALID_ORGANISATION_CODE,
+            message: constant.INVALID_ORGANISATION_MESSAGE,
             fields: {
               id: "should be number",
             },
@@ -202,13 +205,16 @@ module.exports.update = async (req, res) => {
                 } else {
                   logger.error("Error executing update organisation");
                   logger.info("user id: " + userData.userId);
-                  logger.error("Organisation with specified id is not found");
+                  logger.error(constant.ORGANISATION_NOT_FOUND_MESSAGE);
                   logger.info("=========================================");
-                  res.status(404).send({
-                    error: {
-                      message: "Organisation with specified id is not found",
-                    },
-                  });
+                  res
+                    .status(404)
+                    .send(
+                      utility.getErrorResponseObject(
+                        constant.ORGANISATION_NOT_FOUND_CODE,
+                        constant.ORGANISATION_NOT_FOUND_MESSAGE
+                      )
+                    );
                 }
               })
               .catch(() => {
