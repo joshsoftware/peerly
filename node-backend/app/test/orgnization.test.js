@@ -1,13 +1,9 @@
-let path = require("path");
-let dotEnvPath = path.resolve("../.env");
-require("dotenv").config({ path: dotEnvPath });
-const db = require("./dbConnection");
-const Organizations = db.organizations;
-const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 const { createToken } = require("./jwtTokenGenration");
 const data = require("./data");
-const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
+const app = require("../../server");
+const db = require("../models/sequelize");
 let token;
 let id;
 let roleId = 3;
@@ -21,12 +17,12 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
   });
 
   /*eslint-disable-line no-undef*/ after(() => {
-    Organizations.destroy({ where: {} });
+    db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create organisation with write Contents,url", function (done) {
     // post request for create organisation successfully
-    server
+    request(app)
       .post("/organisations")
       .send(data.organizations)
       .expect("Content-type", /json/)
@@ -47,7 +43,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "get API all organizations correct response", function (done) {
     // calling get all organizations api
-    server
+    request(app)
       .get("/organisations")
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -61,7 +57,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "get request contain valid id ", function (done) {
     // calling get by id organizations api
-    server
+    request(app)
       .get("/organisations/" + id)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -77,7 +73,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "put request for updated orgnisation with write content and url", function (done) {
     // calling put request for updated orgnisation sucessfully
-    server
+    request(app)
       .put("/organisations/" + id)
       .send(data.organizations)
       .expect("Content-type", /json/)
@@ -99,7 +95,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "get request contain invalid id ", function (done) {
     // calling get request with wrong id in organisation
-    server
+    request(app)
       .get("/organisations/-50000")
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
@@ -113,7 +109,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "get request pass other content ", function (done) {
     // calling get request with passing other than id
-    server
+    request(app)
       .get("/organisations/jiiuj")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -128,7 +124,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
   it(/*eslint-disable-line no-undef*/ "post request for create orgnisation with wrong Contents", function (done) {
     // post request for create orgnisation with wrong Contents
     data.organizations.hi5_limit = "abc";
-    server
+    request(app)
       .post("/organisations/")
       .send(data.organizations)
       .expect("Content-type", /json/)
@@ -144,7 +140,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "post request for create orgnisation with wrong url", function (done) {
     // calling post request for create orgnisation with wrong url
-    server
+    request(app)
       .post("/organisations/dec")
       .send(data.organizations)
       .expect("Content-type", /json/)
@@ -161,7 +157,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong Contents", function (done) {
     // put request for update orgnisation with wrong Contents
     data.organizations.hi5_limit = "abc";
-    server
+    request(app)
       .put("/organisations/1")
       .send(data.organizations)
       .expect("Content-type", /json/)
@@ -177,7 +173,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with Invalid Id", function (done) {
     // put request for update orgnisation with wrong Contents
-    server
+    request(app)
       .put("/organisations/udc")
       .send(data.organizations)
       .expect("Content-type", /json/)
@@ -193,7 +189,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong url", function (done) {
     // calling put request for update orgnisation with wrong url
-    server
+    request(app)
       .put("/organisations/dec/dd")
       .send(data.organizations)
       .expect("Content-type", /json/)

@@ -1,12 +1,9 @@
-let path = require("path");
-let dotEnvPath = path.resolve("../.env");
-require("dotenv").config({ path: dotEnvPath });
 /*eslint-disable  no-unused-vars */
-const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should"); //eslint-disable-line node/no-unpublished-require
-const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
+const app = require("../../server");
 const { createToken } = require("./jwtTokenGenration");
-const db = require("./dbConnection");
+const db = require("../models/sequelize");
 const data = require("./data");
 
 let employeeToken;
@@ -38,9 +35,9 @@ describe("test cases for users", function () {
   });
 
   it("/users get method should give status 200", function (done) {
-    server
+    request(app)
       .get("/users")
-      .set("Authorization", "Bearer " + employeeToken)
+      .set("Authorization", `Bearer ${employeeToken}`)
       .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
       .expect(200)
@@ -50,7 +47,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users get method should unauthorize user with 401 status", function (done) {
-    server
+    request(app)
       .get("/users")
       .set("Authorization", "Bearer " + "xxxxx")
       .set("Accept", "application/vnd.peerly.v1")
@@ -62,7 +59,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users?limit=10&offset=0&org_id=1 get method should give status 403", function (done) {
-    server
+    request(app)
       .get("/users?limit=2&offset=4&org_id=1")
       .set("Authorization", "Bearer " + employeeToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -74,7 +71,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users?limit=ten&offset=zero&org_id=1 get method should give status 400", function (done) {
-    server
+    request(app)
       .get("/users?limit=ten&offset=zero&org_id=1")
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -86,7 +83,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users?limit=10&offset=0&org_id=1 get method should give status 200", function (done) {
-    server
+    request(app)
       .get("/users?limit=2&offset=4&org_id=1")
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -98,7 +95,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/me get method should give status 401", function (done) {
-    server
+    request(app)
       .get("/users/me")
       .set("Authorization", "Bearer " + "xxxx")
       .set("Accept", "application/vnd.peerly.v1")
@@ -110,7 +107,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/me get method should give status 200", function (done) {
-    server
+    request(app)
       .get("/users/me")
       .set("Authorization", "Bearer " + employeeToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -122,7 +119,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id get method should give status 200", function (done) {
-    server
+    request(app)
       .get(`/users/${userId}`)
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -134,7 +131,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id get method should give status 400", function (done) {
-    server
+    request(app)
       .get("/users/five")
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -146,7 +143,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id get method should give status 403", function (done) {
-    server
+    request(app)
       .get("/users/18")
       .set("Authorization", "Bearer " + employeeToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -159,7 +156,7 @@ describe("test cases for users", function () {
   });
 
   it("/users/me put method should give status 200", function (done) {
-    server
+    request(app)
       .put("/users/me")
       .send({
         first_name: "xyz",
@@ -176,7 +173,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/me put method should give status 400", function (done) {
-    server
+    request(app)
       .put("/users/me")
       .send({
         first_name: "xyz",
@@ -192,7 +189,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/me put method should give status 401", function (done) {
-    server
+    request(app)
       .put("/users/me")
       .send({
         first_name: "xyz",
@@ -209,7 +206,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id put method should give status 403", function (done) {
-    server
+    request(app)
       .put("/users/15")
       .send({
         role_id: "3",
@@ -224,7 +221,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id put method should give status 400 fo invalid path param", function (done) {
-    server
+    request(app)
       .put("/users/five")
       .send({
         role_id: "3",
@@ -239,7 +236,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id put method should give status 400 for invalid input", function (done) {
-    server
+    request(app)
       .put("/users/15")
       .send({
         role_id: "two",
@@ -254,7 +251,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id put method should give status 200", function (done) {
-    server
+    request(app)
       .put(`/users/${userId}`)
       .send({
         role_id: "3",
@@ -269,7 +266,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id delete method should give status 401", function (done) {
-    server
+    request(app)
       .delete("/users/15")
       .set("Authorization", "Bearer " + "xxxxx")
       .set("Accept", "application/vnd.peerly.v1")
@@ -281,7 +278,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id delete method should give status 200", function (done) {
-    server
+    request(app)
       .delete("/users/15")
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -293,7 +290,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id delete method should give status 400", function (done) {
-    server
+    request(app)
       .delete("/users/five")
       .set("Authorization", "Bearer " + superAdminToken)
       .set("Accept", "application/vnd.peerly.v1")
@@ -305,7 +302,7 @@ describe("test cases for users", function () {
       });
   });
   it("/users/:id delete method should give status 403", function (done) {
-    server
+    request(app)
       .delete("/users/15")
       .set("Authorization", "Bearer " + employeeToken)
       .set("Accept", "application/vnd.peerly.v1")
