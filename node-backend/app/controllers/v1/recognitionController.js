@@ -23,26 +23,32 @@ const validateCoreValue = async (req, res, tokenData) => {
       if (data === null) {
         logger.error("Error executing validate core value");
         logger.info("user id: " + tokenData.userId);
-        logger.error("core value not found with specified id");
+        logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "core value not found with specified id",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.CORE_VALUE_NOT_FOUND_CODE,
+              constant.CORE_VALUE_NOT_FOUND_MESSAGE
+            )
+          );
       } else if (data.dataValues.org_id == tokenData.orgId) {
         // CoreValue validate successfully
         return true;
       } else {
         logger.error("Error executing validate core value");
         logger.info("user id: " + tokenData.userId);
-        logger.error("core value not found with specified organisation");
+        logger.error(constant.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "core value not found with specified organisation",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.CORE_VALUE_NOT_FOUND_CODE,
+              constant.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
@@ -67,25 +73,31 @@ const validateGivenFor = async (req, res, tokenData) => {
       if (data === null) {
         logger.error("Error executing validate given for");
         logger.info("user id: " + tokenData.userId);
-        logger.error("User with specified id is not found");
+        logger.error(constant.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.USER_NOT_FOUND_CODE,
+              constant.USER_NOT_FOUND_MESSAGE
+            )
+          );
       } else if (data.dataValues.org_id == tokenData.orgId) {
         return true;
       } else {
         logger.error("Error executing validate given for");
         logger.info("user id: " + tokenData.userId);
-        logger.error("User not found in specified organisation");
+        logger.error(constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User not found in specified organisation",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.USER_NOT_FOUND_CODE,
+              constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
@@ -196,13 +208,16 @@ module.exports.findOne = async (req, res) => {
           if (data == null /*eslint-disable-line no-eq-null*/) {
             logger.error("Error executing find one in recognition");
             logger.info("user id: " + userData.userId);
-            logger.error("Recognition with specified id is not found");
+            logger.error(constant.RECOGNITION_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "Recognition with specified id is not found",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.RECOGNITION_NOT_FOUND_CODE,
+                  constant.RECOGNITION_NOT_FOUND_MESSAGE
+                )
+              );
           } else {
             res.status(200).send({
               data: data,
@@ -304,14 +319,17 @@ module.exports.findAll = async (req, res) => {
             logger.error("Error executing getHi5Count");
             logger.info("user id: " + tokenData.userId);
             logger.error(
-              "Recognition with specified organisation is not found"
+              constant.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
             );
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "Recognition with specified organisation is not found",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.RECOGNITION_NOT_FOUND_CODE,
+                  constant.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -350,35 +368,44 @@ const getHi5Count = async (req, res, id, orgId) => {
       if (data === null) {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error("User with specified id is not found");
+        logger.error(constant.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.USER_NOT_FOUND_CODE,
+              constant.USER_NOT_FOUND_MESSAGE
+            )
+          );
       } else if (data.dataValues.org_id !== orgId) {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error("User with specified organisation is not found");
+        logger.error(constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified organisation is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.USER_NOT_FOUND_CODE,
+              constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
       } else if (data.dataValues.hi5_quota_balance > 0) {
         return data.dataValues.hi5_quota_balance;
       } else {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error("User hi5 balance is Empty");
+        logger.error(constant.EMPTY_HI5_BALANCE_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User hi5 balance is Empty",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.EMPTY_HI5_BALANCE_CODE,
+              constant.EMPTY_HI5_BALANCE_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
@@ -414,13 +441,16 @@ const validateRecognition = async (req, res, id) => {
       if (data == null /*eslint-disable-line no-eq-null*/) {
         logger.error("Error executing validateRecognition");
         logger.info("user id: " + userData.userId);
-        logger.error("Recognition with specified id is not found");
+        logger.error(constant.RECOGNITION_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "Recognition with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.RECOGNITION_NOT_FOUND_CODE,
+              constant.RECOGNITION_NOT_FOUND_MESSAGE
+            )
+          );
       } else {
         return true;
       }
@@ -462,13 +492,16 @@ const decrementHi5Count = async (req, res, id, orgId) => {
       } else {
         logger.error("Error executing decrerment hi5 count");
         logger.info("user id: " + userData.userId);
-        logger.error("User with specified id is not found");
+        logger.error(constant.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              constant.USER_NOT_FOUND_CODE,
+              constant.USER_NOT_FOUND_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
