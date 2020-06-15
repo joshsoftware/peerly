@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const log4js = require("log4js");
 
-const db = require("../../models/sequelize");
+const db = require("../../../models/sequelize");
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();

@@ -1,6 +1,6 @@
 const log4js = require("log4js");
 
-const db = require("../../models/sequelize");
+const db = require("../../../models/sequelize");
 const jsonwebtoken = require("../../jwtTokenValidation/jwtValidation");
 const userBlacklistedTokens = db.user_blacklisted_tokens;
 require("../../config/loggerConfig");

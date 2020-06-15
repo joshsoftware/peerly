@@ -2,7 +2,7 @@ const moment = require("moment"); //eslint-disable-line node/no-extraneous-requi
 const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
 const log4js = require("log4js");
 
-const db = require("../../models/sequelize");
+const db = require("../../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
 const validationSchema = require("./validationSchema/recognitionValidationSchema");
