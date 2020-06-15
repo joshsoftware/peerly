@@ -1,14 +1,10 @@
-let path = require("path");
-let dotEnvPath = path.resolve("../.env");
-require("dotenv").config({ path: dotEnvPath });
-
-const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const app = require("../../server");
+const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 const db = require("../models/sequelize");
 const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");
 
-const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let token;
 let id;
 let orgId;
@@ -16,6 +12,7 @@ let roleId = 2;
 let userId = 1;
 
 describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function () {
+  delete data.coreValue.org_id;
   /*eslint-disable-line no-undef*/ before((done) => {
     db.organizations.create(data.organizations).then((data) => {
       orgId = data.id;
@@ -25,18 +22,14 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   });
 
   /*eslint-disable-line no-undef*/ after(async () => {
-    await db.core_value.destroy({ where: {} });
+    await db.core_values.destroy({ where: {} });
     await db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create core value with right Contents,url", function (done) {
-    server
+    request(app)
       .post(`/organisations/${orgId}/core_values`)
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-      })
+      .send(data.coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -44,15 +37,18 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 201
         res.status.should.equal(201);
+        should(res.body.data).be.a.Object();
         id = res.body.data.id;
-        // Error key should be false.
+        delete res.body.data.id;
+        delete res.body.data.org_id;
+        res.body.data.should.eql(data.coreValue);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get API all core value correct response", function (done) {
     // calling get all core value api
-    server
+    request(app)
       .get(`/organisations/${orgId}/core_values`)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -61,12 +57,13 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .end(function (err, res) {
         // HTTP status should be 200
         res.status.should.equal(200);
+        should(res.body.data).be.a.Array();
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get all core values", function (done) {
-    server
+    request(app)
       .get("/core_values")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -74,12 +71,13 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .expect(200)
       .end(function (err, res) {
         res.status.should.equal(200);
+        should(res.body.data).be.a.Array();
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get request contain valid id ", function (done) {
-    server
+    request(app)
       .get(`/core_values/${id}`)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -87,13 +85,15 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .expect(200)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         res.status.should.equal(200);
+        res.body.data.id.should.equal(id);
+        should(res.body.data).be.a.Object();
         done();
       });
   });
 
-  it(/*eslint-disable-line no-undef*/ "get request contain valid id ", function (done) {
+  it(/*eslint-disable-line no-undef*/ "get request contain valid id with organisation id", function (done) {
     // calling get by id core value api
-    server
+    request(app)
       .get(`/organisations/${orgId}/core_values/${id}`)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -102,19 +102,16 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
         res.status.should.equal(200);
+        should(res.body.data).be.a.Object();
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "put request for updated core value with write content and url", function (done) {
     // calling put request for updated core value sucessfully
-    server
+    request(app)
       .put(`/organisations/${orgId}/core_values/${id}`)
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-      })
+      .send(data.coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -122,14 +119,19 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
         res.status.should.equal(200);
-        // Error key should be false.
+        res.body.data.id.should.equal(id);
+        should(res.body.data).be.a.Object();
+        id = res.body.data.id;
+        delete res.body.data.id;
+        delete res.body.data.org_id;
+        res.body.data.should.eql(data.coreValue);
         done();
       });
   });
 
-  it(/*eslint-disable-line no-undef*/ "get API all core value invalid type recognation id response", function (done) {
+  it(/*eslint-disable-line no-undef*/ "get API all core value invalid type  id response", function (done) {
     // calling get all core value api
-    server
+    request(app)
       .get("/organisations/t/core_values")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -142,75 +144,13 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       });
   });
 
-  it(/*eslint-disable-line no-undef*/ "get request contain invalid id ", function (done) {
-    // calling get request with wrong id in core value
-    server
-      .post("/organisations/1/core_values")
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-        thumbnail_url: "https://mail.google.com",
-      })
-      .expect("Content-type", /json/)
-      .expect(404) // THis is HTTP response
-      .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 404
-        res.status.should.equal(404);
-        done();
-      });
-  });
-
   it(/*eslint-disable-line no-undef*/ "get request pass invalid type content content ", function (done) {
     // calling get request with passing other than id
-    server
+    request(app)
       .get(`/organisations/${orgId}/core_values/t`)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
       .expect("Content-type", /json/)
-      .expect(400) // THis is HTTP response
-      .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 400
-        res.status.should.equal(400);
-        // Error key should be false.
-        done();
-      });
-  });
-
-  it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong Contents", function (done) {
-    // post request for create core value with wrong Contents
-    server
-      .post(`/organisations/${orgId}/core_values`)
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: "xyz",
-        thumbnail_url: "https://mail.google.com",
-      })
-      .expect("Content-type", /json/)
-      .set("Authorization", "Bearer " + token)
-      .set("Accept", "application/vnd.peerly.v1")
-      .expect(400) // THis is HTTP response
-      .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 400
-        res.status.should.equal(400);
-        done();
-      });
-  });
-
-  it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong thumbnail_url", function (done) {
-    // post request for create core value with wrong Contents
-    server
-      .post("/organisations/1/core_values")
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-        thumbnail_url: "mail.google.com",
-      })
-      .expect("Content-type", /json/)
-      .set("Authorization", "Bearer " + token)
-      .set("Accept", "application/vnd.peerly.v1")
       .expect(400) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 400
@@ -221,14 +161,9 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
 
   it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong url", function (done) {
     // calling post request for create core value with wrong url
-    server
+    request(app)
       .post(`/organisations/${orgId}/core_value`)
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-        thumbnail_url: "https://mail.google.com",
-      })
+      .send(data.coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -240,38 +175,28 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       });
   });
 
-  it(/*eslint-disable-line no-undef*/ "put request for updated core value with write content and url", function (done) {
-    // calling put request for updated core value sucessfully
-    server
-      .put("/organisations/1/core_values/2")
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-        thumbnail_url: "https://mail.google.com",
-      })
+  it(/*eslint-disable-line no-undef*/ "put request for update core value with Invalid Id", function (done) {
+    // post request for update core value with wrong Contents
+    request(app)
+      .put(`/organisations/${orgId}/core_values/7000`)
+      .send(data.coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(200) // THis is HTTP response
+      .expect(404) // THis is HTTP response
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 200
-        res.status.should.equal(200);
-        // Error key should be false.
+        // HTTP status should be 404
+        res.status.should.equal(404);
         done();
       });
   });
 
-  it(/*eslint-disable-line no-undef*/ "put request for update core value with wrong Contents", function (done) {
-    // post request for update core value with wrong Contents
-    server
-      .put(`/organisations/${orgId}/core_values/2`)
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: "xyz",
-        thumbnail_url: "https://mail.google.com",
-      })
+  it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong thumbnail_url", function (done) {
+    // post request for create core value with wrong Contents
+    data.coreValue.thumbnail_url = "mail.google.com";
+    request(app)
+      .post("/organisations/1/core_values")
+      .send(data.coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -285,14 +210,10 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
 
   it(/*eslint-disable-line no-undef*/ "put request for update core value with wrong thumbnail_url", function (done) {
     // post request for update core value with wrong Contents
-    server
+    data.coreValue.thumbnail_url = "mail.google.com";
+    request(app)
       .put("/organisations/1/core_values/2")
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-        thumbnail_url: "mail.google.com",
-      })
+      .send(data.coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -304,29 +225,8 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
       });
   });
 
-  it(/*eslint-disable-line no-undef*/ "put request for update core value with Invalid Id", function (done) {
-    // post request for update core value with wrong Contents
-    server
-      .put(`/organisations/${orgId}/core_values/7000`)
-      .send({
-        text: "Tata",
-        description: "good",
-        parent_core_value_id: 2,
-        thumbnail_url: "https://mail.google.com",
-      })
-      .expect("Content-type", /json/)
-      .set("Authorization", "Bearer " + token)
-      .set("Accept", "application/vnd.peerly.v1")
-      .expect(404) // THis is HTTP response
-      .end(function (err /*eslint-disable-line no-undef*/, res) {
-        // HTTP status should be 404
-        res.status.should.equal(404);
-        done();
-      });
-  });
-
   it(/*eslint-disable-line no-undef*/ "get  request contain invalid id ", function (done) {
-    server
+    request(app)
       .get("/core_values/5000")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -339,7 +239,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   });
 
   it(/*eslint-disable-line no-undef*/ "get request pass other content ", function (done) {
-    server
+    request(app)
       .get("/core_values/t")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -352,7 +252,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   });
 
   it(/*eslint-disable-line no-undef*/ "invalid access token", function (done) {
-    server
+    request(app)
       .get("/core_values")
       .set("Authorization", "Bearer " + "")
       .set("Accept", "application/vnd.peerly.v1")

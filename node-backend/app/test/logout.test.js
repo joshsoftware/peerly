@@ -1,14 +1,11 @@
 /*eslint-disable  no-unused-vars */
-const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should"); //eslint-disable-line node/no-unpublished-require
 
-let path = require("path");
-let dotEnvPath = path.resolve("../.env");
-require("dotenv").config({ path: dotEnvPath });
-const db = require("./dbConnection");
+const app = require("../../server");
+const db = require("../models/sequelize");
 const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");
-const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let token;
 let roleId = 3;
 let orgId;
@@ -35,7 +32,7 @@ describe("test cases for logout", function () {
   });
 
   it("should give ok status", function (done) {
-    server
+    request(app)
       .post("/logout")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -48,7 +45,7 @@ describe("test cases for logout", function () {
   });
 
   it("should unauthorized user", function (done) {
-    server
+    request(app)
       .post("/logout")
       .set("Authorization", "Bearer " + "xxxxx")
       .set("Accept", "application/vnd.peerly.v1")

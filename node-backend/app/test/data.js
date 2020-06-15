@@ -26,6 +26,7 @@ data.coreValue = {
   text: faker.lorem.words(5),
   description: faker.lorem.words(3),
   parent_core_value_id: faker.random.number(1),
+  thumbnail_url: faker.internet.url(),
 };
 
 data.recognition = {
@@ -34,5 +35,11 @@ data.recognition = {
   given_for: faker.random.number(),
   given_by: faker.random.number(),
   given_at: faker.random.number(5),
+};
+
+data.badges = {
+  name: faker.name.firstName(),
+  hi5_count_required: faker.random.number(1),
+  hi5_frequency: faker.lorem.words(1),
 };
 module.exports = data;

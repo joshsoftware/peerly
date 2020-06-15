@@ -31,6 +31,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
       .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         res.status.should.equal(201);
+        should(res.body.data).be.a.Object();
         id = res.body.data.id;
         delete res.body.data.id;
         res.body.data.subscription_valid_upto = parseInt(
@@ -51,6 +52,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
       .expect(200) // THis is HTTP response
       .end(function (err, res) {
         res.status.should.equal(200);
+        should(res.body.data).be.a.Array();
         done();
       });
   });
@@ -67,6 +69,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
         // HTTP status should be 200
         res.status.should.equal(200);
         res.body.data.id.should.equal(id);
+        should(res.body.data).be.a.Object();
         done();
       });
   });
@@ -83,6 +86,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         // HTTP status should be 200
         res.status.should.equal(200);
+        should(res.body.data).be.a.Object();
         id.should.equal(res.body.data.id);
         delete res.body.data.id;
         res.body.data.subscription_valid_upto = parseInt(
