@@ -87,3 +87,12 @@ module.exports.authorizeAdmin = async (req, res, next) => {
     });
   }
 };
+
+module.exports.getErrorResponseObject = (code, message) => {
+  return {
+    error: {
+      code: code,
+      message: message,
+    },
+  };
+};
