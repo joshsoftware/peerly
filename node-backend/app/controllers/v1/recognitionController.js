@@ -5,6 +5,7 @@ const log4js = require("log4js");
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
+const constant = require("../../constant/resConstants");
 const validationSchema = require("./validationSchema/recognitionValidationSchema");
 require("../../config/loggerConfig");
 
@@ -47,13 +48,16 @@ const validateCoreValue = async (req, res, tokenData) => {
     .catch(() => {
       logger.error("Error executing validate core value");
       logger.info("user id: " + tokenData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -87,13 +91,16 @@ const validateGivenFor = async (req, res, tokenData) => {
     .catch(() => {
       logger.error("Error executing validate given for");
       logger.info("user id: " + tokenData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -112,13 +119,16 @@ const addRecognition = async (req, res, recognitions) => {
     .catch(() => {
       logger.error("Error executing create recognition");
       logger.info("user id: " + tokenData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -202,13 +212,16 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("Error executing find one in recognition");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error ",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -304,13 +317,16 @@ module.exports.findAll = async (req, res) => {
         .catch(() => {
           logger.error("Error executing find all in recognition");
           logger.info("user id: " + tokenData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error ",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -368,13 +384,16 @@ const getHi5Count = async (req, res, id, orgId) => {
     .catch(() => {
       logger.error("Error executing getHi5Count");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -409,13 +428,16 @@ const validateRecognition = async (req, res, id) => {
     .catch(() => {
       logger.error("Error executing validateRecognition");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error ",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -452,13 +474,16 @@ const decrementHi5Count = async (req, res, id, orgId) => {
     .catch(() => {
       logger.error("Error executing decrerment hi5 count");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -480,13 +505,16 @@ const addHi5Entry = async (req, res, data, orgId) => {
     .catch(() => {
       logger.error("Error executing find users by organisation");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
