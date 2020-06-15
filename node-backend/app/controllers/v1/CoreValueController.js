@@ -4,7 +4,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/coreValueValidationSchema");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
-const constant = require("../../constant/resConstants");
+const resConstants = require("../../constant/responseConstants");
 require("../../config/loggerConfig");
 
 const CoreValue = db.core_values;
@@ -42,14 +42,14 @@ module.exports.create = async (req, res) => {
         .catch(() => {
           logger.error("executing create core value");
           logger.info("user id:" + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -60,8 +60,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_CORE_VALUE_CODE,
-          constant.INVALID_CORE_VALUE_MESSAGE,
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -84,14 +84,14 @@ module.exports.findAll = async (req, res) => {
         .catch(() => {
           logger.error("executing findAll core value");
           logger.info("user id:" + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -102,8 +102,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_CORE_VALUE_CODE,
-          constant.INVALID_CORE_VALUE_MESSAGE,
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -128,14 +128,14 @@ module.exports.findOne = async (req, res) => {
           } else {
             logger.error("executing findOne core value");
             logger.info("user id:" + userData.userId);
-            logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
+            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
-                  constant.CORE_VALUE_NOT_FOUND_CODE,
-                  constant.CORE_VALUE_NOT_FOUND_MESSAGE
+                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
+                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
                 )
               );
           }
@@ -143,14 +143,14 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("executing findOne core value");
           logger.info("user id:" + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -161,8 +161,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_CORE_VALUE_CODE,
-          constant.INVALID_CORE_VALUE_MESSAGE,
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -209,14 +209,14 @@ module.exports.update = async (req, res) => {
           } else {
             logger.error("executing update in core value");
             logger.info("user id:" + userData.userId);
-            logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
+            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
-                  constant.CORE_VALUE_NOT_FOUND_CODE,
-                  constant.CORE_VALUE_NOT_FOUND_MESSAGE
+                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
+                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
                 )
               );
           }
@@ -224,14 +224,14 @@ module.exports.update = async (req, res) => {
         .catch(() => {
           logger.error("executing update in core value");
           logger.info("user id:" + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -242,8 +242,8 @@ module.exports.update = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_CORE_VALUE_CODE,
-          constant.INVALID_CORE_VALUE_MESSAGE,
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -276,14 +276,14 @@ module.exports.getCoreValueById = async (req, res) => {
           } else {
             logger.error("executing getCoreValueById");
             logger.info("user id:" + userData.userId);
-            logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
+            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
-                  constant.CORE_VALUE_NOT_FOUND_CODE,
-                  constant.CORE_VALUE_NOT_FOUND_MESSAGE
+                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
+                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
                 )
               );
           }
@@ -291,14 +291,14 @@ module.exports.getCoreValueById = async (req, res) => {
         .catch(() => {
           logger.error("executing getCoreValueById");
           logger.info("user id:" + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -309,8 +309,8 @@ module.exports.getCoreValueById = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_CORE_VALUE_CODE,
-          constant.INVALID_CORE_VALUE_MESSAGE,
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -337,14 +337,14 @@ module.exports.getCoreValues = async (req, res) => {
     .catch(() => {
       logger.error("executing getCoreValues");
       logger.info("user id:" + userData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });

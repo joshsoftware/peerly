@@ -4,7 +4,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/orgValidationSchema");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
-const constant = require("../../constant/resConstants");
+const resConstants = require("../../constant/responseConstants");
 const Organizations = db.organizations;
 require("../../config/loggerConfig");
 
@@ -43,14 +43,14 @@ module.exports.create = async (req, res) => {
         .catch(() => {
           logger.error("executing find All in organisation");
           logger.info("user id: " + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -61,8 +61,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_ORGANISATION_CODE,
-          constant.INVALID_ORGANISATION_MESSAGE,
+          resConstants.INVALID_ORGANISATION_CODE,
+          resConstants.INVALID_ORGANISATION_MESSAGE,
           err.errors
         ),
       });
@@ -80,14 +80,14 @@ module.exports.findAll = async (req, res) => {
     .catch(() => {
       logger.error("executing find All in organisation");
       logger.info("user id: " + userData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -109,14 +109,14 @@ module.exports.findOne = async (req, res) => {
           } else {
             logger.error("executing find one in organisation");
             logger.info("user id: " + userData.userId);
-            logger.error(constant.ORGANISATION_NOT_FOUND_MESSAGE);
+            logger.error(resConstants.ORGANISATION_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
-                  constant.ORGANISATION_NOT_FOUND_CODE,
-                  constant.ORGANISATION_NOT_FOUND_MESSAGE
+                  resConstants.ORGANISATION_NOT_FOUND_CODE,
+                  resConstants.ORGANISATION_NOT_FOUND_MESSAGE
                 )
               );
           }
@@ -124,14 +124,14 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("executing find one in organisation");
           logger.info("user id: " + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -142,8 +142,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_ORGANISATION_CODE,
-          constant.INVALID_ORGANISATION_MESSAGE,
+          resConstants.INVALID_ORGANISATION_CODE,
+          resConstants.INVALID_ORGANISATION_MESSAGE,
           err.errors
         ),
       });
@@ -163,12 +163,12 @@ module.exports.update = async (req, res) => {
       if (!valid) {
         logger.error("executing update organisation");
         logger.info("organisation id: " + id);
-        logger.error(constant.INVALID_ORGANISATION_MESSAGE);
+        logger.error(resConstants.INVALID_ORGANISATION_MESSAGE);
         logger.info("=========================================");
         res.status(400).send({
           error: {
-            code: constant.INVALID_ORGANISATION_CODE,
-            message: constant.INVALID_ORGANISATION_MESSAGE,
+            code: resConstants.INVALID_ORGANISATION_CODE,
+            message: resConstants.INVALID_ORGANISATION_MESSAGE,
             fields: {
               id: "should be number",
             },
@@ -205,14 +205,14 @@ module.exports.update = async (req, res) => {
                 } else {
                   logger.error("Error executing update organisation");
                   logger.info("user id: " + userData.userId);
-                  logger.error(constant.ORGANISATION_NOT_FOUND_MESSAGE);
+                  logger.error(resConstants.ORGANISATION_NOT_FOUND_MESSAGE);
                   logger.info("=========================================");
                   res
                     .status(404)
                     .send(
                       utility.getErrorResponseObject(
-                        constant.ORGANISATION_NOT_FOUND_CODE,
-                        constant.ORGANISATION_NOT_FOUND_MESSAGE
+                        resConstants.ORGANISATION_NOT_FOUND_CODE,
+                        resConstants.ORGANISATION_NOT_FOUND_MESSAGE
                       )
                     );
                 }
@@ -220,14 +220,14 @@ module.exports.update = async (req, res) => {
               .catch(() => {
                 logger.error("Error executing update organisation");
                 logger.info("user id: " + userData.userId);
-                logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+                logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
                 logger.info("=========================================");
                 res
                   .status(500)
                   .send(
                     utility.getErrorResponseObject(
-                      constant.INTRENAL_SERVER_ERROR_CODE,
-                      constant.INTRENAL_SERVER_ERROR_MESSAGE
+                      resConstants.INTRENAL_SERVER_ERROR_CODE,
+                      resConstants.INTRENAL_SERVER_ERROR_MESSAGE
                     )
                   );
               });
@@ -238,8 +238,8 @@ module.exports.update = async (req, res) => {
             logger.info("=========================================");
             res.status(400).send({
               error: utility.getFormattedErrorObj(
-                constant.INVALID_ORGANISATION_CODE,
-                constant.INVALID_ORGANISATION_MESSAGE,
+                resConstants.INVALID_ORGANISATION_CODE,
+                resConstants.INVALID_ORGANISATION_MESSAGE,
                 err.errors
               ),
             });

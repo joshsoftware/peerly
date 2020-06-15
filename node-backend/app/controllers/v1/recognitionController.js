@@ -5,7 +5,7 @@ const log4js = require("log4js");
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
-const constant = require("../../constant/resConstants");
+const resConstants = require("../../constant/responseConstants");
 const validationSchema = require("./validationSchema/recognitionValidationSchema");
 require("../../config/loggerConfig");
 
@@ -23,14 +23,14 @@ const validateCoreValue = async (req, res, tokenData) => {
       if (data === null) {
         logger.error("Error executing validate core value");
         logger.info("user id: " + tokenData.userId);
-        logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
+        logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.CORE_VALUE_NOT_FOUND_CODE,
-              constant.CORE_VALUE_NOT_FOUND_MESSAGE
+              resConstants.CORE_VALUE_NOT_FOUND_CODE,
+              resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
             )
           );
       } else if (data.dataValues.org_id == tokenData.orgId) {
@@ -39,14 +39,14 @@ const validateCoreValue = async (req, res, tokenData) => {
       } else {
         logger.error("Error executing validate core value");
         logger.info("user id: " + tokenData.userId);
-        logger.error(constant.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE);
+        logger.error(resConstants.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.CORE_VALUE_NOT_FOUND_CODE,
-              constant.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE
+              resConstants.CORE_VALUE_NOT_FOUND_CODE,
+              resConstants.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE
             )
           );
       }
@@ -54,14 +54,14 @@ const validateCoreValue = async (req, res, tokenData) => {
     .catch(() => {
       logger.error("Error executing validate core value");
       logger.info("user id: " + tokenData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -73,14 +73,14 @@ const validateGivenFor = async (req, res, tokenData) => {
       if (data === null) {
         logger.error("Error executing validate given for");
         logger.info("user id: " + tokenData.userId);
-        logger.error(constant.USER_NOT_FOUND_MESSAGE);
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.USER_NOT_FOUND_CODE,
-              constant.USER_NOT_FOUND_MESSAGE
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
             )
           );
       } else if (data.dataValues.org_id == tokenData.orgId) {
@@ -88,14 +88,14 @@ const validateGivenFor = async (req, res, tokenData) => {
       } else {
         logger.error("Error executing validate given for");
         logger.info("user id: " + tokenData.userId);
-        logger.error(constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
+        logger.error(resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.USER_NOT_FOUND_CODE,
-              constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
             )
           );
       }
@@ -103,14 +103,14 @@ const validateGivenFor = async (req, res, tokenData) => {
     .catch(() => {
       logger.error("Error executing validate given for");
       logger.info("user id: " + tokenData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -131,14 +131,14 @@ const addRecognition = async (req, res, recognitions) => {
     .catch(() => {
       logger.error("Error executing create recognition");
       logger.info("user id: " + tokenData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -171,8 +171,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_RECOGNITION_CODE,
-          constant.INVALID_RECOGNITION_MESSAGE,
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -208,14 +208,14 @@ module.exports.findOne = async (req, res) => {
           if (data == null /*eslint-disable-line no-eq-null*/) {
             logger.error("Error executing find one in recognition");
             logger.info("user id: " + userData.userId);
-            logger.error(constant.RECOGNITION_NOT_FOUND_MESSAGE);
+            logger.error(resConstants.RECOGNITION_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
-                  constant.RECOGNITION_NOT_FOUND_CODE,
-                  constant.RECOGNITION_NOT_FOUND_MESSAGE
+                  resConstants.RECOGNITION_NOT_FOUND_CODE,
+                  resConstants.RECOGNITION_NOT_FOUND_MESSAGE
                 )
               );
           } else {
@@ -227,14 +227,14 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("Error executing find one in recognition");
           logger.info("user id: " + userData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -245,8 +245,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_RECOGNITION_CODE,
-          constant.INVALID_RECOGNITION_MESSAGE,
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -319,15 +319,15 @@ module.exports.findAll = async (req, res) => {
             logger.error("Error executing getHi5Count");
             logger.info("user id: " + tokenData.userId);
             logger.error(
-              constant.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
+              resConstants.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
             );
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
-                  constant.RECOGNITION_NOT_FOUND_CODE,
-                  constant.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
+                  resConstants.RECOGNITION_NOT_FOUND_CODE,
+                  resConstants.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
                 )
               );
           }
@@ -335,14 +335,14 @@ module.exports.findAll = async (req, res) => {
         .catch(() => {
           logger.error("Error executing find all in recognition");
           logger.info("user id: " + tokenData.userId);
-          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
           res
             .status(500)
             .send(
               utility.getErrorResponseObject(
-                constant.INTRENAL_SERVER_ERROR_CODE,
-                constant.INTRENAL_SERVER_ERROR_MESSAGE
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
               )
             );
         });
@@ -353,8 +353,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_RECOGNITION_CODE,
-          constant.INVALID_RECOGNITION_MESSAGE,
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -368,27 +368,27 @@ const getHi5Count = async (req, res, id, orgId) => {
       if (data === null) {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error(constant.USER_NOT_FOUND_MESSAGE);
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.USER_NOT_FOUND_CODE,
-              constant.USER_NOT_FOUND_MESSAGE
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
             )
           );
       } else if (data.dataValues.org_id !== orgId) {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error(constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
+        logger.error(resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.USER_NOT_FOUND_CODE,
-              constant.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
             )
           );
       } else if (data.dataValues.hi5_quota_balance > 0) {
@@ -396,14 +396,14 @@ const getHi5Count = async (req, res, id, orgId) => {
       } else {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error(constant.EMPTY_HI5_BALANCE_MESSAGE);
+        logger.error(resConstants.EMPTY_HI5_BALANCE_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.EMPTY_HI5_BALANCE_CODE,
-              constant.EMPTY_HI5_BALANCE_MESSAGE
+              resConstants.EMPTY_HI5_BALANCE_CODE,
+              resConstants.EMPTY_HI5_BALANCE_MESSAGE
             )
           );
       }
@@ -411,14 +411,14 @@ const getHi5Count = async (req, res, id, orgId) => {
     .catch(() => {
       logger.error("Error executing getHi5Count");
       logger.info("user id: " + userData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -441,14 +441,14 @@ const validateRecognition = async (req, res, id) => {
       if (data == null /*eslint-disable-line no-eq-null*/) {
         logger.error("Error executing validateRecognition");
         logger.info("user id: " + userData.userId);
-        logger.error(constant.RECOGNITION_NOT_FOUND_MESSAGE);
+        logger.error(resConstants.RECOGNITION_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.RECOGNITION_NOT_FOUND_CODE,
-              constant.RECOGNITION_NOT_FOUND_MESSAGE
+              resConstants.RECOGNITION_NOT_FOUND_CODE,
+              resConstants.RECOGNITION_NOT_FOUND_MESSAGE
             )
           );
       } else {
@@ -458,14 +458,14 @@ const validateRecognition = async (req, res, id) => {
     .catch(() => {
       logger.error("Error executing validateRecognition");
       logger.info("user id: " + userData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -492,14 +492,14 @@ const decrementHi5Count = async (req, res, id, orgId) => {
       } else {
         logger.error("Error executing decrerment hi5 count");
         logger.info("user id: " + userData.userId);
-        logger.error(constant.USER_NOT_FOUND_MESSAGE);
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
         res
           .status(404)
           .send(
             utility.getErrorResponseObject(
-              constant.USER_NOT_FOUND_CODE,
-              constant.USER_NOT_FOUND_MESSAGE
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
             )
           );
       }
@@ -507,14 +507,14 @@ const decrementHi5Count = async (req, res, id, orgId) => {
     .catch(() => {
       logger.error("Error executing decrerment hi5 count");
       logger.info("user id: " + userData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -538,14 +538,14 @@ const addHi5Entry = async (req, res, data, orgId) => {
     .catch(() => {
       logger.error("Error executing find users by organisation");
       logger.info("user id: " + userData.userId);
-      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
         .status(500)
         .send(
           utility.getErrorResponseObject(
-            constant.INTRENAL_SERVER_ERROR_CODE,
-            constant.INTRENAL_SERVER_ERROR_MESSAGE
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
           )
         );
     });
@@ -581,8 +581,8 @@ module.exports.giveHi5 = async (req, res) => {
           logger.info("=========================================");
           res.status(400).send({
             error: utility.getFormattedErrorObj(
-              constant.INVALID_RECOGNITION_CODE,
-              constant.INVALID_RECOGNITION_MESSAGE,
+              resConstants.INVALID_RECOGNITION_CODE,
+              resConstants.INVALID_RECOGNITION_MESSAGE,
               err.errors
             ),
           });
@@ -594,8 +594,8 @@ module.exports.giveHi5 = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          constant.INVALID_RECOGNITION_CODE,
-          constant.INVALID_RECOGNITION_MESSAGE,
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
