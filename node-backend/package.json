@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "export NODE_ENV=test && mocha 'app/test/orgnization.test.js'",
+    "test": "export NODE_ENV=test && mocha 'app/test/*.test.js'",
     "lint": "lint-staged"
   },
   "husky": {
