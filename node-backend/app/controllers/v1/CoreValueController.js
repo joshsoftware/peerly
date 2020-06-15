@@ -128,13 +128,16 @@ module.exports.findOne = async (req, res) => {
           } else {
             logger.error("executing findOne core value");
             logger.info("user id:" + userData.userId);
-            logger.error("core value not found for specified id");
+            logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "core value not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.CORE_VALUE_NOT_FOUND_CODE,
+                  constant.CORE_VALUE_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -206,13 +209,16 @@ module.exports.update = async (req, res) => {
           } else {
             logger.error("executing update in core value");
             logger.info("user id:" + userData.userId);
-            logger.error("core value not found for specified id");
+            logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "core value not found for specified id",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.CORE_VALUE_NOT_FOUND_CODE,
+                  constant.CORE_VALUE_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -270,13 +276,16 @@ module.exports.getCoreValueById = async (req, res) => {
           } else {
             logger.error("executing getCoreValueById");
             logger.info("user id:" + userData.userId);
-            logger.error("core value not found for specified id");
+            logger.error(constant.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "core value not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.CORE_VALUE_NOT_FOUND_CODE,
+                  constant.CORE_VALUE_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
