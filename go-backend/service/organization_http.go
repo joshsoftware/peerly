@@ -2,12 +2,11 @@ package service
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
+	logger "github.com/sirupsen/logrus"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
-	logger "github.com/sirupsen/logrus"
 )
 
 func getOrganizationByDomainNameHandler(deps Dependencies) http.HandlerFunc {

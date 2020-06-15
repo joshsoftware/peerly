@@ -1,0 +1,66 @@
+[2020-06-15T12:06:20.174] [INFO] default - executing create organisation
+[2020-06-15T12:06:20.174] [INFO] default - user id: 1
+[2020-06-15T12:06:20.174] [INFO] default - {"name":"Brandy","contact_email":"Cyrus.Jaskolski@yahoo.com","domain_name":"perry.biz","subscription_status":0,"subscription_valid_upto":5,"hi5_limit":1,"hi5_quota_renewal_frequency":"qui","timezone":"Sipesfort"}
+[2020-06-15T12:06:20.174] [INFO] default - =========================================
+[2020-06-15T12:06:20.219] [INFO] default - executing update organisation
+[2020-06-15T12:06:20.219] [INFO] default - organisation id: 544
+[2020-06-15T12:06:20.220] [INFO] default - {"name":"Brandy","contact_email":"Cyrus.Jaskolski@yahoo.com","domain_name":"perry.biz","subscription_status":0,"subscription_valid_upto":5,"hi5_limit":1,"hi5_quota_renewal_frequency":"qui","timezone":"Sipesfort"}
+[2020-06-15T12:06:20.220] [INFO] default - =========================================
+[2020-06-15T12:06:20.232] [ERROR] default - executing find one in organisation
+[2020-06-15T12:06:20.233] [INFO] default - user id: 1
+[2020-06-15T12:06:20.233] [ERROR] default - Organisation with specified id not found
+[2020-06-15T12:06:20.233] [INFO] default - =========================================
+[2020-06-15T12:06:20.240] [ERROR] default - validation error
+[2020-06-15T12:06:20.240] [ERROR] default - {"name":"ValidationError","value":{"id":null},"errors":[{"id":"should be number "}],"inner":[{"name":"ValidationError","value":null,"path":"id","type":"typeError","errors":[{"id":"should be number "}],"inner":[],"message":{"id":"should be number "},"params":{"path":"id","value":null,"originalValue":"jiiuj","type":"number"}}],"message":{"id":"should be number "}}
+[2020-06-15T12:06:20.240] [INFO] default - =========================================
+[2020-06-15T12:06:20.247] [INFO] default - executing create organisation
+[2020-06-15T12:06:20.247] [INFO] default - user id: 1
+[2020-06-15T12:06:20.247] [INFO] default - {"name":"Brandy","contact_email":"Cyrus.Jaskolski@yahoo.com","domain_name":"perry.biz","subscription_status":0,"subscription_valid_upto":5,"hi5_limit":"abc","hi5_quota_renewal_frequency":"qui","timezone":"Sipesfort"}
+[2020-06-15T12:06:20.247] [INFO] default - =========================================
+[2020-06-15T12:06:20.247] [ERROR] default - validation error
+[2020-06-15T12:06:20.247] [ERROR] default - {"name":"ValidationError","value":{"timezone":"Sipesfort","hi5_quota_renewal_frequency":"qui","hi5_limit":null,"subscription_valid_upto":5,"subscription_status":0,"domain_name":"perry.biz","contact_email":"Cyrus.Jaskolski@yahoo.com","name":"Brandy"},"errors":[{"hi5_limit":"should be number"}],"inner":[{"name":"ValidationError","value":null,"path":"hi5_limit","type":"typeError","errors":[{"hi5_limit":"should be number"}],"inner":[],"message":{"hi5_limit":"should be number"},"params":{"path":"hi5_limit","value":null,"originalValue":"abc","type":"number"}}],"message":{"hi5_limit":"should be number"}}
+[2020-06-15T12:06:20.247] [INFO] default - =========================================
+[2020-06-15T12:06:20.260] [INFO] default - executing update organisation
+[2020-06-15T12:06:20.260] [INFO] default - organisation id: 1
+[2020-06-15T12:06:20.260] [INFO] default - {"name":"Brandy","contact_email":"Cyrus.Jaskolski@yahoo.com","domain_name":"perry.biz","subscription_status":0,"subscription_valid_upto":5,"hi5_limit":"abc","hi5_quota_renewal_frequency":"qui","timezone":"Sipesfort"}
+[2020-06-15T12:06:20.260] [INFO] default - =========================================
+[2020-06-15T12:06:20.261] [ERROR] default - validation error
+[2020-06-15T12:06:20.261] [ERROR] default - {"name":"ValidationError","value":{"timezone":"Sipesfort","hi5_quota_renewal_frequency":"qui","hi5_limit":null,"subscription_valid_upto":5,"subscription_status":0,"domain_name":"perry.biz","contact_email":"Cyrus.Jaskolski@yahoo.com","name":"Brandy"},"errors":[{"hi5_limit":"should be number"}],"inner":[{"name":"ValidationError","value":null,"path":"hi5_limit","type":"typeError","errors":[{"hi5_limit":"should be number"}],"inner":[],"message":{"hi5_limit":"should be number"},"params":{"path":"hi5_limit","value":null,"originalValue":"abc","type":"number"}}],"message":{"hi5_limit":"should be number"}}
+[2020-06-15T12:06:20.261] [INFO] default - =========================================
+[2020-06-15T12:06:20.266] [ERROR] default - executing update organisation
+[2020-06-15T12:06:20.266] [INFO] default - organisation id: udc
+[2020-06-15T12:06:20.266] [ERROR] default - invalid orgnisation
+[2020-06-15T12:06:20.266] [INFO] default - =========================================
+[2020-06-15T12:06:57.135] [INFO] default - executing create organisation
+[2020-06-15T12:06:57.136] [INFO] default - user id: 1
+[2020-06-15T12:06:57.136] [INFO] default - {"name":"Jo","contact_email":"Misael.Zulauf35@hotmail.com","domain_name":"thad.org","subscription_status":0,"subscription_valid_upto":3,"hi5_limit":1,"hi5_quota_renewal_frequency":"est","timezone":"Riceburgh"}
+[2020-06-15T12:06:57.136] [INFO] default - =========================================
+[2020-06-15T12:06:57.178] [INFO] default - executing update organisation
+[2020-06-15T12:06:57.178] [INFO] default - organisation id: 545
+[2020-06-15T12:06:57.178] [INFO] default - {"name":"Jo","contact_email":"Misael.Zulauf35@hotmail.com","domain_name":"thad.org","subscription_status":0,"subscription_valid_upto":3,"hi5_limit":1,"hi5_quota_renewal_frequency":"est","timezone":"Riceburgh"}
+[2020-06-15T12:06:57.178] [INFO] default - =========================================
+[2020-06-15T12:06:57.191] [ERROR] default - executing find one in organisation
+[2020-06-15T12:06:57.191] [INFO] default - user id: 1
+[2020-06-15T12:06:57.191] [ERROR] default - Organisation with specified id not found
+[2020-06-15T12:06:57.191] [INFO] default - =========================================
+[2020-06-15T12:06:57.198] [ERROR] default - validation error
+[2020-06-15T12:06:57.199] [ERROR] default - {"name":"ValidationError","value":{"id":null},"errors":[{"id":"should be number "}],"inner":[{"name":"ValidationError","value":null,"path":"id","type":"typeError","errors":[{"id":"should be number "}],"inner":[],"message":{"id":"should be number "},"params":{"path":"id","value":null,"originalValue":"jiiuj","type":"number"}}],"message":{"id":"should be number "}}
+[2020-06-15T12:06:57.199] [INFO] default - =========================================
+[2020-06-15T12:06:57.205] [INFO] default - executing create organisation
+[2020-06-15T12:06:57.206] [INFO] default - user id: 1
+[2020-06-15T12:06:57.206] [INFO] default - {"name":"Jo","contact_email":"Misael.Zulauf35@hotmail.com","domain_name":"thad.org","subscription_status":0,"subscription_valid_upto":3,"hi5_limit":"abc","hi5_quota_renewal_frequency":"est","timezone":"Riceburgh"}
+[2020-06-15T12:06:57.206] [INFO] default - =========================================
+[2020-06-15T12:06:57.206] [ERROR] default - validation error
+[2020-06-15T12:06:57.206] [ERROR] default - {"name":"ValidationError","value":{"timezone":"Riceburgh","hi5_quota_renewal_frequency":"est","hi5_limit":null,"subscription_valid_upto":3,"subscription_status":0,"domain_name":"thad.org","contact_email":"Misael.Zulauf35@hotmail.com","name":"Jo"},"errors":[{"hi5_limit":"should be number"}],"inner":[{"name":"ValidationError","value":null,"path":"hi5_limit","type":"typeError","errors":[{"hi5_limit":"should be number"}],"inner":[],"message":{"hi5_limit":"should be number"},"params":{"path":"hi5_limit","value":null,"originalValue":"abc","type":"number"}}],"message":{"hi5_limit":"should be number"}}
+[2020-06-15T12:06:57.206] [INFO] default - =========================================
+[2020-06-15T12:06:57.219] [INFO] default - executing update organisation
+[2020-06-15T12:06:57.219] [INFO] default - organisation id: 1
+[2020-06-15T12:06:57.219] [INFO] default - {"name":"Jo","contact_email":"Misael.Zulauf35@hotmail.com","domain_name":"thad.org","subscription_status":0,"subscription_valid_upto":3,"hi5_limit":"abc","hi5_quota_renewal_frequency":"est","timezone":"Riceburgh"}
+[2020-06-15T12:06:57.219] [INFO] default - =========================================
+[2020-06-15T12:06:57.220] [ERROR] default - validation error
+[2020-06-15T12:06:57.220] [ERROR] default - {"name":"ValidationError","value":{"timezone":"Riceburgh","hi5_quota_renewal_frequency":"est","hi5_limit":null,"subscription_valid_upto":3,"subscription_status":0,"domain_name":"thad.org","contact_email":"Misael.Zulauf35@hotmail.com","name":"Jo"},"errors":[{"hi5_limit":"should be number"}],"inner":[{"name":"ValidationError","value":null,"path":"hi5_limit","type":"typeError","errors":[{"hi5_limit":"should be number"}],"inner":[],"message":{"hi5_limit":"should be number"},"params":{"path":"hi5_limit","value":null,"originalValue":"abc","type":"number"}}],"message":{"hi5_limit":"should be number"}}
+[2020-06-15T12:06:57.220] [INFO] default - =========================================
+[2020-06-15T12:06:57.227] [ERROR] default - executing update organisation
+[2020-06-15T12:06:57.227] [INFO] default - organisation id: udc
+[2020-06-15T12:06:57.227] [ERROR] default - invalid orgnisation
+[2020-06-15T12:06:57.227] [INFO] default - =========================================

@@ -61,5 +61,15 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Users.associate = (models) => {
+    Users.hasMany(models.recognitions, {
+      foreignKey: "given_for",
+      as: "given_for_user",
+    });
+    Users.hasMany(models.recognitions, {
+      foreignKey: "given_by",
+      as: "given_by_user",
+    });
+  };
   return Users;
 };

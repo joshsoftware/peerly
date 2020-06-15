@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render plus sign component 1`] = `
+<DocumentFragment>
+  .c0 {
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  font-size: 48px;
+  color: var(--white);
+}
+
+<div
+    class="c0"
+    data-testid="plusSignText"
+    font-size="48px"
+  >
+    +
+  </div>
+</DocumentFragment>
+`;

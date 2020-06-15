@@ -16,6 +16,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         notNull: true,
       },
+      thumbnail_url: {
+        type: Sequelize.TEXT,
+        notNull: false,
+      },
       description: {
         type: Sequelize.STRING,
         length: 45,
@@ -31,5 +35,8 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Core_values.associate = (models) => {
+    Core_values.hasMany(models.recognitions, { foreignKey: "core_value_id" });
+  };
   return Core_values;
 };

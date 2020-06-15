@@ -5,7 +5,7 @@ const data = require("./data");
 let path = require("path");
 let dotEnvPath = path.resolve("../.env");
 require("dotenv").config({ path: dotEnvPath });
-const db = require("./dbConnection");
+const db = require("../models/sequelize");
 
 const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 const token = process.env.ACCESS_TOKEN;
@@ -38,6 +38,19 @@ describe("test cases for login", function () {
       });
   });
 
+  it("should give bad request error", function (done) {
+    server
+      .post("/oauth/google")
+      .send({
+        access_token: "",
+      })
+      .expect("Content-type", /json/)
+      .expect(400)
+      .end(function (err, res) {
+        res.status.should.equal(400);
+        done();
+      });
+  });
   it("should unauthorize user", function (done) {
     server
       .post("/oauth/google")

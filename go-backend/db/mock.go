@@ -132,6 +132,11 @@ func (m *DBMockStore) UpdateOrganization(ctx context.Context, org Organization, 
 	return args.Get(0).(Organization), args.Error(1)
 }
 
+func (m *DBMockStore) CreateRecognitionHi5(ctx context.Context, recognitionHi5 RecognitionHi5, recognitionID int) (err error) {
+	args := m.Called(ctx, recognitionHi5, recognitionID)
+	return args.Error(0)
+}
+
 func (m *DBMockStore) GetUser(ctx context.Context, id int) (user User, err error) {
 	args := m.Called(ctx, id)
 	return args.Get(0).(User), args.Error(1)

@@ -3,18 +3,13 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"joshsoftware/peerly/db"
-	"log"
-	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
-
 	"github.com/bxcodec/faker/v3"
-	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+	"joshsoftware/peerly/db"
+	"log"
+	"net/http"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -27,12 +22,6 @@ type UsersHandlerTestSuite struct {
 
 func (suite *UsersHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
-}
-
-func TestExampleTestSuite(t *testing.T) {
-	suite.Run(t, new(UsersHandlerTestSuite))
-	suite.Run(t, new(CoreValueHandlerTestSuite))
-	suite.Run(t, new(OrganizationHandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
@@ -101,24 +90,6 @@ func (suite *UsersHandlerTestSuite) TestListUsersWhenDBFailure() {
 
 	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
 	suite.dbMock.AssertExpectations(suite.T())
-}
-
-// path: is used to configure router path (eg: /users/{id})
-// requestURL: current request path (eg: /users/1)
-func makeHTTPCall(method, path, requestURL, body string, handlerFunc http.HandlerFunc) (recorder *httptest.ResponseRecorder) {
-	// create a http request using the given parameters
-	req, _ := http.NewRequest(method, requestURL, strings.NewReader(body))
-
-	// test recorder created for capturing api responses
-	recorder = httptest.NewRecorder()
-
-	// create a router to serve the handler in test with the prepared request
-	router := mux.NewRouter()
-	router.HandleFunc(path, handlerFunc).Methods(method)
-
-	// serve the request and write the response to recorder
-	router.ServeHTTP(recorder, req)
-	return
 }
 
 func (suite *UsersHandlerTestSuite) TestUpdateUserSuccess() {
