@@ -1,57 +1,40 @@
 "use strict";
-var dbm;
-var type; // eslint-disable-line no-unused-vars
-var seed; // eslint-disable-line no-unused-vars
-exports.setup = /*eslint-disable-line node/exports-style*/ (
-  options,
-  seedLink
-) => {
-  dbm = options.dbmigrate;
-  type = dbm.dataType;
-  seed = seedLink;
-};
-exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.createTable(
-    "user_blacklisted_tokens",
-    {
-      id: {
-        type: "int",
-        notNull: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      user_id: {
-        type: "int",
-        notNull: true,
-        foreignKey: {
-          name: "UserBlacklistedToken_userID_fk",
-          table: "users",
-          mapping: "id",
-          rules: {
-            onDelete: "NO ACTION",
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable(
+      "user_blacklisted_tokens",
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        user_id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+            model: "users",
+            key: "id",
           },
         },
+        token: {
+          type: Sequelize.TEXT,
+          allowNull: false,
+        },
+        expires_at: {
+          type: Sequelize.BIGINT,
+          allowNull: false,
+        },
       },
-      token: {
-        type: "text",
-        notNull: true,
-      },
-      expires_at: {
-        type: "bigint",
-        notNull: true,
-      },
-    },
-    function (err) {
-      if (err) return callback(err);
-      return callback();
-    }
-  );
-};
-
-exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.dropTable("user_blacklisted_tokens", callback);
-};
-
-exports._meta = /*eslint-disable-line node/exports-style*/ {
-  "version": 1 // eslint-disable-line prettier/prettier
+      {
+        timestamp: false,
+        createdAt: false,
+        updatedAt: false,
+      }
+    );
+  },
+  down: (queryInterface) => {
+    return queryInterface.dropTable("user_blacklisted_tokens");
+  },
 };
