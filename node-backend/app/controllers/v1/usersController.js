@@ -101,8 +101,8 @@ module.exports.findUsersByOrg = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid query params",
-          "invalid query params data",
+          constant.INVALID_QUERY_PARAMS_CODE,
+          constant.INVALID_QUERY_PARAMS_MESSAGE,
           err.errors
         ),
       });
@@ -158,14 +158,17 @@ module.exports.getProfileById = async (req, res) => {
               data: data,
             });
           } else {
-            logger.error("user not found for specified id");
+            logger.error(constant.USER_NOT_FOUND_MESSAGE);
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "profile not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.USER_NOT_FOUND_CODE,
+                  constant.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -189,8 +192,8 @@ module.exports.getProfileById = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          constant.INVALID_USER_CODE,
+          constant.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
@@ -224,14 +227,17 @@ module.exports.updateUser = async (req, res) => {
               data: updateUsers,
             });
           } else {
-            logger.error("user not found for specified id");
+            logger.error(constant.USER_NOT_FOUND_MESSAGE);
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "user not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.USER_NOT_FOUND_CODE,
+                  constant.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -255,8 +261,8 @@ module.exports.updateUser = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          constant.INVALID_USER_CODE,
+          constant.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
@@ -291,14 +297,17 @@ module.exports.updateUserByAdmin = async (req, res) => {
               data: updateUserByAdmin,
             });
           } else {
-            logger.error("user not found for specified id");
+            logger.error(constant.USER_NOT_FOUND_MESSAGE);
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "user not found for specified id",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.USER_NOT_FOUND_CODE,
+                  constant.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -322,8 +331,8 @@ module.exports.updateUserByAdmin = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          constant.INVALID_USER_CODE,
+          constant.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
@@ -357,13 +366,16 @@ module.exports.deleteUser = async (req, res) => {
           } else {
             logger.error("error at executing soft delete user");
             logger.info("user id: " + userData.userId);
-            logger.error("user not found for specified id " + req.params.id);
+            logger.error(constant.USER_NOT_FOUND_MESSAGE + req.params.id);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "user not found for specified id",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.USER_NOT_FOUND_CODE,
+                  constant.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
@@ -388,8 +400,8 @@ module.exports.deleteUser = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          constant.INVALID_USER_CODE,
+          constant.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
