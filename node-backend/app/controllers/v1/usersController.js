@@ -6,6 +6,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validateSchema = require("./validationSchema/UsersValidationSchema");
+const constant = require("../../constant/responseConstants");
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
@@ -53,13 +54,16 @@ module.exports.findUsersByOrg = async (req, res) => {
             .catch(() => {
               logger.error("Error executing find users by organisation");
               logger.info("user id: " + userData.userId);
-              logger.error("internal server error");
+              logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
               logger.info("=========================================");
-              res.status(500).send({
-                error: {
-                  message: "internal server error",
-                },
-              });
+              res
+                .status(500)
+                .send(
+                  utility.getErrorResponseObject(
+                    constant.INTRENAL_SERVER_ERROR_CODE,
+                    constant.INTRENAL_SERVER_ERROR_MESSAGE
+                  )
+                );
             });
         }
       } else {
@@ -78,13 +82,16 @@ module.exports.findUsersByOrg = async (req, res) => {
           .catch(() => {
             logger.error("Error executing find users by organisation");
             logger.info("user id: " + userData.userId);
-            logger.error("internal server error");
+            logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
             logger.info("=========================================");
-            res.status(500).send({
-              error: {
-                message: "internal server error",
-              },
-            });
+            res
+              .status(500)
+              .send(
+                utility.getErrorResponseObject(
+                  constant.INTRENAL_SERVER_ERROR_CODE,
+                  constant.INTRENAL_SERVER_ERROR_MESSAGE
+                )
+              );
           });
       }
     })
@@ -118,13 +125,16 @@ module.exports.getProfile = async (req, res) => {
     .catch(() => {
       logger.error("executing getProfile");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            constant.INTRENAL_SERVER_ERROR_CODE,
+            constant.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -161,13 +171,16 @@ module.exports.getProfileById = async (req, res) => {
         .catch(() => {
           logger.error("Error in getProfileById");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -224,13 +237,16 @@ module.exports.updateUser = async (req, res) => {
         .catch(() => {
           logger.error("Error in updating user");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -288,13 +304,16 @@ module.exports.updateUserByAdmin = async (req, res) => {
         .catch(() => {
           logger.error("Error in updating user");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -350,13 +369,16 @@ module.exports.deleteUser = async (req, res) => {
         .catch(() => {
           logger.error("error at executing soft delete user");
           logger.error("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(constant.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                constant.INTRENAL_SERVER_ERROR_CODE,
+                constant.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
