@@ -159,8 +159,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          constant.INVALID_RECOGNITION_CODE,
+          constant.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -230,8 +230,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          constant.INVALID_RECOGNITION_CODE,
+          constant.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -335,8 +335,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          constant.INVALID_RECOGNITION_CODE,
+          constant.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -548,8 +548,8 @@ module.exports.giveHi5 = async (req, res) => {
           logger.info("=========================================");
           res.status(400).send({
             error: utility.getFormattedErrorObj(
-              "invalid recognition",
-              "invalid recognition Data",
+              constant.INVALID_RECOGNITION_CODE,
+              constant.INVALID_RECOGNITION_MESSAGE,
               err.errors
             ),
           });
@@ -561,8 +561,8 @@ module.exports.giveHi5 = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          constant.INVALID_RECOGNITION_CODE,
+          constant.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
