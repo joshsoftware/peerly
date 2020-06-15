@@ -61,8 +61,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid organisation",
-          "Invalid organisation Data",
+          constant.INVALID_ORGANISATION_CODE,
+          constant.INVALID_ORGANISATION_MESSAGE,
           err.errors
         ),
       });
@@ -139,8 +139,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid orgnisation",
-          "Invalid value for parameter id",
+          constant.INVALID_ORGANISATION_CODE,
+          constant.INVALID_ORGANISATION_MESSAGE,
           err.errors
         ),
       });
@@ -232,8 +232,8 @@ module.exports.update = async (req, res) => {
             logger.info("=========================================");
             res.status(400).send({
               error: utility.getFormattedErrorObj(
-                "invalid orgnisation",
-                "Invalid organisation Data",
+                constant.INVALID_ORGANISATION_CODE,
+                constant.INVALID_ORGANISATION_MESSAGE,
                 err.errors
               ),
             });
