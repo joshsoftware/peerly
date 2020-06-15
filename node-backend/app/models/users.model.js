@@ -64,11 +64,11 @@ module.exports = (sequelize, Sequelize) => {
   Users.associate = (models) => {
     Users.hasMany(models.recognitions, {
       foreignKey: "given_for",
-      as: "givenFor",
+      as: "given_for_user",
     });
     Users.hasMany(models.recognitions, {
       foreignKey: "given_by",
-      as: "givenBy",
+      as: "given_by_user",
     });
   };
   return Users;

@@ -169,12 +169,12 @@ module.exports.findOne = async (req, res) => {
           {
             model: db.users,
             attributes: ["id", "first_name", "last_name", "profile_image_url"],
-            as: "givenFor",
+            as: "given_for_user",
           },
           {
             model: db.users,
             attributes: ["id", "first_name", "last_name", "profile_image_url"],
-            as: "givenBy",
+            as: "given_by_user",
           },
           {
             model: db.core_values,
@@ -263,13 +263,13 @@ module.exports.findAll = async (req, res) => {
           {
             model: db.users,
             attributes: ["id", "first_name", "last_name", "profile_image_url"],
-            as: "givenFor",
+            as: "given_for_user",
             where: createWhereClause(tokenData, filterData.given_for),
           },
           {
             model: db.users,
             attributes: ["id", "first_name", "last_name", "profile_image_url"],
-            as: "givenBy",
+            as: "given_by_user",
             where: createWhereClause(tokenData, filterData.given_by),
           },
           {
