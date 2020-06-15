@@ -6,7 +6,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validateSchema = require("./validationSchema/UsersValidationSchema");
-const constant = require("../../constant/responseConstants");
+const constant = require("../../constant/resConstants");
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();

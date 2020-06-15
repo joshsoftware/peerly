@@ -4,7 +4,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/orgValidationSchema");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
-const constant = require("../../constant/responseConstants");
+const constant = require("../../constant/resConstants");
 const Organizations = db.organizations;
 require("../../config/loggerConfig");
 

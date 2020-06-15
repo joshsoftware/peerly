@@ -19,3 +19,16 @@ module.exports.ORGANISATION_NOT_FOUND_CODE = "organisation-not-found";
 
 module.exports.ORGANISATION_NOT_FOUND_MESSAGE =
   "Organisation with specified id is not found";
+
+module.exports.INVALID_QUERY_PARAMS_VALUE_CODE = "invalid-query-params";
+
+module.exports.INVALID_QUERY_PARAMS_MESSAGE = "Invalid query params data";
+
+module.exports.INVALID_USER_CODE = "invalid-user";
+
+module.exports.INVALID_USER_MESSAGE = "Invalid user data";
+
+module.exports.ORGANISATION_NOT_FOUND_CODE = "user-not-found";
+
+module.exports.ORGANISATION_NOT_FOUND_MESSAGE =
+  "User with specified id is not found";
