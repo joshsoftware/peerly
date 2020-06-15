@@ -6,27 +6,39 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        notNull: true,
+        allowNull: false,
       },
       core_value_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
+        references: {
+          model: "core_values",
+          key: "id",
+        },
       },
       text: {
-        type: Sequelize.STRING,
-        notNull: true,
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       given_for: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       given_by: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       given_at: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {
@@ -35,5 +47,16 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Recognitions.associate = (models) => {
+    Recognitions.belongsTo(models.users, {
+      foreignKey: "given_for",
+      as: "given_for_user",
+    });
+    Recognitions.belongsTo(models.core_values, { foreignKey: "core_value_id" });
+    Recognitions.belongsTo(models.users, {
+      foreignKey: "given_by",
+      as: "given_by_user",
+    });
+  };
   return Recognitions;
 };

@@ -4,21 +4,29 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       badge_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        references: {
+          model: "badges",
+          key: "id",
+        },
+        allowNull: false,
       },
       user_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        allowNull: false,
       },
       obtained_at: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {

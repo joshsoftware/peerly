@@ -4,37 +4,43 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       recognition_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        references: {
+          model: "recognitions",
+          key: "id",
+        },
+        allowNull: false,
       },
       is_inappropriate: {
         type: Sequelize.BOOLEAN,
-        notNull: true,
+        allowNull: false,
       },
       moderator_comment: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: false,
+        type: Sequelize.STRING(45),
+        allowNull: false,
       },
       moderated_by: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        allowNull: false,
       },
       moderated_at: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {
       timestamp: false,
       createdAt: false,
       updatedAt: false,
-      freezeTableName: true,
     }
   );
   return Recognition_Moderation;

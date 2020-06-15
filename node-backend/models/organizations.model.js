@@ -4,45 +4,41 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       name: {
-        type: Sequelize.STRING,
-        length: 50,
-        notNull: true,
+        type: Sequelize.STRING(50),
+        allowNull: false,
       },
       contact_email: {
-        type: Sequelize.STRING,
-        length: 50,
-        notNull: false,
+        type: Sequelize.STRING(50),
+        allowNull: true,
       },
       domain_name: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
+        type: Sequelize.STRING(45),
+        allowNull: false,
       },
       subscription_status: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       subscription_valid_upto: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
       hi5_limit: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       hi5_quota_renewal_frequency: {
-        type: Sequelize.STRING,
-        length: 9,
-        notNull: false,
+        type: Sequelize.STRING(9),
+        allowNull: true,
       },
       timezone: {
         type: Sequelize.TEXT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {

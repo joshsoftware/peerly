@@ -4,55 +4,65 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       org_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
+        references: {
+          model: "organizations",
+          key: "id",
+        },
       },
       first_name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         length: 50,
-        notNull: true,
+        allowNull: false,
       },
       last_name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         length: 50,
-        notNull: false,
+        allowNull: true,
       },
       email: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         length: 50,
-        notNull: true,
+        allowNull: false,
       },
       display_name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(30),
         length: 30,
-        notNull: false,
+        allowNull: true,
       },
       profile_image_url: {
         type: Sequelize.TEXT,
-        notNull: false,
+        allowNull: true,
       },
       soft_delete: {
         type: Sequelize.BOOLEAN,
-        notNull: true,
+        allowNull: false,
       },
       role_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
+        references: {
+          model: "roles",
+          key: "id",
+        },
       },
       hi5_quota_balance: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       soft_delete_by: {
         type: Sequelize.INTEGER,
+        allowNull: true,
       },
       soft_delete_at: {
         type: Sequelize.BIGINT,
+        allowNull: true,
       },
     },
     {
@@ -61,5 +71,15 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Users.associate = (models) => {
+    Users.hasMany(models.recognitions, {
+      foreignKey: "given_for",
+      as: "given_for_user",
+    });
+    Users.hasMany(models.recognitions, {
+      foreignKey: "given_by",
+      as: "given_by_user",
+    });
+  };
   return Users;
 };

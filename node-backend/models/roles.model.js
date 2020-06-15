@@ -8,9 +8,8 @@ module.exports = (sequelize, Sequelize) => {
         primaryKey: true,
       },
       role: {
-        type: Sequelize.STRING,
-        length: 25,
-        notNull: true,
+        type: Sequelize.STRING(25),
+        allowNull: false,
       },
     },
     {
