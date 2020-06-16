@@ -24,3 +24,4 @@ const corsOption = {
 app.use("/", cors(corsOption), indexRoute); // eslint-disable-line no-undef
 const httpServer = http.createServer(app);
 httpServer.listen(process.env.HTTP_PORT || 8080); // eslint-disable-line no-undef
+module.exports = app;

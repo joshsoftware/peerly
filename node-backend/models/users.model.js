@@ -4,55 +4,53 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       org_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       first_name: {
-        type: Sequelize.STRING,
-        length: 50,
-        notNull: true,
+        type: Sequelize.STRING(50),
+        allowNull: false,
       },
       last_name: {
-        type: Sequelize.STRING,
-        length: 50,
-        notNull: false,
+        type: Sequelize.STRING(50),
+        allowNull: true,
       },
       email: {
-        type: Sequelize.STRING,
-        length: 50,
-        notNull: true,
+        type: Sequelize.STRING(50),
+        allowNull: false,
       },
       display_name: {
-        type: Sequelize.STRING,
-        length: 30,
-        notNull: false,
+        type: Sequelize.STRING(30),
+        allowNull: true,
       },
       profile_image_url: {
         type: Sequelize.TEXT,
-        notNull: false,
+        allowNull: true,
       },
       soft_delete: {
         type: Sequelize.BOOLEAN,
-        notNull: true,
+        allowNull: false,
       },
       role_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       hi5_quota_balance: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       soft_delete_by: {
         type: Sequelize.INTEGER,
+        allowNull: true,
       },
       soft_delete_at: {
         type: Sequelize.BIGINT,
+        allowNull: true,
       },
     },
     {
@@ -61,5 +59,15 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Users.associate = (models) => {
+    Users.hasMany(models.recognitions, {
+      foreignKey: "given_for",
+      as: "given_for_user",
+    });
+    Users.hasMany(models.recognitions, {
+      foreignKey: "given_by",
+      as: "given_by_user",
+    });
+  };
   return Users;
 };

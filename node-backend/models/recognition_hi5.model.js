@@ -6,29 +6,29 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        notNull: true,
+        allowNull: false,
       },
       recognition_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       comment: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
       given_by: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       given_at: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {
       timestamp: false,
       createdAt: false,
       updatedAt: false,
-      freezeTableName: true,
     }
   );
   return Recognition_hi5;

@@ -4,21 +4,21 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       user_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       token: {
         type: Sequelize.TEXT,
-        notNull: true,
+        allowNull: false,
       },
       expires_at: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {

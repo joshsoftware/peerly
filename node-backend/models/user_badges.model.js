@@ -4,21 +4,21 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       badge_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       user_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       obtained_at: {
         type: Sequelize.BIGINT,
-        notNull: true,
+        allowNull: false,
       },
     },
     {

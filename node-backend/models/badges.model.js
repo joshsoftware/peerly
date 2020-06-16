@@ -4,27 +4,29 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       name: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
+        type: Sequelize.STRING(45),
+        allowNull: false,
       },
       org_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        references: {
+          model: "organizations",
+          key: "id",
+        },
+        allowNull: false,
       },
       hi5_count_required: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       hi5_frequency: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
+        type: Sequelize.STRING(45),
+        allowNull: false,
       },
     },
     {
