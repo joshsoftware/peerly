@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface) => {
-    let rolesCount = await queryInterface.sequelize.query(
+    const rolesCount = await queryInterface.sequelize.query(
       "SELECT count(*) from roles;"
     );
     if (rolesCount[0][0].count > 0) {
