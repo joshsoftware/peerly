@@ -2,6 +2,7 @@ const log4js = require("log4js");
 
 require("../config/loggerConfig");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
+const resConstants = require("../constant/responseConstants");
 
 const logger = log4js.getLogger();
 
@@ -79,12 +80,14 @@ module.exports.authorizeAdmin = async (req, res, next) => {
         " trying to access admin credentials"
     );
     logger.info("=========================================");
-    res.status(403).send({
-      error: {
-        code: "access_denied",
-        message: "Permission required",
-      },
-    });
+    res
+      .status(403)
+      .send(
+        this.getErrorResponseObject(
+          resConstants.ACCESS_DENIED_CODE,
+          resConstants.ACCESS_DENIED_MESSAGE
+        )
+      );
   }
 };
 

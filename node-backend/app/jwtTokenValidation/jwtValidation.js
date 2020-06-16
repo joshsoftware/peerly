@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const log4js = require("log4js");
 
 const db = require("../models/sequelize");
+const utility = require("../utils/utility");
+const resConstants = require("../constant/responseConstants");
 require("../config/loggerConfig");
 
 const UserBlacklistedTokens = db.user_blacklisted_tokens;
@@ -13,21 +15,27 @@ module.exports.autheticateToken = (req, res, next) => {
   if (token == null /*eslint-disable-line no-eq-null*/) {
     logger.error("unauthorised user with undefined acess token");
     logger.info("=========================================");
-    res.status(401).send({
-      error: {
-        message: "unauthorised user",
-      },
-    });
+    res
+      .status(401)
+      .send(
+        utility.getErrorResponseObject(
+          resConstants.INVALID_TOKEN_CODE,
+          resConstants.UNAUTHORIZED_USER_MESSAGE
+        )
+      );
   } else {
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
       if (err) {
         logger.error("unauthorised user by rejecting access token");
         logger.info("=========================================");
-        res.status(401).send({
-          error: {
-            message: "unauthorised user",
-          },
-        });
+        res
+          .status(401)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.INVALID_TOKEN_CODE,
+              resConstants.UNAUTHORIZED_USER_MESSAGE
+            )
+          );
       } else {
         UserBlacklistedTokens.findOne({ where: { token: token } }).then(
           (data) => {
@@ -36,11 +44,14 @@ module.exports.autheticateToken = (req, res, next) => {
             } else {
               logger.error("unauthorised user");
               logger.info("=========================================");
-              res.status(401).send({
-                error: {
-                  message: "unauthorised user",
-                },
-              });
+              res
+                .status(401)
+                .send(
+                  utility.getErrorResponseObject(
+                    resConstants.INVALID_TOKEN_CODE,
+                    resConstants.UNAUTHORIZED_USER_MESSAGE
+                  )
+                );
             }
           }
         );
