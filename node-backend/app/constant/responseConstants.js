@@ -65,3 +65,7 @@ module.exports.INVALID_REPORTED_RECOGNITION_MESSAGE =
   "Invalid reported recognition data";
 
 module.exports.UNAUTHORIZED_USER_MESSAGE = "unauthorized user";
+
+module.exports.INVALID_BADGES_CODE = "invalid-badges";
+
+module.exports.INVALID_BADGES_MESSAGE = "Invalid badges data";
