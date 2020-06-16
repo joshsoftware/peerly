@@ -145,7 +145,7 @@ module.exports.getProfileById = async (req, res) => {
         .then((data) => {
           if (data.length != 0) {
             res.status(200).send({
-              data: data[0],
+              data: data,
             });
           } else {
             logger.error("user not found for specified id");
