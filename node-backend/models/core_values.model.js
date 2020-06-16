@@ -10,10 +10,6 @@ module.exports = (sequelize, Sequelize) => {
       },
       org_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "organizations",
-          key: "id",
-        },
         allowNull: false,
       },
       text: {
