@@ -57,3 +57,9 @@ module.exports.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE =
 module.exports.EMPTY_HI5_BALANCE_CODE = "empty-hi5-balance";
 
 module.exports.EMPTY_HI5_BALANCE_MESSAGE = "User hi5 balance is empty";
+
+module.exports.INVALID_REPORTED_RECOGNITION_CODE =
+  "invalid reported recognition";
+
+module.exports.INVALID_REPORTED_RECOGNITION_MESSAGE =
+  "Invalid reported recognition data";

@@ -5,6 +5,7 @@ const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
 const validationSchema = require("./validationSchema/moderationSchema");
+const resConstants = require("../../constant/responseConstants");
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
@@ -38,13 +39,16 @@ module.exports.report = async (req, res) => {
         .catch(() => {
           logger.error("executing report in moderation");
           logger.info("user id: " + tokenData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -53,8 +57,8 @@ module.exports.report = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid reported recognition",
-          "invalid reported recognition Data",
+          resConstants.INVALID_REPORTED_RECOGNITION_CODE,
+          resConstants.INVALID_REPORTED_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -88,13 +92,16 @@ module.exports.review = async (req, res) => {
         .catch(() => {
           logger.error("executing review moderation");
           logger.info("user id: " + tokenData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -103,8 +110,8 @@ module.exports.review = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition moderation",
-          "invalid recognition moderation Data",
+          resConstants.INVALID_REPORTED_RECOGNITION_CODE,
+          resConstants.INVALID_REPORTED_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
