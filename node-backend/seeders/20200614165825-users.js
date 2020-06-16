@@ -2,30 +2,30 @@
 
 module.exports = {
   up: async (queryInterface) => {
-    let organizationsCount = await queryInterface.sequelize.query(
-      "SELECT count(*) from organizations;"
+    const usersCount = await queryInterface.sequelize.query(
+      "SELECT count(*) from users;"
     );
-    if (organizationsCount[0][0].count > 0) {
-      return organizationsCount;
+    if (usersCount[0][0].count > 0) {
+      return usersCount;
     } else {
-      return queryInterface.bulkInsert(
-        "users",
-        [
-          {
-            org_id: 1,
-            first_name: "admin",
-            email: "admin@123",
-            soft_delete: false,
-            role_id: 1,
-            hi5_quota_balance: 5,
-          },
-        ],
-        {}
+      const organizationObject = await queryInterface.sequelize.query(
+        "SELECT id, hi5_limit from organizations;"
       );
+      return queryInterface.bulkInsert("users", [
+        {
+          org_id: organizationObject[0][0].id,
+          first_name: "sunil",
+          last_name: "sonawane",
+          email: "sunil.sonawane@joshsoftware.com",
+          soft_delete: false,
+          role_id: 1,
+          hi5_quota_balance: organizationObject[0][0].hi5_limit,
+        },
+      ]);
     }
   },
 
   down: (queryInterface) => {
-    return queryInterface.bulkDelete("users", null, {});
+    return queryInterface.bulkDelete("users", null);
   },
 };
