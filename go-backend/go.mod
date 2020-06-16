@@ -5,6 +5,8 @@ go 1.12
 require (
 	github.com/DATA-DOG/go-sqlmock v1.4.1
 	github.com/auth0/go-jwt-middleware v0.0.0-20200507191422-d30d7b9ece63
+	github.com/aws/aws-sdk-go v1.32.1
+	github.com/aws/aws-sdk-go-v2 v0.23.0 // indirect
 	github.com/bxcodec/faker/v3 v3.3.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-co-op/gocron v0.1.1
@@ -20,4 +22,6 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/urfave/cli v1.22.4
 	github.com/urfave/negroni v1.0.0
+	golang.org/x/net v0.0.0-20200602114024-627f9648deb9 // indirect
+	golang.org/x/text v0.3.2 // indirect
 )
