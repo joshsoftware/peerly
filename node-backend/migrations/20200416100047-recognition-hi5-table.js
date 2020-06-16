@@ -12,6 +12,10 @@ module.exports = {
         },
         recognition_id: {
           type: Sequelize.INTEGER,
+          references: {
+            model: "recognitions",
+            key: "id",
+          },
           allowNull: false,
         },
         comment: {
@@ -20,6 +24,10 @@ module.exports = {
         },
         given_by: {
           type: Sequelize.INTEGER,
+          references: {
+            model: "users",
+            key: "id",
+          },
           allowNull: false,
         },
         given_at: {
