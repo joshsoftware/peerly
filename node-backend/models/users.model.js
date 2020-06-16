@@ -11,10 +11,6 @@ module.exports = (sequelize, Sequelize) => {
       org_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "organizations",
-          key: "id",
-        },
       },
       first_name: {
         type: Sequelize.STRING(50),
@@ -47,10 +43,6 @@ module.exports = (sequelize, Sequelize) => {
       role_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "roles",
-          key: "id",
-        },
       },
       hi5_quota_balance: {
         type: Sequelize.INTEGER,
