@@ -39,7 +39,7 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 		"comment": "Comment Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/review",
 		"/recognitions/1/review",
@@ -59,7 +59,7 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 		"comment": "Comment Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/review",
 		"/recognitions/1/review",
@@ -77,7 +77,7 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 		"comment": "Comment Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/review",
 		"/recognitions/1/review",
@@ -98,7 +98,7 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 		"reason": "Comment Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/review",
 		"/recognitions/1/review",

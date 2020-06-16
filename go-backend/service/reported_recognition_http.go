@@ -5,14 +5,24 @@ import (
 	"net/http"
 	"strconv"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
+	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/db"
 )
 
 func createReportedRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		userID := int64(1) //Extract from token
+		parsedToken := req.Context().Value("user").(*jwt.Token)
+		claims := parsedToken.Claims.(jwt.MapClaims)
+
+		userID, err := strconv.Atoi(claims["sub"].(string))
+		if err != nil {
+			logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
+			ae.JSONError(rw, http.StatusInternalServerError, err)
+			return
+		}
 
 		vars := mux.Vars(req)
 		recognitionID, err := strconv.ParseInt(vars["recognition_id"], 10, 64)
@@ -33,7 +43,7 @@ func createReportedRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-		reportedRecognition.ReportedBy = userID
+		reportedRecognition.ReportedBy = int64(userID)
 
 		ok, errFields := reportedRecognition.Validate()
 		if !ok {

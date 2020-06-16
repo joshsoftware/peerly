@@ -38,7 +38,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionS
 		"reason": "Reason Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/report",
 		"/recognitions/1/report",
@@ -58,7 +58,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 		"reason": "Reason Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/report",
 		"/recognitions/1/report",
@@ -77,7 +77,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 		"reason": "Reason Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/report",
 		"/recognitions/1/report",
@@ -96,7 +96,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 		"reason": "Reason Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/report",
 		"/recognitions/1/report",
@@ -115,7 +115,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 		"reason": ""
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/report",
 		"/recognitions/1/report",
@@ -136,7 +136,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 		"reason": "Reason Test"
 	}`
 
-	recorder := makeHTTPCall(
+	recorder := makeHTTPCallWithJWTMiddleware(
 		http.MethodPost,
 		"/recognitions/{recognition_id:[0-9]+}/report",
 		"/recognitions/1/report",
