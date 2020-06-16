@@ -14,6 +14,8 @@ func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(OrganizationHandlerTestSuite))
 	suite.Run(t, new(RecognitionHi5HandlerTestSuite))
 	suite.Run(t, new(CoreValueHandlerTestSuite))
+	suite.Run(t, new(ReportedRecognitionHandlerTestSuite))
+	suite.Run(t, new(RecognitionModerationHandlerTestSuite))
 }
 
 // path: is used to configure router path (eg: /users/{id})

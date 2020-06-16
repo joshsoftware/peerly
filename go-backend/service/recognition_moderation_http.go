@@ -12,7 +12,7 @@ import (
 
 func createRecognitionModerationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		userID := int64(1) //Extract for token
+		userID := int64(1) //Extract from token
 
 		vars := mux.Vars(req)
 		recognitionID, err := strconv.ParseInt(vars["recognition_id"], 10, 64)
