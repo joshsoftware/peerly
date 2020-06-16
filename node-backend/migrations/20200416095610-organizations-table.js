@@ -1,73 +1,56 @@
 "use strict";
-var dbm;
-var type; // eslint-disable-line no-unused-vars
-var seed; // eslint-disable-line no-unused-vars
-exports.setup = /*eslint-disable-line node/exports-style*/ (
-  options,
-  seedLink
-) => {
-  dbm = options.dbmigrate;
-  type = dbm.dataType;
-  seed = seedLink;
-};
-exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  // eslint-disable-line node/exports-style
-  db.createTable(
-    "organizations",
-    {
-      id: {
-        type: "int",
-        notNull: true,
-        primaryKey: true,
-        autoIncrement: true,
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable(
+      "organizations",
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        name: {
+          type: Sequelize.STRING(50),
+          allowNull: false,
+        },
+        contact_email: {
+          type: Sequelize.STRING(50),
+          allowNull: true,
+        },
+        domain_name: {
+          type: Sequelize.STRING(45),
+          allowNull: false,
+        },
+        subscription_status: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+        },
+        subscription_valid_upto: {
+          type: Sequelize.BIGINT,
+          allowNull: false,
+        },
+        hi5_limit: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+        },
+        hi5_quota_renewal_frequency: {
+          type: Sequelize.STRING(9),
+          allowNull: true,
+        },
+        timezone: {
+          type: Sequelize.TEXT,
+          allowNull: false,
+        },
       },
-      name: {
-        type: "string",
-        length: 50,
-        notNull: true,
-      },
-      contact_email: {
-        type: "string",
-        length: 50,
-        notNull: false,
-      },
-      domain_name: {
-        type: "string",
-        length: 45,
-        notNull: true,
-      },
-      subscription_status: {
-        type: "int",
-        notNull: true,
-      },
-      subscription_valid_upto: {
-        type: "bigint",
-        notNull: true,
-      },
-      hi5_limit: {
-        type: "int",
-        notNull: true,
-      },
-      hi5_quota_renewal_frequency: {
-        type: "string",
-        length: 9,
-        notNull: false,
-      },
-      timezone: {
-        type: "text",
-        notNull: true,
-      },
-    },
-    function (err) {
-      if (err) return callback(err);
-      return callback();
-    }
-  );
-};
-exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  // eslint-disable-line node/exports-style
-  db.dropTable("organizations", callback);
-};
-exports._meta = /*eslint-disable-line node/exports-style*/ {
-  "version": 1, // eslint-disable-line prettier/prettier
+      {
+        timestamp: false,
+        createdAt: false,
+        updatedAt: false,
+      }
+    );
+  },
+  down: (queryInterface) => {
+    return queryInterface.dropTable("organizations");
+  },
 };

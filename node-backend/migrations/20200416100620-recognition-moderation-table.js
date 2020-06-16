@@ -1,74 +1,52 @@
 "use strict";
-
-var dbm;
-var type; // eslint-disable-line no-unused-vars
-var seed; // eslint-disable-line no-unused-vars
-exports.setup = /*eslint-disable-line node/exports-style*/ (
-  options,
-  seedLink
-) => {
-  dbm = options.dbmigrate;
-  type = dbm.dataType; // eslint-disable-line no-unused-vars
-  seed = seedLink; // eslint-disable-line no-unused-vars
-};
-exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.createTable(
-    "recognition_moderation",
-    {
-      id: {
-        type: "int",
-        primaryKey: true,
-        autoIncrement: true,
-        notNull: true,
-      },
-      recognition_id: {
-        type: "int",
-        notNull: true,
-        foreignKey: {
-          name: "recognition_recognitionID_fk",
-          table: "recognitions",
-          mapping: "id",
-          rules: {
-            onDelete: "NO ACTION",
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable(
+      "recognition_moderation",
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        recognition_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: "recognitions",
+            key: "id",
           },
+          allowNull: false,
+        },
+        is_inappropriate: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+        },
+        moderator_comment: {
+          type: Sequelize.STRING(45),
+          allowNull: false,
+        },
+        moderated_by: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: "users",
+            key: "id",
+          },
+          allowNull: false,
+        },
+        moderated_at: {
+          type: Sequelize.BIGINT,
+          allowNull: false,
         },
       },
-      is_inappropriate: {
-        type: "boolean",
-        notNull: true,
-      },
-      moderator_comment: {
-        type: "string",
-        length: 45,
-        notNull: false,
-      },
-      moderated_by: {
-        type: "int",
-        notNull: true,
-        foreignKey: {
-          name: "user_moderatedID_fk",
-          table: "users",
-          mapping: "id",
-          rules: {
-            onDelete: "NO ACTION",
-          },
-        },
-      },
-      moderated_at: {
-        type: "bigint",
-        notNull: true,
-      },
-    },
-    function (err) {
-      if (err) return callback(err);
-      return callback();
-    }
-  );
-};
-exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.dropTable("recognition_moderation", callback);
-};
-
-exports._meta = /*eslint-disable-line node/exports-style*/ {
-  version: 1,
+      {
+        timestamp: false,
+        createdAt: false,
+        updatedAt: false,
+      }
+    );
+  },
+  down: (queryInterface) => {
+    return queryInterface.dropTable("recognition_moderation");
+  },
 };
