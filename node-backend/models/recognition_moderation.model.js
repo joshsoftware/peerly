@@ -10,10 +10,6 @@ module.exports = (sequelize, Sequelize) => {
       },
       recognition_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "recognitions",
-          key: "id",
-        },
         allowNull: false,
       },
       is_inappropriate: {
@@ -26,10 +22,6 @@ module.exports = (sequelize, Sequelize) => {
       },
       moderated_by: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "users",
-          key: "id",
-        },
         allowNull: false,
       },
       moderated_at: {
