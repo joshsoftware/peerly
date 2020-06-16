@@ -63,3 +63,5 @@ module.exports.INVALID_REPORTED_RECOGNITION_CODE =
 
 module.exports.INVALID_REPORTED_RECOGNITION_MESSAGE =
   "Invalid reported recognition data";
+
+module.exports.UNAUTHORIZED_USER_MESSAGE = "unauthorized user";
