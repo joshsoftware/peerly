@@ -1,6 +1,7 @@
 const log4js = require("log4js");
 
 const utility = require("../../utils/utility");
+const resConstants = require("../../constant/responseConstants");
 const db = require("../../models/sequelize");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validationSchema = require("./validationSchema/badgesValidationSchema");
@@ -38,13 +39,16 @@ module.exports.create = async (req, res) => {
         .catch(() => {
           logger.error("executing create badges");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -53,8 +57,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          resConstants.INVALID_BADGES_CODE,
+          resConstants.INVALID_BADGES_MESSAGE,
           err.errors
         ),
       });
@@ -77,13 +81,16 @@ module.exports.findAll = async (req, res) => {
         .catch(() => {
           logger.error("executing findAll badges");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -92,8 +99,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          resConstants.INVALID_BADGES_CODE,
+          resConstants.INVALID_BADGES_MESSAGE,
           err.errors
         ),
       });
@@ -130,13 +137,16 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("executing findOne badge");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -144,8 +154,8 @@ module.exports.findOne = async (req, res) => {
       logger.error(JSON.stringify(err));
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          resConstants.INVALID_BADGES_CODE,
+          resConstants.INVALID_BADGES_MESSAGE,
           err.errors
         ),
       });
@@ -200,13 +210,16 @@ module.exports.update = async (req, res) => {
         .catch(() => {
           logger.error("executing update badges");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -215,8 +228,8 @@ module.exports.update = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-badges",
-          "Invalid badges data",
+          resConstants.INVALID_BADGES_CODE,
+          resConstants.INVALID_BADGES_MESSAGE,
           err.errors
         ),
       });

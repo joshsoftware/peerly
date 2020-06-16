@@ -4,20 +4,24 @@ const bodyParser = require("body-parser");
 const utility = require("../utils/utility");
 const /*eslint-disable no-unused-vars*/ BadgesControllerV1 = require("../controllers/v1/badgesController");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
+const resConstants = require("../constant/responseConstants");
 const badgesRouter = express.Router();
 badgesRouter.use(bodyParser.urlencoded({ extended: true }));
 
 async function authorizedRole(req, res, next) {
   const authHeader = req.headers["authorization"];
   const tokenData = await jwtValidate.getData(authHeader);
-  if (tokenData.roleId == 2) {
+  if (utility.validateRole(tokenData.roleId, "OrganisationAdmin")) {
     next();
   } else {
-    res.status(401).send({
-      error: {
-        message: "unauthorised user",
-      },
-    });
+    res
+      .status(403)
+      .send(
+        utility.getErrorResponseObject(
+          resConstants.ACCESS_DENIED_CODE,
+          resConstants.ACCESS_DENIED_MESSAGE
+        )
+      );
   }
 }
 

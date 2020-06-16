@@ -5,6 +5,7 @@ const log4js = require("log4js");
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
 const utility = require("../../utils/utility");
+const resConstants = require("../../constant/responseConstants");
 const validationSchema = require("./validationSchema/recognitionValidationSchema");
 require("../../config/loggerConfig");
 
@@ -22,38 +23,47 @@ const validateCoreValue = async (req, res, tokenData) => {
       if (data === null) {
         logger.error("Error executing validate core value");
         logger.info("user id: " + tokenData.userId);
-        logger.error("core value not found with specified id");
+        logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "core value not found with specified id",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.CORE_VALUE_NOT_FOUND_CODE,
+              resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
+            )
+          );
       } else if (data.dataValues.org_id == tokenData.orgId) {
         // CoreValue validate successfully
         return true;
       } else {
         logger.error("Error executing validate core value");
         logger.info("user id: " + tokenData.userId);
-        logger.error("core value not found with specified organisation");
+        logger.error(resConstants.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "core value not found with specified organisation",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.CORE_VALUE_NOT_FOUND_CODE,
+              resConstants.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
       logger.error("Error executing validate core value");
       logger.info("user id: " + tokenData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -63,37 +73,46 @@ const validateGivenFor = async (req, res, tokenData) => {
       if (data === null) {
         logger.error("Error executing validate given for");
         logger.info("user id: " + tokenData.userId);
-        logger.error("User with specified id is not found");
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
+            )
+          );
       } else if (data.dataValues.org_id == tokenData.orgId) {
         return true;
       } else {
         logger.error("Error executing validate given for");
         logger.info("user id: " + tokenData.userId);
-        logger.error("User not found in specified organisation");
+        logger.error(resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User not found in specified organisation",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
       logger.error("Error executing validate given for");
       logger.info("user id: " + tokenData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -112,13 +131,16 @@ const addRecognition = async (req, res, recognitions) => {
     .catch(() => {
       logger.error("Error executing create recognition");
       logger.info("user id: " + tokenData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -149,8 +171,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -186,13 +208,16 @@ module.exports.findOne = async (req, res) => {
           if (data == null /*eslint-disable-line no-eq-null*/) {
             logger.error("Error executing find one in recognition");
             logger.info("user id: " + userData.userId);
-            logger.error("Recognition with specified id is not found");
+            logger.error(resConstants.RECOGNITION_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "Recognition with specified id is not found",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.RECOGNITION_NOT_FOUND_CODE,
+                  resConstants.RECOGNITION_NOT_FOUND_MESSAGE
+                )
+              );
           } else {
             res.status(200).send({
               data: data,
@@ -202,13 +227,16 @@ module.exports.findOne = async (req, res) => {
         .catch(() => {
           logger.error("Error executing find one in recognition");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error ",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -217,8 +245,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -291,26 +319,32 @@ module.exports.findAll = async (req, res) => {
             logger.error("Error executing getHi5Count");
             logger.info("user id: " + tokenData.userId);
             logger.error(
-              "Recognition with specified organisation is not found"
+              resConstants.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
             );
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "Recognition with specified organisation is not found",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.RECOGNITION_NOT_FOUND_CODE,
+                  resConstants.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("Error executing find all in recognition");
           logger.info("user id: " + tokenData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error ",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -319,8 +353,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });
@@ -334,47 +368,59 @@ const getHi5Count = async (req, res, id, orgId) => {
       if (data === null) {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error("User with specified id is not found");
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
+            )
+          );
       } else if (data.dataValues.org_id !== orgId) {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error("User with specified organisation is not found");
+        logger.error(resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified organisation is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
       } else if (data.dataValues.hi5_quota_balance > 0) {
         return data.dataValues.hi5_quota_balance;
       } else {
         logger.error("Error executing getHi5Count");
         logger.info("user id: " + userData.userId);
-        logger.error("User hi5 balance is Empty");
+        logger.error(resConstants.EMPTY_HI5_BALANCE_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User hi5 balance is Empty",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.EMPTY_HI5_BALANCE_CODE,
+              resConstants.EMPTY_HI5_BALANCE_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
       logger.error("Error executing getHi5Count");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -395,13 +441,16 @@ const validateRecognition = async (req, res, id) => {
       if (data == null /*eslint-disable-line no-eq-null*/) {
         logger.error("Error executing validateRecognition");
         logger.info("user id: " + userData.userId);
-        logger.error("Recognition with specified id is not found");
+        logger.error(resConstants.RECOGNITION_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "Recognition with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.RECOGNITION_NOT_FOUND_CODE,
+              resConstants.RECOGNITION_NOT_FOUND_MESSAGE
+            )
+          );
       } else {
         return true;
       }
@@ -409,13 +458,16 @@ const validateRecognition = async (req, res, id) => {
     .catch(() => {
       logger.error("Error executing validateRecognition");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error ",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -440,25 +492,31 @@ const decrementHi5Count = async (req, res, id, orgId) => {
       } else {
         logger.error("Error executing decrerment hi5 count");
         logger.info("user id: " + userData.userId);
-        logger.error("User with specified id is not found");
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
         logger.info("=========================================");
-        res.status(404).send({
-          error: {
-            message: "User with specified id is not found",
-          },
-        });
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
+            )
+          );
       }
     })
     .catch(() => {
       logger.error("Error executing decrerment hi5 count");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -480,13 +538,16 @@ const addHi5Entry = async (req, res, data, orgId) => {
     .catch(() => {
       logger.error("Error executing find users by organisation");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -520,8 +581,8 @@ module.exports.giveHi5 = async (req, res) => {
           logger.info("=========================================");
           res.status(400).send({
             error: utility.getFormattedErrorObj(
-              "invalid recognition",
-              "invalid recognition Data",
+              resConstants.INVALID_RECOGNITION_CODE,
+              resConstants.INVALID_RECOGNITION_MESSAGE,
               err.errors
             ),
           });
@@ -533,8 +594,8 @@ module.exports.giveHi5 = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid recognition",
-          "invalid recognition Data",
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
           err.errors
         ),
       });

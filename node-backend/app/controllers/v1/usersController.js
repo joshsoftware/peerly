@@ -6,6 +6,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
 const validateSchema = require("./validationSchema/UsersValidationSchema");
+const resConstants = require("../../constant/responseConstants");
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
@@ -30,12 +31,14 @@ module.exports.findUsersByOrg = async (req, res) => {
             logger.error("find user by orrganisaiton access denied");
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(403).send({
-              error: {
-                code: "access_denied",
-                message: "Permission required",
-              },
-            });
+            res
+              .status(403)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.ACCESS_DENIED_CODE,
+                  resConstants.ACCESS_DENIED_MESSAGE
+                )
+              );
           }
         } else {
           Users.findAll({
@@ -53,13 +56,16 @@ module.exports.findUsersByOrg = async (req, res) => {
             .catch(() => {
               logger.error("Error executing find users by organisation");
               logger.info("user id: " + userData.userId);
-              logger.error("internal server error");
+              logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
               logger.info("=========================================");
-              res.status(500).send({
-                error: {
-                  message: "internal server error",
-                },
-              });
+              res
+                .status(500)
+                .send(
+                  utility.getErrorResponseObject(
+                    resConstants.INTRENAL_SERVER_ERROR_CODE,
+                    resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+                  )
+                );
             });
         }
       } else {
@@ -78,13 +84,16 @@ module.exports.findUsersByOrg = async (req, res) => {
           .catch(() => {
             logger.error("Error executing find users by organisation");
             logger.info("user id: " + userData.userId);
-            logger.error("internal server error");
+            logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
             logger.info("=========================================");
-            res.status(500).send({
-              error: {
-                message: "internal server error",
-              },
-            });
+            res
+              .status(500)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.INTRENAL_SERVER_ERROR_CODE,
+                  resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+                )
+              );
           });
       }
     })
@@ -94,8 +103,8 @@ module.exports.findUsersByOrg = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid query params",
-          "invalid query params data",
+          resConstants.INVALID_QUERY_PARAMS_CODE,
+          resConstants.INVALID_QUERY_PARAMS_MESSAGE,
           err.errors
         ),
       });
@@ -118,13 +127,16 @@ module.exports.getProfile = async (req, res) => {
     .catch(() => {
       logger.error("executing getProfile");
       logger.info("user id: " + userData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };
 
@@ -148,26 +160,32 @@ module.exports.getProfileById = async (req, res) => {
               data: data,
             });
           } else {
-            logger.error("user not found for specified id");
+            logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "profile not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.USER_NOT_FOUND_CODE,
+                  resConstants.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("Error in getProfileById");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -176,8 +194,8 @@ module.exports.getProfileById = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          resConstants.INVALID_USER_CODE,
+          resConstants.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
@@ -211,26 +229,32 @@ module.exports.updateUser = async (req, res) => {
               data: updateUsers,
             });
           } else {
-            logger.error("user not found for specified id");
+            logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "user not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.USER_NOT_FOUND_CODE,
+                  resConstants.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("Error in updating user");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -239,8 +263,8 @@ module.exports.updateUser = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          resConstants.INVALID_USER_CODE,
+          resConstants.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
@@ -275,26 +299,32 @@ module.exports.updateUserByAdmin = async (req, res) => {
               data: updateUserByAdmin,
             });
           } else {
-            logger.error("user not found for specified id");
+            logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
             logger.info("user id: " + userData.userId);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "user not found for specified id",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.USER_NOT_FOUND_CODE,
+                  resConstants.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("Error in updating user");
           logger.info("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -303,8 +333,8 @@ module.exports.updateUserByAdmin = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          resConstants.INVALID_USER_CODE,
+          resConstants.INVALID_USER_MESSAGE,
           err.errors
         ),
       });
@@ -338,25 +368,31 @@ module.exports.deleteUser = async (req, res) => {
           } else {
             logger.error("error at executing soft delete user");
             logger.info("user id: " + userData.userId);
-            logger.error("user not found for specified id " + req.params.id);
+            logger.error(resConstants.USER_NOT_FOUND_MESSAGE + req.params.id);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "user not found for specified id",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.USER_NOT_FOUND_CODE,
+                  resConstants.USER_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("error at executing soft delete user");
           logger.error("user id: " + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -366,8 +402,8 @@ module.exports.deleteUser = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-user",
-          "Invalid user data",
+          resConstants.INVALID_USER_CODE,
+          resConstants.INVALID_USER_MESSAGE,
           err.errors
         ),
       });

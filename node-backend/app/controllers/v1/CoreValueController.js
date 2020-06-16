@@ -4,6 +4,7 @@ const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
 const validationSchema = require("./validationSchema/coreValueValidationSchema");
 const jwtToken = require("../../jwtTokenValidation/jwtValidation");
+const resConstants = require("../../constant/responseConstants");
 require("../../config/loggerConfig");
 
 const CoreValue = db.core_values;
@@ -41,13 +42,16 @@ module.exports.create = async (req, res) => {
         .catch(() => {
           logger.error("executing create core value");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -56,8 +60,8 @@ module.exports.create = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -80,13 +84,16 @@ module.exports.findAll = async (req, res) => {
         .catch(() => {
           logger.error("executing findAll core value");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -95,8 +102,8 @@ module.exports.findAll = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -121,25 +128,31 @@ module.exports.findOne = async (req, res) => {
           } else {
             logger.error("executing findOne core value");
             logger.info("user id:" + userData.userId);
-            logger.error("core value not found for specified id");
+            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "core value not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
+                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("executing findOne core value");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -148,8 +161,8 @@ module.exports.findOne = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -196,25 +209,31 @@ module.exports.update = async (req, res) => {
           } else {
             logger.error("executing update in core value");
             logger.info("user id:" + userData.userId);
-            logger.error("core value not found for specified id");
+            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "core value not found for specified id",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
+                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("executing update in core value");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -223,8 +242,8 @@ module.exports.update = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -257,25 +276,31 @@ module.exports.getCoreValueById = async (req, res) => {
           } else {
             logger.error("executing getCoreValueById");
             logger.info("user id:" + userData.userId);
-            logger.error("core value not found for specified id");
+            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
             logger.info("=========================================");
-            res.status(404).send({
-              error: {
-                message: "core value not found for specified id ",
-              },
-            });
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
+                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
+                )
+              );
           }
         })
         .catch(() => {
           logger.error("executing getCoreValueById");
           logger.info("user id:" + userData.userId);
-          logger.error("internal server error");
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
           logger.info("=========================================");
-          res.status(500).send({
-            error: {
-              message: "internal server error",
-            },
-          });
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
         });
     })
     .catch((err) => {
@@ -284,8 +309,8 @@ module.exports.getCoreValueById = async (req, res) => {
       logger.info("=========================================");
       res.status(400).send({
         error: utility.getFormattedErrorObj(
-          "invalid-core-value",
-          "Invalid core value data",
+          resConstants.INVALID_CORE_VALUE_CODE,
+          resConstants.INVALID_CORE_VALUE_MESSAGE,
           err.errors
         ),
       });
@@ -312,12 +337,15 @@ module.exports.getCoreValues = async (req, res) => {
     .catch(() => {
       logger.error("executing getCoreValues");
       logger.info("user id:" + userData.userId);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     });
 };

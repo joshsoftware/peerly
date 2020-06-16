@@ -3,6 +3,8 @@ const moment = require("moment");
 const log4js = require("log4js");
 
 const db = require("../../models/sequelize");
+const resConstants = require("../../constant/responseConstants");
+const utility = require("../../utils/utility");
 require("../../config/loggerConfig");
 
 const logger = log4js.getLogger();
@@ -15,11 +17,14 @@ module.exports.login = async (req, res) => {
   let expTime;
   let result = await getUser(email);
   if (result == "error") {
-    res.status(500).send({
-      error: {
-        message: "internal server error",
-      },
-    });
+    res
+      .status(500)
+      .send(
+        utility.getErrorResponseObject(
+          resConstants.INTRENAL_SERVER_ERROR_CODE,
+          resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+        )
+      );
   } else if (result[1].rowCount) {
     expTime = {
       expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
@@ -48,11 +53,14 @@ module.exports.login = async (req, res) => {
     let domainName = profile.emails[0].value.split("@").pop();
     let domainResult = await getOrganization(domainName);
     if (domainResult == "error") {
-      res.status(500).send({
-        error: {
-          message: "internal server error",
-        },
-      });
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
     } else if (domainResult) {
       let checkerror = await insertData(
         domainResult.id,
@@ -63,11 +71,14 @@ module.exports.login = async (req, res) => {
         domainResult.hi5_limit
       );
       if (checkerror == "error") {
-        res.status(500).send({
-          error: {
-            message: "internal server error",
-          },
-        });
+        res
+          .status(500)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.INTRENAL_SERVER_ERROR_CODE,
+              resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+            )
+          );
       } else {
         let getUserResult = await getUser(email);
         if (getUserResult[1].rowCount) {
@@ -100,26 +111,30 @@ module.exports.login = async (req, res) => {
           });
         } else {
           logger.error("executing login");
-          logger.error("unauthorized user");
+          logger.error(resConstants.UNAUTHORIZED_USER_MESSAGE);
           logger.info("=========================================");
-          res.status(401).send({
-            error: {
-              code: "invalid_organization",
-              message: "unauthorized user",
-            },
-          });
+          res
+            .status(401)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INVALID_ORGANISATION_CODE,
+                resConstants.UNAUTHORIZED_USER_MESSAGE
+              )
+            );
         }
       }
     } else {
       logger.error("executing login");
-      logger.error("unauthorized user");
+      logger.error(resConstants.UNAUTHORIZED_USER_MESSAGE);
       logger.info("=========================================");
-      res.status(401).send({
-        error: {
-          code: "invalid_organization",
-          message: "unauthorized user",
-        },
-      });
+      res
+        .status(401)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INVALID_ORGANISATION_CODE,
+            resConstants.UNAUTHORIZED_USER_MESSAGE
+          )
+        );
     }
   }
 };
@@ -138,7 +153,7 @@ const getUser = async (email) => {
     .catch(() => {
       logger.error("executing get user in login");
       logger.info("user email: " + email);
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       result = "error";
     });
@@ -153,7 +168,7 @@ const getOrganization = async (domainName) => {
     })
     .catch(() => {
       logger.error("executing get organisation in login");
-      logger.error("internal server error");
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       domainResult = "error";
     });
@@ -185,7 +200,7 @@ const insertData = async (
 
   await Users.create(user).catch(() => {
     logger.error("executing create user");
-    logger.error("internal server error");
+    logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
     logger.info("=========================================");
     errorCheck = "error";
   });
