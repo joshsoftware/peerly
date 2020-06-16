@@ -9,6 +9,7 @@ let id;
 let roleId = 3;
 let orgId = 2;
 let userId = 1;
+let organizations = { ...data.organizations };
 // UNIT test begin
 describe(/*eslint-disable-line no-undef*/ "test case for organisation", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
@@ -16,15 +17,15 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
     done();
   });
 
-  /*eslint-disable-line no-undef*/ after(() => {
-    db.organizations.destroy({ where: {} });
+  /*eslint-disable-line no-undef*/ after(async () => {
+    await db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create organisation with write Contents,url", function (done) {
     // post request for create organisation successfully
     request(app)
       .post("/organisations")
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -37,7 +38,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
         res.body.data.subscription_valid_upto = parseInt(
           res.body.data.subscription_valid_upto
         );
-        res.body.data.should.eql(data.organizations);
+        res.body.data.should.eql(organizations);
         done();
       });
   });
@@ -78,7 +79,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
     // calling put request for updated orgnisation sucessfully
     request(app)
       .put("/organisations/" + id)
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -92,7 +93,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
         res.body.data.subscription_valid_upto = parseInt(
           res.body.data.subscription_valid_upto
         );
-        res.body.data.should.eql(data.organizations);
+        res.body.data.should.eql(organizations);
         done();
       });
   });
@@ -127,10 +128,10 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "post request for create orgnisation with wrong Contents", function (done) {
     // post request for create orgnisation with wrong Contents
-    data.organizations.hi5_limit = "abc";
+    organizations.hi5_limit = "abc";
     request(app)
       .post("/organisations/")
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -146,7 +147,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
     // calling post request for create orgnisation with wrong url
     request(app)
       .post("/organisations/dec")
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -160,10 +161,10 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
 
   it(/*eslint-disable-line no-undef*/ "put request for update orgnisation with wrong Contents", function (done) {
     // put request for update orgnisation with wrong Contents
-    data.organizations.hi5_limit = "abc";
+    organizations.hi5_limit = "abc";
     request(app)
       .put("/organisations/1")
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -179,7 +180,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
     // put request for update orgnisation with wrong Contents
     request(app)
       .put("/organisations/udc")
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -195,7 +196,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
     // calling put request for update orgnisation with wrong url
     request(app)
       .put("/organisations/dec/dd")
-      .send(data.organizations)
+      .send(organizations)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")

@@ -10,7 +10,7 @@ let id;
 let orgId;
 let roleId = 2;
 let userId = 1;
-
+let badges = { ...data.badges };
 // UNIT test begin
 
 describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
@@ -31,7 +31,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
     // post request for create badges successfully
     request(app)
       .post(`/organisations/${orgId}/badges`)
-      .send(data.badges)
+      .send(badges)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -42,7 +42,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
         id = res.body.data.id;
         delete res.body.data.id;
         delete res.body.data.org_id;
-        res.body.data.should.eql(data.badges);
+        res.body.data.should.eql(badges);
         done();
       });
   });
@@ -82,7 +82,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
     // calling put request for updated badges sucessfully
     request(app)
       .put(`/organisations/${orgId}/badges/${id}`)
-      .send(data.badges)
+      .send(badges)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -93,7 +93,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
         should(res.body.data).be.a.Object();
         delete res.body.data.id;
         delete res.body.data.org_id;
-        res.body.data.should.eql(data.badges);
+        res.body.data.should.eql(badges);
         done();
       });
   });
@@ -148,7 +148,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
     // put request for create badges with wrong Contents
     request(app)
       .put(`/organisations/${orgId}/badges/7000`)
-      .send(data.badges)
+      .send(badges)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -164,7 +164,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
     // calling post request for create badges with wrong url
     request(app)
       .post(`/organisations/${orgId}/badge`)
-      .send(data.badges)
+      .send(badges)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -178,10 +178,10 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
 
   it(/*eslint-disable-line no-undef*/ "post request for create badges with wrong Contents", function (done) {
     // post request for create badges with wrong Contents
-    data.badges.hi5_count_required = "abc";
+    badges.hi5_count_required = "abc";
     request(app)
       .post(`/organisations/${orgId}/badges`)
-      .send(data.badges)
+      .send(badges)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -195,10 +195,10 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
 
   it(/*eslint-disable-line no-undef*/ "put request for update badges with wrong Contents", function (done) {
     // put request for update badges with wrong Contents
-    data.badges.hi5_count_required = "abc";
+    badges.hi5_count_required = "abc";
     request(app)
       .put(`/organisations/${orgId}/badges/${id}`)
-      .send(data.badges)
+      .send(badges)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")

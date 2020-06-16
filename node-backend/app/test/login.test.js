@@ -1,20 +1,17 @@
 /*eslint-disable  no-unused-vars */
-const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should"); //eslint-disable-line node/no-unpublished-require
 const data = require("./data");
-let path = require("path");
-let dotEnvPath = path.resolve("../.env");
-require("dotenv").config({ path: dotEnvPath });
+const app = require("../../server");
 const db = require("../models/sequelize");
-
-const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 const token = process.env.ACCESS_TOKEN;
+let organizations = { ...data.organizations };
 /*eslint-disable  no-unused-vars */
 /*eslint-disable  no-undef*/
 describe("test cases for login", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
-    data.organizations.domain_name = "joshsoftware.com";
-    db.organizations.create(data.organizations);
+    organizations.domain_name = "joshsoftware.com";
+    db.organizations.create(organizations);
     done();
   });
 
@@ -25,7 +22,7 @@ describe("test cases for login", function () {
   });
 
   it("should give ok status", function (done) {
-    server
+    request(app)
       .post("/oauth/google")
       .send({
         access_token: token,
@@ -34,12 +31,13 @@ describe("test cases for login", function () {
       .expect(200)
       .end(function (err, res) {
         res.status.should.equal(200);
+        should(res.body.data).be.a.Object();
         done();
       });
   });
 
   it("should give bad request error", function (done) {
-    server
+    request(app)
       .post("/oauth/google")
       .send({
         access_token: "",
@@ -52,7 +50,7 @@ describe("test cases for login", function () {
       });
   });
   it("should unauthorize user", function (done) {
-    server
+    request(app)
       .post("/oauth/google")
       .send({
         access_token: "",
@@ -65,8 +63,8 @@ describe("test cases for login", function () {
         done();
       });
   });
-  it("shoul give unauthorize with 401", function (done) {
-    server
+  it("should give unauthorize with 401", function (done) {
+    request(app)
       .post("/oauth/google")
       .send({
         access_token: "xxxxxxx",

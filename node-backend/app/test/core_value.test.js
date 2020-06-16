@@ -10,9 +10,10 @@ let id;
 let orgId;
 let roleId = 2;
 let userId = 1;
+let coreValue = { ...data.coreValue };
 
 describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function () {
-  delete data.coreValue.org_id;
+  delete coreValue.org_id;
   /*eslint-disable-line no-undef*/ before((done) => {
     db.organizations.create(data.organizations).then((data) => {
       orgId = data.id;
@@ -29,7 +30,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   it(/*eslint-disable-line no-undef*/ "post request for create core value with right Contents,url", function (done) {
     request(app)
       .post(`/organisations/${orgId}/core_values`)
-      .send(data.coreValue)
+      .send(coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -41,7 +42,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         id = res.body.data.id;
         delete res.body.data.id;
         delete res.body.data.org_id;
-        res.body.data.should.eql(data.coreValue);
+        res.body.data.should.eql(coreValue);
         done();
       });
   });
@@ -111,7 +112,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
     // calling put request for updated core value sucessfully
     request(app)
       .put(`/organisations/${orgId}/core_values/${id}`)
-      .send(data.coreValue)
+      .send(coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -124,7 +125,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         id = res.body.data.id;
         delete res.body.data.id;
         delete res.body.data.org_id;
-        res.body.data.should.eql(data.coreValue);
+        res.body.data.should.eql(coreValue);
         done();
       });
   });
@@ -163,7 +164,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
     // calling post request for create core value with wrong url
     request(app)
       .post(`/organisations/${orgId}/core_value`)
-      .send(data.coreValue)
+      .send(coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -179,7 +180,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
     // post request for update core value with wrong Contents
     request(app)
       .put(`/organisations/${orgId}/core_values/7000`)
-      .send(data.coreValue)
+      .send(coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -193,10 +194,10 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
 
   it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong thumbnail_url", function (done) {
     // post request for create core value with wrong Contents
-    data.coreValue.thumbnail_url = "mail.google.com";
+    coreValue.thumbnail_url = "mail.google.com";
     request(app)
       .post("/organisations/1/core_values")
-      .send(data.coreValue)
+      .send(coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -210,10 +211,10 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
 
   it(/*eslint-disable-line no-undef*/ "put request for update core value with wrong thumbnail_url", function (done) {
     // post request for update core value with wrong Contents
-    data.coreValue.thumbnail_url = "mail.google.com";
+    coreValue.thumbnail_url = "mail.google.com";
     request(app)
       .put("/organisations/1/core_values/2")
-      .send(data.coreValue)
+      .send(coreValue)
       .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")

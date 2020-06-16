@@ -1,35 +1,35 @@
-const path = require("path");
-const dotEnvPath = path.resolve("../.env");
-require("dotenv").config({ path: dotEnvPath });
-const supertest = require("supertest"); //eslint-disable-line node/no-unpublished-require
+const app = require("../../server");
+const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
-
-const db = require("./dbConnection");
+const db = require("../models/sequelize");
 const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");
 
-const server = supertest.agent(process.env.TEST_URL + process.env.HTTP_PORT);
 let orgId;
 let roleId = 3;
 let userId;
 let coreValueId;
 let recognitionId;
 let token;
+let organizations = { ...data.organizations };
+let user = { ...data.user };
+let coreValue = { ...data.coreValue };
+let recognition = { ...data.recognition };
 describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation", function () {
   /*eslint-disable-line no-undef*/ before((done) => {
-    db.organizations.create(data.organizations).then((res) => {
+    db.organizations.create(organizations).then((res) => {
       orgId = res.id;
-      data.user.org_id = orgId;
-      data.user.role_id = roleId;
-      db.users.create(data.user).then((res) => {
+      user.org_id = orgId;
+      user.role_id = roleId;
+      db.users.create(user).then((res) => {
         userId = res.id;
-        data.coreValue.org_id = orgId;
-        db.core_value.create(data.coreValue).then((res) => {
+        coreValue.org_id = orgId;
+        db.core_values.create(coreValue).then((res) => {
           coreValueId = res.id;
-          data.recognition.core_value_id = coreValueId;
-          data.recognition.given_by = userId;
-          data.recognition.given_for = userId;
-          db.recognitions.create(data.recognition).then((res) => {
+          recognition.core_value_id = coreValueId;
+          recognition.given_by = userId;
+          recognition.given_for = userId;
+          db.recognitions.create(recognition).then((res) => {
             recognitionId = res.id;
             token = createToken(roleId, orgId, userId);
             done();
@@ -45,12 +45,12 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
     await db.recognition_hi5.destroy({ where: {} });
     await db.recognitions.destroy({ where: {} });
     await db.users.destroy({ where: {} });
-    await db.core_value.destroy({ where: {} });
+    await db.core_values.destroy({ where: {} });
     await db.organizations.destroy({ where: {} });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with right Contents and url", function (done) {
-    server
+    request(app)
       .post(`/recognitions/${recognitionId}/report`)
       .send({
         mark_as: "fraud",
@@ -62,12 +62,13 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
       .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         res.status.should.equal(201);
+        should(res.body.data).be.a.Object();
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with incorrect Contents", function (done) {
-    server
+    request(app)
       .post(`/recognitions/${recognitionId}/report`)
       .send({
         type_of_reporting: "negative",
@@ -84,7 +85,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with invalid token", function (done) {
-    server
+    request(app)
       .post(`/recognitions/${recognitionId}/report`)
       .send({
         type_of_reporting: "negative",
@@ -101,7 +102,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with right Contents and url", function (done) {
-    server
+    request(app)
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "true",
@@ -113,12 +114,13 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
       .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         res.status.should.equal(201);
+        should(res.body.data).be.a.Object();
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with incorrect Contents", function (done) {
-    server
+    request(app)
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "hello",
@@ -135,7 +137,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with invalid token", function (done) {
-    server
+    request(app)
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "true",
