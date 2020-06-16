@@ -11,10 +11,6 @@ module.exports = (sequelize, Sequelize) => {
       core_value_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "core_values",
-          key: "id",
-        },
       },
       text: {
         type: Sequelize.TEXT,
@@ -23,18 +19,10 @@ module.exports = (sequelize, Sequelize) => {
       given_for: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "users",
-          key: "id",
-        },
       },
       given_by: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "users",
-          key: "id",
-        },
       },
       given_at: {
         type: Sequelize.BIGINT,
