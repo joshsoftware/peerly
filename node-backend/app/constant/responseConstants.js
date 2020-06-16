@@ -69,3 +69,5 @@ module.exports.UNAUTHORIZED_USER_MESSAGE = "unauthorized user";
 module.exports.INVALID_BADGES_CODE = "invalid-badges";
 
 module.exports.INVALID_BADGES_MESSAGE = "Invalid badges data";
+
+module.exports.INVALID_TOKEN_CODE = "invalid_token";
