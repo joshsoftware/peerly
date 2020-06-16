@@ -10,18 +10,10 @@ module.exports = (sequelize, Sequelize) => {
       },
       badge_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "badges",
-          key: "id",
-        },
         allowNull: false,
       },
       user_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "users",
-          key: "id",
-        },
         allowNull: false,
       },
       obtained_at: {
