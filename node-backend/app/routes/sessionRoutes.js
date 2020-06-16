@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const log4js = require("log4js");
 
 const utility = require("../utils/utility");
+const resConstants = require("../constant/responseConstants");
 const loginController = require("../controllers/v1/loginController");
 require("../google_auth/google_auth")();
 const tokenValidation = require("../jwtTokenValidation/jwtValidation");
@@ -33,8 +34,8 @@ router.post(
         logger.info("=========================================");
         res.status(400).send({
           error: utility.getFormattedErrorObj(
-            "invalid-token",
-            "Invalid token data",
+            resConstants.INVALID_TOKEN_CODE,
+            resConstants.INVALID_TOKEN_MESSAGE,
             err.errors
           ),
         });

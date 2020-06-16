@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const utility = require("../utils/utility");
+const resConstants = require("../constant/responseConstants");
 const /*eslint-disable no-unused-vars*/ recognitionControllerV1 = require("../controllers/v1/recognitionController");
 const jwtValidate = require("../jwtTokenValidation/jwtValidation");
 const recRouter = express.Router();
@@ -14,12 +15,14 @@ async function authorizedRole(req, res, next) {
   ) {
     next();
   } else {
-    res.status(403).send({
-      error: {
-        code: "access_denied",
-        message: "Permission required",
-      },
-    });
+    res
+      .status(403)
+      .send(
+        utility.getErrorResponseObject(
+          resConstants.ACCESS_DENIED_CODE,
+          resConstants.ACCESS_DENIED_MESSAGE
+        )
+      );
   }
 }
 
