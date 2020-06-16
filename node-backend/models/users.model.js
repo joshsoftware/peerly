@@ -14,22 +14,18 @@ module.exports = (sequelize, Sequelize) => {
       },
       first_name: {
         type: Sequelize.STRING(50),
-        length: 50,
         allowNull: false,
       },
       last_name: {
         type: Sequelize.STRING(50),
-        length: 50,
         allowNull: true,
       },
       email: {
         type: Sequelize.STRING(50),
-        length: 50,
         allowNull: false,
       },
       display_name: {
         type: Sequelize.STRING(30),
-        length: 30,
         allowNull: true,
       },
       profile_image_url: {
