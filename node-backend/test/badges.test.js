@@ -1,4 +1,4 @@
-const app = require("../../server");
+const app = require("../server");
 const db = require("../models/sequelize");
 const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");

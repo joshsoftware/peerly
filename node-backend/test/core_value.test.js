@@ -1,4 +1,4 @@
-const app = require("../../server");
+const app = require("../server");
 const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 const db = require("../models/sequelize");

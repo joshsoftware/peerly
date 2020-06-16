@@ -2,7 +2,7 @@ const request = require("supertest"); //eslint-disable-line node/no-unpublished-
 const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
 const { createToken } = require("./jwtTokenGenration");
 const data = require("./data");
-const app = require("../../server");
+const app = require("../server");
 const db = require("../models/sequelize");
 let token;
 let id;

@@ -1,7 +1,7 @@
 /*eslint-disable  no-unused-vars */
 const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
 const should = require("should"); //eslint-disable-line node/no-unpublished-require
-const app = require("../../server");
+const app = require("../server");
 const { createToken } = require("./jwtTokenGenration");
 const db = require("../models/sequelize");
 const data = require("./data");
