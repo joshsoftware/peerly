@@ -4,30 +4,29 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       recognition_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       type_of_reporting: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
+        type: Sequelize.STRING(45),
+        allowNull: false,
       },
       reason_for_reporting: {
         type: Sequelize.STRING,
-        notNull: true,
+        allowNull: false,
       },
       reported_by: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       reported_at: {
         type: Sequelize.BIGINT,
-        notNull: false,
+        allowNull: true,
       },
     },
     {

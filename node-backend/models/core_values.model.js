@@ -4,25 +4,29 @@ module.exports = (sequelize, Sequelize) => {
     {
       id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
       org_id: {
         type: Sequelize.INTEGER,
-        notNull: true,
+        allowNull: false,
       },
       text: {
-        type: Sequelize.STRING,
-        notNull: true,
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      thumbnail_url: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
       description: {
-        type: Sequelize.STRING,
-        length: 45,
-        notNull: true,
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       parent_core_value_id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
     },
     {
@@ -31,5 +35,8 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Core_values.associate = (models) => {
+    Core_values.hasMany(models.recognitions, { foreignKey: "core_value_id" });
+  };
   return Core_values;
 };

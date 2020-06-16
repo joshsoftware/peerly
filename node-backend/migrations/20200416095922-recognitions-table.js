@@ -19,7 +19,7 @@ module.exports = {
           },
         },
         text: {
-          type: Sequelize.STRING,
+          type: Sequelize.TEXT,
           allowNull: false,
         },
         given_for: {

@@ -8,9 +8,8 @@ module.exports = (sequelize, Sequelize) => {
         primaryKey: true,
       },
       role: {
-        type: Sequelize.STRING,
-        length: 25,
-        notNull: true,
+        type: Sequelize.STRING(25),
+        allowNull: false,
       },
     },
     {
@@ -19,5 +18,11 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Roles.associate = (models) => {
+    Roles.hasMany(models.users, {
+      foreignKey: "role_id",
+      as: "users_role_id_fkey",
+    });
+  };
   return Roles;
 };
