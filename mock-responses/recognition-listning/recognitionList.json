@@ -4,13 +4,13 @@
       "id":1,
       "text":
       "i give high five to avinash for writing block on react strap document",
-      "givenFor": {
+      "given_for_user": {
             "id": 1,
             "first_name": "avinash",
             "last_name": "mane",
             "profile_image_url":"https://i.picsum.photos/id/2/200/200.jpg"
        },
-      "givenBy": {
+      "given_by_user": {
             "id": 2,
             "first_name": "onkar",
             "last_name": "hasabe",
@@ -28,13 +28,13 @@
     {
       "id":1,
       "text":"give high five to avinash writing block on react strap document",
-      "givenFor": {
+      "given_for_user": {
             "id": 1,
             "first_name": "avinash",
             "last_name": "mane",
             "profile_image_url":"https://i.picsum.photos/id/2/200/200.jpg"
        },
-      "givenBy": {
+      "given_by_user": {
             "id": 2,
             "first_name": "onkar",
             "last_name": "hasabe",
@@ -45,7 +45,7 @@
            "id": 3,
            "text": "core value text",
            "description": "desc",
-           "thumbnail": "https://i.picsum.photos/id/654/300/200.jpg"
+           "thumbnail_url": "https://i.picsum.photos/id/654/300/200.jpg"
       }
     }
 
