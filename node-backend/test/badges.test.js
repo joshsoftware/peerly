@@ -39,7 +39,7 @@ describe(/*eslint-disable-line no-undef*/ "test cases for badges", function () {
       .set("Accept", "application/vnd.peerly.v1")
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         res.should.have.status(201);
-        res.body.should.be.a("object");
+        res.body.data.should.be.a("object");
         id = res.body.data.id;
         delete res.body.data.id;
         delete res.body.data.org_id;
