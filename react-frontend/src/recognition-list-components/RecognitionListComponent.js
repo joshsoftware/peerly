@@ -20,14 +20,14 @@ const RecognitionListComponent = ({ recognitionList }) => {
       {recognitionList.map((recognition, index) => (
         <RecognitionCardComponent
           key={index}
-          givenByName={`${recognition.givenBy.first_name} ${recognition.givenBy.last_name}`}
-          givenByImage={recognition.givenBy.profile_image_url}
-          givenForName={`${recognition.givenFor.first_name} ${recognition.givenFor.last_name}`}
-          givenForImage={recognition.givenFor.profile_image_url}
+          givenByName={`${recognition.given_by_user.first_name} ${recognition.givenBy.last_name}`}
+          givenByImage={recognition.given_by_user.profile_image_url}
+          givenForName={`${recognition.given_for_user.first_name} ${recognition.givenFor.last_name}`}
+          givenForImage={recognition.given_for_user.profile_image_url}
           givenAt={getDateFormate(recognition.given_at)}
           text={recognition.text}
           coreValue={recognition.coreValue.text}
-          coreValueImage={recognition.coreValue.thumbnail}
+          coreValueImage={recognition.coreValue.thumbnail_url}
         />
       ))}
     </Wrapper>
