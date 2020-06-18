@@ -22,7 +22,7 @@ const PeerlyTextComponent = ({ theme, fontSize }) => (
 
 PeerlyTextComponent.defaultProps = {
   theme: "dark",
-  fontSize: "48px",
+  fontSize: "30px",
 };
 
 PeerlyTextComponent.propTypes = {
