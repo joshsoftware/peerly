@@ -116,7 +116,7 @@ module.exports.findOne = async (req, res) => {
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
     .then(() => {
-      Badges.findAll({ where: { org_id: org_id, id: id } })
+      Badges.findOne({ where: { org_id: org_id, id: id } })
         .then((data) => {
           if (data.length != 0) {
             res.status(200).send({

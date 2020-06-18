@@ -148,7 +148,7 @@ module.exports.getProfileById = async (req, res) => {
   idSchema
     .validate({ id }, { abortEarly: false })
     .then(() => {
-      Users.findAll({
+      Users.findOne({
         where: { id: id },
         attributes: {
           exclude: ["soft_delete", "soft_delete_by", "soft_delete_at"],
