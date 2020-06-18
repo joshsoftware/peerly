@@ -20,6 +20,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for organisation", function
   });
 
   /*eslint-disable-line no-undef*/ after(async () => {
+    await db.users.destroy({ where: {} });
     await db.organizations.destroy({ where: {} });
   });
 
