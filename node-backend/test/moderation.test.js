@@ -1,6 +1,8 @@
 const app = require("../server");
-const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
-const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+chai.should();
+chai.use(chaiHttp);
 const db = require("../models/sequelize");
 const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");
@@ -50,105 +52,99 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with right Contents and url", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${recognitionId}/report`)
       .send({
         mark_as: "fraud",
         reason: "wrong content",
       })
-      .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(201);
-        should(res.body.data).be.a.Object();
+        res.should.have.status(201);
+        res.body.data.should.be.a("object");
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with incorrect Contents", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${recognitionId}/report`)
       .send({
         type_of_reporting: "negative",
         reason_for_reporting: "wrong content",
       })
-      .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(400)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(400);
+        res.should.have.status(400);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with invalid token", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${recognitionId}/report`)
       .send({
         type_of_reporting: "negative",
         reason_for_reporting: "wrong content",
       })
-      .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + "")
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(401)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(401);
+        res.should.have.status(401);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with right Contents and url", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "true",
         moderator_comment: "wrong content",
       })
-      .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(201);
-        should(res.body.data).be.a.Object();
+        res.should.have.status(201);
+        res.body.data.should.be.a("object");
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with incorrect Contents", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "hello",
         moderator_comment: "wrong content",
       })
-      .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(400)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(400);
+        res.should.have.status(400);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for report recognition with invalid token", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "true",
         moderator_comment: "wrong content",
       })
-      .expect("Content-type", /json/)
       .set("Authorization", "Bearer " + "")
       .set("Accept", "application/vnd.peerly.v1")
-      .expect(401)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(401);
+        res.should.have.status(401);
         done();
       });
   });
