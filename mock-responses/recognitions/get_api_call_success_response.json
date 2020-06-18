@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "core_value_id": 2,
+      "text": "good work",
+      "given_for": 4,
+      "given_by": 6,
+      "given_at": "1588924868",
+      "givenFor": {
+        "id": 4,
+        "first_name": "Avinash",
+        "last_name": "mane",
+        "profile_image_url": null 
+      },
+      "givenBy": {
+        "id": 6,
+        "first_name": "Avinash",
+        "last_name": "mane",
+        "profile_image_url": null
+      },
+      "core_value": {
+        "id": 2,
+        "text": "good work",
+        "description": "good working in peerly"
+      }
+    },
+    {
+      "id": 2,
+      "core_value_id": 2,
+      "text": "good work",
+      "given_for": 4,
+      "given_by": 6,
+      "given_at": "1588924868",
+      "givenFor": {
+        "id": 4,
+        "first_name": "Avinash",
+        "last_name": "mane",
+        "profile_image_url": null
+      },
+      "givenBy": {
+        "id": 6,
+        "first_name": "Avinash",
+        "last_name": "mane",
+        "profile_image_url": null
+      },
+      "core_value": {
+        "id": 2,
+        "text": "good work",
+        "description": "good working in peerly"
+      }
+    }
+  ]
+}
