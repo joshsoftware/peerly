@@ -1,3 +1,6 @@
 export const LIST_RECOGNITION = "LIST_RECOGNITION";
 
 export const LIST_RECOGNITION_API = "LIST_RECOGNITION_API";
+export const LOGIN_API = "LOGIN_API";
+
+export const LOGIN = "LOGIN";
