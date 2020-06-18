@@ -6,8 +6,7 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 chai.should();
 chai.use(chaiHttp);
-// const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
-// const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
+
 let token;
 let id;
 let orgId;
