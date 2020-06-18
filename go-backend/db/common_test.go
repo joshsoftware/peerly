@@ -6,6 +6,12 @@ import (
 	logger "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/suite"
 	"testing"
+	"time"
+)
+
+var (
+	now        time.Time
+	mockedRows *sqlmock.Rows
 )
 
 func InitMockDB() (s Storer, sqlConn *sqlx.DB, sqlmockInstance sqlmock.Sqlmock) {
@@ -27,4 +33,6 @@ func InitMockDB() (s Storer, sqlConn *sqlx.DB, sqlmockInstance sqlmock.Sqlmock) 
 func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, new(OrganizationTestSuite))
 	suite.Run(t, new(RecognitionHi5TestSuite))
+	suite.Run(t, new(ReportedRecognitionTestSuite))
+	suite.Run(t, new(RecognitionModerationTestSuite))
 }
