@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "export NODE_ENV=test && mocha",
+    "test": "npx sequelize-cli db:seed:all && export NODE_ENV=test && mocha",
     "lint": "lint-staged"
   },
   "husky": {
