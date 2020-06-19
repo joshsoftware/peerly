@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -29,18 +28,15 @@ const CreateRecognition = ({
   EmployeeName,
   EmployeeImage,
   recognitionToImage,
+  setCoreValueId,
+  comment,
+  commentText,
+  show,
+  handleClose,
+  handleShow,
+  onClickAddComment,
+  addCommentText,
 }) => {
-  const [comment, addComment] = useState(false);
-  const [commentText, updateCommentText] = useState(null);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const onClickAddComment = () => {
-    addComment(true);
-  };
-  const addCommentText = (event) => {
-    updateCommentText(event.target.value);
-  };
   return (
     <Card
       style={{
@@ -58,7 +54,7 @@ const CreateRecognition = ({
       </WrapperForHeader>
       <Wrapper className="justify-content-center mt-3">
         <div className="d-flex justify-content-center flex-row">
-          <CoreValue coreValues={coreValues} />
+          <CoreValue coreValues={coreValues} setCoreValueId={setCoreValueId} />
         </div>
         <div className="text-center  mt-5">
           {comment ? (
@@ -92,10 +88,11 @@ CreateRecognition.propTypes = {
   coreValues: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
-      coreValueName: PropTypes.string.isRequired,
-      fontSize: PropTypes.string,
-      backgroundColor: PropTypes.string,
-      coreValueImageSrc: PropTypes.string,
+      text: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      parent_core_value_id: PropTypes.number,
+      org_id: PropTypes.number,
+      thumbnail_url: PropTypes.string,
     })
   ),
   EmployeeName: PropTypes.string,
@@ -103,6 +100,15 @@ CreateRecognition.propTypes = {
   recognitionToImage: PropTypes.string,
   comment: PropTypes.string,
   Hi5Image: PropTypes.string,
+  setCoreValueId: PropTypes.number,
+  addComment: PropTypes.func,
+  commentText: PropTypes.string,
+  show: PropTypes.bool,
+  setShow: PropTypes.func,
+  handleClose: PropTypes.func,
+  handleShow: PropTypes.func,
+  onClickAddComment: PropTypes.func,
+  addCommentText: PropTypes.func,
 };
 
 export default CreateRecognition;
