@@ -45,12 +45,12 @@ CoreValueComponent.defaultProps = {
 
 CoreValueComponent.propTypes = {
   coreValueId: PropTypes.number,
-  coreValueName: PropTypes.string.isRequired,
+  coreValueName: PropTypes.string,
   description: PropTypes.string,
   parent_core_value_id: PropTypes.number,
   org_id: PropTypes.number,
   coreValueImageSrc: PropTypes.string,
-  setCoreValueId: PropTypes.number,
+  setCoreValueId: PropTypes.func,
 };
 
 export default CoreValueComponent;
