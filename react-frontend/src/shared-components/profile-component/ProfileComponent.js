@@ -17,12 +17,16 @@ const ProfileComponent = ({ className, size, labelClass, src, name }) => (
   </div>
 );
 
+ProfileComponent.defaultProps = {
+  size: 10,
+};
+
 ProfileComponent.propTypes = {
   className: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  src: PropTypes.string.isRequired,
-  size: PropTypes.number.isRequired,
-  labelClass: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  src: PropTypes.string,
+  size: PropTypes.number,
+  labelClass: PropTypes.string,
 };
 
 export default React.memo(ProfileComponent);

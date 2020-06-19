@@ -1,6 +1,19 @@
 export const LIST_RECOGNITION = "LIST_RECOGNITION";
 
 export const LIST_RECOGNITION_API = "LIST_RECOGNITION_API";
+
 export const LOGIN_API = "LOGIN_API";
 
 export const LOGIN = "LOGIN";
+
+export const CORE_VALUE_LIST = "CORE_VALUE_LIST";
+
+export const CORE_VALUE_API = "CORE_VALUE_API";
+
+export const RECOGNIZE_TO_API = "RECOGNIZE_TO_API";
+
+export const RECOGNIZE_TO = "RECOGNIZE_TO";
+
+export const ADD_RECOGNITION_API = "ADD_RECOGNITION_API";
+
+export const ADD_RECOGNITION = "ADD_RECOGNITION";
