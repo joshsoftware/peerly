@@ -9,16 +9,21 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/database/postgres"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
-	"github.com/mattes/migrate"
-	"github.com/mattes/migrate/database/postgres"
-	_ "github.com/mattes/migrate/source/file"
+
 	logger "github.com/sirupsen/logrus"
+
+	// Import PostgreSQL database driver
+	_ "github.com/lib/pq"
+
+	// For database migrations
+	_ "github.com/golang-migrate/migrate/source/file"
 )
 
 const (
-	dbDriver      = "postgres"
+	dbDriver = "postgres"
 )
 
 var errFindingDriver = errors.New("no migrate driver instance found")
@@ -27,6 +32,9 @@ type pgStore struct {
 	db *sqlx.DB
 }
 
+var pgStoreConn pgStore
+
+// Init - initialize database connection and return the db store
 func Init() (s Storer, err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -36,25 +44,26 @@ func Init() (s Storer, err error) {
 		return
 	}
 
+	pgStoreConn.db = conn
 	logger.WithField("uri", uri).Info("Connected to pg database")
-	return &pgStore{conn}, nil
+	return &pgStoreConn, nil
 }
 
+// RunMigrations - runs all database migrations (see ../migrtions/*.up.sql)
 func RunMigrations() (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
-	db, err := sql.Open(dbDriver, uri)
-	if err != nil {
-		return
-	}
+	db, _ := sql.Open(dbDriver, uri)
 
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
+		// TODO: Log failure to create driver obj here
 		return
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(getMigrationPath(), dbDriver, driver)
 	if err != nil {
+		// TODO: Log migrate failure here
 		return
 	}
 
@@ -67,6 +76,7 @@ func RunMigrations() (err error) {
 	return
 }
 
+// CreateMigrationFile - Creates a boilerplate *.sql files for a database migration
 func CreateMigrationFile(filename string) (err error) {
 	if len(filename) == 0 {
 		err = errors.New("filename is not provided")
@@ -96,6 +106,7 @@ func CreateMigrationFile(filename string) (err error) {
 	return
 }
 
+// RollbackMigrations - Used to run the "down" database migrations in ../migrations/*.down.sql
 func RollbackMigrations(s string) (err error) {
 	uri := config.ReadEnvString("DB_URI")
 
@@ -130,4 +141,8 @@ func createFile(filename string) (err error) {
 
 func getMigrationPath() string {
 	return fmt.Sprintf("file://%s", config.ReadEnvString("MIGRATION_FOLDER_PATH"))
+}
+
+func getDBConn() *sqlx.DB {
+	return pgStoreConn.db
 }
