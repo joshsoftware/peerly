@@ -6,9 +6,9 @@ import { Card } from "core-components/card/CardComponent";
 import { Form } from "core-components/form/FormComponent";
 import CoreValue from "shared-components/core-value/CoreValues";
 import { Button } from "core-components/button/ButtonComponent";
-import Image from "shared-components/image-name/UserImageName";
 import AddRecognition from "create-recognition/AddRecognition";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
+import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
 const HighFive = styled(HighFiveComponent)`
   margin-left: 70%;
@@ -25,8 +25,7 @@ const WrapperForHeader = styled.section`
 
 const CreateRecognition = ({
   coreValues,
-  EmployeeName,
-  EmployeeImage,
+  recognitionToName,
   recognitionToImage,
   setCoreValueId,
   comment,
@@ -36,19 +35,26 @@ const CreateRecognition = ({
   handleShow,
   onClickAddComment,
   addCommentText,
+  sendData,
 }) => {
   return (
     <Card
       style={{
-        "margin-left": "30%",
+        marginLeft: "30%",
         borderRadius: "36px 36px 0px 0px",
         minHeight: "100vh",
         width: "500px",
-        background: "linear-gradient(var(--sage) 175px, var(--white) 0%)",
+        background: "linear-gradient(var(--sage) 23%, var(--white) 0%)",
       }}
     >
       <WrapperForHeader>
-        <Image imageSrc={EmployeeImage} EmployeeName={EmployeeName}></Image>
+        <ProfileComponent
+          className="d-flex flex-column"
+          size={14}
+          labelClass=""
+          src={recognitionToImage}
+          name={recognitionToName}
+        />
         <HighFive />
         <div className="justify-content-center mt-5"> Select Value </div>
       </WrapperForHeader>
@@ -77,8 +83,9 @@ const CreateRecognition = ({
         show={show}
         handleClose={handleClose}
         recognitionToImage={recognitionToImage}
-        EmployeeName={EmployeeName}
+        recognitionToName={recognitionToName}
         commentText={commentText}
+        sendData={sendData}
       />
     </Card>
   );
@@ -88,19 +95,19 @@ CreateRecognition.propTypes = {
   coreValues: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
-      text: PropTypes.string.isRequired,
+      text: PropTypes.string,
       description: PropTypes.string,
       parent_core_value_id: PropTypes.number,
       org_id: PropTypes.number,
       thumbnail_url: PropTypes.string,
     })
   ),
-  EmployeeName: PropTypes.string,
+  recognitionToName: PropTypes.string,
   EmployeeImage: PropTypes.string,
   recognitionToImage: PropTypes.string,
-  comment: PropTypes.string,
+  comment: PropTypes.bool,
   Hi5Image: PropTypes.string,
-  setCoreValueId: PropTypes.number,
+  setCoreValueId: PropTypes.func,
   addComment: PropTypes.func,
   commentText: PropTypes.string,
   show: PropTypes.bool,
@@ -109,6 +116,7 @@ CreateRecognition.propTypes = {
   handleShow: PropTypes.func,
   onClickAddComment: PropTypes.func,
   addCommentText: PropTypes.func,
+  sendData: PropTypes.func,
 };
 
 export default CreateRecognition;
