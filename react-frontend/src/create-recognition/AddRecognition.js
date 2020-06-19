@@ -26,21 +26,29 @@ const AddRecognition = ({
   recognitionToImage,
   commentText,
 }) => (
-  <Modal show={show} onHide={handleClose} centered={true} size="xl">
-    <Modal.Header closeButton />
-    <Image imageSrc={recognitionToImage} />
+  <Modal
+    show={show}
+    onHide={handleClose}
+    centered={true}
+    aria-labelledby="contained-modal-title-vcenter"
+  >
+    <Modal.Header closeButton>
+      <Image imageSrc={recognitionToImage} />
+    </Modal.Header>
     <Modal.Body>
       <Border>
         <Legend>Your Note</Legend>
         {commentText}
       </Border>
     </Modal.Body>
-    <Button variant="secondary" onClick={handleClose}>
-      Close
-    </Button>
-    <Button variant="primary" onClick={handleClose}>
-      Save Changes
-    </Button>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClose}>
+        Close
+      </Button>
+      <Button variant="primary" onClick={handleClose}>
+        Save Changes
+      </Button>
+    </Modal.Footer>
   </Modal>
 );
 
