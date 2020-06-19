@@ -18,7 +18,7 @@ CoreValues.propTypes = {
   coreValues: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
-      text: PropTypes.string.isRequired,
+      text: PropTypes.string,
       description: PropTypes.string,
       parent_core_value_id: PropTypes.number,
       org_id: PropTypes.number,
