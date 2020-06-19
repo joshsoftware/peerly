@@ -164,3 +164,13 @@ func (m *DBMockStore) ListRecognitionsWithFilter(ctx context.Context, filters ma
 	args := m.Called(ctx)
 	return args.Get(0).([]Recognition), args.Error(1)
 }
+
+func (m *DBMockStore) CreateReportedRecognition(ctx context.Context, recognitionID int64, reportedRecognition ReportedRecognition) (resp ReportedRecognition, err error) {
+	args := m.Called(ctx, recognitionID, reportedRecognition)
+	return args.Get(0).(ReportedRecognition), args.Error(1)
+}
+
+func (m *DBMockStore) CreateRecognitionModeration(ctx context.Context, recognitionID int64, recognitionModeration RecognitionModeration) (resp RecognitionModeration, err error) {
+	args := m.Called(ctx, recognitionID, recognitionModeration)
+	return args.Get(0).(RecognitionModeration), args.Error(1)
+}
