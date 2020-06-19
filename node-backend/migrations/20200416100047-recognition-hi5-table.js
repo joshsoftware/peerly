@@ -1,68 +1,48 @@
 "use strict";
-
-var dbm;
-var type; // eslint-disable-line no-unused-vars
-var seed; // eslint-disable-line no-unused-vars
-// Recognition_hi5 Table Migration
-exports.setup = /*eslint-disable-line node/exports-style*/ (
-  options,
-  seedLink
-) => {
-  dbm = options.dbmigrate;
-  type = dbm.dataType; // eslint-disable-line no-undef
-  seed = seedLink; // eslint-disable-line no-undef
-};
-
-exports.up = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.createTable(
-    "recognition_hi5",
-    {
-      id: {
-        type: "int",
-        primaryKey: true,
-        autoIncrement: true,
-        notNull: true,
-      },
-      recognition_id: {
-        type: "int",
-        foreignKey: {
-          name: "recongnitionIdInRecongnitionCommentsForeignKey",
-          table: "recognitions",
-          rules: {
-            onDelete: "NO ACTION",
-          },
-          mapping: "id",
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable(
+      "recognition_hi5",
+      {
+        id: {
+          type: Sequelize.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+          allowNull: false,
         },
-        notNull: true,
-      },
-      given_by: {
-        type: "int",
-        notNull: true,
-        foreignKey: {
-          name: "hi5_by_users_id_fk",
-          table: "users",
-          mapping: "id",
-          rules: {
-            onDelete: "NO ACTION",
+        recognition_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: "recognitions",
+            key: "id",
           },
+          allowNull: false,
+        },
+        comment: {
+          type: Sequelize.TEXT,
+          allowNull: true,
+        },
+        given_by: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: "users",
+            key: "id",
+          },
+          allowNull: false,
+        },
+        given_at: {
+          type: Sequelize.BIGINT,
+          allowNull: false,
         },
       },
-      given_at: {
-        type: "bigint",
-        notNull: true,
-      },
-    },
-    function (err) {
-      if (err) return callback(err);
-      return callback();
-    }
-  );
-};
-
-exports.down = /*eslint-disable-line node/exports-style*/ (db, callback) => {
-  db.dropTable("recognition_hi5", callback);
-};
-
-exports._meta = /*eslint-disable-line node/exports-style*/ {
-  version: 1,
+      {
+        timestamp: false,
+        createdAt: false,
+        updatedAt: false,
+      }
+    );
+  },
+  down: (queryInterface) => {
+    return queryInterface.dropTable("recognition_hi5");
+  },
 };

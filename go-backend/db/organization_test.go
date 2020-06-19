@@ -1,12 +1,11 @@
 package db
 
 import (
+	"context"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
-	"context"
-	"joshsoftware/peerly/config"
-	"testing"
-	logger "github.com/sirupsen/logrus"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -14,78 +13,101 @@ import (
 type OrganizationTestSuite struct {
 	suite.Suite
 	dbStore Storer
+	db      *sqlx.DB
+	sqlmock sqlmock.Sqlmock
 }
 
-func TestExampleTestSuite(t *testing.T) {
-	suite.Run(t, new(OrganizationTestSuite))
+var expectedOrg = Organization{
+	ID:                       1,
+	Name:                     "test organization",
+	ContactEmail:             "test@gmail.com",
+	DomainName:               "www.testdomain.com",
+	SubscriptionStatus:       1,
+	SubscriptionValidUpto:    1588073442241,
+	Hi5Limit:                 5,
+	Hi5QuotaRenewalFrequency: "2",
+	Timezone:                 "IST",
 }
 
-func (suite *OrganizationTestSuite) SetupSuite() {
-	config.Load("application_test")
-
-	err := RunMigrations()
-	if err!=nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
-	}
-
-	store, err := Init()
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
-		return
-	}
-  suite.dbStore = store
+func (suite *OrganizationTestSuite) SetupTest() {
+	dbStore, dbConn, sqlmock := InitMockDB()
+	suite.dbStore = dbStore
+	suite.db = dbConn
+	suite.sqlmock = sqlmock
+	mockedRows = suite.getMockedRows()
 }
 
-func (suite *OrganizationTestSuite) TestOrganizationsSuccess() {
-
-// test create organization
- 	expectedOrg := Organization{
-		Name:"test organization",
-		ContactEmail: "test@gmail.com",
-		DomainName: "www.testdomain.com",
-		SubscriptionStatus: 1,
-		SubscriptionValidUpto: 1588073442241,
-		Hi5Limit: 5,
-		Hi5QuotaRenewalFrequency: "2",
-		Timezone: "IST",
-	}
-	var err error
-	createdOrganization, err := suite.dbStore.CreateOrganization(context.Background(), expectedOrg)
-
-	assert.Nil(suite.T(), err)
-
-	expectedOrg.ID = createdOrganization.ID
-
-	assert.Equal(suite.T(), expectedOrg, createdOrganization)
-
-	// test list organization
-	var organizationsList []Organization
-	organizationsList, err = suite.dbStore.ListOrganizations(context.Background())
-	
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), organizationsList, []Organization{createdOrganization})
-
-	// test get organization
-	var organizationData Organization
-	organizationData, err = suite.dbStore.GetOrganization(context.Background(), expectedOrg.ID)
-	
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), organizationData, createdOrganization)
-
-	//test update organization
-	var updatedOrg Organization
-
-	createdOrganization.Name = "Updated name"
-	updatedOrg, err = suite.dbStore.UpdateOrganization(context.Background(), createdOrganization, expectedOrg.ID)
-	
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), updatedOrg, createdOrganization)
-
-	//test delete organization
-	err = suite.dbStore.DeleteOrganization(context.Background(), createdOrganization.ID)
-	
-	assert.Nil(suite.T(), err)
+func (suite *OrganizationTestSuite) TearDownTest() {
+	suite.db.Close()
 }
 
-// TODO run migrations conflicts for multiple test files
-// TODO teardown function
+func (suite *OrganizationTestSuite) getMockedRows() (mockedRows *sqlmock.Rows) {
+	mockedRows = suite.sqlmock.NewRows([]string{"id", "name", "contact_email", "domain_name", "subscription_status", "subscription_valid_upto", "hi5_limit", "hi5_quota_renewal_frequency", "timezone"}).
+		AddRow(1, "test organization", "test@gmail.com", "www.testdomain.com", 1, 1588073442241, 5, "2", "IST")
+	return
+}
+
+func (suite *OrganizationTestSuite) TestOrganizationsFailure() {
+	suite.db.Close() //Close connection to test failure case
+
+	suite.sqlmock.ExpectQuery(listOrganizationsQuery).
+		WillReturnRows(mockedRows)
+
+	_, err := suite.dbStore.ListOrganizations(context.Background())
+	assert.NotNil(suite.T(), err)
+
+	_, err = suite.dbStore.UpdateOrganization(context.Background(), expectedOrg, expectedOrg.ID)
+	assert.NotNil(suite.T(), err)
+
+	_, err = suite.dbStore.CreateOrganization(context.Background(), expectedOrg)
+	assert.NotNil(suite.T(), err)
+
+	_, err = suite.dbStore.GetOrganization(context.Background(), expectedOrg.ID)
+	assert.NotNil(suite.T(), err)
+
+	err = suite.dbStore.DeleteOrganization(context.Background(), expectedOrg.ID)
+	assert.NotNil(suite.T(), err)
+}
+
+func (suite *OrganizationTestSuite) TestListOrganizationsSuccess() {
+	suite.sqlmock.ExpectQuery(listOrganizationsQuery).
+		WillReturnRows(mockedRows)
+
+	org, err := suite.dbStore.ListOrganizations(context.Background())
+
+	assert.Nil(suite.T(), err)
+	assert.Equal(suite.T(), []Organization{expectedOrg}, org)
+}
+
+func (suite *OrganizationTestSuite) TestUpdateOrganizationSuccess() {
+	suite.sqlmock.ExpectExec("UPDATE organizations").
+		WithArgs("test organization", "test@gmail.com", "www.testdomain.com", 1, 1588073442241, 5, "2", "IST", 1).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	suite.sqlmock.ExpectQuery("SELECT").
+		WillReturnRows(mockedRows)
+
+	org, err := suite.dbStore.UpdateOrganization(context.Background(), expectedOrg, expectedOrg.ID)
+
+	assert.Nil(suite.T(), err)
+	assert.Equal(suite.T(), expectedOrg, org)
+}
+
+func (suite *OrganizationTestSuite) TestGetOrganizationSuccess() {
+	suite.sqlmock.ExpectQuery("SELECT").
+		WillReturnRows(mockedRows)
+
+	org, err := suite.dbStore.GetOrganization(context.Background(), expectedOrg.ID)
+
+	assert.Nil(suite.T(), err)
+	assert.Equal(suite.T(), expectedOrg, org)
+}
+
+func (suite *OrganizationTestSuite) TestDeleteOrganizationSuccess() {
+	suite.sqlmock.ExpectExec("DELETE").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	err := suite.dbStore.DeleteOrganization(context.Background(), expectedOrg.ID)
+
+	assert.Nil(suite.T(), err)
+}

@@ -4,9 +4,10 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 require("dotenv").config("./.env");
-require("./app/jwtTokenValidation/deleteExpiredToken.js"); // eslint-disable-line node/no-missing-require
-const indexRoute = require("./app/routes/index");
-const dbConn = require("./app/models/sequelize");
+require("./jwtTokenValidation/deleteExpiredToken.js"); // eslint-disable-line node/no-missing-require
+require("./cronJobs/ResetHi5QuotaBalance");
+const indexRoute = require("./routes/index");
+const dbConn = require("./models/sequelize");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,3 +24,4 @@ const corsOption = {
 app.use("/", cors(corsOption), indexRoute); // eslint-disable-line no-undef
 const httpServer = http.createServer(app);
 httpServer.listen(process.env.HTTP_PORT || 8080); // eslint-disable-line no-undef
+module.exports = app;
