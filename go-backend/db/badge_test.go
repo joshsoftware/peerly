@@ -2,84 +2,126 @@ package db
 
 import (
 	"context"
-	"joshsoftware/peerly/config"
-	"testing"
 
-	logger "github.com/sirupsen/logrus"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
-// Define the suite, and absorb the built-in basic suite
-// functionality from testify - including assertion methods.
-type BadgeHandlerTestSuite struct {
+type BadgeTestSuite struct {
 	suite.Suite
 	dbStore Storer
+	db      *sqlx.DB
+	sqlmock sqlmock.Sqlmock
 }
 
-func TestBadgeTestSuite(t *testing.T) {
-	suite.Run(t, new(BadgeHandlerTestSuite))
+func (suite *BadgeTestSuite) SetupTest() {
+	dbStore, dbConn, sqlmock := InitMockDB()
+	suite.dbStore = dbStore
+	suite.db = dbConn
+	suite.sqlmock = sqlmock
 }
 
-func (suite *OrganizationTestSuite) SetupBadgeSuite() {
-	config.Load("application_test")
-
-	err := RunMigrations()
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
-	}
-
-	store, err := Init()
-	if err != nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
-		return
-	}
-	suite.dbStore = store
+func (suite *BadgeTestSuite) TearDownTest() {
+	suite.db.Close()
 }
 
-func (suite *OrganizationTestSuite) TestBadgeSuccess() {
-
-	// test create badge
-	expectedBadge := Badge{
-		Name:             "test badges",
-		OrganizationID:   999,
+func (suite *BadgeTestSuite) TestCreateBadgeSuccess() {
+	badge := Badge{
+		ID:               1,
+		Name:             "test badge",
+		OrganizationID:   1,
 		Hi5CountRequired: 5,
-		Hi5Frequency:     "2",
+		Hi5Frequency:     "Monthly",
 	}
-	var err error
-	createdBadge, err := suite.dbStore.CreateBadge(context.Background(), expectedBadge)
 
+	suite.sqlmock.ExpectBegin()
+
+	suite.sqlmock.ExpectExec("INSERT INTO badge").
+		WithArgs(1, "Test badge", 1, 5, "Monthly").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	suite.sqlmock.ExpectCommit()
+
+	CreatedBadge, err := suite.dbStore.CreateBadge(context.Background(), badge)
+
+	assert.Nil(suite.T(), suite.sqlmock.ExpectationsWereMet())
+	assert.Equal(suite.T(), CreatedBadge, badge)
 	assert.Nil(suite.T(), err)
+}
+func (suite *BadgeTestSuite) TestCreateBadgeFailure() {
+	badge := Badge{
+		ID:               1,
+		Name:             "test badge",
+		OrganizationID:   1,
+		Hi5CountRequired: 5,
+		Hi5Frequency:     "Monthly",
+	}
 
-	expectedBadge.ID = createdBadge.ID
+	suite.sqlmock.ExpectBegin()
 
-	assert.Equal(suite.T(), expectedBadge, createdBadge)
+	suite.sqlmock.ExpectExec("INSERT INTO badge").
+		WithArgs(1, "Test badge", 1, 5, "Monthly").
+		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	// test list badge
-	var badgeList []Badge
-	badgeList, err = suite.dbStore.ListBadges(context.Background(), expectedBadge.OrganizationID)
+	suite.sqlmock.ExpectCommit()
 
+	CreatedBadge, err := suite.dbStore.CreateBadge(context.Background(), badge)
+	assert.NotEqual(suite.T(), badge, CreatedBadge)
+	assert.NotNil(suite.T(), err)
+}
+
+func (suite *BadgeTestSuite) TestUpdateBadgeSuccess() {
+	badge := Badge{
+		ID:               1,
+		Name:             "test badge",
+		OrganizationID:   1,
+		Hi5CountRequired: 5,
+		Hi5Frequency:     "Monthly",
+	}
+
+	suite.sqlmock.ExpectBegin()
+
+	suite.sqlmock.ExpectExec("INSERT INTO users").
+		WithArgs(1, "test badge", 1, 5, "Monthly").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	suite.sqlmock.ExpectCommit()
+
+	updatedBadge, err := suite.dbStore.UpdateBadge(context.Background(), badge)
+	assert.Nil(suite.T(), suite.sqlmock.ExpectationsWereMet())
+	assert.Equal(suite.T(), updatedBadge, badge)
 	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), badgeList, []Badge{createdBadge})
+}
 
-	// test get badge
-	var badgeData Badge
-	badgeData, err = suite.dbStore.ShowBadge(context.Background(), expectedBadge)
+func (suite *BadgeTestSuite) TestUpdateBadgeFailure() {
+	badge := Badge{
+		ID:               1,
+		Name:             "test badge",
+		OrganizationID:   1,
+		Hi5CountRequired: 5,
+		Hi5Frequency:     "Monthly",
+	}
 
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), badgeData, createdBadge)
+	suite.sqlmock.ExpectBegin()
 
-	//test update badge
-	var updatedOrg Badge
+	suite.sqlmock.ExpectExec("INSERT INTO users").
+		WithArgs(1, "test badge", 1, 5, "Monthly").
+		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	createdBadge.Name = "Updated name"
-	updatedOrg, err = suite.dbStore.UpdateBadge(context.Background(), createdBadge)
+	suite.sqlmock.ExpectCommit()
 
-	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), updatedOrg, createdBadge)
+	updatedBadge, err := suite.dbStore.UpdateBadge(context.Background(), badge)
+	assert.NotEqual(suite.T(), badge, updatedBadge)
+	assert.NotNil(suite.T(), err)
+}
 
-	//test delete badge
-	err = suite.dbStore.DeleteBadge(context.Background(), createdBadge.OrganizationID, createdBadge.ID)
+func (suite *OrganizationTestSuite) TestDeleteBadgeSuccess() {
+	suite.sqlmock.ExpectExec("DELETE").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	err := suite.dbStore.DeleteBadge(context.Background(), 1, 1)
 
 	assert.Nil(suite.T(), err)
 }

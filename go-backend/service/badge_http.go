@@ -23,29 +23,42 @@ func createBadgeHandler(deps Dependencies) http.HandlerFunc {
 		org_id, err := strconv.Atoi(vars["organization_id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 		var badge db.Badge
 		err = json.NewDecoder(req.Body).Decode(&badge)
 		if err != nil {
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			logger.WithField("err", err.Error()).Error("Error while decoding badge data")
 			return
 		}
 
-		errorResponse, valid := badge.Validate()
+		errorResp, valid := badge.Validate()
 		if !valid {
-			respBytes, err := json.Marshal(errorResponse)
+			_, err := json.Marshal(errorResp)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling badge data")
-				rw.WriteHeader(http.StatusInternalServerError)
+				repsonse(rw, http.StatusInternalServerError, errorResponse{
+					Error: messageObject{
+						Message: "Internal server error",
+					},
+				})
 				return
 			}
-
-			rw.Header().Add("Content-Type", "application/json")
-			rw.WriteHeader(http.StatusBadRequest)
-			rw.Write(respBytes)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
@@ -53,21 +66,16 @@ func createBadgeHandler(deps Dependencies) http.HandlerFunc {
 		badge.OrganizationID = org_id
 		createdBadge, err = deps.Store.CreateBadge(req.Context(), badge)
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			logger.WithField("err", err.Error()).Error("Error create badge")
 			return
 		}
+		repsonse(rw, http.StatusOK, successResponse{Data: createdBadge})
 
-		respBytes, err := json.Marshal(createdBadge)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling badge data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		rw.WriteHeader(http.StatusCreated)
-		rw.Write(respBytes)
-		rw.Header().Add("Content-Type", "application/json")
 	})
 }
 
@@ -77,7 +85,11 @@ func listBadgesHandler(deps Dependencies) http.HandlerFunc {
 		org_id, err := strconv.Atoi(vars["organization_id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			rw.Write([]byte("Error org_id key is missing"))
 			return
 		}
@@ -85,19 +97,15 @@ func listBadgesHandler(deps Dependencies) http.HandlerFunc {
 		badges, err := deps.Store.ListBadges(req.Context(), org_id)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error listing badges")
-			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			return
 		}
+		repsonse(rw, http.StatusOK, successResponse{Data: badges})
 
-		respBytes, err := json.Marshal(badges)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling badges data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		rw.Header().Add("Content-Type", "application/json")
-		rw.Write(respBytes)
 	})
 }
 
@@ -107,37 +115,55 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 		org_id, err := strconv.Atoi(vars["organization_id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
 		var badge db.Badge
 		err = json.NewDecoder(req.Body).Decode(&badge)
 		if err != nil {
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			logger.WithField("err", err.Error()).Error("Error while decoding badge data")
 			return
 		}
 
-		errorResponse, valid := badge.Validate()
+		errResp, valid := badge.Validate()
 		if !valid {
-			respBytes, err := json.Marshal(errorResponse)
+			_, err := json.Marshal(errResp)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling badge data")
-				rw.WriteHeader(http.StatusInternalServerError)
+				repsonse(rw, http.StatusInternalServerError, errorResponse{
+					Error: messageObject{
+						Message: "Internal server error",
+					},
+				})
 				return
 			}
 
-			rw.Header().Add("Content-Type", "application/json")
-			rw.WriteHeader(http.StatusBadRequest)
-			rw.Write(respBytes)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
@@ -147,21 +173,16 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 		badge.ID = badge_id
 		updatedBadge, err = deps.Store.UpdateBadge(req.Context(), badge)
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			logger.WithField("err", err.Error()).Error("Error update badge")
 			return
 		}
+		repsonse(rw, http.StatusOK, successResponse{Data: updatedBadge})
 
-		respBytes, err := json.Marshal(updatedBadge)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling badge data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		rw.WriteHeader(http.StatusCreated)
-		rw.Write(respBytes)
-		rw.Header().Add("Content-Type", "application/json")
 	})
 }
 
@@ -171,14 +192,22 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 		org_id, err := strconv.Atoi(vars["organization_id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
@@ -188,21 +217,17 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 		latestbadge.ID = badge_id
 		latestbadge, err = deps.Store.ShowBadge(req.Context(), latestbadge)
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			logger.WithField("err", err.Error()).Error("Error show badge")
 			return
 		}
 
-		respBytes, err := json.Marshal(latestbadge)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling badge data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+		repsonse(rw, http.StatusOK, successResponse{Data: latestbadge})
 
-		rw.WriteHeader(http.StatusCreated)
-		rw.Write(respBytes)
-		rw.Header().Add("Content-Type", "application/json")
 	})
 }
 
@@ -212,21 +237,33 @@ func deleteBadgeHandler(deps Dependencies) http.HandlerFunc {
 		org_id, err := strconv.Atoi(vars["organization_id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json request body",
+				},
+			})
 			return
 		}
 
 		err = deps.Store.DeleteBadge(req.Context(), org_id, badge_id)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while deleting badge")
-			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			return
 		}
 

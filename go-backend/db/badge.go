@@ -97,22 +97,29 @@ func (s *pgStore) ListBadges(ctx context.Context, org_id int) (badges []Badge, e
 }
 
 func (s *pgStore) UpdateBadge(ctx context.Context, badge Badge) (updatedBadge Badge, err error) {
-	var dbBadge Badge
-	err = s.db.Get(&dbBadge, getBadgeQuery, badge.ID, badge.OrganizationID)
+
+	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting badges")
+		logger.WithField("err:", err.Error()).Error("Error while initiating transaction")
 		return
 	}
-	_, err = s.db.Exec(
-		updateBadgesQuery,
+
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+			return
+		}
+		tx.Commit()
+	}()
+
+	_, err = tx.ExecContext(ctx, updateBadgesQuery,
 		badge.Name,
 		badge.Hi5CountRequired,
 		badge.Hi5Frequency,
 		badge.ID,
-		badge.OrganizationID,
-	)
+		badge.OrganizationID)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while updating badge")
+		logger.WithField("err:", err.Error()).Error("Error updating badge")
 		return
 	}
 
