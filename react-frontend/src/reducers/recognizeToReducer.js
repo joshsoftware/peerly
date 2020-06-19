@@ -1,7 +1,13 @@
 import actionGenerator from "utils/actionGenerator";
 
 export const defaultState = {
-  data: null,
+  data: {
+    id: null,
+    profile_image_url: null,
+    first_name: null,
+    last_name: null,
+    display_name: null,
+  },
   error: null,
 };
 
