@@ -3,15 +3,14 @@ import PropTypes from "prop-types";
 
 import CoreValue from "shared-components/core-value/CoreValue";
 
-const CoreValues = ({ coreValues, fontSize, backgroundColor }) =>
+const CoreValues = ({ coreValues, setCoreValueId }) =>
   coreValues.map((coreValue, index) => (
     <CoreValue
       key={index}
       coreValueId={coreValue.id}
-      coreValueName={coreValue.coreValueName}
-      coreValueImageSrc={coreValue.coreValueImageSrc}
-      fontSize={fontSize}
-      backgroundColor={backgroundColor}
+      coreValueName={coreValue.text}
+      coreValueImageSrc={coreValue.thumbnail_url}
+      setCoreValueId={setCoreValueId}
     />
   ));
 
@@ -19,10 +18,11 @@ CoreValues.propTypes = {
   coreValues: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
-      coreValueName: PropTypes.string.isRequired,
-      fontSize: PropTypes.string,
-      backgroundColor: PropTypes.string,
-      coreValueImageSrc: PropTypes.string,
+      text: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      parent_core_value_id: PropTypes.number,
+      org_id: PropTypes.number,
+      thumbnail_url: PropTypes.string,
     })
   ),
 };
