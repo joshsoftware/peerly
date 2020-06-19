@@ -5,34 +5,37 @@ import styled from "styled-components";
 import ImageComponent from "core-components/image/ImageComponent";
 
 const CoreValueImage = styled(ImageComponent)`
-  max-width: 70px;
-  min-height: 100px;
+  width: 70px;
+  height: 100px;
   border-radius: 10px;
   text-align: center;
   border-radius: 20px;
   overflow: hidden;
 `;
-
+const Wrapper = styled.div`
+  width: 80px;
+  height: 120px;
+`;
 const CoreValueComponent = ({
   coreValueId,
-  coreValueImageSrc,
   coreValueName,
+  coreValueImageSrc,
+  setCoreValueId,
 }) => {
   const onClick = () => {
-    //todo
+    setCoreValueId(coreValueId);
   };
   return (
-    <div className="text-center">
+    <Wrapper className="text-center" onClick={onClick}>
       <div>
         <CoreValueImage
           id={coreValueId}
           src={coreValueImageSrc}
           alt="Core value"
-          onClick={onClick}
         />
       </div>
       <div>{coreValueName}</div>
-    </div>
+    </Wrapper>
   );
 };
 
@@ -42,10 +45,12 @@ CoreValueComponent.defaultProps = {
 
 CoreValueComponent.propTypes = {
   coreValueId: PropTypes.number,
-  coreValueImageSrc: PropTypes.string.isRequired,
   coreValueName: PropTypes.string.isRequired,
-  fontSize: PropTypes.string,
-  backgroundColor: PropTypes.string,
+  description: PropTypes.string,
+  parent_core_value_id: PropTypes.number,
+  org_id: PropTypes.number,
+  coreValueImageSrc: PropTypes.string,
+  setCoreValueId: PropTypes.number,
 };
 
 export default CoreValueComponent;
