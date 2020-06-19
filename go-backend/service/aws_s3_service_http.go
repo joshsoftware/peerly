@@ -12,7 +12,7 @@ func getS3SignedURLHandler() http.HandlerFunc {
 		vars := mux.Vars(req)
 		S3SignedURLData, err := getS3SignedURL(req.Context(), vars["type"])
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while retrieving URL using" + vars["type"])
+			logger.WithField("err", err.Error()).Error("Error while retrieving URL")
 			rw.WriteHeader(http.StatusInternalServerError)
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
 				Error: messageObject{
