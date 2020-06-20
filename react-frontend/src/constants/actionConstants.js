@@ -17,3 +17,7 @@ export const RECOGNIZE_TO = "RECOGNIZE_TO";
 export const ADD_RECOGNITION_API = "ADD_RECOGNITION_API";
 
 export const ADD_RECOGNITION = "ADD_RECOGNITION";
+
+export const LIST_USERS_API = "LIST_USERS_API";
+
+export const LIST_USERS = "LIST_USERS";
