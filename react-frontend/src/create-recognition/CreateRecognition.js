@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import { Card } from "core-components/card/CardComponent";
 import { Form } from "core-components/form/FormComponent";
+import { Col } from "core-components/grid/GridComponent";
 import CoreValue from "shared-components/core-value/CoreValues";
 import { Button } from "core-components/button/ButtonComponent";
 import AddRecognition from "create-recognition/AddRecognition";
@@ -23,6 +24,15 @@ const WrapperForHeader = styled.section`
   margin-right: 18%;
 `;
 
+const CardWrapper = styled(Card)`
+  border-radius: 36px;
+  background: linear-gradient(var(--sage) 23%, var(--white) 0%);
+`;
+
+const MainWrapper = styled.div`
+  height: 100vh;
+`;
+
 const CreateRecognition = ({
   coreValues,
   recognitionToName,
@@ -38,31 +48,67 @@ const CreateRecognition = ({
   sendData,
 }) => {
   return (
-    <Card
-      style={{
-        marginLeft: "30%",
-        borderRadius: "36px 36px 0px 0px",
-        minHeight: "100vh",
-        width: "500px",
-        background: "linear-gradient(var(--sage) 23%, var(--white) 0%)",
-      }}
-    >
-      <WrapperForHeader>
-        <ProfileComponent
-          className="d-flex flex-column"
-          size={14}
-          labelClass=""
-          src={recognitionToImage}
-          name={recognitionToName}
+    <MainWrapper>
+      <CardWrapper className="d-none d-md-block h-100">
+        <WrapperForHeader>
+          <ProfileComponent
+            className="d-flex flex-column mt-2"
+            size={12}
+            labelClass="ml-3"
+            src={recognitionToImage}
+            name={recognitionToName}
+          />
+          <HighFive />
+          <div className="justify-content-center mt-5"> Select Value </div>
+        </WrapperForHeader>
+        <Wrapper className="justify-content-center mt-3">
+          <div className="d-flex justify-content-around flex-row">
+            <CoreValue
+              coreValues={coreValues}
+              setCoreValueId={setCoreValueId}
+            />
+          </div>
+          <div className="text-center  mt-5">
+            {comment ? (
+              <Form.Control
+                as="textarea"
+                rows="3"
+                onChange={(event) => {
+                  addCommentText(event);
+                }}
+              ></Form.Control>
+            ) : (
+              <Button onClick={onClickAddComment}> Add Comments </Button>
+            )}
+          </div>
+          <div className="text-center mt-5">
+            <Button onClick={handleShow}> Done </Button>
+          </div>
+        </Wrapper>
+        <AddRecognition
+          show={show}
+          handleClose={handleClose}
+          recognitionToImage={recognitionToImage}
+          recognitionToName={recognitionToName}
+          commentText={commentText}
+          sendData={sendData}
         />
-        <HighFive />
-        <div className="justify-content-center mt-5"> Select Value </div>
-      </WrapperForHeader>
-      <Wrapper className="justify-content-center mt-3">
-        <div className="d-flex justify-content-center flex-row">
+      </CardWrapper>
+      <div className="d-sm-block d-xs-block d-md-none h-100 d-flex flex-column">
+        <Col className="d-flex justify-content-center align-items-center bg-light grey">
+          <ProfileComponent
+            className="d-flex flex-column"
+            size={14}
+            labelClass="ml-3"
+            src={recognitionToImage}
+            name={recognitionToName}
+          />
+        </Col>
+        <span className="my-3">select core value</span>
+        <Col className="d-flex justify-content-around flex-row">
           <CoreValue coreValues={coreValues} setCoreValueId={setCoreValueId} />
-        </div>
-        <div className="text-center  mt-5">
+        </Col>
+        <Col className="text-center ">
           {comment ? (
             <Form.Control
               as="textarea"
@@ -74,20 +120,12 @@ const CreateRecognition = ({
           ) : (
             <Button onClick={onClickAddComment}> Add Comments </Button>
           )}
-        </div>
-        <div className="text-center mt-5">
+        </Col>
+        <Col className="text-center">
           <Button onClick={handleShow}> Done </Button>
-        </div>
-      </Wrapper>
-      <AddRecognition
-        show={show}
-        handleClose={handleClose}
-        recognitionToImage={recognitionToImage}
-        recognitionToName={recognitionToName}
-        commentText={commentText}
-        sendData={sendData}
-      />
-    </Card>
+        </Col>
+      </div>
+    </MainWrapper>
   );
 };
 
