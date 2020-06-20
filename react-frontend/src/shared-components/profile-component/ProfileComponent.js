@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -10,15 +10,31 @@ const ProfileImage = styled(ImageComponent)`
   width: ${({ size }) => `${size}vh`};
 `;
 
-const ProfileComponent = ({ className, size, labelClass, src, name }) => (
-  <div className={className}>
-    <ProfileImage size={size} src={src} roundedCircle={true} alt="Profile" />
-    <Form.Label className={`font-weight-bold ${labelClass}`}>{name}</Form.Label>
-  </div>
-);
+const ProfileComponent = ({
+  className,
+  size,
+  labelClass,
+  src,
+  name,
+  id,
+  setUserId,
+}) => {
+  const onClick = () => {
+    setUserId(id);
+  };
+  return (
+    <div className={className} onClick={onClick}>
+      <ProfileImage size={size} src={src} roundedCircle={true} alt="Profile" />
+      <Form.Label className={`font-weight-bold ${labelClass}`}>
+        {name}
+      </Form.Label>
+    </div>
+  );
+};
 
 ProfileComponent.defaultProps = {
   size: 10,
+  id: 0,
 };
 
 ProfileComponent.propTypes = {
@@ -27,6 +43,8 @@ ProfileComponent.propTypes = {
   src: PropTypes.string,
   size: PropTypes.number,
   labelClass: PropTypes.string,
+  id: PropTypes.number,
+  setUserId: PropTypes.func,
 };
 
-export default React.memo(ProfileComponent);
+export default React.memo(ProfileComponent);*/

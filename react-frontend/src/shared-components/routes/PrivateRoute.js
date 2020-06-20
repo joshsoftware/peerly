@@ -7,7 +7,7 @@ import withLayout from "HOC/withLayout";
 import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 
 const PrivateRoute = ({ route }) => {
-  const token = useSelector((state) => state.appReducer.token);
+  const token = useSelector((state) => state.loginReducer.data.token);
 
   const finalComponent = token
     ? withLayout(route.component, route.includeNavbar, route.includeSidebar)

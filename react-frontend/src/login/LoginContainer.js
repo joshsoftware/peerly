@@ -1,13 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import LoginComponent from "login/LoginComponent";
+import LoginComponent from "login/LoginPageComponent";
 import actionGenerator from "utils/actionGenerator";
 import { LOGIN_API, LOGIN } from "constants/actionConstants";
 import { store } from "root/redux-store";
 import actionObjectGenerator from "actions/actionObjectGenerator";
+import { useHistory } from "react-router-dom";
 
 const LoginContainer = () => {
+  let history = useHistory();
   const loginAuthorization = useSelector((state) => state.loginReducer);
 
   const responseGoogleOnSuccess = ({ tokenObj }) => {
@@ -34,7 +36,7 @@ const LoginContainer = () => {
   } else if (loginAuthorization.error.message === "popup_closed_by_user") {
     return "Unauthorized user"; //TODO: redirect to unauthorized component
   } else if (loginAuthorization.status === 200) {
-    return "Successful"; //TODO: redirect to dashboard
+    history.push("/createREcognition");
   }
   return (
     <LoginComponent

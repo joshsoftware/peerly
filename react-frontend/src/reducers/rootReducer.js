@@ -5,6 +5,7 @@ import listRecognitionReducer from "reducers/listRecognitionReducer";
 import loginReducer from "reducers/loginReducer";
 import coreValueListReducer from "reducers/coreValueListReducer";
 import RecognizeToReducer from "reducers/recognizeToReducer";
+import userListReducer from "reducers/listUsers";
 
 export default combineReducers({
   appReducer,
@@ -12,4 +13,5 @@ export default combineReducers({
   loginReducer,
   coreValueListReducer,
   RecognizeToReducer,
+  userListReducer,
 });
