@@ -1,4 +1,11 @@
-import { put, takeEvery, takeLatest, spawn, call } from "redux-saga/effects";
+import {
+  put,
+  takeEvery,
+  takeLatest,
+  spawn,
+  call,
+  select,
+} from "redux-saga/effects";
 
 import getJson from "utils/getJson";
 import actionObjectGenerator from "actions/listRecognitionAction";
@@ -15,11 +22,12 @@ import {
 
 export function* getRecognitionList() {
   const status = actionGenerator(CORE_VALUE_LIST);
+  const getToken = (state) => state.loginReducer.data.token;
+  const token = yield select(getToken);
   try {
     const response = yield call(getJson, {
       path: "/core_values",
-      apiToken:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJub2RlLnBlZXJseS5jb20iLCJzdWIiOjcsImF1ZCI6InBlZXJseS5jb20iLCJuYmYiOjE1OTI1Mjk5NDUsImh0dHBzOi8vcGVlcmx5LmNvbSI6eyJyb2xlSWQiOjIsIm9yZ0lkIjoxLCJvcmdOYW1lIjoiam9zaCJ9LCJpYXQiOjE1OTI1Mjk5NDUsImV4cCI6MTU5MjU2NTk0NX0.g8_QD5UzXLgKz8Wm1v4MfpV9l01lChE8iJEFpz_zXmA",
+      apiToken: token,
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
@@ -34,11 +42,12 @@ export function* getRecognitionList() {
 
 export function* getRecognitionTo() {
   const status = actionGenerator(RECOGNIZE_TO);
+  const getToken = (state) => state.loginReducer.data.token;
+  const token = yield select(getToken);
   try {
     const response = yield call(getJson, {
       path: "/users/1",
-      apiToken:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJub2RlLnBlZXJseS5jb20iLCJzdWIiOjcsImF1ZCI6InBlZXJseS5jb20iLCJuYmYiOjE1OTI1Mjk5NDUsImh0dHBzOi8vcGVlcmx5LmNvbSI6eyJyb2xlSWQiOjIsIm9yZ0lkIjoxLCJvcmdOYW1lIjoiam9zaCJ9LCJpYXQiOjE1OTI1Mjk5NDUsImV4cCI6MTU5MjU2NTk0NX0.g8_QD5UzXLgKz8Wm1v4MfpV9l01lChE8iJEFpz_zXmA",
+      apiToken: token,
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
@@ -53,12 +62,13 @@ export function* getRecognitionTo() {
 
 export function* addRecognition(action) {
   const actionStatus = actionGenerator(ADD_RECOGNITION);
+  const getToken = (state) => state.loginReducer.data.token;
+  const token = yield select(getToken);
   try {
     const response = yield call(PostJson, {
       path: "/recognitions",
       paramsObj: action.payload,
-      apiToken:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJub2RlLnBlZXJseS5jb20iLCJzdWIiOjcsImF1ZCI6InBlZXJseS5jb20iLCJuYmYiOjE1OTI1Mjk5NDUsImh0dHBzOi8vcGVlcmx5LmNvbSI6eyJyb2xlSWQiOjIsIm9yZ0lkIjoxLCJvcmdOYW1lIjoiam9zaCJ9LCJpYXQiOjE1OTI1Mjk5NDUsImV4cCI6MTU5MjU2NTk0NX0.g8_QD5UzXLgKz8Wm1v4MfpV9l01lChE8iJEFpz_zXmA",
+      apiToken: token,
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
