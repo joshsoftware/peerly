@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
+import { Modal } from "core-components/modal/ModalComponent";
 
 const Wrapper = styled.div`
   border: 1px solid var(--grey);
@@ -15,7 +16,13 @@ const Wrapper = styled.div`
   height: 537px;
 `;
 
-const RecognitionListComponent = ({ recognitionList, giveHi5func }) => {
+const RecognitionListComponent = ({
+  recognitionList,
+  giveHi5func,
+  show,
+  handleClose,
+  errorMessage,
+}) => {
   const getDateFormate = (timestamp) =>
     new Date(timestamp * 1000).toDateString();
 
@@ -34,9 +41,20 @@ const RecognitionListComponent = ({ recognitionList, giveHi5func }) => {
           text={recognition.text}
           coreValue={recognition.coreValue.text}
           coreValueImage={recognition.coreValue.thumbnail_url}
-          hi5Count={3}
+          hi5Count={recognition.hi5Count.length}
         />
       ))}
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered={true}
+        aria-labelledby="contained-modal-title-vcenter"
+      >
+        <Modal.Body closeButton className="text-center text-danger">
+          {errorMessage}
+        </Modal.Body>
+      </Modal>
+      <div id="#1233" style={{ height: 1 }} className="text-center" />
     </Wrapper>
   );
 };
@@ -45,6 +63,9 @@ RecognitionListComponent.propTypes = {
   recognitionList: PropTypes.array.isRequired,
   giveHi5func: PropTypes.func.isRequired,
   hi5Count: PropTypes.number,
+  show: PropTypes.bool,
+  handleClose: PropTypes.func,
+  errorMessage: PropTypes.string,
 };
 
 export default React.memo(RecognitionListComponent);

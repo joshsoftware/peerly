@@ -83,6 +83,7 @@ const CreateRecognitionContainer = () => {
       recognitionToImage={recognitionTo.data.profile_image_url}
       recognitionToName={`${recognitionTo.data.first_name} ${recognitionTo.data.last_name}`}
       sendData={sendData}
+      coreValueId={coreValueId}
     />
   );
 };

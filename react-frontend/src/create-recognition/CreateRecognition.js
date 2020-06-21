@@ -50,6 +50,7 @@ const CreateRecognition = ({
   onClickAddComment,
   addCommentText,
   sendData,
+  coreValueId,
 }) => {
   return (
     <MainWrapper>
@@ -86,7 +87,7 @@ const CreateRecognition = ({
             )}
           </div>
           <div className="text-center mt-3">
-            <Button onClick={handleShow}> Done </Button>
+            {coreValueId ? <Button onClick={handleShow}> Done </Button> : <></>}
           </div>
         </Wrapper>
         <AddRecognition
@@ -159,6 +160,7 @@ CreateRecognition.propTypes = {
   onClickAddComment: PropTypes.func,
   addCommentText: PropTypes.func,
   sendData: PropTypes.func,
+  coreValueId: PropTypes.number,
 };
 
 export default CreateRecognition;

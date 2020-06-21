@@ -1,4 +1,4 @@
-/*import React from "react";
+import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
@@ -8,8 +8,7 @@ import ImageComponent from "core-components/image/ImageComponent";
 const ProfileImage = styled(ImageComponent)`
   height: ${({ size }) => `${size}vh`};
   width: ${({ size }) => `${size}vh`};
-  box-shadow: ${({ shadow }) => (shadow ? "0px 3px 6px #00000029" : "")}
- 
+  box-shadow: ${({ shadow }) => (shadow ? "0px 3px 6px #00000029" : "")};
 `;
 
 const ProfileComponent = ({
@@ -26,8 +25,17 @@ const ProfileComponent = ({
     setUserId(id);
   };
   return (
-    <div className={className} onClick={onClick}>
-      <ProfileImage size={size} src={src} roundedCircle={true} shadow={shadow} alt="Profile" />
+    <div /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+      className={className}
+      onClick={onClick}
+    >
+      <ProfileImage
+        size={size}
+        src={src}
+        roundedCircle={true}
+        shadow={shadow}
+        alt="Profile"
+      />
       <Form.Label className={`font-weight-bold ${labelClass}`}>
         {name}
       </Form.Label>
@@ -52,4 +60,4 @@ ProfileComponent.propTypes = {
   shadow: PropTypes.bool,
 };
 
-export default React.memo(ProfileComponent);*/
+export default React.memo(ProfileComponent);
