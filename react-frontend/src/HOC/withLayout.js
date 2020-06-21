@@ -2,17 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import TopNavbar from "shared-components/layout/TopNavbar";
-import Sidebar from "shared-components/layout/Sidebar";
+import Sidebar from "shared-components/left-panel/LeftPanelContainer";
 
 const withLayout = (WrappedComponent, includeNavbar, includeSidebar) => (
   props
 ) => {
   return (
-    <>
+    <div style={{ "background-color": "var(--grey)", height: "100vh" }}>
       {includeNavbar && <TopNavbar />}
       <WrappedComponent {...props} />
       {includeSidebar && <Sidebar />}
-    </>
+    </div>
   );
 };
 

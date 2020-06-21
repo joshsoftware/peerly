@@ -3,6 +3,7 @@ import recognitionSaga from "sagas/recognitionSaga";
 import { loginApi } from "sagas/loginSaga";
 import coreValueList from "sagas/coreValueListSaga";
 import usersListSaga from "sagas/usersListSaga";
+import userProfileSaga from "sagas/userProfileSaga";
 
 export function* helloSaga() {
   const msg = yield "Hello Sagas!";
@@ -16,4 +17,5 @@ export default function* rootSaga() {
   yield spawn(loginApi);
   yield spawn(coreValueList);
   yield spawn(usersListSaga);
+  yield spawn(userProfileSaga);
 }
