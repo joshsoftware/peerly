@@ -8,6 +8,7 @@ import ImageComponent from "core-components/image/ImageComponent";
 
 const ProfileImage = styled.div`
   width: 12vh;
+  height: 12vh;
 `;
 
 const MenuButton = styled(Button)`

@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"joshsoftware/peerly/config"
-
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
+	"joshsoftware/peerly/config"
 )
 
 const (
@@ -39,6 +38,18 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values", createCoreValueHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", deleteCoreValueHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", updateCoreValueHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+
+	//reported recognition
+	router.Handle("/recognitions/{recognition_id:[0-9]+}/report", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createReportedRecognitionHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
+	//recognition moderation
+	router.Handle("/recognitions/{recognition_id:[0-9]+}/review", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createRecognitionModerationHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
 
 	//users
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)

@@ -43,7 +43,7 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"data":[{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}]}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":[{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null,"thumbnail_url":null}]}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -87,7 +87,7 @@ func (suite *CoreValueHandlerTestSuite) TestGetCoreValueSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null,"thumbnail_url":null}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -141,11 +141,12 @@ func (suite *CoreValueHandlerTestSuite) TestDeleteCoreValueWhenDBFailure() {
 
 func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueSuccess() {
 	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{
-		ID:          1,
-		OrgID:       1,
-		Text:        "TEST",
-		Description: "Description TEST",
-		ParentID:    nil,
+		ID:           1,
+		OrgID:        1,
+		Text:         "TEST",
+		Description:  "Description TEST",
+		ParentID:     nil,
+		ThumbnailURL: nil,
 	}, nil)
 
 	body := `{
@@ -162,7 +163,7 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusCreated, recorder.Code)
-	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null,"thumbnail_url":null}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -287,7 +288,7 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null}}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":{"id":1,"org_id":1,"text":"TEST","description":"Description TEST","parent_id":null,"thumbnail_url":null}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 

@@ -41,6 +41,8 @@ export default (state = defaultState, action) => {
         ...state,
         hi5: { data: action.payload.data, error: {} },
       };
+    case hi5Status.init:
+      return { ...state, hi5: { data: {}, error: {} } };
     default:
       return state;
   }

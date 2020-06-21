@@ -14,7 +14,11 @@ const RecognnitionListContainer = () => {
   const status = actionGenrator(LIST_RECOGNITION_API);
   const hi5Status = actionGenrator(GIVE_HI5_API);
   const [refresh, changeRefresh] = useState(0);
-
+  const [show, setShow] = useState(false);
+  const handleClose = () => {
+    setShow(false);
+    dispatch(actionObjectGenrator(hi5Status.init));
+  };
   const handleObserver = (entries) => {
     if (entries[0].isIntersecting) {
       dispatch(actionObjectGenrator(status.success));
@@ -35,7 +39,7 @@ const RecognnitionListContainer = () => {
       options
     );
     observer.observe(document.getElementById("#1233"));
-  }, [dispatch, status.success, refresh]);
+  }, [dispatch, status.success, refresh, show]);
 
   const giveHi5func = async (id) => {
     if (id !== 0) {
@@ -52,15 +56,18 @@ const RecognnitionListContainer = () => {
     return <SessionTimeoutComponent />;
   } else if (recognitionList.error.code === "access_denied") {
     return <UnauthorisedErrorComponent />;
+  } else if (recognitionList.hi5.error.code !== undefined && show == false) {
+    setShow(true);
   }
-
   return (
     <div>
       <RecognitionListComponent
         recognitionList={recognitionList.list}
         giveHi5func={giveHi5func}
+        show={show}
+        handleClose={handleClose}
+        errorMessage={recognitionList.hi5.error.message}
       />
-      <div id="#1233" style={{ height: 1 }} className="text-center" />
     </div>
   );
 };

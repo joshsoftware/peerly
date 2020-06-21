@@ -59,6 +59,11 @@ func listUsersHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			return
 		}
 
@@ -66,6 +71,11 @@ func listUsersHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error marshaling users data")
 			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			return
 		}
 
@@ -82,6 +92,11 @@ func getUserHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id is missing")
 			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error id is missing",
+				},
+			})
 			return
 		}
 
@@ -89,18 +104,14 @@ func getUserHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while fetching User")
 			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			return
 		}
-
-		respBytes, err := json.Marshal(user)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling User's data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		rw.Header().Add("Content-Type", "application/json")
-		rw.Write(respBytes)
+		repsonse(rw, http.StatusOK, successResponse{Data: user})
 	})
 }
 
@@ -111,6 +122,11 @@ func updateUserHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
 			rw.WriteHeader(http.StatusBadRequest)
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error id is missing",
+				},
+			})
 			return
 		}
 
@@ -119,14 +135,24 @@ func updateUserHandler(deps Dependencies) http.HandlerFunc {
 		if err != nil {
 			rw.WriteHeader(http.StatusBadRequest)
 			logger.WithField("err", err.Error()).Error("Error while decoding user")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Invalid json body",
+				},
+			})
 			return
 		}
 
-		errorResponse, valid := user.Validate()
+		errRes, valid := user.Validate()
 		if !valid {
-			respBytes, err := json.Marshal(errorResponse)
+			respBytes, err := json.Marshal(errRes)
 			if err != nil {
 				logger.WithField("err", err.Error()).Error("Error marshaling user's data")
+				repsonse(rw, http.StatusBadRequest, errorResponse{
+					Error: messageObject{
+						Message: "Invalid json body",
+					},
+				})
 				rw.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -140,20 +166,19 @@ func updateUserHandler(deps Dependencies) http.HandlerFunc {
 		updatedUser, err = deps.Store.UpdateUser(req.Context(), user, id)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			logger.WithField("err", err.Error()).Error("Error while updating user's profile")
 			return
 		}
+		// rw.WriteHeader(http.StatusOK)
+		// rw.Write(respBytes)
+		// rw.Header().Add("Content-Type", "application/json")
+		repsonse(rw, http.StatusOK, successResponse{Data: updatedUser})
 
-		respBytes, err := json.Marshal(updatedUser)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling user's data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		rw.WriteHeader(http.StatusOK)
-		rw.Write(respBytes)
-		rw.Header().Add("Content-Type", "application/json")
 		return
 	})
 }

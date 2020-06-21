@@ -39,4 +39,10 @@ type Storer interface {
 
 	//Recognition
 	CreateRecognitionHi5(context.Context, RecognitionHi5, int) error
+
+	//Reported Recognition
+	CreateReportedRecognition(context.Context, int64, ReportedRecognition) (ReportedRecognition, error)
+
+	//Recognition Moderation
+	CreateRecognitionModeration(context.Context, int64, RecognitionModeration) (RecognitionModeration, error)
 }

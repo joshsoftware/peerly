@@ -12,6 +12,8 @@ import HighFiveComponent from "shared-components/high-five-components/HighFiveCo
 const CoreValueImage = styled(ImageComponent)`
   border-radius: 20px;
   overflow: hidden;
+  height: 250px;
+  width: 100%;
 `;
 
 const HighFive = styled(HighFiveComponent)`

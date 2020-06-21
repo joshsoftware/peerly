@@ -20,6 +20,7 @@ const Legend = styled.legend`
 
 const ProfileImage = styled(ImageComponent)`
   width: 7vh;
+  height: 7vh;
   margin-right: 5%;
 `;
 

@@ -23,7 +23,7 @@ const HighFiveIcon = styled(HighFiveComponent)`
 
 function TopNavbar() {
   return (
-    <NavbarWrapper>
+    <NavbarWrapper className="sticky-top">
       <Container fluid>
         <Row className="w-100 justify-content-center">
           <Col md="8" sm="12">

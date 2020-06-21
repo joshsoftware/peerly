@@ -17,8 +17,6 @@ type OrganizationTestSuite struct {
 	sqlmock sqlmock.Sqlmock
 }
 
-var mockedRows *sqlmock.Rows
-
 var expectedOrg = Organization{
 	ID:                       1,
 	Name:                     "test organization",

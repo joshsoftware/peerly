@@ -18,10 +18,10 @@ export function* getRecognitionList() {
   const listReducer = yield select((state) => state.listRecognitionReducer);
   try {
     const response = yield call(getJson, {
-      path: "recognitions",
+      path: "/recognitions",
       paramsObj: {
-        limit: yield select((state) => state.listRecognitionReducer.limit),
-        offset: yield select((state) => state.listRecognitionReducer.offset),
+        limit: listReducer.limit,
+        offset: listReducer.offset,
       },
       apiToken: token,
     });
@@ -31,14 +31,14 @@ export function* getRecognitionList() {
         yield put(
           actionObjectGenerator(status.success, {
             list: responseObj.data,
-            offset: listReducer.offset + listReducer.limit,
+            offset: listReducer.offset + responseObj.data.length,
           })
         );
       } else {
         yield put(
           actionObjectGenerator(status.success, {
             list: listReducer.list.concat(responseObj.data),
-            offset: listReducer.offset + listReducer.limit,
+            offset: listReducer.offset + responseObj.data.length,
           })
         );
       }
@@ -69,7 +69,7 @@ export function* giveHi5ToRecognition(action) {
   );
   try {
     const response = yield call(postJson, {
-      path: "recognitions/" + action.payload.id + "/hi5",
+      path: "/recognitions/" + action.payload.id + "/hi5",
       apiToken: token,
     });
     const responseObj = yield response.json();
@@ -88,11 +88,17 @@ export function* giveHi5ToRecognition(action) {
   }
 }
 
+function* resetHi5ReducerObject() {
+  const hi5Status = actionGenerator(GIVE_HI5);
+  yield put(actionObjectGenerator(hi5Status.init));
+}
+
 export function* recognitionApi() {
   const status = actionGenerator(LIST_RECOGNITION_API);
   const hi5Status = actionGenerator(GIVE_HI5_API);
   yield takeLeading(status.success, getRecognitionList);
   yield takeLeading(hi5Status.success, giveHi5ToRecognition);
+  yield takeLeading(hi5Status.init, resetHi5ReducerObject);
 }
 
 export default function* rootRecognitionSaga() {
