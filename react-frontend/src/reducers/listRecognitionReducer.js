@@ -17,7 +17,7 @@ export const defaultState = {
   error: {
     fields: {},
   },
-  limit: 10,
+  limit: 3,
   offset: 0,
 };
 
@@ -30,6 +30,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         list: action.payload.list,
+        offset: action.payload.offset,
       };
     case status.failure:
       return { ...state, error: action.payload };
@@ -39,7 +40,6 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         hi5: { data: action.payload.data, error: {} },
-        list: action.payload.list,
       };
     default:
       return state;
