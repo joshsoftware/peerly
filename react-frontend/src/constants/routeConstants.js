@@ -4,6 +4,7 @@ export const DASHBOARD_ROUTES = {
   leftPanel: "/leftPanel",
   createRecognition: "/createRecognition",
   usersList: "/usersList",
+  listOfRecognition: "/listOfRecognition",
 };
 
 export const ROOT_ROUTES = {

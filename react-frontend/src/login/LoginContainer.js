@@ -36,7 +36,7 @@ const LoginContainer = () => {
   } else if (loginAuthorization.error.message === "popup_closed_by_user") {
     return "Unauthorized user"; //TODO: redirect to unauthorized component
   } else if (loginAuthorization.status === 200) {
-    history.push("/createREcognition");
+    history.push("/listOfRecognition");
   }
   return (
     <LoginComponent
