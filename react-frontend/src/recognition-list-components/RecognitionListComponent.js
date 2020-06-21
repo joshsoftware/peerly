@@ -9,6 +9,10 @@ const Wrapper = styled.div`
   background: var(--white) 0% 0% no-repeat padding-box;
   border-radius: 36px;
   opacity: 1;
+  margin-top: 3%;
+  margin-left: 35%;
+  margin-right: 20%;
+  height: 537px;
 `;
 
 const RecognitionListComponent = ({ recognitionList, giveHi5func }) => {
@@ -16,7 +20,7 @@ const RecognitionListComponent = ({ recognitionList, giveHi5func }) => {
     new Date(timestamp * 1000).toDateString();
 
   return (
-    <Wrapper>
+    <Wrapper className="sticky-top">
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
           key={recognition.id}
@@ -30,7 +34,7 @@ const RecognitionListComponent = ({ recognitionList, giveHi5func }) => {
           text={recognition.text}
           coreValue={recognition.coreValue.text}
           coreValueImage={recognition.coreValue.thumbnail_url}
-          hi5Count={recognition.hi5Count.length}
+          hi5Count={3}
         />
       ))}
     </Wrapper>
