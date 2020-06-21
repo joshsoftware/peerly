@@ -1,4 +1,4 @@
-import { put, spawn, call, takeLeading } from "redux-saga/effects";
+import { put, spawn, call, takeLeading, select } from "redux-saga/effects";
 
 import getJson from "utils/getJson";
 import postJson from "utils/postJson";
@@ -13,14 +13,16 @@ import {
 
 export function* getRecognitionList(action) {
   const status = actionGenerator(LIST_RECOGNITION);
+  const getToken = (state) => state.loginReducer.data.token;
+  const token = yield select(getToken);
   try {
     const response = yield call(getJson, {
-      path: "recognitions",
+      path: "/recognitions",
       paramsObj: {
         limit: action.payload.limit,
         offset: action.payload.offset,
       },
-      apiToken: "",
+      apiToken: token,
     });
     const responseObj = yield response.json();
     if (responseObj.data) {

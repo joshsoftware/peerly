@@ -40,13 +40,13 @@ export function* getRecognitionList() {
   }
 }
 
-export function* getRecognitionTo() {
+export function* getRecognitionTo(action) {
   const status = actionGenerator(RECOGNIZE_TO);
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
   try {
     const response = yield call(getJson, {
-      path: "/users/1",
+      path: "/users/" + action.payload + "",
       apiToken: token,
     });
     const responseObj = yield response.json();

@@ -32,7 +32,7 @@ const LeftPanelComponent = ({
     //TODO
   };
   return (
-    <Wrapper className="justify-content-around align-items-center d-flex flex-column">
+    <Wrapper className="justify-content-around align-items-center d-flex flex-column position-fixed">
       <ProfileComponent
         name={profileName}
         src={profileImage}

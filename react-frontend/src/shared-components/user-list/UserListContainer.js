@@ -32,7 +32,7 @@ const UserListContainer = () => {
     return <UnauthorisedErrorComponent />;
   } else if (userId) {
     history.push("/createREcognition");
-    setUserId(null);
+    //setUserId(null);
   }
 
   return (
