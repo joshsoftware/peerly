@@ -22,6 +22,10 @@ export const LIST_USERS_API = "LIST_USERS_API";
 
 export const LIST_USERS = "LIST_USERS";
 
+export const GIVE_HI5_API = "GIVE_HI5_API";
+
+export const GIVE_HI5 = "GIVE_HI5";
+
 export const USER_PROFILE = "USER_PROFILE";
 
 export const USER_PROFILE_API = "USER_PROFILE_API";

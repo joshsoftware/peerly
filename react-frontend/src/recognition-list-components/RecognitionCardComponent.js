@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import { Row, Col } from "core-components/grid/GridComponent";
 import { Card } from "core-components/card/CardComponent";
-import { BsCircle } from "core-components/icon/icons";
 import ImageComponent from "core-components/image/ImageComponent";
 import RecognitionCardHeaderComponent from "recognition-list-components/RecognitionCardHeaderComponent";
 import RecognitionTextComponent from "recognition-list-components/RecognitionTextComponent";
@@ -29,6 +28,8 @@ const CardComponent = styled(Card)`
 `;
 
 const RecognitionCardComponent = ({
+  recognitionId,
+  giveHi5func,
   givenByName,
   givenByImage,
   givenForName,
@@ -37,6 +38,7 @@ const RecognitionCardComponent = ({
   text,
   coreValue,
   coreValueImage,
+  hi5Count,
 }) => (
   <CardComponent>
     <Card.Body>
@@ -67,19 +69,27 @@ const RecognitionCardComponent = ({
               className="mt-2"
             />
           </div>
-          <BsCircle size="50px" className="mt-4" color="red" />
         </Col>
       </Row>
-      <HighFive />
+      <div /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+        onClick={(e) => {
+          e.preventDefault();
+          giveHi5func(recognitionId);
+        }}
+      >
+        <HighFive />
+      </div>
       <Card.Footer className="bg-white">
         <span className="font-weight-bold text-muted">+</span>
-        <span className="font-weight-bold text-dark">1</span>
+        <span className="font-weight-bold text-dark">{hi5Count}</span>
       </Card.Footer>
     </Card.Body>
   </CardComponent>
 );
 
 RecognitionCardComponent.propTypes = {
+  recognitionId: PropTypes.number.isRequired,
+  giveHi5func: PropTypes.func.isRequired,
   givenByName: PropTypes.string.isRequired,
   givenByImage: PropTypes.string,
   givenForName: PropTypes.string.isRequired,
@@ -88,10 +98,12 @@ RecognitionCardComponent.propTypes = {
   text: PropTypes.string.isRequired,
   coreValue: PropTypes.string.isRequired,
   coreValueImage: PropTypes.string,
+  hi5Count: PropTypes.number,
 };
 
 RecognitionCardComponent.defaultProps = {
   coreValueImage: "https://i.picsum.photos/id/654/300/200.jpg",
+  recognitionId: 5,
 };
 
 export default React.memo(RecognitionCardComponent);
