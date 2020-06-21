@@ -13,49 +13,52 @@ import {
 import actionGenerator from "utils/actionGenerator";
 import { store } from "root/redux-store";
 import actionObjectGenerator from "actions/actionObjectGenerator";
-
+import { useHistory } from "react-router-dom";
 import CreateRecognition from "create-recognition/CreateRecognition";
 
 const CreateRecognitionContainer = () => {
+  const recognitionList = useSelector((state) => state.coreValueListReducer);
+  const recognitionTo = useSelector((state) => state.RecognizeToReducer);
+  const userProfile = useSelector((state) => state.userProfileReducer);
+
   const [commentText, updateCommentText] = useState(null);
   const [show, setShow] = useState(false);
   const [comment, addComment] = useState(false);
   const [coreValueId, setCoreValueId] = useState(null);
+  let history = useHistory();
   const onClickAddComment = () => {
     addComment(true);
   };
   const addCommentText = (event) => {
     updateCommentText(event.target.value);
   };
-
   const sendData = () => {
     setShow(false);
     const actionStatus = actionGenerator(ADD_RECOGNITION_API);
     const addRecognition = {
       core_value_id: coreValueId,
       text: commentText,
-      given_for: 1,
-      given_by: 7,
+      given_for: recognitionTo.data.id,
+      given_by: userProfile.data.id,
     };
     const dispatchObject = actionObjectGenerator(
       actionStatus.success,
       addRecognition
     );
     store.dispatch(dispatchObject);
+    history.push("/listOfRecognition");
   };
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const recognitionList = useSelector((state) => state.coreValueListReducer);
-  const recognitionTo = useSelector((state) => state.RecognizeToReducer);
-
   const dispatch = useDispatch();
   const status = actionGenrator(CORE_VALUE_API);
   const recognitionToStatus = actionGenrator(RECOGNIZE_TO_API);
 
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
-    dispatch(actionObjectGenrator(recognitionToStatus.success));
+    dispatch(
+      actionObjectGenrator(recognitionToStatus.success, recognitionTo.data.id)
+    );
   }, [dispatch, status.success, recognitionToStatus.success]);
 
   if (recognitionList.error === "invalid_token") {
