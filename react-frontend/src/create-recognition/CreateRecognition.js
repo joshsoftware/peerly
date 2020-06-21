@@ -12,7 +12,9 @@ import HighFiveComponent from "shared-components/high-five-components/HighFiveCo
 import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
 const HighFive = styled(HighFiveComponent)`
+  position: relative;
   margin-left: 70%;
+  margin-top: -20px;
 `;
 const Wrapper = styled.section`
   margin-left: 10%;
@@ -25,13 +27,15 @@ const WrapperForHeader = styled.section`
 `;
 
 const CardWrapper = styled(Card)`
-  border-radius: 36px;
-  background: linear-gradient(var(--sage) 23%, var(--white) 0%);
+  border-radius: 36px 36px 0px 0px;
+  background: linear-gradient(var(--sage) 120px, var(--white) 0%);
+  margin-top: 3%;
+  margin-left: 35%;
+  margin-right: 20%;
+  height: 537px;
 `;
 
-const MainWrapper = styled.div`
-  height: 100vh;
-`;
+const MainWrapper = styled.div``;
 
 const CreateRecognition = ({
   coreValues,
@@ -49,17 +53,17 @@ const CreateRecognition = ({
 }) => {
   return (
     <MainWrapper>
-      <CardWrapper className="d-none d-md-block h-100">
+      <CardWrapper className="d-none d-md-block ">
         <WrapperForHeader>
           <ProfileComponent
-            className="d-flex flex-column mt-2"
-            size={12}
+            className="d-flex flex-column align-items-center mt-2"
+            size={10}
             labelClass="ml-3"
             src={recognitionToImage}
             name={recognitionToName}
           />
           <HighFive />
-          <div className="justify-content-center mt-5"> Select Value </div>
+          <div className="justify-content-center"> Select Value </div>
         </WrapperForHeader>
         <Wrapper className="justify-content-center mt-3">
           <div className="d-flex justify-content-around flex-row">
@@ -68,7 +72,7 @@ const CreateRecognition = ({
               setCoreValueId={setCoreValueId}
             />
           </div>
-          <div className="text-center  mt-5">
+          <div className="text-center mt-5">
             {comment ? (
               <Form.Control
                 as="textarea"
@@ -81,7 +85,7 @@ const CreateRecognition = ({
               <Button onClick={onClickAddComment}> Add Comments </Button>
             )}
           </div>
-          <div className="text-center mt-5">
+          <div className="text-center mt-3">
             <Button onClick={handleShow}> Done </Button>
           </div>
         </Wrapper>
@@ -112,7 +116,7 @@ const CreateRecognition = ({
           {comment ? (
             <Form.Control
               as="textarea"
-              rows="3"
+              rows="2"
               onChange={(event) => {
                 addCommentText(event);
               }}

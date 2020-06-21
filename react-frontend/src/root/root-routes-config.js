@@ -1,10 +1,10 @@
-import App from "root/App";
 import Dashboard from "root/Dashboard";
 import LeftPanel from "shared-components/left-panel/LeftPanelComponent";
 import CreateRecognition from "create-recognition/CreateRecognitionContainer";
 import LoginContainer from "login/LoginContainer";
 import UserListContainer from "shared-components/user-list/UserListContainer";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
+import ListOfRecognition from "recognition-list/RecognitionListContainer";
 import { DASHBOARD_ROUTES, ROOT_ROUTES } from "constants/routeConstants";
 
 export default [
@@ -13,7 +13,7 @@ export default [
     isProtected: false,
     includeNavbar: false,
     includeSidebar: false,
-    component: App,
+    component: LoginContainer,
     exact: true,
     strict: false,
     key: ROOT_ROUTES.rootIndex,
@@ -37,6 +37,16 @@ export default [
     exact: false,
     strict: false,
     key: DASHBOARD_ROUTES.loginRoute,
+  },
+  {
+    path: DASHBOARD_ROUTES.listOfRecognition,
+    isProtected: true,
+    includeNavbar: true,
+    includeSidebar: true,
+    component: ListOfRecognition,
+    exact: false,
+    strict: false,
+    key: DASHBOARD_ROUTES.listOfRecognition,
   },
   {
     path: DASHBOARD_ROUTES.leftPanel,

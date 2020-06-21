@@ -10,12 +10,12 @@ import PopupWindow from "shared-components/user-list/PopupUserList";
 
 const Wrapper = styled(Card)`
   position: absolute;
-  margin-top: -600px;
-  margin-left: 80px;
-  width: 150px;
-  border-radius: 36px;
-  height: 80vh;
-  background: linear-gradient(var(--sage) 25%, var(--white) 0%);
+  margin-top: -537px;
+  margin-left: 260px;
+  width: 175px;
+  border-radius: 36px 36px 0px 0px;
+  height: 537px;
+  background: linear-gradient(var(--sage) 15%, var(--white) 0%);
 `;
 
 const LeftPanelComponent = ({
@@ -37,7 +37,8 @@ const LeftPanelComponent = ({
         name={profileName}
         src={profileImage}
         size={12}
-        className="d-flex flex-column"
+        shadow
+        className="d-flex flex-column text-center mt-5"
       />
       <div className="m-auto">
         <div className="text-center">
