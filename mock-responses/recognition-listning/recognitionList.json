@@ -22,7 +22,8 @@
            "text": "core value text",
            "description": "desc",
            "thumbnail": "https://i.picsum.photos/id/654/300/200.jpg"
-      }
+      },
+      "hi5Count": []
     },
      
     {
@@ -46,7 +47,8 @@
            "text": "core value text",
            "description": "desc",
            "thumbnail_url": "https://i.picsum.photos/id/654/300/200.jpg"
-      }
+      },
+      "hi5Count": []
     }
 
   ]

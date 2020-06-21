@@ -158,31 +158,15 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
               src="https://i.picsum.photos/id/654/300/200.jpg"
             />
           </div>
-          <svg
-            class="mt-4"
-            color="red"
-            fill="currentColor"
-            height="50px"
-            stroke="currentColor"
-            stroke-width="0"
-            style="color: red;"
-            viewBox="0 0 16 16"
-            width="50px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              clip-rule="evenodd"
-              d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z"
-              fill-rule="evenodd"
-            />
-          </svg>
         </div>
       </div>
-      <img
-        alt="High five recognition"
-        class="c7 img-fluid"
-        src="/assets/images//high-five.png"
-      />
+      <div>
+        <img
+          alt="High five recognition"
+          class="c7 img-fluid"
+          src="/assets/images//high-five.png"
+        />
+      </div>
       <div
         class="bg-white card-footer"
       >
@@ -193,9 +177,7 @@ exports[`Recognition Card Component test should equal snapshot 1`] = `
         </span>
         <span
           class="font-weight-bold text-dark"
-        >
-          1
-        </span>
+        />
       </div>
     </div>
   </div>

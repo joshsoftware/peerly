@@ -11,15 +11,17 @@ const Wrapper = styled.div`
   opacity: 1;
 `;
 
-const RecognitionListComponent = ({ recognitionList }) => {
+const RecognitionListComponent = ({ recognitionList, giveHi5func }) => {
   const getDateFormate = (timestamp) =>
     new Date(timestamp * 1000).toDateString();
 
   return (
     <Wrapper>
-      {recognitionList.map((recognition, index) => (
+      {recognitionList.map((recognition) => (
         <RecognitionCardComponent
-          key={index}
+          key={recognition.id}
+          giveHi5func={giveHi5func}
+          recognitionId={recognition.id}
           givenByName={`${recognition.given_by_user.first_name} ${recognition.given_by_user.last_name}`}
           givenByImage={recognition.given_by_user.profile_image_url}
           givenForName={`${recognition.given_for_user.first_name} ${recognition.given_for_user.last_name}`}
@@ -28,6 +30,7 @@ const RecognitionListComponent = ({ recognitionList }) => {
           text={recognition.text}
           coreValue={recognition.coreValue.text}
           coreValueImage={recognition.coreValue.thumbnail_url}
+          hi5Count={recognition.hi5Count.length}
         />
       ))}
     </Wrapper>
@@ -36,6 +39,8 @@ const RecognitionListComponent = ({ recognitionList }) => {
 
 RecognitionListComponent.propTypes = {
   recognitionList: PropTypes.array.isRequired,
+  giveHi5func: PropTypes.func.isRequired,
+  hi5Count: PropTypes.number,
 };
 
 export default React.memo(RecognitionListComponent);
