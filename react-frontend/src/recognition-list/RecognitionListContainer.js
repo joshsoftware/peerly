@@ -22,13 +22,9 @@ const RecognnitionListContainer = () => {
   };
 
   useEffect(() => {
-    dispatch(
-      actionObjectGenrator(status.success, {
-        list: recognitionList.list.length === 1 ? [] : recognitionList.list,
-        offset: recognitionList.offset,
-        limit: recognitionList.limit,
-      })
-    );
+    if (refresh === 0) {
+      dispatch(actionObjectGenrator(status.success));
+    }
     const options = {
       root: document.getElementById("1233"), // Page as root
       rootMargin: "0px",
@@ -46,7 +42,6 @@ const RecognnitionListContainer = () => {
       dispatch(
         actionObjectGenrator(hi5Status.success, {
           id: id,
-          list: recognitionList.list,
         })
       );
       changeRefresh(refresh + 1);
@@ -57,10 +52,6 @@ const RecognnitionListContainer = () => {
     return <SessionTimeoutComponent />;
   } else if (recognitionList.error.code === "access_denied") {
     return <UnauthorisedErrorComponent />;
-  } else if (recognitionList.hi5.error.code) {
-    //alert(recognitionList.hi5.error.message)
-  } else if (recognitionList.hi5.data.recognition_id) {
-    //alert("success");
   }
 
   return (
@@ -69,9 +60,7 @@ const RecognnitionListContainer = () => {
         recognitionList={recognitionList.list}
         giveHi5func={giveHi5func}
       />
-      <div id="#1233" style={{ height: 10 }} className="text-center">
-        <span>Loading...</span>
-      </div>
+      <div id="#1233" style={{ height: 1 }} className="text-center" />
     </div>
   );
 };

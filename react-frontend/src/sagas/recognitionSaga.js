@@ -11,28 +11,37 @@ import {
   GIVE_HI5,
 } from "constants/actionConstants";
 
-export function* getRecognitionList(action) {
+export function* getRecognitionList() {
   const status = actionGenerator(LIST_RECOGNITION);
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
+  const listReducer = yield select((state) => state.listRecognitionReducer);
   try {
     const response = yield call(getJson, {
       path: "/recognitions",
       paramsObj: {
-        limit: action.payload.limit,
-        offset: action.payload.offset,
+        limit: yield select((state) => state.listRecognitionReducer.limit),
+        offset: yield select((state) => state.listRecognitionReducer.offset),
       },
       apiToken: token,
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
-      yield put(
-        actionObjectGenerator(status.success, {
-          list: action.payload.list.concat(responseObj.data),
-          offset: action.payload.offset,
-          limit: action.payload.limit,
-        })
-      );
+      if (listReducer.list.length === 1) {
+        yield put(
+          actionObjectGenerator(status.success, {
+            list: responseObj.data,
+            offset: listReducer.offset + listReducer.limit,
+          })
+        );
+      } else {
+        yield put(
+          actionObjectGenerator(status.success, {
+            list: listReducer.list.concat(responseObj.data),
+            offset: listReducer.offset + listReducer.limit,
+          })
+        );
+      }
     } else {
       yield put(actionObjectGenerator(status.failure, responseObj.error));
     }
@@ -41,19 +50,34 @@ export function* getRecognitionList(action) {
   }
 }
 
+const getUpdateCountList = (id, listRecognition) => {
+  listRecognition.map((recognition) => {
+    if (recognition.id === id) {
+      recognition.hi5Count.push({});
+      return recognition;
+    }
+    return recognition;
+  });
+};
+
 export function* giveHi5ToRecognition(action) {
   const hi5Status = actionGenerator(GIVE_HI5);
+  const getToken = (state) => state.loginReducer.data.token;
+  const token = yield select(getToken);
+  const listRecognition = yield select(
+    (state) => state.listRecognitionReducer.list
+  );
   try {
     const response = yield call(postJson, {
       path: "recognitions/" + action.payload.id + "/hi5",
-      apiToken: "",
+      apiToken: token,
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
+      getUpdateCountList(action.payload.id, listRecognition);
       yield put(
         actionObjectGenerator(hi5Status.success, {
           data: responseObj.data,
-          list: action.payload.list,
         })
       );
     } else {
