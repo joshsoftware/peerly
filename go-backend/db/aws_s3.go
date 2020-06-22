@@ -1,4 +1,4 @@
-package service
+package db
 
 import (
 	"context"
@@ -12,12 +12,11 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
-// S3URLData returned s3_signed url result
-type S3URLData struct {
+type S3SignedURL struct {
 	S3SignedURL string `json:"s3_signed_url"`
 }
 
-func getS3SignedURL(ctx context.Context, bucketName string) (signedURL S3URLData, err error) {
+func (s *pgStore) GetAWSS3SignedURL(ctx context.Context, bucketName, fileName string) (signedURL S3SignedURL, err error) {
 	// Initialize a session in AWS_REGION that the SDK will use to load
 	// credentials from the shared credentials file ~/.aws/credentials.
 	session, err := session.NewSession(&aws.Config{
@@ -36,7 +35,7 @@ func getS3SignedURL(ctx context.Context, bucketName string) (signedURL S3URLData
 	serviceClient := s3.New(session)
 	req, _ := serviceClient.PutObjectRequest(&s3.PutObjectInput{
 		Bucket:      aws.String(bucketName),
-		Key:         aws.String("filename.jpg"),
+		Key:         aws.String(fileName),
 		ContentType: aws.String("image/jpeg"),
 	})
 	signedURL.S3SignedURL, err = req.Presign(15 * time.Minute)

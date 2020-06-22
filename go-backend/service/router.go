@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"joshsoftware/peerly/config"
+
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
-	"joshsoftware/peerly/config"
 )
 
 const (
@@ -80,7 +81,7 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", createRecognitionHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}", getRecognitionHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", listRecognitionsHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/s3_signed_url/{type}", getS3SignedURLHandler()).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/aws/s3_signed_url", getS3SignedURLHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	return
 }
