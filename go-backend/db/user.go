@@ -44,6 +44,7 @@ const (
 		0, NULL, :created_at
 	)`
 	updateHi5QuotaBalanceQuery = `UPDATE users SET hi5_quota_balance=$1 where org_id = $2 AND soft_delete = $3`
+	getUserByOrganizationQuery = `SELECT * FROM users WHERE id=$1 AND org_id=$2 AND soft_delete = $3`
 )
 
 // User - basic struct representing a User
@@ -250,6 +251,14 @@ func (user *User) Validate() (errorResponse map[string]ErrorResponse, valid bool
 	}
 	//TODO: Ask what other validations are expected
 
+	return
+}
+func (s *pgStore) GetUserByOrganization(ctx context.Context, userID, orgID int) (user User, err error) {
+	err = s.db.Get(&user, getUserByOrganizationQuery, userID, orgID, false)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error fetching user")
+		return
+	}
 	return
 }
 

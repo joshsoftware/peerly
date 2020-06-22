@@ -131,6 +131,10 @@ func (m *DBMockStore) UpdateOrganization(ctx context.Context, org Organization, 
 	args := m.Called(ctx, org, id)
 	return args.Get(0).(Organization), args.Error(1)
 }
+func (m *DBMockStore) ShowRecognition(ctx context.Context, recognitionID int) (recognition Recognition, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).(Recognition), args.Error(1)
+}
 
 func (m *DBMockStore) CreateRecognitionHi5(ctx context.Context, recognitionHi5 RecognitionHi5, recognitionID int) (err error) {
 	args := m.Called(ctx, recognitionHi5, recognitionID)
@@ -149,6 +153,21 @@ func (m *DBMockStore) UpdateUser(ctx context.Context, user User, id int) (update
 // ResetHi5QuotaBalanceJob - test mock
 func (m *DBMockStore) ResetHi5QuotaBalanceJob() (err error) {
 	return
+}
+
+func (m *DBMockStore) CreateRecognition(ctx context.Context, recognition Recognition) (createdRecognition Recognition, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).(Recognition), args.Error(1)
+}
+
+func (m *DBMockStore) ListRecognitions(ctx context.Context) (users []Recognition, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).([]Recognition), args.Error(1)
+}
+
+func (m *DBMockStore) ListRecognitionsWithFilter(ctx context.Context, filters map[string]int) (users []Recognition, err error) {
+	args := m.Called(ctx)
+	return args.Get(0).([]Recognition), args.Error(1)
 }
 
 func (m *DBMockStore) CreateReportedRecognition(ctx context.Context, recognitionID int64, reportedRecognition ReportedRecognition) (resp ReportedRecognition, err error) {

@@ -25,6 +25,12 @@ func (suite *UsersHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
 }
 
+func TestExampleTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersHandlerTestSuite))
+	suite.Run(t, new(OrganizationHandlerTestSuite))
+	suite.Run(t, new(RecognitionsHandlerTestSuite))
+}
+
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	// Start by declaring a fakeUser of type db.User, then have faker shove fake data into it
 	fakeUser := db.User{}
