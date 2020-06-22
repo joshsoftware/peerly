@@ -29,7 +29,15 @@ module.exports = (sequelize, Sequelize) => {
       timestamp: false,
       createdAt: false,
       updatedAt: false,
+      freezeTableName: true,
     }
   );
+
+  Recognition_hi5.associate = (models) => {
+    Recognition_hi5.belongsTo(models.recognitions, {
+      foreignKey: "recognition_id",
+      as: "hi5Count",
+    });
+  };
   return Recognition_hi5;
 };
