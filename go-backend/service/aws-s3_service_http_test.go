@@ -45,7 +45,7 @@ func (suite *AWSs3TestSuite) TestGetAWSS3SignedURLSuccess() {
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
-func (suite *AWSs3TestSuite) TestGetOrganizationDbFailure() {
+func (suite *AWSs3TestSuite) TestGetAWSS3SignedURLFailure() {
 	suite.dbMock.On("GetAWSS3SignedURL", mock.Anything, mock.Anything, mock.Anything).Return(
 		testSignedURL, nil,
 	)
