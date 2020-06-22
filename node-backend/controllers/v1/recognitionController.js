@@ -258,6 +258,9 @@ const addRecognition = async (req, res, recognitions) => {
           );
       });
   } else {
+    logger.error("Error executing create recognition");
+    logger.info("user id: " + tokenData.userId);
+    logger.error(resConstants.EMPTY_HI5_BALANCE_CODE);
     res
       .status(404)
       .send(
@@ -634,6 +637,9 @@ module.exports.giveHi5 = async (req, res) => {
               ) {
                 await addHi5Entry(req, res, hi5Data, tokenData.orgId);
               } else {
+                logger.error(resConstants.NOT_REPEATED_HI5_CODE);
+                logger.error("UserId :", hi5Data.given_by);
+                logger.info("=========================================");
                 res
                   .status(422)
                   .send(
