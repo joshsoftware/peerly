@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 const UserListContainer = () => {
   let history = useHistory();
   let [userId, setUserId] = useState(null);
-  const recognitionList = useSelector((state) => state.userListReducer);
+  const userList = useSelector((state) => state.userListReducer);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_USERS_API);
 
@@ -26,17 +26,17 @@ const UserListContainer = () => {
     dispatch(actionObjectGenrator(status.success));
   }, [dispatch, status.success]);
 
-  if (recognitionList.error === "invalid_token") {
+  if (userList.error === "invalid_token") {
     return <SessionTimeoutComponent />;
-  } else if (recognitionList.error === "access_denied") {
+  } else if (userList.error === "access_denied") {
     return <UnauthorisedErrorComponent />;
   } else if (userId) {
-    history.push("/createREcognition");
+    history.push("/createRecognition");
   }
 
   return (
     <div>
-      <ListOfUsers userList={recognitionList.list} setUserId={setUserId} />
+      <ListOfUsers userList={userList.list} setUserId={setUserId} />
     </div>
   );
 };

@@ -7,7 +7,7 @@ export const defaultState = {
     first_name: null,
     last_name: null,
     display_name: null,
-    hi5_quota_balance: null,
+    hi5_quota_balance: 0,
   },
   error: null,
 };
@@ -20,6 +20,8 @@ export default (state = defaultState, action) => {
       return { ...state, data: action.payload };
     case status.failure:
       return { ...state, error: action.payload };
+    case status.init:
+      return { ...state, hi5_quota_balance: action.payload.count };
     default:
       return state;
   }
