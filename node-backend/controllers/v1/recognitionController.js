@@ -116,21 +116,56 @@ const validateGivenFor = async (req, res, tokenData) => {
     });
 };
 
-const addRecognition = async (req, res, recognitions) => {
-  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
-  logger.info("Error executing create recognition");
-  logger.info("user id: " + tokenData.userId);
-  logger.info(JSON.stringify(recognitions));
-  logger.info("=========================================");
-  Recognitions.create(recognitions)
-    .then((info) => {
-      res.status(201).send({
-        data: info,
-      });
+const getHi5Count = async (req, res, id, orgId) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
+  return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
+    .then((data) => {
+      if (data === null) {
+        logger.error("Error executing getHi5Count");
+        logger.info("user id: " + userData.userId);
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
+        logger.info("=========================================");
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
+            )
+          );
+      } else if (data.dataValues.org_id !== orgId) {
+        logger.error("Error executing getHi5Count");
+        logger.info("user id: " + userData.userId);
+        logger.error(resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
+        logger.info("=========================================");
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
+            )
+          );
+      } else if (data.dataValues.hi5_quota_balance > 0) {
+        return data.dataValues.hi5_quota_balance;
+      } else {
+        logger.error("Error executing getHi5Count");
+        logger.info("user id: " + userData.userId);
+        logger.error(resConstants.EMPTY_HI5_BALANCE_MESSAGE);
+        logger.info("=========================================");
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.EMPTY_HI5_BALANCE_CODE,
+              resConstants.EMPTY_HI5_BALANCE_MESSAGE
+            )
+          );
+      }
     })
     .catch(() => {
-      logger.error("Error executing create recognition");
-      logger.info("user id: " + tokenData.userId);
+      logger.error("Error executing getHi5Count");
+      logger.info("user id: " + userData.userId);
       logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
@@ -142,6 +177,96 @@ const addRecognition = async (req, res, recognitions) => {
           )
         );
     });
+};
+
+const decrementHi5Count = async (req, res, id, orgId) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
+  let hi5Count = (await getHi5Count(req, res, id, orgId)) - 1;
+  logger.info("executing decrerment hi5 count");
+  logger.info("user id: " + userData.userId);
+  logger.info("his count: " + hi5Count);
+  logger.info("=========================================");
+
+  return Users.update(
+    { hi5_quota_balance: hi5Count },
+    {
+      returning: true,
+      where: { id: id },
+    }
+  )
+    .then(([rowsUpdate]) => {
+      if (rowsUpdate == 1) {
+        return true;
+      } else {
+        logger.error("Error executing decrerment hi5 count");
+        logger.info("user id: " + userData.userId);
+        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
+        logger.info("=========================================");
+        res
+          .status(404)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.USER_NOT_FOUND_CODE,
+              resConstants.USER_NOT_FOUND_MESSAGE
+            )
+          );
+      }
+    })
+    .catch(() => {
+      logger.error("Error executing decrerment hi5 count");
+      logger.info("user id: " + userData.userId);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.info("=========================================");
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
+    });
+};
+
+const addRecognition = async (req, res, recognitions) => {
+  const tokenData = await jwtValidate.getData(req.headers["authorization"]);
+  logger.info("Error executing create recognition");
+  logger.info("user id: " + tokenData.userId);
+  logger.info(JSON.stringify(recognitions));
+  logger.info("=========================================");
+  if (
+    await decrementHi5Count(req, res, recognitions.given_by, tokenData.orgId)
+  ) {
+    Recognitions.create(recognitions)
+      .then((info) => {
+        res.status(201).send({
+          data: info,
+        });
+      })
+      .catch(() => {
+        logger.error("Error executing create recognition");
+        logger.info("user id: " + tokenData.userId);
+        logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
+        logger.info("=========================================");
+        res
+          .status(500)
+          .send(
+            utility.getErrorResponseObject(
+              resConstants.INTRENAL_SERVER_ERROR_CODE,
+              resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+            )
+          );
+      });
+  } else {
+    res
+      .status(404)
+      .send(
+        utility.getErrorResponseObject(
+          resConstants.EMPTY_HI5_BALANCE_CODE,
+          resConstants.EMPTY_HI5_BALANCE_MESSAGE
+        )
+      );
+  }
 };
 
 module.exports.create = async (req, res) => {
@@ -161,7 +286,11 @@ module.exports.create = async (req, res) => {
     .then(async () => {
       if (await validateCoreValue(req, res, tokenData)) {
         if (await validateGivenFor(req, res, tokenData)) {
-          await addRecognition(req, res, recognitions);
+          if (
+            await getHi5Count(req, res, recognitions.given_by, tokenData.orgId)
+          ) {
+            await addRecognition(req, res, recognitions);
+          }
         }
       }
     })
@@ -201,10 +330,6 @@ module.exports.findOne = async (req, res) => {
           {
             model: db.core_values,
             attributes: ["id", "text", "description", "thumbnail_url"],
-          },
-          {
-            model: db.recognition_hi5,
-            as: "hi5Count",
           },
         ],
       })
@@ -291,6 +416,7 @@ module.exports.findAll = async (req, res) => {
     .validate(filterData, { abortEarly: false })
     .then(() => {
       Recognitions.findAll({
+        attributes: ["id", "text"],
         include: [
           {
             model: db.users,
@@ -307,6 +433,7 @@ module.exports.findAll = async (req, res) => {
           {
             model: db.core_values,
             attributes: ["id", "text", "description", "thumbnail_url"],
+            as: "coreValue",
             where: createWhereClause(tokenData, filterData.core_value_id),
           },
           {
@@ -316,6 +443,7 @@ module.exports.findAll = async (req, res) => {
         ],
         offset: paginationData.offset,
         limit: paginationData.limit,
+        order: [["id", "DESC"]],
       })
         .then((info) => {
           let data = info[0];
@@ -369,69 +497,6 @@ module.exports.findAll = async (req, res) => {
     });
 };
 
-const getHi5Count = async (req, res, id, orgId) => {
-  const userData = await jwtValidate.getData(req.headers["authorization"]);
-  return Users.findByPk(id, { attributes: ["hi5_quota_balance", "org_id"] })
-    .then((data) => {
-      if (data === null) {
-        logger.error("Error executing getHi5Count");
-        logger.info("user id: " + userData.userId);
-        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
-        logger.info("=========================================");
-        res
-          .status(404)
-          .send(
-            utility.getErrorResponseObject(
-              resConstants.USER_NOT_FOUND_CODE,
-              resConstants.USER_NOT_FOUND_MESSAGE
-            )
-          );
-      } else if (data.dataValues.org_id !== orgId) {
-        logger.error("Error executing getHi5Count");
-        logger.info("user id: " + userData.userId);
-        logger.error(resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE);
-        logger.info("=========================================");
-        res
-          .status(404)
-          .send(
-            utility.getErrorResponseObject(
-              resConstants.USER_NOT_FOUND_CODE,
-              resConstants.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE
-            )
-          );
-      } else if (data.dataValues.hi5_quota_balance > 0) {
-        return data.dataValues.hi5_quota_balance;
-      } else {
-        logger.error("Error executing getHi5Count");
-        logger.info("user id: " + userData.userId);
-        logger.error(resConstants.EMPTY_HI5_BALANCE_MESSAGE);
-        logger.info("=========================================");
-        res
-          .status(404)
-          .send(
-            utility.getErrorResponseObject(
-              resConstants.EMPTY_HI5_BALANCE_CODE,
-              resConstants.EMPTY_HI5_BALANCE_MESSAGE
-            )
-          );
-      }
-    })
-    .catch(() => {
-      logger.error("Error executing getHi5Count");
-      logger.info("user id: " + userData.userId);
-      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
-      logger.info("=========================================");
-      res
-        .status(500)
-        .send(
-          utility.getErrorResponseObject(
-            resConstants.INTRENAL_SERVER_ERROR_CODE,
-            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
-          )
-        );
-    });
-};
-
 const getHi5Data = (data, recognition_id, given_by) => {
   let hi5Data = {
     recognition_id: recognition_id,
@@ -479,55 +544,6 @@ const validateRecognition = async (req, res, id) => {
     });
 };
 
-const decrementHi5Count = async (req, res, id, orgId) => {
-  const userData = await jwtValidate.getData(req.headers["authorization"]);
-  let hi5Count = (await getHi5Count(req, res, id, orgId)) - 1;
-  logger.info("executing decrerment hi5 count");
-  logger.info("user id: " + userData.userId);
-  logger.info("his count: " + hi5Count);
-  logger.info("=========================================");
-
-  return Users.update(
-    { hi5_quota_balance: hi5Count },
-    {
-      returning: true,
-      where: { id: id },
-    }
-  )
-    .then(([rowsUpdate]) => {
-      if (rowsUpdate == 1) {
-        return true;
-      } else {
-        logger.error("Error executing decrerment hi5 count");
-        logger.info("user id: " + userData.userId);
-        logger.error(resConstants.USER_NOT_FOUND_MESSAGE);
-        logger.info("=========================================");
-        res
-          .status(404)
-          .send(
-            utility.getErrorResponseObject(
-              resConstants.USER_NOT_FOUND_CODE,
-              resConstants.USER_NOT_FOUND_MESSAGE
-            )
-          );
-      }
-    })
-    .catch(() => {
-      logger.error("Error executing decrerment hi5 count");
-      logger.info("user id: " + userData.userId);
-      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
-      logger.info("=========================================");
-      res
-        .status(500)
-        .send(
-          utility.getErrorResponseObject(
-            resConstants.INTRENAL_SERVER_ERROR_CODE,
-            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
-          )
-        );
-    });
-};
-
 const addHi5Entry = async (req, res, data, orgId) => {
   const userData = await jwtValidate.getData(req.headers["authorization"]);
   logger.info("executing addHi5Entry");
@@ -546,6 +562,35 @@ const addHi5Entry = async (req, res, data, orgId) => {
     .catch(() => {
       logger.error("Error executing find users by organisation");
       logger.info("user id: " + userData.userId);
+      logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
+      logger.info("=========================================");
+      res
+        .status(500)
+        .send(
+          utility.getErrorResponseObject(
+            resConstants.INTRENAL_SERVER_ERROR_CODE,
+            resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+          )
+        );
+    });
+};
+
+const checkRepeatHi5WithSameUser = async (req, res, userId, id) => {
+  return RecognitionHi5.findAll({
+    where: { recognition_id: id, given_by: userId },
+  })
+    .then((data) => {
+      if (data && data[0].dataValues) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch(() => {
+      logger.error(
+        "Error executing find recognition_hi5 by recognition_id and userId"
+      );
+      logger.info("user id: " + userId);
       logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
       logger.info("=========================================");
       res
@@ -579,7 +624,25 @@ module.exports.giveHi5 = async (req, res) => {
             if (
               await getHi5Count(req, res, hi5Data.given_by, tokenData.orgId)
             ) {
-              await addHi5Entry(req, res, hi5Data, tokenData.orgId);
+              if (
+                !(await checkRepeatHi5WithSameUser(
+                  req,
+                  res,
+                  tokenData.userId,
+                  hi5Data.recognition_id
+                ))
+              ) {
+                await addHi5Entry(req, res, hi5Data, tokenData.orgId);
+              } else {
+                res
+                  .status(422)
+                  .send(
+                    utility.getErrorResponseObject(
+                      resConstants.NOT_REPEATED_HI5_CODE,
+                      resConstants.NOT_REPEATED_HI5_MESSAGE
+                    )
+                  );
+              }
             }
           }
         })
