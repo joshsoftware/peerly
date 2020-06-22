@@ -3,13 +3,14 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"joshsoftware/peerly/db"
+	"log"
+	"net/http"
+
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"joshsoftware/peerly/db"
-	"log"
-	"net/http"
 )
 
 // Define the suite, and absorb the built-in basic suite
@@ -22,6 +23,12 @@ type UsersHandlerTestSuite struct {
 
 func (suite *UsersHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
+}
+
+func TestExampleTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersHandlerTestSuite))
+	suite.Run(t, new(OrganizationHandlerTestSuite))
+	suite.Run(t, new(RecognitionsHandlerTestSuite))
 }
 
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
@@ -115,7 +122,7 @@ func (suite *UsersHandlerTestSuite) TestUpdateUserSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"full_name":"test2","org_id":1,"email":"test@gmail.com","display_name":"test user","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5,"soft_delete_by":{"Int64":0,"Valid":false},"soft_delete_on":{"Time":"0001-01-01T00:00:00Z","Valid":false},"created_at":"0001-01-01T00:00:00Z"}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":{"id":1,"full_name":"test2","org_id":1,"email":"test@gmail.com","display_name":"test user","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5,"soft_delete_by":{"Int64":0,"Valid":false},"soft_delete_on":{"Time":"0001-01-01T00:00:00Z","Valid":false},"created_at":"0001-01-01T00:00:00Z"}}`, recorder.Body.String())
 	suite.dbMock.AssertExpectations(suite.T())
 }
 
@@ -158,7 +165,7 @@ func (suite *UsersHandlerTestSuite) TestGetUserSuccess() {
 	)
 
 	assert.Equal(suite.T(), http.StatusOK, recorder.Code)
-	assert.Equal(suite.T(), `{"id":1,"full_name":"test2","org_id":1,"email":"test@gmail.com","display_name":"test","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5,"soft_delete_by":{"Int64":0,"Valid":false},"soft_delete_on":{"Time":"0001-01-01T00:00:00Z","Valid":false},"created_at":"0001-01-01T00:00:00Z"}`, recorder.Body.String())
+	assert.Equal(suite.T(), `{"data":{"id":1,"full_name":"test2","org_id":1,"email":"test@gmail.com","display_name":"test","profile_image_url":"test.jpg","role_id":10,"hi5_quota_balance":5,"soft_delete_by":{"Int64":0,"Valid":false},"soft_delete_on":{"Time":"0001-01-01T00:00:00Z","Valid":false},"created_at":"0001-01-01T00:00:00Z"}}`, recorder.Body.String())
 
 	suite.dbMock.AssertExpectations(suite.T())
 }

@@ -119,7 +119,7 @@ module.exports.findOne = async (req, res) => {
   idSchema
     .validate({ id, org_id }, { abortEarly: false })
     .then(() => {
-      CoreValue.findAll({ where: { org_id: org_id, id: id } })
+      CoreValue.findOne({ where: { org_id: org_id, id: id } })
         .then((data) => {
           if (data.length != 0) {
             res.status(200).send({
@@ -257,7 +257,7 @@ module.exports.getCoreValueById = async (req, res) => {
   idSchema
     .validate({ id }, { abortEarly: false })
     .then(() => {
-      CoreValue.findAll({
+      CoreValue.findOne({
         where: { id: id },
         attributes: [
           "id",

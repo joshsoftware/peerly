@@ -1,8 +1,10 @@
 /*eslint-disable  no-unused-vars */
-const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
-const should = require("should"); //eslint-disable-line node/no-unpublished-require
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+chai.should();
+chai.use(chaiHttp);
 const data = require("./data");
-const app = require("../../server");
+const app = require("../server");
 const db = require("../models/sequelize");
 const token = process.env.ACCESS_TOKEN;
 let organizations = { ...data.organizations };
@@ -22,56 +24,52 @@ describe("test cases for login", function () {
   });
 
   it("should give ok status", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post("/oauth/google")
       .send({
         access_token: token,
       })
-      .expect("Content-type", /json/)
-      .expect(200)
       .end(function (err, res) {
-        res.status.should.equal(200);
-        should(res.body.data).be.a.Object();
+        res.should.have.status(200);
+        res.body.data.should.be.a("object");
         done();
       });
   });
 
   it("should give bad request error", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post("/oauth/google")
       .send({
         access_token: "",
       })
-      .expect("Content-type", /json/)
-      .expect(400)
       .end(function (err, res) {
-        res.status.should.equal(400);
+        res.should.have.status(400);
         done();
       });
   });
   it("should unauthorize user", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post("/oauth/google")
       .send({
         access_token: "",
       })
-      .expect("Content-type", /json/)
-      .expect(400)
       .end(function (err, res) {
-        res.body.error.code.should.equal("invalid-token");
-        res.status.should.equal(400);
+        res.should.have.status(400);
         done();
       });
   });
   it("should give unauthorize with 401", function (done) {
-    request(app)
+    chai
+      .request(app)
       .post("/oauth/google")
       .send({
         access_token: "xxxxxxx",
       })
-      .expect(401)
       .end(function (err, res) {
-        res.status.should.equal(401);
+        res.should.have.status(401);
         done();
       });
   });

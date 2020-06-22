@@ -1,11 +1,11 @@
-const app = require("../../server");
+const app = require("../server");
 const db = require("../models/sequelize");
 const data = require("./data");
 const { createToken } = require("./jwtTokenGenration");
-
-const request = require("supertest"); //eslint-disable-line node/no-unpublished-require
-const should = require("should" /*eslint-disable-line node/no-unpublished-require*/); //eslint-disable-line no-unused-vars
-
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+chai.should();
+chai.use(chaiHttp);
 let token;
 let orgId;
 let roleId = 3;
@@ -44,7 +44,8 @@ describe(/*eslint-disable-line no-undef*/ "test cases for recognitions", functio
 
   it(/*eslint-disable-line no-undef*/ "post request for create recognition with write Contents,url", function (done) {
     // post request for create Recognition successfully
-    request(app)
+    chai
+      .request(app)
       .post("/recognitions")
       .send({
         core_value_id: coreValueId,
@@ -53,53 +54,47 @@ describe(/*eslint-disable-line no-undef*/ "test cases for recognitions", functio
       })
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
         id = res.body.data.id;
-        res.status.should.equal(201);
-        should(res.body.data).be.a.Object();
-        res.body.data.given_for.should.equal(userId);
-        res.body.data.core_value_id.should.equal(coreValueId);
-        res.body.data.text.should.equal("good contribution");
+        res.should.have.status(201);
+        res.body.data.should.be.a("object");
+        res.body.data.given_for.should.be.equal(userId);
+        res.body.data.core_value_id.should.be.equal(coreValueId);
+        res.body.data.text.should.be.equal("good contribution");
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get request for get recognition by id with write url", function (done) {
-    // post request for get Recognition successfully
-    request(app)
+    chai
+      .request(app)
       .get("/recognitions/" + id)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(200)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(200);
-        should(res.body.data).be.a.Object();
-        res.body.data.id.should.equal(id);
+        res.should.have.status(200);
+        res.body.data.should.be.a("object");
+        res.body.data.id.should.be.equal(id);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get request for get all recognition  with write url", function (done) {
-    // post request for get Recognition successfully
-    request(app)
+    chai
+      .request(app)
       .get("/recognitions/")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(200)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(200);
-        should(res.body.data).be.a.Array();
+        res.should.have.status(200);
+        res.body.data.should.be.a("array");
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get request for get all recognition  with all filter parameters", function (done) {
-    // post request for get filter Recognition successfully
-    request(app)
+    chai
+      .request(app)
       .get(
         "/recognitions/?core_values=" +
           coreValueId +
@@ -111,37 +106,33 @@ describe(/*eslint-disable-line no-undef*/ "test cases for recognitions", functio
       )
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(200)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(200);
-        should(res.body.data).be.a.Array();
+        res.should.have.status(200);
+        res.body.data.should.be.a("array");
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for give hi5 for recognition with write Contents,url", function (done) {
-    // post request for give hi5 Recognition successfully
-    request(app)
+    chai
+      .request(app)
       .post(`/recognitions/${id}/hi5`)
       .send({
         comment: "good efforts",
       })
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(201)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(201);
-        should(res.body.data).be.a.Object();
+        res.should.have.status(201);
+        res.body.data.should.be.a("array");
         res.body.data.id.should.equal(id);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create recognition with wrong Contents,response code is 400 ", function (done) {
-    // post request with wrong contents
-    request(app)
+    chai
+      .request(app)
       .post("/recognitions/")
       .send({
         core_value_id: "",
@@ -150,24 +141,20 @@ describe(/*eslint-disable-line no-undef*/ "test cases for recognitions", functio
       })
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(400)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(400);
+        res.should.have.status(400);
         done();
       });
   });
 
   it(/*eslint-disable-line no-undef*/ "get request for get recognition by id with incorrect id type", function (done) {
-    // provide id as string
-    request(app)
+    chai
+      .request(app)
       .get("/recognitions/abc")
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
-      .expect("Content-type", /json/)
-      .expect(400)
       .end(function (err /*eslint-disable-line no-undef*/, res) {
-        res.status.should.equal(400);
+        res.should.have.status(400);
         done();
       });
   });

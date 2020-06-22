@@ -30,7 +30,7 @@ const (
 		) = 
 		($1, $2, $3, $4, $5, $6) where id = $7 AND soft_delete = $8`
 	getUserByEmailQuery = `SELECT * FROM users WHERE email=$1 LIMIT 1`
-	getUserByIDQuery    = `SELECT * FROM users WHERE id=$1 LIMIT 1`
+	getUserByIDQuery    = `SELECT * FROM users WHERE id=$1 AND soft_delete = $2 LIMIT 1`
 	listUsersQuery      = `SELECT * FROM users ORDER BY name ASC`
 	insertUserQuery     = `INSERT INTO users (
 		id, name, org_id, email, display_name, profile_image_url, soft_delete, role_id, hi5_quota_balance,
@@ -39,6 +39,7 @@ const (
 		DEFAULT, :name, :org_id, :email, :display_name, :profile_image_url, FALSE, :role_id, :hi5_quota_balance,
 		0, NULL, :created_at
 	)`
+	getUserByOrganizationQuery = `SELECT * FROM users WHERE id=$1 AND org_id=$2 AND soft_delete = $3`
 )
 
 // User - basic struct representing a User
@@ -93,7 +94,7 @@ func (s *pgStore) GetUserByEmail(ctx context.Context, email string) (user User, 
 
 // GetUserByID - Given the database ID for that user, look them up.
 func (s *pgStore) GetUserByID(ctx context.Context, id int) (user User, err error) {
-	err = s.db.Get(&user, getUserByIDQuery, id)
+	err = s.db.Get(&user, getUserByIDQuery, id, false)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error selecting user from database by id " + string(id))
 		return
@@ -176,13 +177,27 @@ func (s *pgStore) GetUser(ctx context.Context, userID int) (user User, err error
 }
 
 func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) (updatedUser User, err error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		logger.WithField("err:", err.Error()).Error("Error while initiating transaction")
+		return
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+			return
+		}
+		tx.Commit()
+	}()
+
 	var dbUser User
 	err = s.db.Get(&dbUser, getUserQuery, userID, false)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Error while getting user profile")
 		return
 	}
-	_, err = s.db.Exec(
+	_, err = tx.ExecContext(ctx,
 		updateUserQuery,
 		userProfile.Name,
 		userProfile.Email,
@@ -197,10 +212,9 @@ func (s *pgStore) UpdateUser(ctx context.Context, userProfile User, userID int) 
 		logger.WithField("err", err.Error()).Error("Error updating user profile")
 		return
 	}
-
-	err = s.db.Get(&updatedUser, getUserQuery, userID, false)
+	updatedUser, err = s.GetUserByID(ctx, userID)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while getting user profile")
+		logger.WithField("err", err.Error()).Error("Error selecting user from database with userID: ", userID)
 		return
 	}
 	return
@@ -232,5 +246,13 @@ func (user *User) Validate() (errorResponse map[string]ErrorResponse, valid bool
 	}
 	//TODO: Ask what other validations are expected
 
+	return
+}
+func (s *pgStore) GetUserByOrganization(ctx context.Context, userID, orgID int) (user User, err error) {
+	err = s.db.Get(&user, getUserByOrganizationQuery, userID, orgID, false)
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("Error fetching user")
+		return
+	}
 	return
 }

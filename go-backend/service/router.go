@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"joshsoftware/peerly/config"
-
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
+	"joshsoftware/peerly/config"
 )
 
 const (
@@ -40,6 +39,18 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", deleteCoreValueHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", updateCoreValueHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
 
+	//reported recognition
+	router.Handle("/recognitions/{recognition_id:[0-9]+}/report", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createReportedRecognitionHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
+	//recognition moderation
+	router.Handle("/recognitions/{recognition_id:[0-9]+}/review", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createRecognitionModerationHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
 	//users
 	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/users/{id:[0-9]+}", getUserHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
@@ -66,6 +77,9 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 
 	// Recognition routes
 	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/hi5", createRecognitionHi5Handler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", createRecognitionHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}", getRecognitionHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", listRecognitionsHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	router.HandleFunc("/s3_signed_url/{type}", getS3SignedURLHandler()).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	return
