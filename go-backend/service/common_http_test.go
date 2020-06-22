@@ -46,11 +46,11 @@ func makeHTTPCall(method, path, requestURL, body string, handlerFunc http.Handle
 // requestURL: current request path (eg: /users/1)
 func makeHTTPCallWithJWTMiddleware(method, path, requestURL, body string, handlerFunc http.HandlerFunc) (recorder *httptest.ResponseRecorder) {
 	// create jwt token with userID
-	JWTToken, _ := newJWT(1)
+	JWTToken, _ := newJWT(1, 1)
 
 	// create a http request using the given parameters
 	req, _ := http.NewRequest(method, requestURL, strings.NewReader(body))
-	req.Header.Set("Authorization", "Bearer " + JWTToken)
+	req.Header.Set("Authorization", "Bearer "+JWTToken)
 
 	// test recorder created for capturing api responses
 	recorder = httptest.NewRecorder()

@@ -22,7 +22,29 @@ func (suite *RecognitionModerationHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
 }
 
+func (suite *RecognitionModerationHandlerTestSuite) setupJWTTokenTest(valid bool) {
+	var orgID int
+	if valid {
+		orgID = 1
+	} else {
+		orgID = 2
+	}
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(
+		db.User{
+			ID:              1,
+			OrgID:           orgID,
+			Name:            "test2",
+			Email:           "test@gmail.com",
+			DisplayName:     "test",
+			ProfileImageURL: "test.jpg",
+			RoleID:          10,
+			Hi5QuotaBalance: 5,
+		}, nil,
+	)
+}
+
 func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerationSuccess() {
+	suite.setupJWTTokenTest(true)
 	now := time.Now().Unix()
 	isInappropriate := false
 	suite.dbMock.On("CreateRecognitionModeration", mock.Anything, mock.Anything, mock.Anything).Return(db.RecognitionModeration{
@@ -54,6 +76,7 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 }
 
 func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerationWhenInvalidJSONFormat() {
+	suite.setupJWTTokenTest(true)
 	body := `{
 		"is_inappropriate": false
 		"comment": "Comment Test"
@@ -73,6 +96,7 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 }
 
 func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerationWhenEmptyIsInappropriate() {
+	suite.setupJWTTokenTest(true)
 	body := `{
 		"comment": "Comment Test"
 	}`
@@ -91,7 +115,50 @@ func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerat
 }
 
 func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerationWhenDBFailure() {
+	suite.setupJWTTokenTest(true)
 	suite.dbMock.On("CreateRecognitionModeration", mock.Anything, mock.Anything, mock.Anything).Return(db.RecognitionModeration{}, errors.New("error creating reported recognition"))
+
+	body := `{
+		"is_inappropriate": false,
+		"reason": "Comment Test"
+	}`
+
+	recorder := makeHTTPCallWithJWTMiddleware(
+		http.MethodPost,
+		"/recognitions/{recognition_id:[0-9]+}/review",
+		"/recognitions/1/review",
+		body,
+		createRecognitionModerationHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Internal server error"}}`, recorder.Body.String())
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerationWhenInvalidTokenWithOrganizationMismatch() {
+	suite.setupJWTTokenTest(false)
+
+	body := `{
+		"is_inappropriate": false,
+		"reason": "Comment Test"
+	}`
+
+	recorder := makeHTTPCallWithJWTMiddleware(
+		http.MethodPost,
+		"/recognitions/{recognition_id:[0-9]+}/review",
+		"/recognitions/1/review",
+		body,
+		createRecognitionModerationHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusUnauthorized, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid Token"}}`, recorder.Body.String())
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *RecognitionModerationHandlerTestSuite) TestCreateRecognitionModerationWhenDBFailureForValidateToken() {
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{}, errors.New("Internal server error"))
 
 	body := `{
 		"is_inappropriate": false,

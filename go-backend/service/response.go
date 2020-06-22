@@ -28,7 +28,7 @@ type errorObject struct {
 func repsonse(rw http.ResponseWriter, status int, responseBody interface{}) {
 	respBytes, err := json.Marshal(responseBody)
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Error while marshaling core values data")
+		logger.WithField("err", err.Error()).Error("Error while marshaling response data")
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -22,7 +22,29 @@ func (suite *ReportedRecognitionHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
 }
 
+func (suite *ReportedRecognitionHandlerTestSuite) setupJWTTokenTest(valid bool) {
+	var orgID int
+	if valid {
+		orgID = 1
+	} else {
+		orgID = 2
+	}
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(
+		db.User{
+			ID:              1,
+			OrgID:           orgID,
+			Name:            "test2",
+			Email:           "test@gmail.com",
+			DisplayName:     "test",
+			ProfileImageURL: "test.jpg",
+			RoleID:          10,
+			Hi5QuotaBalance: 5,
+		}, nil,
+	)
+}
+
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionSuccess() {
+	suite.setupJWTTokenTest(true)
 	now := time.Now().Unix()
 	suite.dbMock.On("CreateReportedRecognition", mock.Anything, mock.Anything, mock.Anything).Return(db.ReportedRecognition{
 		ID:                 1,
@@ -53,6 +75,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionS
 }
 
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenInvalidJSONFormat() {
+	suite.setupJWTTokenTest(true)
 	body := `{
 		"mark_as": "fraud"
 		"reason": "Reason Test"
@@ -72,6 +95,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 }
 
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenEmptyReportedRecognitionType() {
+	suite.setupJWTTokenTest(true)
 	body := `{
 		"mark_as": "",
 		"reason": "Reason Test"
@@ -91,6 +115,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 }
 
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenInvalidReportedRecognitionType() {
+	suite.setupJWTTokenTest(true)
 	body := `{
 		"mark_as": "XYZ",
 		"reason": "Reason Test"
@@ -110,6 +135,7 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 }
 
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenEmptyReasonForReport() {
+	suite.setupJWTTokenTest(true)
 	body := `{
 		"mark_as": "fraud",
 		"reason": ""
@@ -129,7 +155,50 @@ func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionW
 }
 
 func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenDBFailure() {
+	suite.setupJWTTokenTest(true)
 	suite.dbMock.On("CreateReportedRecognition", mock.Anything, mock.Anything, mock.Anything).Return(db.ReportedRecognition{}, errors.New("error creating reported recognition"))
+
+	body := `{
+		"mark_as": "fraud",
+		"reason": "Reason Test"
+	}`
+
+	recorder := makeHTTPCallWithJWTMiddleware(
+		http.MethodPost,
+		"/recognitions/{recognition_id:[0-9]+}/report",
+		"/recognitions/1/report",
+		body,
+		createReportedRecognitionHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusInternalServerError, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Internal server error"}}`, recorder.Body.String())
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenInvalidTokenWithOrganizationMismatch() {
+	suite.setupJWTTokenTest(false)
+
+	body := `{
+		"mark_as": "fraud",
+		"reason": "Reason Test"
+	}`
+
+	recorder := makeHTTPCallWithJWTMiddleware(
+		http.MethodPost,
+		"/recognitions/{recognition_id:[0-9]+}/report",
+		"/recognitions/1/report",
+		body,
+		createReportedRecognitionHandler(Dependencies{Store: suite.dbMock}),
+	)
+
+	assert.Equal(suite.T(), http.StatusUnauthorized, recorder.Code)
+	assert.Equal(suite.T(), `{"error":{"message":"Invalid Token"}}`, recorder.Body.String())
+	suite.dbMock.AssertExpectations(suite.T())
+}
+
+func (suite *ReportedRecognitionHandlerTestSuite) TestCreateReportedRecognitionWhenDBFailureForValidateToken() {
+	suite.dbMock.On("GetUser", mock.Anything, mock.Anything).Return(db.User{}, errors.New("Internal server error"))
 
 	body := `{
 		"mark_as": "fraud",
