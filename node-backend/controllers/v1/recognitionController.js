@@ -202,6 +202,10 @@ module.exports.findOne = async (req, res) => {
             model: db.core_values,
             attributes: ["id", "text", "description", "thumbnail_url"],
           },
+          {
+            model: db.recognition_hi5,
+            as: "hi5Count",
+          },
         ],
       })
         .then((data) => {
@@ -304,6 +308,10 @@ module.exports.findAll = async (req, res) => {
             model: db.core_values,
             attributes: ["id", "text", "description", "thumbnail_url"],
             where: createWhereClause(tokenData, filterData.core_value_id),
+          },
+          {
+            model: db.recognition_hi5,
+            as: "hi5Count",
           },
         ],
         offset: paginationData.offset,
@@ -473,7 +481,7 @@ const validateRecognition = async (req, res, id) => {
 
 const decrementHi5Count = async (req, res, id, orgId) => {
   const userData = await jwtValidate.getData(req.headers["authorization"]);
-  let hi5Count = (await getHi5Count(res, res, id, orgId)) - 1;
+  let hi5Count = (await getHi5Count(req, res, id, orgId)) - 1;
   logger.info("executing decrerment hi5 count");
   logger.info("user id: " + userData.userId);
   logger.info("his count: " + hi5Count);
