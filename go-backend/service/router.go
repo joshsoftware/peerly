@@ -83,5 +83,8 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 
 	// Recognition routes
 	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/hi5", createRecognitionHi5Handler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", createRecognitionHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}", getRecognitionHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", listRecognitionsHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	return
 }
