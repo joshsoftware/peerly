@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   height: 100vh;
+  color: var(--white);
   background-color: var(--sage);
 `;
 
