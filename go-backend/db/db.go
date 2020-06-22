@@ -44,7 +44,6 @@ type Storer interface {
 
 	//Recognition
 	CreateRecognitionHi5(context.Context, RecognitionHi5, int) error
-	GetAWSS3SignedURL(context.Context, string, string) (S3SignedURL, error)
 
 	//Reported Recognition
 	CreateReportedRecognition(context.Context, int64, ReportedRecognition) (ReportedRecognition, error)

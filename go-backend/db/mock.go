@@ -174,8 +174,3 @@ func (m *DBMockStore) CreateRecognitionModeration(ctx context.Context, recogniti
 	args := m.Called(ctx, recognitionID, recognitionModeration)
 	return args.Get(0).(RecognitionModeration), args.Error(1)
 }
-
-func (m *DBMockStore) GetAWSS3SignedURL(ctx context.Context, bucketName, fileName string) (S3SignedURL, error) {
-	args := m.Called(ctx, bucketName, fileName)
-	return args.Get(0).(S3SignedURL), args.Error(1)
-}
