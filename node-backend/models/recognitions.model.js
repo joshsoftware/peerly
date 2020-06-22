@@ -40,7 +40,10 @@ module.exports = (sequelize, Sequelize) => {
       foreignKey: "given_for",
       as: "given_for_user",
     });
-    Recognitions.belongsTo(models.core_values, { foreignKey: "core_value_id" });
+    Recognitions.belongsTo(models.core_values, {
+      foreignKey: "core_value_id",
+      as: "coreValue",
+    });
     Recognitions.belongsTo(models.users, {
       foreignKey: "given_by",
       as: "given_by_user",

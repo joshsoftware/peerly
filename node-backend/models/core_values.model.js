@@ -36,7 +36,10 @@ module.exports = (sequelize, Sequelize) => {
     }
   );
   Core_values.associate = (models) => {
-    Core_values.hasMany(models.recognitions, { foreignKey: "core_value_id" });
+    Core_values.hasMany(models.recognitions, {
+      foreignKey: "core_value_id",
+      as: "coreValue",
+    });
   };
   return Core_values;
 };
