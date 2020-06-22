@@ -61,9 +61,13 @@ export function* getRecognitionTo(action) {
 }
 
 export function* addRecognition(action) {
+  const userStatus = actionGenerator("USER_PROFILE");
   const actionStatus = actionGenerator(ADD_RECOGNITION);
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
+  const hi5_count = yield select(
+    (state) => state.userProfileReducer.data.hi5_quota_balance
+  );
   try {
     const response = yield call(PostJson, {
       path: "/recognitions",
@@ -77,6 +81,7 @@ export function* addRecognition(action) {
         value: responseObj.data,
       });
       yield put(dispatchObject);
+      yield put(actionObjectGenerator(userStatus.init, { count: hi5_count }));
     } else {
       const dispatchObject = actionObjectGenerator(actionStatus.failure, {
         status: response.status,

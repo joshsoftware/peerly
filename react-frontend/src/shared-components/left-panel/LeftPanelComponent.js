@@ -45,7 +45,7 @@ const LeftPanelComponent = ({
           <HighFiveComponent />
         </div>
         <div>
-          <span>{collectedHi5}collected</span>
+          <span>{collectedHi5}Available</span>
         </div>
       </div>
       <CreateRecognitionButton
