@@ -44,7 +44,7 @@ module.exports.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE =
   "Core value not found with specified organisation";
 
 module.exports.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE =
-  "Core value not found with specified organisation";
+  "User not found with specified organisation";
 
 module.exports.RECOGNITION_NOT_FOUND_CODE = "recognition-not-found";
 
@@ -73,3 +73,8 @@ module.exports.INVALID_BADGES_MESSAGE = "Invalid badges data";
 module.exports.INVALID_TOKEN_CODE = "invalid_token";
 
 module.exports.INVALID_TOKEN_MESSAGE = "Invalid token data";
+
+module.exports.NOT_REPEATED_HI5_CODE = "not-give-repeat-hi5";
+
+module.exports.NOT_REPEATED_HI5_MESSAGE =
+  "Not allow give repeated hi5 for same recognition";
