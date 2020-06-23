@@ -13,10 +13,10 @@ import { useHistory } from "react-router-dom";
 const UserListContainer = () => {
   let history = useHistory();
   let [userId, setUserId] = useState(null);
+
   const recognitionList = useSelector((state) => state.userListReducer);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_USERS_API);
-
   const actionStatus = actionGenrator(RECOGNIZE_TO);
   const dispatchObject = actionObjectGenrator(actionStatus.success, {
     id: userId,
@@ -31,6 +31,7 @@ const UserListContainer = () => {
   } else if (recognitionList.error === "access_denied") {
     return <UnauthorisedErrorComponent />;
   } else if (userId) {
+    localStorage.setItem("userId", userId);
     history.push("/createREcognition");
   }
 
