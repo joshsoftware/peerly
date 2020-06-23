@@ -29,3 +29,5 @@ export const GIVE_HI5 = "GIVE_HI5";
 export const USER_PROFILE = "USER_PROFILE";
 
 export const USER_PROFILE_API = "USER_PROFILE_API";
+
+export const LOGOUT_API = "LOGOUT_API";

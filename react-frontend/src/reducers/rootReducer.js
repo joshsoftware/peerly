@@ -7,6 +7,7 @@ import coreValueListReducer from "reducers/coreValueListReducer";
 import RecognizeToReducer from "reducers/recognizeToReducer";
 import userListReducer from "reducers/listUsers";
 import userProfileReducer from "reducers/userProfileReducer";
+import addRecognitionReducer from "reducers/addRecognitionReducer";
 
 export default combineReducers({
   appReducer,
@@ -16,4 +17,5 @@ export default combineReducers({
   RecognizeToReducer,
   userListReducer,
   userProfileReducer,
+  addRecognitionReducer,
 });

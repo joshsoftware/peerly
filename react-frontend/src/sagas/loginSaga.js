@@ -14,6 +14,7 @@ export function* userLogin(action) {
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
+      localStorage.setItem("jwtToken", responseObj.data.token);
       const dispatchObject = actionObjectGenerator(actionStatus.success, {
         status: response.status,
         value: responseObj.data,

@@ -20,6 +20,9 @@ const CreateRecognitionContainer = () => {
   const recognitionList = useSelector((state) => state.coreValueListReducer);
   const recognitionTo = useSelector((state) => state.RecognizeToReducer);
   const userProfile = useSelector((state) => state.userProfileReducer);
+  const createRecognitionStatus = useSelector(
+    (state) => state.addRecognitionReducer
+  );
 
   const [commentText, updateCommentText] = useState(null);
   const [show, setShow] = useState(false);
@@ -46,7 +49,6 @@ const CreateRecognitionContainer = () => {
       addRecognition
     );
     store.dispatch(dispatchObject);
-    history.push("/listOfRecognition");
   };
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -57,7 +59,10 @@ const CreateRecognitionContainer = () => {
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
     dispatch(
-      actionObjectGenrator(recognitionToStatus.success, recognitionTo.data.id)
+      actionObjectGenrator(
+        recognitionToStatus.success,
+        localStorage.getItem("userId")
+      )
     );
   }, [dispatch, status.success, recognitionToStatus.success]);
 
@@ -65,7 +70,10 @@ const CreateRecognitionContainer = () => {
     return <SessionTimeoutComponent />;
   } else if (recognitionList.error === "access_denied") {
     return <UnauthorisedErrorComponent />;
+  } else if (createRecognitionStatus.status === 201) {
+    history.push("/listOfRecognition");
   }
+
   return (
     <CreateRecognition
       coreValues={recognitionList.list}
