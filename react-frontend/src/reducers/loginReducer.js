@@ -4,12 +4,19 @@ const actionStatus = actionGenerator(LOGIN);
 
 export const defaultState = {
   status: null,
-  data: { token: null },
+  data: { token: localStorage.getItem("jwtToken") },
   error: { message: null },
 };
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case actionStatus.init:
+      return {
+        ...state,
+        status: null,
+        data: { token: localStorage.getItem("jwtToken") },
+        error: { message: null },
+      };
     case actionStatus.success:
       return {
         ...state,
