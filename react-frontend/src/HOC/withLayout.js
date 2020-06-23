@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import TopNavbar from "shared-components/layout/TopNavbar";
+import TopNavbar from "shared-components/layout/TopNavbarContainer";
 import Sidebar from "shared-components/left-panel/LeftPanelContainer";
 
 const withLayout = (WrappedComponent, includeNavbar, includeSidebar) => (
