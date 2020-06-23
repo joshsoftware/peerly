@@ -1,1 +1,3 @@
-export { Navbar } from "react-bootstrap";
+export { Navbar, Nav } from "react-bootstrap";
+
+//export { Nav } from "react-bootstrap";
