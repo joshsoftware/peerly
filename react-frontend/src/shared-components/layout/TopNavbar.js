@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
-import { Navbar } from "core-components/navbar/NavbarComponent";
+import { Navbar, Nav } from "core-components/navbar/NavbarComponent";
 import { Container, Col, Row } from "core-components/grid/GridComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import NotificationBadgeComponent from "shared-components/notification/NotificationBadgeComponent";
@@ -21,15 +22,20 @@ const HighFiveIcon = styled(HighFiveComponent)`
   height: 28px;
 `;
 
-function TopNavbar() {
+function TopNavbar({ onClickLogout }) {
   return (
     <NavbarWrapper className="sticky-top">
       <Container fluid>
         <Row className="w-100 justify-content-center">
           <Col md="8" sm="12">
             <Row>
-              <Col xs="10" className="text-center">
+              <Col xs="8" className="text-center">
                 <Navbar.Brand>Peerly</Navbar.Brand>
+              </Col>
+              <Col xs="2" className="text-right">
+                <Nav.Link href="/" onClick={onClickLogout}>
+                  logout
+                </Nav.Link>
               </Col>
               <Col xs="2" className="text-right">
                 <Navbar.Text>
@@ -52,4 +58,8 @@ function TopNavbar() {
   );
 }
 
-export default React.memo(TopNavbar);
+TopNavbar.propTypes = {
+  onClickLogout: PropTypes.func,
+};
+
+export default TopNavbar;
