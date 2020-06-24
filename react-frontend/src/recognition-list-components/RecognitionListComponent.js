@@ -33,7 +33,7 @@ const RecognitionListComponent = ({
     <Wrapper>
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
-          key={recognition.id}
+          key={recognition.index}
           giveHi5func={giveHi5func}
           recognitionId={recognition.id}
           givenByName={`${recognition.given_by_user.first_name} ${recognition.given_by_user.last_name}`}
@@ -65,7 +65,6 @@ const RecognitionListComponent = ({
 RecognitionListComponent.propTypes = {
   recognitionList: PropTypes.array.isRequired,
   giveHi5func: PropTypes.func.isRequired,
-  hi5Count: PropTypes.number,
   show: PropTypes.bool,
   handleClose: PropTypes.func,
   errorMessage: PropTypes.string,

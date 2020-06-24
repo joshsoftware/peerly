@@ -88,7 +88,7 @@ LeftPanelComponent.propTypes = {
   hi5ImageForButton: PropTypes.string.isRequired,
   profileImage: PropTypes.string.isRequired,
   profileName: PropTypes.string.isRequired,
-  collectedHi5: PropTypes.string.isRequired,
+  collectedHi5: PropTypes.number.isRequired,
   errorMessage: PropTypes.string,
   showError: PropTypes.string,
   handleCloseError: PropTypes.func,
