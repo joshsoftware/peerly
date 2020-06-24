@@ -79,7 +79,7 @@ func startApp() (err error) {
 	}
 	awsstore, err := aws.Init()
 	if err != nil {
-		logger.WithField("err", err.Error()).Error("Database init failed")
+		logger.WithField("err", err.Error()).Error("AWS service init failed")
 		return
 	}
 
