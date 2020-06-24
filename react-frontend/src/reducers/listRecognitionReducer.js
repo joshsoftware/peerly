@@ -12,11 +12,9 @@ export const defaultState = {
   ],
   hi5: {
     data: {},
-    error: {},
+    error: { code: undefined },
   },
-  error: {
-    fields: {},
-  },
+  error: null,
   limit: 3,
   offset: 0,
 };
@@ -26,6 +24,24 @@ const hi5Status = actionGenerator(GIVE_HI5);
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case status.init:
+      return {
+        list: [
+          {
+            coreValue: {},
+            given_for_user: {},
+            given_by_user: {},
+            hi5Count: [],
+          },
+        ],
+        hi5: {
+          data: {},
+          error: { code: undefined },
+        },
+        error: null,
+        limit: 3,
+        offset: 0,
+      };
     case status.success:
       return {
         ...state,
