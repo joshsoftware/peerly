@@ -22,9 +22,9 @@ const HighFiveIcon = styled(HighFiveComponent)`
   height: 28px;
 `;
 
-function TopNavbar({ onClickLogout }) {
+function TopNavbar({ onClickLogout, count }) {
   return (
-    <NavbarWrapper className="sticky-top">
+    <NavbarWrapper className="fixed-top">
       <Container fluid>
         <Row className="w-100 justify-content-center">
           <Col md="8" sm="12">
@@ -45,7 +45,7 @@ function TopNavbar({ onClickLogout }) {
                 </Navbar.Text>
                 <Navbar.Text>
                   <NotificationWrapper>
-                    <NotificationBadgeComponent count={2} />
+                    <NotificationBadgeComponent count={count} />
                   </NotificationWrapper>
                   <HighFiveIcon />
                 </Navbar.Text>
@@ -60,6 +60,7 @@ function TopNavbar({ onClickLogout }) {
 
 TopNavbar.propTypes = {
   onClickLogout: PropTypes.func,
+  count: PropTypes.number,
 };
 
 export default TopNavbar;

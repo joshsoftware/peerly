@@ -9,6 +9,8 @@ import {
   CORE_VALUE_API,
   RECOGNIZE_TO_API,
   ADD_RECOGNITION_API,
+  LIST_RECOGNITION,
+  ADD_RECOGNITION,
 } from "constants/actionConstants";
 import actionGenerator from "utils/actionGenerator";
 import { store } from "root/redux-store";
@@ -66,11 +68,15 @@ const CreateRecognitionContainer = () => {
     );
   }, [dispatch, status.success, recognitionToStatus.success]);
 
-  if (recognitionList.error === "invalid_token") {
+  if (createRecognitionStatus.error === "invalid_token") {
     return <SessionTimeoutComponent />;
-  } else if (recognitionList.error === "access_denied") {
+  } else if (createRecognitionStatus.error === "access_denied") {
     return <UnauthorisedErrorComponent />;
   } else if (createRecognitionStatus.status === 201) {
+    const recognitionListStatus = actionGenrator(LIST_RECOGNITION);
+    const addRecognitionStatus = actionGenrator(ADD_RECOGNITION);
+    dispatch(actionObjectGenrator(recognitionListStatus.init));
+    dispatch(actionObjectGenrator(addRecognitionStatus.init));
     history.push("/listOfRecognition");
   }
 
