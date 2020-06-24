@@ -42,4 +42,12 @@ data.badges = {
   hi5_count_required: faker.random.number(1),
   hi5_frequency: faker.lorem.words(1),
 };
+
+data.header = {
+  host: "127.0.0.1:41253",
+  authorization: faker.lorem.words(2),
+  accept: "application/vnd.peerly.v1",
+  connection: "close",
+};
+
 module.exports = data;
