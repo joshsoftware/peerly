@@ -7,10 +7,11 @@ import ProfileComponent from "shared-components/profile-component/ProfileCompone
 import CreateRecognitionButton from "shared-components/create-recognition-button/CreateRecognitionButton";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import PopupWindow from "shared-components/user-list/PopupUserList";
+import { Modal } from "core-components/modal/ModalComponent";
 
 const Wrapper = styled(Card)`
   position: absolute;
-  margin-top: -537px;
+  margin-top: 100px;
   margin-left: 260px;
   width: 175px;
   border-radius: 36px 36px 0px 0px;
@@ -24,6 +25,11 @@ const LeftPanelComponent = ({
   profileName,
   collectedHi5,
   listOfEmployee,
+  errorMessage,
+  handleCloseError,
+  handleShowError,
+  showPopup,
+  hi5_quota_balance,
 }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -50,16 +56,29 @@ const LeftPanelComponent = ({
       </div>
       <CreateRecognitionButton
         imageUrl={hi5ImageForButton}
-        onClick={handleShow}
+        onClick={hi5_quota_balance !== 0 ? handleShow : handleShowError}
       />
-      <PopupWindow
-        show={show}
-        handleClose={handleClose}
-        recognitionToImage={profileImage}
-        recognitionToName={profileName}
-        sendData={sendData}
-        listOfEmployee={listOfEmployee}
-      ></PopupWindow>
+      {showPopup ? (
+        <Modal
+          show={showPopup}
+          onHide={handleCloseError}
+          centered={true}
+          aria-labelledby="contained-modal-title-vcenter"
+        >
+          <Modal.Body closeButton className="text-center text-danger">
+            {errorMessage}
+          </Modal.Body>
+        </Modal>
+      ) : (
+        <PopupWindow
+          show={show}
+          handleClose={handleClose}
+          recognitionToImage={profileImage}
+          recognitionToName={profileName}
+          sendData={sendData}
+          listOfEmployee={listOfEmployee}
+        ></PopupWindow>
+      )}
     </Wrapper>
   );
 };
@@ -70,6 +89,12 @@ LeftPanelComponent.propTypes = {
   profileImage: PropTypes.string.isRequired,
   profileName: PropTypes.string.isRequired,
   collectedHi5: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string,
+  showError: PropTypes.string,
+  handleCloseError: PropTypes.func,
+  handleShowError: PropTypes.func,
+  showPopup: PropTypes.func,
+  hi5_quota_balance: PropTypes.number,
 };
 
 export default React.memo(LeftPanelComponent);

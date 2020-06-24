@@ -31,11 +31,16 @@ const CardWrapper = styled(Card)`
   background: linear-gradient(var(--sage) 120px, var(--white) 0%);
   margin-top: 3%;
   margin-left: 35%;
+  margin-right: 10%;
+  height: 537px;
+  padding-bottom: 19%;
+  margin-left: 35%;
   margin-right: 20%;
   height: 537px;
+  margin-top: 100px;
+  position: fixed;
+  width: 550px;
 `;
-
-const MainWrapper = styled.div``;
 
 const CreateRecognition = ({
   coreValues,
@@ -53,7 +58,7 @@ const CreateRecognition = ({
   coreValueId,
 }) => {
   return (
-    <MainWrapper>
+    <div>
       <CardWrapper className="d-none d-md-block ">
         <WrapperForHeader>
           <ProfileComponent
@@ -130,7 +135,7 @@ const CreateRecognition = ({
           <Button onClick={handleShow}> Done </Button>
         </Col>
       </div>
-    </MainWrapper>
+    </div>
   );
 };
 
