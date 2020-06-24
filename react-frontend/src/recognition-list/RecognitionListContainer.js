@@ -5,10 +5,16 @@ import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
-import { LIST_RECOGNITION_API, GIVE_HI5_API } from "constants/actionConstants";
+import {
+  LIST_RECOGNITION_API,
+  GIVE_HI5_API,
+  USER_PROFILE_API,
+} from "constants/actionConstants";
 import RecognitionListComponent from "recognition-list-components/RecognitionListComponent";
 
 const RecognnitionListContainer = () => {
+  const userProfileStatus = actionGenrator(USER_PROFILE_API);
+
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_RECOGNITION_API);
@@ -24,6 +30,11 @@ const RecognnitionListContainer = () => {
       dispatch(actionObjectGenrator(status.success));
     }
   };
+
+  /*let location = useLocation();
+    React.useEffect(() => {
+    ga.send(["pageview", location.pathname]);
+  }, [location]);*/
 
   useEffect(() => {
     if (refresh === 0) {
@@ -48,13 +59,14 @@ const RecognnitionListContainer = () => {
           id: id,
         })
       );
+      dispatch(actionObjectGenrator(userProfileStatus.success));
       changeRefresh(refresh + 1);
     }
   };
 
-  if (recognitionList.error.code === "invalid_token") {
+  if (recognitionList.error === "invalid_token") {
     return <SessionTimeoutComponent />;
-  } else if (recognitionList.error.code === "access_denied") {
+  } else if (recognitionList.error === "access_denied") {
     return <UnauthorisedErrorComponent />;
   } else if (recognitionList.hi5.error.code !== undefined && show == false) {
     setShow(true);
