@@ -14,7 +14,6 @@ import RecognitionListComponent from "recognition-list-components/RecognitionLis
 
 const RecognnitionListContainer = () => {
   const userProfileStatus = actionGenrator(USER_PROFILE_API);
-
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_RECOGNITION_API);
@@ -30,11 +29,6 @@ const RecognnitionListContainer = () => {
       dispatch(actionObjectGenrator(status.success));
     }
   };
-
-  /*let location = useLocation();
-    React.useEffect(() => {
-    ga.send(["pageview", location.pathname]);
-  }, [location]);*/
 
   useEffect(() => {
     if (refresh === 0) {
