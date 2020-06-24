@@ -10,10 +10,13 @@ const Wrapper = styled.div`
   background: var(--white) 0% 0% no-repeat padding-box;
   border-radius: 36px;
   opacity: 1;
-  margin-top: 3%;
+  padding-bottom: 19%;
   margin-left: 35%;
   margin-right: 20%;
   height: 537px;
+  margin-top: 100px;
+  position: fixed;
+  overflow: scroll;
 `;
 
 const RecognitionListComponent = ({
@@ -27,7 +30,7 @@ const RecognitionListComponent = ({
     new Date(timestamp * 1000).toDateString();
 
   return (
-    <Wrapper className="sticky-top">
+    <Wrapper>
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
           key={recognition.id}
