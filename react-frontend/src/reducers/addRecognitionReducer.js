@@ -10,6 +10,13 @@ const status = actionGenerator("ADD_RECOGNITION");
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case status.init:
+      return {
+        ...state,
+        status: null,
+        data: null,
+        error: { message: null },
+      };
     case status.success:
       return {
         ...state,
