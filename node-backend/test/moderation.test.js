@@ -106,7 +106,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation"
       .post(`/recognitions/${recognitionId}/review`)
       .send({
         is_inappropriate: "true",
-        moderator_comment: "wrong content",
+        comment: "wrong content",
       })
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")

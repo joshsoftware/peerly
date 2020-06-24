@@ -24,7 +24,6 @@ type UsersHandlerTestSuite struct {
 func (suite *UsersHandlerTestSuite) SetupTest() {
 	suite.dbMock = &db.DBMockStore{}
 }
-
 func (suite *UsersHandlerTestSuite) TestListUsersSuccess() {
 	// Start by declaring a fakeUser of type db.User, then have faker shove fake data into it
 	fakeUser := db.User{}

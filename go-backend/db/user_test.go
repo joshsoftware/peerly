@@ -91,16 +91,10 @@ func (suite *UserTestSuite) TestUpdateUserSuccess() {
 
 	suite.sqlmock.ExpectBegin()
 
-	suite.sqlmock.ExpectExec("INSERT INTO users").
-		WithArgs("test user", 1, "testuser@gmail.com", "test", "test.jpeg", 1, 1).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	suite.sqlmock.ExpectCommit()
-
-	createdUser, err := suite.dbStore.CreateNewUser(context.Background(), user)
+	UpdatedUser, err := suite.dbStore.UpdateUser(context.Background(), user, 1)
 
 	assert.Nil(suite.T(), suite.sqlmock.ExpectationsWereMet())
-	assert.Equal(suite.T(), createdUser, user)
+	assert.Equal(suite.T(), UpdatedUser, user)
 	assert.Nil(suite.T(), err)
 }
 
@@ -114,15 +108,8 @@ func (suite *UserTestSuite) TestUpdateUserFailure() {
 		RoleID:          1,
 		Hi5QuotaBalance: 5,
 	}
-	suite.db.Close()
 	suite.sqlmock.ExpectBegin()
-	suite.sqlmock.ExpectExec("INSERT INTO users").
-		WithArgs("test user", 1, "testuser@gmail.com", "test", "test.jpeg", 1, 1).
-		WillReturnResult(sqlmock.NewResult(1, 1))
-
-	suite.sqlmock.ExpectRollback()
-
-	_, err := suite.dbStore.CreateNewUser(context.Background(), user)
-
+	updatedUser, err := suite.dbStore.UpdateUser(context.Background(), user, 1)
+	assert.NotEqual(suite.T(), user, updatedUser)
 	assert.NotNil(suite.T(), err)
 }

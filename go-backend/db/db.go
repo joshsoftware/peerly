@@ -51,4 +51,9 @@ type Storer interface {
 
 	//Recognition Moderation
 	CreateRecognitionModeration(context.Context, int64, RecognitionModeration) (RecognitionModeration, error)
+	CreateBadge(context.Context, Badge) (Badge, error)
+	ListBadges(context.Context,int) ([]Badge, error)
+	UpdateBadge(context.Context, Badge) (Badge, error)
+	ShowBadge(context.Context, Badge) (Badge, error)
+	DeleteBadge(context.Context, int,int) (error)
 }

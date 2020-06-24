@@ -118,7 +118,7 @@ module.exports.findOne = async (req, res) => {
     .then(() => {
       Badges.findOne({ where: { org_id: org_id, id: id } })
         .then((data) => {
-          if (data.length != 0) {
+          if (data) {
             res.status(200).send({
               data: data,
             });
