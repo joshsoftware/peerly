@@ -136,6 +136,31 @@ func (m *DBMockStore) ShowRecognition(ctx context.Context, recognitionID int) (r
 	return args.Get(0).(Recognition), args.Error(1)
 }
 
+func (m *DBMockStore) CreateBadge(ctx context.Context, badge Badge) (createdBadge Badge, err error) {
+	args := m.Called(ctx, badge)
+	return args.Get(0).(Badge), args.Error(1)
+}
+
+func (m *DBMockStore) ListBadges(ctx context.Context, org_id int) (badges []Badge, err error) {
+	args := m.Called(ctx, org_id)
+	return args.Get(0).([]Badge), args.Error(1)
+}
+
+func (m *DBMockStore) ShowBadge(ctx context.Context, badge Badge) (badges Badge, err error) {
+	args := m.Called(ctx, badge)
+	return args.Get(0).(Badge), args.Error(1)
+}
+
+func (m *DBMockStore) UpdateBadge(ctx context.Context, badge Badge) (badges Badge, err error) {
+	args := m.Called(ctx, badge)
+	return args.Get(0).(Badge), args.Error(1)
+}
+
+func (m *DBMockStore) DeleteBadge(ctx context.Context, org_id int, id int) (err error) {
+	args := m.Called(ctx, org_id, id)
+	return args.Error(1)
+}
+
 func (m *DBMockStore) CreateRecognitionHi5(ctx context.Context, recognitionHi5 RecognitionHi5, recognitionID int) (err error) {
 	args := m.Called(ctx, recognitionHi5, recognitionID)
 	return args.Error(0)
