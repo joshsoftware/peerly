@@ -30,11 +30,11 @@ const LoginContainer = () => {
   };
 
   if (loginAuthorization.status === 401) {
-    return "Unauthorized user"; //TODO: redirect to unauthorized component
+    history.push("/unauthorised"); //TODO: redirect to unauthorized component
   } else if (loginAuthorization.status === 500) {
     return "internal server error"; //TODO: redirects to internal server error component
   } else if (loginAuthorization.error.message === "popup_closed_by_user") {
-    return "Unauthorized user"; //TODO: redirect to unauthorized component
+    history.push("/unauthorised"); //TODO: redirect to unauthorized component
   } else if (loginAuthorization.status === 200) {
     history.push("/listOfRecognition");
   }
