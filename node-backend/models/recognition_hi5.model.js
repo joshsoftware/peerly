@@ -32,5 +32,10 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Recognition_hi5.associate = (models) => {
+    Recognition_hi5.belongsTo(models.recognitions, {
+      foreignKey: "recognition_id",
+    });
+  };
   return Recognition_hi5;
 };
