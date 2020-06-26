@@ -19,6 +19,16 @@ export default [
     key: ROOT_ROUTES.rootIndex,
   },
   {
+    path: ROOT_ROUTES.unauthorised,
+    isProtected: false,
+    includeNavbar: false,
+    includeSidebar: false,
+    component: UnauthorisedErrorComponent,
+    exact: false,
+    strict: false,
+    key: ROOT_ROUTES.unauthorised,
+  },
+  {
     path: DASHBOARD_ROUTES.dashboardIndex,
     isProtected: true,
     includeNavbar: true,
@@ -77,15 +87,5 @@ export default [
     exact: false,
     strict: false,
     key: DASHBOARD_ROUTES.createRecognition,
-  },
-  {
-    path: ROOT_ROUTES.unauthorised,
-    isProtected: false,
-    includeNavbar: true,
-    includeSidebar: true,
-    component: UnauthorisedErrorComponent,
-    exact: false,
-    strict: false,
-    key: ROOT_ROUTES.unauthorised,
   },
 ];
