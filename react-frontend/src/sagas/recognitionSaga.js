@@ -73,7 +73,6 @@ export function* giveHi5ToRecognition(action) {
       apiToken: token,
     });
     const responseObj = yield response.json();
-
     if (responseObj.data) {
       getUpdateCountList(action.payload.id, listRecognition);
       yield put(
