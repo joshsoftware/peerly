@@ -30,6 +30,8 @@ const LeftPanelComponent = ({
   handleShowError,
   showPopup,
   hi5_quota_balance,
+  setUserId,
+  id,
 }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -42,6 +44,8 @@ const LeftPanelComponent = ({
       <ProfileComponent
         name={profileName}
         src={profileImage}
+        setUserId={setUserId}
+        id={id}
         size={12}
         shadow
         className="d-flex flex-column text-center mt-5"
@@ -95,6 +99,8 @@ LeftPanelComponent.propTypes = {
   handleShowError: PropTypes.func,
   showPopup: PropTypes.func,
   hi5_quota_balance: PropTypes.number,
+  setUserId: PropTypes.func,
+  id: PropTypes.number,
 };
 
 export default React.memo(LeftPanelComponent);
