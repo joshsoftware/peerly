@@ -19,7 +19,7 @@ import { useHistory } from "react-router-dom";
 import CreateRecognition from "create-recognition/CreateRecognition";
 
 const CreateRecognitionContainer = () => {
-  const recognitionList = useSelector((state) => state.coreValueListReducer);
+  const coreValueList = useSelector((state) => state.coreValueListReducer);
   const recognitionTo = useSelector((state) => state.RecognizeToReducer);
   const userProfile = useSelector((state) => state.userProfileReducer);
   const createRecognitionStatus = useSelector(
@@ -82,7 +82,7 @@ const CreateRecognitionContainer = () => {
 
   return (
     <CreateRecognition
-      coreValues={recognitionList.list}
+      coreValues={coreValueList.list}
       setCoreValueId={setCoreValueId}
       comment={comment}
       addComment={addComment}
