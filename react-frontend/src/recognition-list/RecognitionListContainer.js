@@ -5,6 +5,7 @@ import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
+//import FilterContainer from "filterRecognition/FilterRecognitionContainer";
 import {
   LIST_RECOGNITION_API,
   GIVE_HI5_API,
@@ -13,6 +14,10 @@ import {
 import RecognitionListComponent from "recognition-list-components/RecognitionListComponent";
 
 const RecognnitionListContainer = () => {
+  const [filter, showFilter] = useState(false);
+  const onFilterClick = () => {
+    showFilter(true);
+  };
   const userProfileStatus = actionGenrator(USER_PROFILE_API);
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
   const dispatch = useDispatch();
@@ -73,6 +78,8 @@ const RecognnitionListContainer = () => {
         show={show}
         handleClose={handleClose}
         errorMessage={recognitionList.hi5.error.message}
+        onFilterClick={onFilterClick}
+        filter={filter}
       />
     </div>
   );

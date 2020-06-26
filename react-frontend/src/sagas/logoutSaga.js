@@ -1,6 +1,6 @@
 import { takeEvery, spawn, call, select } from "redux-saga/effects";
 
-import getJson from "utils/getJson";
+import PostJson from "utils/postJson";
 //import actionObjectGenerator from "actions/listRecognitionAction";
 import actionGenerator from "utils/actionGenerator";
 import { LOGOUT_API } from "constants/actionConstants";
@@ -10,16 +10,13 @@ export function* logout() {
   const token = yield select(getToken);
   //const status = actionGenerator(USER_PROFILE);
   try {
-    yield call(getJson, {
+    const response = yield call(PostJson, {
       path: "/logout",
       apiToken: token,
     });
-    // const responseObj = yield response.json();
-    /*if (responseObj.data) {
-      yield put(actionObjectGenerator(status.success, responseObj.data));
-    } else {
-      yield put(actionObjectGenerator(status.failure, responseObj.error));
-    }*/
+    if (response.status === 200) {
+      localStorage.clear();
+    }
   } catch (error) {
     // yield put(actionObjectGenerator(status.failure, error));
   }

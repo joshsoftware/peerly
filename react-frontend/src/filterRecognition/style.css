@@ -1,0 +1,45 @@
+
+.menu-sidebar.modal.fade .modal-dialog {
+    transition: none;
+  }
+  .menu-sidebar.modal.fade {
+    transition: transform 0.3s ease-out, opacity 0.15s linear;
+  }
+  .menu-sidebar.modal.fade:not(.in).left {
+    transform: translate3d(-100%, 0, 0);
+  }
+  .menu-sidebar.modal.fade:not(.in).right {
+    transform: translate3d(100%, 0, 0);
+  }
+  .menu-sidebar.modal {
+    max-width: 100%;
+    box-shadow: 5px 0 10px;
+  }
+  .menu-sidebar.modal.left {
+    right: auto;
+  }
+  .menu-sidebar.modal.right {
+    left: auto;
+  }
+  .menu-sidebar.modal .modal-dialog {
+    margin: 0;
+    width: auto;
+  }
+  .menu-sidebar.modal .modal-dialog .modal-content {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  .menu-sidebar.modal .modal-dialog .modal-content .modal-body {
+    padding: 0;
+   
+  }
+  .menu-sidebar.modal.fade:not(.in).left .modal-dialog {
+    transform: translate3d(-100%, 0, 0);
+  }
+  .menu-sidebar.modal.fade:not(.in).right .modal-dialog {
+    transform: translate3d(100%, 0, 0);
+  }
+  .menu-sidebar .nav {
+    width: 320px;
+  }

@@ -7,15 +7,19 @@ import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
 import { USER_PROFILE_API, GIVE_HI5_API } from "constants/actionConstants";
 import LeftfPanel from "shared-components/left-panel/LeftPanelComponent";
+//import { BsChevronCompactLeft } from "react-icons/bs";
 
 const LeftPanelContainer = () => {
   const userProfile = useSelector((state) => state.userProfileReducer);
   const [showError, setShowError] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
+  const [userId, setUserId] = useState(null);
   const dispatch = useDispatch();
   const status = actionGenrator(USER_PROFILE_API);
   const hi5Status = actionGenrator(GIVE_HI5_API);
-
+  if (userId === 1) {
+    //console.log("clicked user")
+  }
   const handleCloseError = () => {
     setShowPopup(false);
     dispatch(actionObjectGenrator(hi5Status.init));
@@ -43,6 +47,8 @@ const LeftPanelContainer = () => {
       showPopup={showPopup}
       hi5_quota_balance={hi5_quota_balance}
       setShowError={setShowError}
+      setUserId={setUserId}
+      id={1}
     />
   );
 };

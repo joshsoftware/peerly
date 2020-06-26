@@ -22,6 +22,7 @@ const ProfileComponent = ({
   shadow,
 }) => {
   const onClick = () => {
+    // console.log(id)
     setUserId(id);
   };
   return (
@@ -47,6 +48,9 @@ ProfileComponent.defaultProps = {
   size: 10,
   id: 0,
   shadow: false,
+  setUserId: () => {
+    /*TODO*/
+  },
 };
 
 ProfileComponent.propTypes = {
