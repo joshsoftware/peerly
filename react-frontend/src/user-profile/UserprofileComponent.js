@@ -69,7 +69,7 @@ const UserProfileComponent = ({
             <Form.Control type="file" className="text-center" />
           </Col>
         </Form.Group>
-        <Button onClick={onClick}>Upload</Button>
+        <Button onClick={onClick}>Update</Button>
       </Form>
     </CardComponent>
   );
