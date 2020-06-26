@@ -118,10 +118,22 @@ module.exports.getProfile = async (req, res) => {
     attributes: {
       exclude: ["soft_delete", "soft_delete_by", "soft_delete_at"],
     },
+    include: [
+      {
+        model: db.recognitions,
+        as: "given_for_user",
+        include: [
+          {
+            model: db.recognition_hi5,
+          },
+        ],
+      },
+    ],
   })
-    .then((profile) => {
+    .then((data) => {
+      data = modifyProfile(data);
       res.status(200).send({
-        data: profile,
+        data: data,
       });
     })
     .catch(() => {
@@ -153,9 +165,21 @@ module.exports.getProfileById = async (req, res) => {
         attributes: {
           exclude: ["soft_delete", "soft_delete_by", "soft_delete_at"],
         },
+        include: [
+          {
+            model: db.recognitions,
+            as: "given_for_user",
+            include: [
+              {
+                model: db.recognition_hi5,
+              },
+            ],
+          },
+        ],
       })
         .then((data) => {
-          if (data.length != 0) {
+          if (data) {
+            data = modifyProfile(data);
             res.status(200).send({
               data: data,
             });
@@ -408,4 +432,12 @@ module.exports.deleteUser = async (req, res) => {
         ),
       });
     });
+};
+
+const modifyProfile = (data) => {
+  let hi5_count = 0;
+  data.given_for_user.map((r) => (hi5_count += r.recognition_hi5s.length));
+  delete data.dataValues.given_for_user;
+  data.dataValues.hi5_count = hi5_count;
+  return data;
 };

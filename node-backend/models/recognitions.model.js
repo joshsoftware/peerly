@@ -45,6 +45,9 @@ module.exports = (sequelize, Sequelize) => {
       foreignKey: "given_by",
       as: "given_by_user",
     });
+    Recognitions.hasMany(models.recognition_hi5, {
+      foreignKey: "recognition_id",
+    });
   };
   return Recognitions;
 };
