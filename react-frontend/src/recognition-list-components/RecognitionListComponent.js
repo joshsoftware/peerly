@@ -4,6 +4,8 @@ import styled from "styled-components";
 
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
 import { Modal } from "core-components/modal/ModalComponent";
+import { Button } from "core-components/button/ButtonComponent";
+import FilterContainer from "filterRecognition/FilterRecognitionContainer";
 
 const Wrapper = styled.div`
   border: 1px solid var(--grey);
@@ -25,12 +27,15 @@ const RecognitionListComponent = ({
   show,
   handleClose,
   errorMessage,
+  onFilterClick,
+  filter,
 }) => {
   const getDateFormate = (timestamp) =>
     new Date(timestamp * 1000).toDateString();
 
   return (
     <Wrapper>
+      <Button onClick={onFilterClick}> click </Button>
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
           key={recognition.index}
@@ -47,6 +52,7 @@ const RecognitionListComponent = ({
           hi5Count={recognition.hi5Count.length}
         />
       ))}
+      {filter ? <FilterContainer /> : null}
       <Modal
         show={show}
         onHide={handleClose}
@@ -68,6 +74,8 @@ RecognitionListComponent.propTypes = {
   show: PropTypes.bool,
   handleClose: PropTypes.func,
   errorMessage: PropTypes.string,
+  onFilterClick: PropTypes.func,
+  filter: PropTypes.string,
 };
 
 export default React.memo(RecognitionListComponent);
