@@ -22,6 +22,7 @@ const TopNavbarContainer = () => {
     const actionStatus = actionGenerator(LOGOUT_API);
     const dispatchObject = actionObjectGenerator(actionStatus.success);
     store.dispatch(dispatchObject);
+    localStorage.clear();
   };
   if (userProfile.data.hi5_quota_balance) {
     hi5_count = userProfile.data.hi5_quota_balance;
