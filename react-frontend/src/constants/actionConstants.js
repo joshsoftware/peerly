@@ -30,4 +30,12 @@ export const USER_PROFILE = "USER_PROFILE";
 
 export const USER_PROFILE_API = "USER_PROFILE_API";
 
+export const USER_PROFILE_POST_API = "USER_PROFILE_POST_API";
+
 export const LOGOUT_API = "LOGOUT_API";
+
+export const S3_SIGNED_URL_API = "S3_SIGNED_URL_API";
+
+export const S3_SIGNED_URL = "S3_SIGNED_URL";
+
+export const S3_SIGNED_URL_POST = "S3_SIGNED_URL_POST";
