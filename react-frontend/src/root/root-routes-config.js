@@ -6,6 +6,7 @@ import UserListContainer from "shared-components/user-list/UserListContainer";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import ListOfRecognition from "recognition-list/RecognitionListContainer";
 import { DASHBOARD_ROUTES, ROOT_ROUTES } from "constants/routeConstants";
+import Profile from "user-profile/UserProfileContainer";
 
 export default [
   {
@@ -77,6 +78,16 @@ export default [
     exact: false,
     strict: false,
     key: DASHBOARD_ROUTES.usersList,
+  },
+  {
+    path: DASHBOARD_ROUTES.profile,
+    isProtected: true,
+    includeNavbar: true,
+    includeSidebar: false,
+    component: Profile,
+    exact: false,
+    strict: false,
+    key: DASHBOARD_ROUTES.profile,
   },
   {
     path: DASHBOARD_ROUTES.createRecognition,
