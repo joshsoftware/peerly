@@ -5,6 +5,7 @@ import coreValueList from "sagas/coreValueListSaga";
 import usersListSaga from "sagas/usersListSaga";
 import userProfileSaga from "sagas/userProfileSaga";
 import logoutSaga from "sagas/logoutSaga";
+import s3SignedAPI from "sagas/getS3SignedUrl";
 
 export function* helloSaga() {
   const msg = yield "Hello Sagas!";
@@ -20,4 +21,5 @@ export default function* rootSaga() {
   yield spawn(usersListSaga);
   yield spawn(userProfileSaga);
   yield spawn(logoutSaga);
+  yield spawn(s3SignedAPI);
 }
