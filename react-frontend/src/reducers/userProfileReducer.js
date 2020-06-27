@@ -8,6 +8,7 @@ export const defaultState = {
     last_name: null,
     display_name: null,
     hi5_quota_balance: null,
+    hi5_count: null,
   },
   error: null,
 };
