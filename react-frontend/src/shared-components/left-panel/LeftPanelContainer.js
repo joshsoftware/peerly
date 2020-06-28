@@ -7,9 +7,10 @@ import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
 import { USER_PROFILE_API, GIVE_HI5_API } from "constants/actionConstants";
 import LeftfPanel from "shared-components/left-panel/LeftPanelComponent";
-//import { BsChevronCompactLeft } from "react-icons/bs";
+import { useHistory } from "react-router-dom";
 
 const LeftPanelContainer = () => {
+  let history = useHistory();
   const userProfile = useSelector((state) => state.userProfileReducer);
   const [showError, setShowError] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
@@ -18,7 +19,7 @@ const LeftPanelContainer = () => {
   const status = actionGenrator(USER_PROFILE_API);
   const hi5Status = actionGenrator(GIVE_HI5_API);
   if (userId === 1) {
-    //console.log("clicked user")
+    history.push("/profile");
   }
   const handleCloseError = () => {
     setShowPopup(false);
@@ -39,7 +40,7 @@ const LeftPanelContainer = () => {
     <LeftfPanel
       profileImage={userProfile.data.profile_image_url}
       profileName={userProfile.data.display_name}
-      collectedHi5={userProfile.data.hi5_quota_balance}
+      collectedHi5={userProfile.data.hi5_count}
       errorMessage="You have Empty Hi5 quota balance"
       showError={showError}
       handleCloseError={handleCloseError}

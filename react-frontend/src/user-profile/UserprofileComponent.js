@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -9,12 +9,15 @@ import { Col } from "core-components/grid/GridComponent";
 import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
 const CardComponent = styled(Card)`
-  border-radius: 20px;
-  margin: 20px 20px;
+border-radius: 36px 36px 0px 0px;
+  margin-top: 3%;
+  margin-left: 30%;
+ 
+  padding-bottom: 19%;
+  height: 537px;
+  margin-top: 100px;
+  position: fixed;
   width: 550px;
-  box-shadow: 0px 5px 20px var(--box-shadow-color);
-  opacity: 1;
-  background: var(--white) 0% 0% no-repeat padding-box;
 `;
 
 const UserProfileComponent = ({
@@ -23,13 +26,16 @@ const UserProfileComponent = ({
   email,
   profileImage,
   displayName,
+  id,
+  uploadImage,
+  uploadOnAws,
 }) => {
   const onClick = () => {
     // console.log(id)
   };
   return (
     <CardComponent className="text-center">
-      <Form>
+      <Form onSubmit={uploadOnAws}>
         <ProfileComponent
           src={profileImage}
           name={displayName}
@@ -66,10 +72,10 @@ const UserProfileComponent = ({
             <Form.Label>Profile Image</Form.Label>
           </Col>
           <Col>
-            <Form.Control type="file" className="text-center" />
+            <Form.Control type="file" className="text-center" onChange={uploadImage}/>
           </Col>
         </Form.Group>
-        <Button onClick={onClick}>Update</Button>
+        <Button type="submit">Updates</Button>
       </Form>
     </CardComponent>
   );
@@ -84,3 +90,4 @@ UserProfileComponent.propTypes = {
 };
 
 export default React.memo(UserProfileComponent);
+*/

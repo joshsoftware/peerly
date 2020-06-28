@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
-import { Modal } from "core-components/modal/ModalComponent";
 import { Button } from "core-components/button/ButtonComponent";
-import FilterContainer from "filterRecognition/FilterRecognitionContainer";
 
 const Wrapper = styled.div`
   border: 1px solid var(--grey);
@@ -19,15 +17,28 @@ const Wrapper = styled.div`
   margin-top: 100px;
   position: fixed;
   overflow: scroll;
+  overflow-y: hidden;
 `;
-
+const Sidebar = styled.div`
+  height: 100vh;
+  position: absolute;
+  padding-left: 20px;
+  background-color: navy;
+  opacity: 0.8;
+  color: white;
+  width: 400px;
+  position: fixed;
+  z-index: 1000;
+  margin-right: 800px;
+  margin-left: 441px;
+  margin-top: -78px;
+  animation: slide-open 2s forwards;
+`;
 const RecognitionListComponent = ({
   recognitionList,
   giveHi5func,
-  show,
-  handleClose,
-  errorMessage,
-  onFilterClick,
+  sliderOn,
+  sliderOff,
   filter,
 }) => {
   const getDateFormate = (timestamp) =>
@@ -35,7 +46,15 @@ const RecognitionListComponent = ({
 
   return (
     <Wrapper>
-      <Button onClick={onFilterClick}> click </Button>
+      <Button onClick={sliderOn}> click </Button>
+      {filter ? (
+        <Sidebar className="sidebar">
+          <h2>Sidebar</h2>
+          <button id="close" onClick={sliderOff}>
+            &times; close
+          </button>
+        </Sidebar>
+      ) : null}
       {recognitionList.map((recognition) => (
         <RecognitionCardComponent
           key={recognition.index}
@@ -49,20 +68,9 @@ const RecognitionListComponent = ({
           text={recognition.text}
           coreValue={recognition.coreValue.text}
           coreValueImage={recognition.coreValue.thumbnail_url}
-          hi5Count={recognition.hi5Count.length}
+          hi5Count={recognition.recognition_hi5s.length}
         />
       ))}
-      {filter ? <FilterContainer /> : null}
-      <Modal
-        show={show}
-        onHide={handleClose}
-        centered={true}
-        aria-labelledby="contained-modal-title-vcenter"
-      >
-        <Modal.Body closeButton className="text-center text-danger">
-          {errorMessage}
-        </Modal.Body>
-      </Modal>
       <div id="#1233" style={{ height: 1 }} className="text-center" />
     </Wrapper>
   );
@@ -76,6 +84,8 @@ RecognitionListComponent.propTypes = {
   errorMessage: PropTypes.string,
   onFilterClick: PropTypes.func,
   filter: PropTypes.string,
+  sliderOn: PropTypes.func,
+  sliderOff: PropTypes.func,
 };
 
 export default React.memo(RecognitionListComponent);

@@ -2,18 +2,12 @@ import actionGenerator from "utils/actionGenerator";
 
 export const defaultState = {
   data: {
-    id: null,
-    profile_image_url: null,
-    first_name: null,
-    last_name: null,
-    display_name: null,
-    hi5_quota_balance: null,
-    hi5_count: null,
+    s3_signed_url: null,
   },
   error: null,
 };
 
-const status = actionGenerator("USER_PROFILE");
+const status = actionGenerator("S3_SIGNED_URL");
 
 export default (state = defaultState, action) => {
   switch (action.type) {

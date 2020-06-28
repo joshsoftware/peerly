@@ -8,6 +8,7 @@ import RecognizeToReducer from "reducers/recognizeToReducer";
 import userListReducer from "reducers/listUsers";
 import userProfileReducer from "reducers/userProfileReducer";
 import addRecognitionReducer from "reducers/addRecognitionReducer";
+import s3SignedUrlReducer from "reducers/s3SignedUrlReducer";
 
 export default combineReducers({
   appReducer,
@@ -18,4 +19,5 @@ export default combineReducers({
   userListReducer,
   userProfileReducer,
   addRecognitionReducer,
+  s3SignedUrlReducer,
 });

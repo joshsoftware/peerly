@@ -15,8 +15,11 @@ import RecognitionListComponent from "recognition-list-components/RecognitionLis
 
 const RecognnitionListContainer = () => {
   const [filter, showFilter] = useState(false);
-  const onFilterClick = () => {
+  const sliderOn = () => {
     showFilter(true);
+  };
+  const sliderOff = () => {
+    showFilter(false);
   };
   const userProfileStatus = actionGenrator(USER_PROFILE_API);
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
@@ -78,8 +81,9 @@ const RecognnitionListContainer = () => {
         show={show}
         handleClose={handleClose}
         errorMessage={recognitionList.hi5.error.message}
-        onFilterClick={onFilterClick}
+        sliderOn={sliderOn}
         filter={filter}
+        sliderOff={sliderOff}
       />
     </div>
   );

@@ -5,6 +5,7 @@ export const DASHBOARD_ROUTES = {
   createRecognition: "/createRecognition",
   usersList: "/usersList",
   listOfRecognition: "/listOfRecognition",
+  profile: "/profile",
 };
 
 export const ROOT_ROUTES = {
