@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
 import { Button } from "core-components/button/ButtonComponent";
+import FilterContainer from "filterRecognition/FilterRecognitionContainer";
 
 const Wrapper = styled.div`
   border: 1px solid var(--grey);
@@ -17,15 +18,17 @@ const Wrapper = styled.div`
   margin-top: 100px;
   position: fixed;
   overflow: scroll;
-  overflow-y: hidden;
+  overflow-x: hidden;
+  overflow-y: ${({ filter }) => (filter ? "hidden" : null)};
 `;
 const Sidebar = styled.div`
   height: 100vh;
   position: absolute;
   padding-left: 20px;
   background-color: navy;
-  opacity: 0.8;
+  opacity: 1;
   color: white;
+  background: var(--white) 0% 0% no-repeat padding-box;
   width: 400px;
   position: fixed;
   z-index: 1000;
@@ -43,9 +46,8 @@ const RecognitionListComponent = ({
 }) => {
   const getDateFormate = (timestamp) =>
     new Date(timestamp * 1000).toDateString();
-
   return (
-    <Wrapper>
+    <Wrapper filter={filter}>
       <Button onClick={sliderOn}> click </Button>
       {filter ? (
         <Sidebar className="sidebar">
@@ -53,6 +55,7 @@ const RecognitionListComponent = ({
           <button id="close" onClick={sliderOff}>
             &times; close
           </button>
+          <FilterContainer />
         </Sidebar>
       ) : null}
       {recognitionList.map((recognition) => (

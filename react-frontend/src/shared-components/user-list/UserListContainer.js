@@ -5,9 +5,8 @@ import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
-import { LIST_USERS_API, RECOGNIZE_TO } from "constants/actionConstants";
+import { LIST_USERS_API } from "constants/actionConstants";
 import ListOfUsers from "shared-components/user-list/UserListComponent";
-import { store } from "root/redux-store";
 import { useHistory } from "react-router-dom";
 
 const UserListContainer = () => {
@@ -16,11 +15,6 @@ const UserListContainer = () => {
   const recognitionList = useSelector((state) => state.userListReducer);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_USERS_API);
-  const actionStatus = actionGenrator(RECOGNIZE_TO);
-  const dispatchObject = actionObjectGenrator(actionStatus.success, {
-    id: userId,
-  });
-  store.dispatch(dispatchObject);
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
   }, [dispatch, status.success]);
@@ -31,6 +25,7 @@ const UserListContainer = () => {
     return <UnauthorisedErrorComponent />;
   } else if (userId) {
     localStorage.setItem("userId", userId);
+    setUserId(null);
     history.push("/createREcognition");
   }
 

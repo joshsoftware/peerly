@@ -9,6 +9,10 @@ import userListReducer from "reducers/listUsers";
 import userProfileReducer from "reducers/userProfileReducer";
 import addRecognitionReducer from "reducers/addRecognitionReducer";
 import s3SignedUrlReducer from "reducers/s3SignedUrlReducer";
+import filterRecognitionReducer from "reducers/filterRecognitionReducer";
+import userProfileUpdateReducer from "reducers/userProfileUpdateReducer";
+import hi5StatusResponseReducer from "reducers/hi5StatusResponseReducer";
+import filterStatus from "reducers/filterStatus";
 
 export default combineReducers({
   appReducer,
@@ -20,4 +24,8 @@ export default combineReducers({
   userProfileReducer,
   addRecognitionReducer,
   s3SignedUrlReducer,
+  filterRecognitionReducer,
+  userProfileUpdateReducer,
+  hi5StatusResponseReducer,
+  filterStatus,
 });

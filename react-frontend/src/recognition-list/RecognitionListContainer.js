@@ -5,11 +5,13 @@ import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
 import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
-//import FilterContainer from "filterRecognition/FilterRecognitionContainer";
+import { store } from "root/redux-store";
 import {
   LIST_RECOGNITION_API,
   GIVE_HI5_API,
   USER_PROFILE_API,
+  GIVE_HI5_POST_RESPONSE,
+  FILTER_STATUS,
 } from "constants/actionConstants";
 import RecognitionListComponent from "recognition-list-components/RecognitionListComponent";
 
@@ -23,11 +25,22 @@ const RecognnitionListContainer = () => {
   };
   const userProfileStatus = actionGenrator(USER_PROFILE_API);
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
+  const hi5StatusResponseReducer = useSelector(
+    (state) => state.hi5StatusResponseReducer
+  );
+  const filterStatus = useSelector((state) => state.filterStatus);
+
+  const filterReducerStatus = actionGenrator(FILTER_STATUS);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_RECOGNITION_API);
   const hi5Status = actionGenrator(GIVE_HI5_API);
+  const hi5StatusResponse = actionGenrator(GIVE_HI5_POST_RESPONSE);
   const [refresh, changeRefresh] = useState(0);
   const [show, setShow] = useState(false);
+  if (filterStatus.status == "applied") {
+    sliderOff();
+    store.dispatch(actionObjectGenrator(filterReducerStatus.init));
+  }
   const handleClose = () => {
     setShow(false);
     dispatch(actionObjectGenrator(hi5Status.init));
@@ -54,6 +67,11 @@ const RecognnitionListContainer = () => {
     observer.observe(document.getElementById("#1233"));
   }, [dispatch, status.success, refresh, show]);
 
+  if (hi5StatusResponseReducer.status === 201) {
+    dispatch(actionObjectGenrator(userProfileStatus.success));
+    dispatch(actionObjectGenrator(hi5StatusResponse.init));
+  }
+
   const giveHi5func = async (id) => {
     if (id !== 0) {
       dispatch(
@@ -61,7 +79,6 @@ const RecognnitionListContainer = () => {
           id: id,
         })
       );
-      dispatch(actionObjectGenrator(userProfileStatus.success));
       changeRefresh(refresh + 1);
     }
   };

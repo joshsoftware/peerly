@@ -1,24 +1,18 @@
 import actionGenerator from "utils/actionGenerator";
 
 export const defaultState = {
-  data: {
-    id: null,
-    profile_image_url: null,
-    first_name: null,
-    last_name: null,
-    display_name: null,
-  },
+  status: null,
   error: null,
 };
 
-const status = actionGenerator("RECOGNIZE_TO");
+const status = actionGenerator("GIVE_HI5_POST_RESPONSE");
 
 export default (state = defaultState, action) => {
   switch (action.type) {
     case status.init:
-      return { ...state, data: action.payload };
+      return { ...state, status: null, error: null };
     case status.success:
-      return { ...state, data: action.payload };
+      return { ...state, status: action.payload };
     case status.failure:
       return { ...state, error: action.payload };
     default:

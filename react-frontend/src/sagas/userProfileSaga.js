@@ -8,6 +8,7 @@ import {
   USER_PROFILE,
   USER_PROFILE_API,
   USER_PROFILE_POST_API,
+  USER_PROFILE_UPDATE_RESPONSE,
 } from "constants/actionConstants";
 
 export function* getUser() {
@@ -34,6 +35,8 @@ export function* updateUser(action) {
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
   const status = actionGenerator(USER_PROFILE);
+  const update_status = actionGenerator(USER_PROFILE_UPDATE_RESPONSE);
+
   try {
     const response = yield call(putJson, {
       path: "/users/me",
@@ -43,8 +46,11 @@ export function* updateUser(action) {
     const responseObj = yield response.json();
     if (responseObj.data) {
       yield put(actionObjectGenerator(status.success, responseObj.data));
+      yield put(actionObjectGenerator(update_status.success, response.status));
     } else {
-      yield put(actionObjectGenerator(status.failure, responseObj.error));
+      yield put(
+        actionObjectGenerator(update_status.failure, responseObj.error)
+      );
     }
   } catch (error) {
     yield put(actionObjectGenerator(status.failure, error));
