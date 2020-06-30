@@ -24,7 +24,6 @@ const HighFive = styled(HighFiveComponent)`
 const CardComponent = styled(Card)`
   border-radius: 20px;
   margin: 20px 20px;
-  width: 550px;
   box-shadow: 0px 5px 20px var(--box-shadow-color);
   opacity: 1;
   background: var(--white) 0% 0% no-repeat padding-box;

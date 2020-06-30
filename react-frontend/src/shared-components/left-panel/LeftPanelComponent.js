@@ -40,50 +40,52 @@ const LeftPanelComponent = ({
     //TODO
   };
   return (
-    <Wrapper className="justify-content-around align-items-center d-flex flex-column position-fixed">
-      <ProfileComponent
-        name={profileName}
-        src={profileImage}
-        setUserId={setUserId}
-        id={id}
-        size={12}
-        shadow
-        className="d-flex flex-column text-center mt-5"
-      />
-      <div className="m-auto">
-        <div className="text-center">
-          <HighFiveComponent />
+    <div className="d-none d-md-block">
+      <Wrapper className="justify-content-around align-items-center d-flex flex-column  position-fixed">
+        <ProfileComponent
+          name={profileName}
+          src={profileImage}
+          setUserId={setUserId}
+          id={id}
+          size={12}
+          shadow
+          className="d-flex flex-column text-center mt-5"
+        />
+        <div className="m-auto">
+          <div className="text-center">
+            <HighFiveComponent />
+          </div>
+          <div>
+            <span>{collectedHi5}collected</span>
+          </div>
         </div>
-        <div>
-          <span>{collectedHi5}collected</span>
-        </div>
-      </div>
-      <CreateRecognitionButton
-        imageUrl={hi5ImageForButton}
-        onClick={hi5_quota_balance !== 0 ? handleShow : handleShowError}
-      />
-      {showPopup ? (
-        <Modal
-          show={showPopup}
-          onHide={handleCloseError}
-          centered={true}
-          aria-labelledby="contained-modal-title-vcenter"
-        >
-          <Modal.Body closeButton className="text-center text-danger">
-            {errorMessage}
-          </Modal.Body>
-        </Modal>
-      ) : (
-        <PopupWindow
-          show={show}
-          handleClose={handleClose}
-          recognitionToImage={profileImage}
-          recognitionToName={profileName}
-          sendData={sendData}
-          listOfEmployee={listOfEmployee}
-        ></PopupWindow>
-      )}
-    </Wrapper>
+        <CreateRecognitionButton
+          imageUrl={hi5ImageForButton}
+          onClick={hi5_quota_balance !== 0 ? handleShow : handleShowError}
+        />
+        {showPopup ? (
+          <Modal
+            show={showPopup}
+            onHide={handleCloseError}
+            centered={true}
+            aria-labelledby="contained-modal-title-vcenter"
+          >
+            <Modal.Body closeButton className="text-center text-danger">
+              {errorMessage}
+            </Modal.Body>
+          </Modal>
+        ) : (
+          <PopupWindow
+            show={show}
+            handleClose={handleClose}
+            recognitionToImage={profileImage}
+            recognitionToName={profileName}
+            sendData={sendData}
+            listOfEmployee={listOfEmployee}
+          ></PopupWindow>
+        )}
+      </Wrapper>
+    </div>
   );
 };
 

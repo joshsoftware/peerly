@@ -42,6 +42,16 @@ const CardWrapper = styled(Card)`
   width: 550px;
 `;
 
+const MobileWrapper = styled(Card)`
+  border-radius: 36px 36px 0px 0px;
+  background: linear-gradient(var(--sage) 120px, var(--white) 0%);
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  margin-top: 35%;
+  padding-bottom: 19%;
+`;
+
 const CreateRecognition = ({
   coreValues,
   recognitionToName,
@@ -104,7 +114,7 @@ const CreateRecognition = ({
           sendData={sendData}
         />
       </CardWrapper>
-      <div className="d-sm-block d-xs-block d-md-none h-100 d-flex flex-column">
+      <MobileWrapper className="d-sm-block d-xs-block d-md-none  d-flex flex-column">
         <Col className="d-flex justify-content-center align-items-center bg-light grey">
           <ProfileComponent
             className="d-flex flex-column"
@@ -134,7 +144,7 @@ const CreateRecognition = ({
         <Col className="text-center">
           <Button onClick={handleShow}> Done </Button>
         </Col>
-      </div>
+      </MobileWrapper>
     </div>
   );
 };
