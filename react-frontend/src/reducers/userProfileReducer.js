@@ -16,6 +16,7 @@ export const defaultState = {
 const status = actionGenerator("USER_PROFILE");
 
 export default (state = defaultState, action) => {
+  //console.log(state)
   switch (action.type) {
     case status.success:
       return { ...state, data: action.payload };
