@@ -34,11 +34,30 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	v1 := fmt.Sprintf("application/vnd.%s.v1", config.AppName())
 
 	//core values
-	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", getCoreValueHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values", listCoreValuesHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values", createCoreValueHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", deleteCoreValueHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", updateCoreValueHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+	router.Handle("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getCoreValueHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/organisations/{organisation_id:[0-9]+}/core_values", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(listCoreValuesHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/organisations/{organisation_id:[0-9]+}/core_values", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createCoreValueHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
+	router.Handle("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(deleteCoreValueHandler(deps))),
+	)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+
+	router.Handle("/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(updateCoreValueHandler(deps))),
+	)).Methods(http.MethodPut).Headers(versionHeader, v1)
 
 	//reported recognition
 	router.Handle("/recognitions/{recognition_id:[0-9]+}/report", negroni.New(
@@ -53,10 +72,25 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	)).Methods(http.MethodPost).Headers(versionHeader, v1)
 
 	//users
-	router.HandleFunc("/users", listUsersHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/users/{id:[0-9]+}", getUserHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/users/{id:[0-9]+}", updateUserHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
-	router.HandleFunc("/users/{email}", getUserByEmailHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.Handle("/users", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(listUsersHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/users/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getUserHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/users/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(updateUserHandler(deps))),
+	)).Methods(http.MethodPut).Headers(versionHeader, v1)
+
+	router.Handle("/users/{email}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getUserByEmailHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
 	// Basic logout
 	router.Handle("/logout", negroni.New(
@@ -67,27 +101,90 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	// TODO: Finish login system
 	router.HandleFunc("/auth/google", handleAuth(deps)).Methods(http.MethodGet)
 
-	//TODO fix this route as it is conflicting with GET organization by id
-	router.HandleFunc("/organizations/{domainName}", getOrganizationByDomainNameHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	// organizations routes
+	router.Handle("/organizations", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(listOrganizationHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
-	router.HandleFunc("/organizations", listOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{id:[0-9]+}", getOrganizationHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{id:[0-9]+}", deleteOrganizationHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{id:[0-9]+}", updateOrganizationHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges", createBadgeHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges", listBadgesHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", updateBadgeHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", showBadgeHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", deleteBadgeHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+	router.Handle("/organizations/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getOrganizationHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
+	router.Handle("/organizations/{domainName}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getOrganizationByDomainNameHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
 
-	// Recognition routes
-	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/hi5", createRecognitionHi5Handler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", createRecognitionHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}", getRecognitionHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/organisations/{orgnization_id:[0-9]+}/recognitions", listRecognitionsHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
-	router.HandleFunc("/s3_signed_url", getS3SignedURLHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.Handle("/organizations", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createOrganizationHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
 
+	router.Handle("/organizations/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(deleteOrganizationHandler(deps))),
+	)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+
+	router.Handle("/organizations/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(updateOrganizationHandler(deps))),
+	)).Methods(http.MethodPut).Headers(versionHeader, v1)
+
+	// badges routes
+	router.Handle("/organizations/{organization_id:[0-9]+}/badges", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createBadgeHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
+	router.Handle("/organizations/{organization_id:[0-9]+}/badges", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(listBadgesHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(updateBadgeHandler(deps))),
+	)).Methods(http.MethodPut).Headers(versionHeader, v1)
+
+	router.Handle("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(showBadgeHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(deleteBadgeHandler(deps))),
+	)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+
+	// Get S3 signed URL
+	router.Handle("/s3_signed_url", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getS3SignedURLHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	// Recognition Hi5 routes
+
+	router.Handle("/recognitions/{recognition_id:[0-9]+}/hi5", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createRecognitionHi5Handler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
+	// Recognitions
+	router.Handle("/organisations/{orgnization_id:[0-9]+}/recognitions", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(createRecognitionHandler(deps))),
+	)).Methods(http.MethodPost).Headers(versionHeader, v1)
+
+	router.Handle("/organisations/{orgnization_id:[0-9]+}/recognitions/{recognition_id:[0-9]+}", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(getRecognitionHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
+
+	router.Handle("/organisations/{orgnization_id:[0-9]+}/recognitions", negroni.New(
+		negroni.HandlerFunc(jwtMiddleware.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(listRecognitionsHandler(deps))),
+	)).Methods(http.MethodGet).Headers(versionHeader, v1)
 	return
 }

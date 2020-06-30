@@ -5,22 +5,29 @@ import (
 	"net/http"
 	"strconv"
 
-	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/mux"
-	logger "github.com/sirupsen/logrus"
 	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/db"
+
+	"github.com/gorilla/mux"
+	logger "github.com/sirupsen/logrus"
 )
 
 func createRecognitionModerationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		parsedToken := req.Context().Value("user").(*jwt.Token)
-		claims := parsedToken.Claims.(jwt.MapClaims)
-
-		userID, err := strconv.Atoi(claims["sub"].(string))
+		ctx := req.Context()
+		validatedUser, err := validateJWTToken(ctx, deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		if err != nil {
-			logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
-			ae.JSONError(rw, http.StatusInternalServerError, err)
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
 
@@ -43,7 +50,7 @@ func createRecognitionModerationHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-		recognitionModeration.ModeratedBy = int64(userID)
+		recognitionModeration.ModeratedBy = int64(validatedUser.ID)
 
 		ok, errFields := recognitionModeration.Validate()
 		if !ok {

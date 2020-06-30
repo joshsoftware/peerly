@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
@@ -19,17 +20,32 @@ import (
 
 func createBadgeHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		org_id, err := strconv.Atoi(vars["organization_id"])
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Invalid json request body",
-				},
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		// vars := mux.Vars(req)
+		// org_id, err := strconv.Atoi(vars["organization_id"])
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error org_id key is missing")
+		// 	repsonse(rw, http.StatusBadRequest, errorResponse{
+		// 		Error: messageObject{
+		// 			Message: "Invalid json request body",
+		// 		},
+		// 	})
+		// 	return
+		// }
 		var badge db.Badge
 		err = json.NewDecoder(req.Body).Decode(&badge)
 		if err != nil {
@@ -63,7 +79,7 @@ func createBadgeHandler(deps Dependencies) http.HandlerFunc {
 		}
 
 		var createdBadge db.Badge
-		badge.OrganizationID = org_id
+		badge.OrganizationID = validatedUser.OrgID
 		createdBadge, err = deps.Store.CreateBadge(req.Context(), badge)
 		if err != nil {
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -81,20 +97,23 @@ func createBadgeHandler(deps Dependencies) http.HandlerFunc {
 
 func listBadgesHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		org_id, err := strconv.Atoi(vars["organization_id"])
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Invalid json request body",
-				},
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
-			rw.Write([]byte("Error org_id key is missing"))
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
 
-		badges, err := deps.Store.ListBadges(req.Context(), org_id)
+		badges, err := deps.Store.ListBadges(req.Context(), validatedUser.OrgID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error listing badges")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -111,17 +130,32 @@ func listBadgesHandler(deps Dependencies) http.HandlerFunc {
 
 func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		org_id, err := strconv.Atoi(vars["organization_id"])
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Invalid json request body",
-				},
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		vars := mux.Vars(req)
+		// org_id, err := strconv.Atoi(vars["organization_id"])
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error org_id key is missing")
+		// 	repsonse(rw, http.StatusBadRequest, errorResponse{
+		// 		Error: messageObject{
+		// 			Message: "Invalid json request body",
+		// 		},
+		// 	})
+		// 	return
+		// }
 
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -169,7 +203,7 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 
 		var updatedBadge db.Badge
 
-		badge.OrganizationID = org_id
+		badge.OrganizationID = validatedUser.OrgID
 		badge.ID = badge_id
 		updatedBadge, err = deps.Store.UpdateBadge(req.Context(), badge)
 		if err != nil {
@@ -188,17 +222,32 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 
 func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		org_id, err := strconv.Atoi(vars["organization_id"])
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Invalid json request body",
-				},
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		vars := mux.Vars(req)
+		// org_id, err := strconv.Atoi(vars["organization_id"])
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error org_id key is missing")
+		// 	repsonse(rw, http.StatusBadRequest, errorResponse{
+		// 		Error: messageObject{
+		// 			Message: "Invalid json request body",
+		// 		},
+		// 	})
+		// 	return
+		// }
 
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -213,7 +262,7 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 
 		var latestbadge db.Badge
 
-		latestbadge.OrganizationID = org_id
+		latestbadge.OrganizationID = validatedUser.OrgID
 		latestbadge.ID = badge_id
 		latestbadge, err = deps.Store.ShowBadge(req.Context(), latestbadge)
 		if err != nil {
@@ -234,16 +283,31 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 func deleteBadgeHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		org_id, err := strconv.Atoi(vars["organization_id"])
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error org_id key is missing")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Invalid json request body",
-				},
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		// org_id, err := strconv.Atoi(vars["organization_id"])
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error org_id key is missing")
+		// 	repsonse(rw, http.StatusBadRequest, errorResponse{
+		// 		Error: messageObject{
+		// 			Message: "Invalid json request body",
+		// 		},
+		// 	})
+		// 	return
+		// }
 
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -256,7 +320,7 @@ func deleteBadgeHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		err = deps.Store.DeleteBadge(req.Context(), org_id, badge_id)
+		err = deps.Store.DeleteBadge(req.Context(), validatedUser.OrgID, badge_id)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while deleting badge")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{

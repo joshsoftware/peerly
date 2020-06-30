@@ -2,15 +2,32 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
-	logger "github.com/sirupsen/logrus"
+	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	logger "github.com/sirupsen/logrus"
 )
 
 func createRecognitionHi5Handler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		vars := mux.Vars(req)
 		recognitionID, err := strconv.Atoi(vars["recognition_id"])
 		if err != nil {
@@ -27,16 +44,9 @@ func createRecognitionHi5Handler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		currentUser, err := deps.Store.GetUser(req.Context(), recognitionHi5.GivenBy)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while fetching User")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		errorResponse := recognitionHi5.CheckHi5QuotaBalance(currentUser.Hi5QuotaBalance)
+		errorResponse := recognitionHi5.CheckHi5QuotaBalance(validatedUser.Hi5QuotaBalance)
 		if len(errorResponse) > 0 {
-			logger.Error("Insufficient hi5 quota balance for ", currentUser.ID)
+			logger.Error("Insufficient hi5 quota balance for ", validatedUser.ID)
 
 			respBytes, err := json.Marshal(errorResponse)
 			if err != nil {

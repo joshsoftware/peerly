@@ -5,22 +5,39 @@ import (
 	"net/http"
 	"strconv"
 
+	ae "joshsoftware/peerly/apperrors"
+	"joshsoftware/peerly/db"
+
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
-	"joshsoftware/peerly/db"
 )
 
 func listCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
-			rw.WriteHeader(http.StatusBadRequest)
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		// vars := mux.Vars(req)
+		// organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
+		// 	rw.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
-		coreValues, err := deps.Store.ListCoreValues(req.Context(), organisationID)
+		coreValues, err := deps.Store.ListCoreValues(req.Context(), int64(validatedUser.OrgID))
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while fetching data")
 			rw.WriteHeader(http.StatusInternalServerError)
@@ -38,13 +55,28 @@ func listCoreValuesHandler(deps Dependencies) http.HandlerFunc {
 
 func getCoreValueHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
-			rw.WriteHeader(http.StatusBadRequest)
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		vars := mux.Vars(req)
+		// organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
+		// 	rw.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
 		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
@@ -53,7 +85,7 @@ func getCoreValueHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		coreValue, err := deps.Store.GetCoreValue(req.Context(), organisationID, coreValueID)
+		coreValue, err := deps.Store.GetCoreValue(req.Context(), int64(validatedUser.OrgID), coreValueID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while fetching data")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -70,13 +102,28 @@ func getCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
-			rw.WriteHeader(http.StatusBadRequest)
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		// vars := mux.Vars(req)
+		// organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
+		// 	rw.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
 		var coreValue db.CoreValue
 		err = json.NewDecoder(req.Body).Decode(&coreValue)
@@ -90,7 +137,7 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		ok, errFields := coreValue.Validate(req.Context(), deps.Store, organisationID)
+		ok, errFields := coreValue.Validate(req.Context(), deps.Store, int64(validatedUser.OrgID))
 		if !ok {
 			repsonse(rw, http.StatusBadRequest, errorResponse{
 				Error: errorObject{
@@ -102,7 +149,7 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		resp, err := deps.Store.CreateCoreValue(req.Context(), organisationID, coreValue)
+		resp, err := deps.Store.CreateCoreValue(req.Context(), int64(validatedUser.OrgID), coreValue)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while creating core value")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -119,13 +166,28 @@ func createCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 func deleteCoreValueHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
-			rw.WriteHeader(http.StatusBadRequest)
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		vars := mux.Vars(req)
+		// organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
+		// 	rw.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
 		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
@@ -134,7 +196,7 @@ func deleteCoreValueHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		err = deps.Store.DeleteCoreValue(req.Context(), organisationID, coreValueID)
+		err = deps.Store.DeleteCoreValue(req.Context(), int64(validatedUser.OrgID), coreValueID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while deleting core value")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -151,13 +213,28 @@ func deleteCoreValueHandler(deps Dependencies) http.HandlerFunc {
 
 func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
-			rw.WriteHeader(http.StatusBadRequest)
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		vars := mux.Vars(req)
+		// organisationID, err := strconv.ParseInt(vars["organisation_id"], 10, 64)
+		// if err != nil {
+		// 	logger.WithField("err", err.Error()).Error("Error while parsing organisation_id from url")
+		// 	rw.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
 		coreValueID, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
@@ -178,7 +255,7 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		ok, errFields := coreValue.Validate(req.Context(), deps.Store, organisationID)
+		ok, errFields := coreValue.Validate(req.Context(), deps.Store, int64(validatedUser.OrgID))
 		if !ok {
 			repsonse(rw, http.StatusBadRequest, errorResponse{
 				Error: errorObject{
@@ -190,7 +267,7 @@ func updateCoreValueHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		resp, err := deps.Store.UpdateCoreValue(req.Context(), organisationID, coreValueID, coreValue)
+		resp, err := deps.Store.UpdateCoreValue(req.Context(), int64(validatedUser.OrgID), coreValueID, coreValue)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error while updating core value")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{

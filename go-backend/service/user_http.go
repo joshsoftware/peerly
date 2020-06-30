@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
@@ -18,6 +19,21 @@ import (
 // @Failure 400 {object}
 func getUserByEmailHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		_, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		tmp, ok := req.URL.Query()["email"]
 		if !ok || len(tmp[0]) < 1 {
 			rw.WriteHeader(http.StatusBadRequest)
@@ -55,6 +71,21 @@ func getUserByEmailHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func listUsersHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		_, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		users, err := deps.Store.ListUsers(req.Context())
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error fetching data")
@@ -87,6 +118,21 @@ func listUsersHandler(deps Dependencies) http.HandlerFunc {
 
 func getUserHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		_, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		vars := mux.Vars(req)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -117,19 +163,21 @@ func getUserHandler(deps Dependencies) http.HandlerFunc {
 
 func updateUserHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
-		id, err := strconv.Atoi(vars["id"])
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Error id is missing",
-				},
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
 			return
 		}
-
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		var user db.User
 		err = json.NewDecoder(req.Body).Decode(&user)
 		if err != nil {
@@ -163,7 +211,7 @@ func updateUserHandler(deps Dependencies) http.HandlerFunc {
 		}
 
 		var updatedUser db.User
-		updatedUser, err = deps.Store.UpdateUser(req.Context(), user, id)
+		updatedUser, err = deps.Store.UpdateUser(req.Context(), user, validatedUser.ID)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
 			repsonse(rw, http.StatusInternalServerError, errorResponse{

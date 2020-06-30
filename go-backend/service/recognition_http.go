@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/db"
 	"net/http"
 	"strconv"
@@ -45,26 +46,19 @@ var decoder = schema.NewDecoder()
 // @Failure 400 {object}
 func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		vars := mux.Vars(req)
 		var recognition db.Recognition
-
-		// validate given organization_id is correct and present or not
-		organizationID, err := strconv.Atoi(vars["orgnization_id"])
-		if err != nil {
-			logger.Error("Error organization_id key is missing")
-			rw.WriteHeader(http.StatusBadRequest)
+		validatedUser, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
 			return
 		}
-
-		// validate that given organization_id is present in database or not
-
-		_, err = deps.Store.GetOrganization(req.Context(), organizationID)
 		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error while fetching given organization")
-			repsonse(rw, http.StatusBadRequest, errorResponse{
-				Error: messageObject{
-					Message: "Error while fetching given organization",
-				},
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
 			})
 			return
 		}
@@ -80,8 +74,8 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		// validates that recognition giving user is belongs to current specified organization or not
-		_, err = deps.Store.GetUserByOrganization(req.Context(), recognition.GivenBy, organizationID)
+		// validates that recognition to given user is belongs to current specified organization or not
+		_, err = deps.Store.GetUserByOrganization(req.Context(), recognition.GivenFor, validatedUser.OrgID)
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("User is not belongs to given organization")
 			repsonse(rw, http.StatusInternalServerError, errorResponse{
@@ -126,6 +120,21 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		_, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		vars := mux.Vars(req)
 
 		recognitionID, err := strconv.Atoi(vars["id"])
@@ -162,8 +171,23 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 // @Failure 400 {object}
 func listRecognitionsHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		_, err := validateJWTToken(req.Context(), deps.Store)
+		if err == ae.ErrInvalidToken {
+			logger.WithField("err", err.Error()).Error("Invalid user organization with organization domain")
+			repsonse(rw, http.StatusUnauthorized, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while validating the jwt token")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{Message: err.Error()},
+			})
+			return
+		}
 		var filterParam FilterParam
-		err := decoder.Decode(&filterParam, req.URL.Query())
+		err = decoder.Decode(&filterParam, req.URL.Query())
 		var recognitions []db.Recognition
 
 		if filterParam.isEmpty() {
