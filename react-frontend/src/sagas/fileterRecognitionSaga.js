@@ -6,9 +6,11 @@ import actionGenerator from "utils/actionGenerator";
 import {
   LIST_RECOGNITION,
   FILTER_RECOGNITION_API,
+  FILTER_ERROR_STATUS,
 } from "constants/actionConstants";
 
 export function* getRecognitionFilterList() {
+  const filterStatus = actionGenerator(FILTER_ERROR_STATUS);
   const status = actionGenerator(LIST_RECOGNITION);
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
@@ -43,7 +45,7 @@ export function* getRecognitionFilterList() {
         })
       );
     } else {
-      yield put(actionObjectGenerator(status.failure, responseObj.error));
+      yield put(actionObjectGenerator(filterStatus.failure, responseObj.error));
     }
   } catch (error) {
     yield put(actionObjectGenerator(status.failure, error));
