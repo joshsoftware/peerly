@@ -15,6 +15,7 @@ const CardComponent = styled(Card)`
   padding-bottom: 19%;
   height: 537px;
   margin-top: 100px;
+  align-items: center;
   position: fixed;
   width: 550px;
 `;
@@ -34,12 +35,14 @@ const UserProfileComponent = ({
   return (
     <CardComponent className="text-center">
       <Form onSubmit={uploadOnAws}>
-        <ProfileComponent
-          src={profileImage}
-          name={displayName}
-          onClick={onClick}
-          className="d-flex flex-column "
-        />
+        <div className="d-flex justify-content-center">
+          <ProfileComponent
+            src={profileImage}
+            name={displayName}
+            onClick={onClick}
+            className="d-flex flex-column"
+          />
+        </div>
         <Form.Label>{email}</Form.Label>
         <Form.Group controlId="formFirstName" className=" d-flex">
           <Col>
