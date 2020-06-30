@@ -46,6 +46,7 @@ const CreateRecognitionContainer = () => {
       given_for: recognitionTo.data.id,
       given_by: userProfile.data.id,
     };
+
     const dispatchObject = actionObjectGenerator(
       actionStatus.success,
       addRecognition
@@ -79,6 +80,7 @@ const CreateRecognitionContainer = () => {
     dispatch(actionObjectGenrator(addRecognitionStatus.init));
     history.push("/listOfRecognition");
   }
+  //console.log(recognitionTo.data.profile_image_url);
 
   return (
     <CreateRecognition
