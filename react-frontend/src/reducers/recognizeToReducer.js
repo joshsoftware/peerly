@@ -15,6 +15,8 @@ const status = actionGenerator("RECOGNIZE_TO");
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case status.init:
+      return { ...state, data: action.payload };
     case status.success:
       return { ...state, data: action.payload };
     case status.failure:
