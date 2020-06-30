@@ -9,6 +9,7 @@ import {
   LIST_RECOGNITION_API,
   GIVE_HI5_API,
   GIVE_HI5,
+  GIVE_HI5_POST_RESPONSE,
 } from "constants/actionConstants";
 
 export function* getRecognitionList() {
@@ -16,12 +17,24 @@ export function* getRecognitionList() {
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
   const listReducer = yield select((state) => state.listRecognitionReducer);
+  const filterRecognition = yield select(
+    (state) => state.filterRecognitionReducer
+  );
   try {
     const response = yield call(getJson, {
       path: "/recognitions",
       paramsObj: {
         limit: listReducer.limit,
         offset: listReducer.offset,
+        core_value_id: filterRecognition.filterData.core_value_id
+          ? filterRecognition.filterData.core_value_id
+          : undefined,
+        given_by: filterRecognition.filterData.given_by
+          ? filterRecognition.filterData.given_by
+          : undefined,
+        given_for: filterRecognition.filterData.given_for
+          ? filterRecognition.filterData.given_for
+          : undefined,
       },
       apiToken: token,
     });
@@ -53,7 +66,7 @@ export function* getRecognitionList() {
 const getUpdateCountList = (id, listRecognition) => {
   listRecognition.map((recognition) => {
     if (recognition.id === id) {
-      recognition.hi5Count.push({});
+      recognition.recognition_hi5s.push({});
       return recognition;
     }
     return recognition;
@@ -62,6 +75,7 @@ const getUpdateCountList = (id, listRecognition) => {
 
 export function* giveHi5ToRecognition(action) {
   const hi5Status = actionGenerator(GIVE_HI5);
+  const hi5StatusResponse = actionGenerator(GIVE_HI5_POST_RESPONSE);
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
   const listRecognition = yield select(
@@ -79,6 +93,9 @@ export function* giveHi5ToRecognition(action) {
         actionObjectGenerator(hi5Status.success, {
           data: responseObj.data,
         })
+      );
+      yield put(
+        actionObjectGenerator(hi5StatusResponse.success, response.status)
       );
     } else {
       yield put(actionObjectGenerator(hi5Status.failure, responseObj.error));
