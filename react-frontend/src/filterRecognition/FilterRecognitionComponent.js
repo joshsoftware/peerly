@@ -1,16 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 
 import { Card } from "core-components/card/CardComponent";
 import { Button } from "core-components/button/ButtonComponent";
 import { Form } from "core-components/form/FormComponent";
 import AsyncSelect from "core-components/auto-complete/AutoComplete";
 import CoreValues from "../shared-components/core-value/CoreValues";
-
-const CardComponent = styled(Card)`
-  margin-right: 100px;
-`;
 
 const FilterRecognitionComponent = ({
   coreValues,
@@ -22,7 +17,7 @@ const FilterRecognitionComponent = ({
   onSubmit,
 }) => {
   return (
-    <CardComponent className="text-center">
+    <Card className="text-center p-3 border-white">
       <div className="d-flex justify-content-around flex-row text-dark">
         <CoreValues coreValues={coreValues} setCoreValueId={setCoreValueId} />
       </div>
@@ -52,7 +47,7 @@ const FilterRecognitionComponent = ({
         </div>
       </Form>
       Send a message
-    </CardComponent>
+    </Card>
   );
 };
 

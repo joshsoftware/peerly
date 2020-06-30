@@ -6,6 +6,7 @@ import { Navbar, Nav } from "core-components/navbar/NavbarComponent";
 import { Container, Col, Row } from "core-components/grid/GridComponent";
 import HighFiveComponent from "shared-components/high-five-components/HighFiveComponent";
 import NotificationBadgeComponent from "shared-components/notification/NotificationBadgeComponent";
+import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
 const NotificationWrapper = styled.div`
   position: relative;
@@ -25,7 +26,7 @@ const HighFiveIcon = styled(HighFiveComponent)`
 function TopNavbar({ onClickLogout, count }) {
   return (
     <NavbarWrapper className="fixed-top">
-      <Container fluid>
+      <Container fluid className="flex-column">
         <Row className="w-100 justify-content-center">
           <Col md="8" sm="12">
             <Row>
@@ -52,6 +53,18 @@ function TopNavbar({ onClickLogout, count }) {
               </Col>
             </Row>
           </Col>
+        </Row>
+        <Row className="d-sm-block d-xs-block d-md-none bg-light grey w-100">
+          <ProfileComponent
+            name="avinash"
+            src="https://i.picsum.photos/id/2/200/200.jpg"
+            size={8}
+            labelClass="ml-2"
+            className="mr-5"
+          />
+          <span className="align-self-center font-weight-bold">
+            5 collected
+          </span>
         </Row>
       </Container>
     </NavbarWrapper>
