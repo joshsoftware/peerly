@@ -7,6 +7,7 @@ import { Card } from "core-components/card/CardComponent";
 import { Button } from "core-components/button/ButtonComponent";
 import { Col } from "core-components/grid/GridComponent";
 import ProfileComponent from "shared-components/profile-component/ProfileComponent";
+import { Spinner } from "core-components/spinner/SpinnerComponent.js";
 
 const CardComponent = styled(Card)`
   border-radius: 36px 36px 0px 0px;
@@ -28,6 +29,7 @@ const UserProfileComponent = ({
   displayName,
   uploadImage,
   uploadOnAws,
+  spinner,
 }) => {
   const onClick = () => {
     // console.log(id)
@@ -94,6 +96,12 @@ const UserProfileComponent = ({
         </Form.Group>
         <Button type="submit">Update</Button>
       </Form>
+      {spinner ? (
+        <>
+          <Spinner className="mt-5" animation="grow" variant="info"></Spinner>
+          <span className="mt-5">Updating...</span>
+        </>
+      ) : null}
     </CardComponent>
   );
 };
@@ -106,6 +114,7 @@ UserProfileComponent.propTypes = {
   email: PropTypes.string,
   uploadImage: PropTypes.func,
   uploadOnAws: PropTypes.func,
+  spinner: PropTypes.bool,
 };
 
 export default React.memo(UserProfileComponent);
