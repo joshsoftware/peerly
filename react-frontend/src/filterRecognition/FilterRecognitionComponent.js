@@ -16,10 +16,9 @@ const CardComponent = styled(Card)`
 const FilterRecognitionComponent = ({
   coreValues,
   setCoreValueId,
-  givenForList,
-  givenByList,
-  promiseGivenByOptions,
-  promiseGivenForOptions,
+  userList,
+  promiseOptions,
+  handleInputChange,
   onSubmit,
 }) => {
   return (
@@ -31,19 +30,21 @@ const FilterRecognitionComponent = ({
         <Form.Group controlId="filterGivenFor">
           <Form.Label>Given For</Form.Label>
           <AsyncSelect
-            defaultOptions={givenForList}
-            loadOptions={promiseGivenForOptions}
+            defaultOptions={userList}
+            loadOptions={promiseOptions}
             name="given_for"
             placeholder="select given for"
+            onInputChange={handleInputChange}
           />
         </Form.Group>
         <Form.Group controlId="filterGivenBy">
           <Form.Label>Given By</Form.Label>
           <AsyncSelect
-            defaultOptions={givenByList}
-            loadOptions={promiseGivenByOptions}
+            defaultOptions={userList}
+            loadOptions={promiseOptions}
             name="given_by"
             placeholder="select given by"
+            onInputChange={handleInputChange}
           />
         </Form.Group>
         <div className="text-center">
@@ -60,10 +61,10 @@ const FilterRecognitionComponent = ({
 FilterRecognitionComponent.propTypes = {
   coreValues: PropTypes.array,
   setCoreValueId: PropTypes.number,
-  givenForList: PropTypes.array,
+  userList: PropTypes.array,
   givenByList: PropTypes.array,
-  promiseGivenByOptions: PropTypes.func,
-  promiseGivenForOptions: PropTypes.func,
+  promiseOptions: PropTypes.func,
+  handleInputChange: PropTypes.func,
   onSubmit: PropTypes.func,
 };
 
