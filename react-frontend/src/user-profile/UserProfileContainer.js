@@ -21,6 +21,7 @@ const UserProfileContainer = () => {
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [displayName, setDisplayName] = useState(null);
+  const [spinner, setSpinner] = useState(false);
   const getSignedUrl = actionGenrator(S3_SIGNED_URL_API);
   let history = useHistory();
 
@@ -55,6 +56,7 @@ const UserProfileContainer = () => {
   }
   const uploadOnAws = (event) => {
     event.preventDefault();
+    setSpinner(true);
     setFirstName(event.target.formFirstName.value);
     setLastName(event.target.formLastName.value);
     setDisplayName(event.target.formDisplayName.value);
@@ -82,7 +84,6 @@ const UserProfileContainer = () => {
       sets3url(response.url);
     });
   }
-
   return (
     <UserComponent
       firstName={userProfile.data.first_name}
@@ -93,6 +94,7 @@ const UserProfileContainer = () => {
       id={userProfile.data.id}
       uploadImage={uploadImage}
       uploadOnAws={uploadOnAws}
+      spinner={spinner}
     />
   );
 };

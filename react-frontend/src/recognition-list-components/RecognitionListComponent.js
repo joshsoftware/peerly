@@ -5,6 +5,8 @@ import { FiFilter } from "react-icons/fi";
 import { Button } from "core-components/button/ButtonComponent";
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
 import FilterContainer from "filterRecognition/FilterRecognitionContainer";
+import { Modal } from "core-components/modal/ModalComponent";
+
 import CreateRecognitionButton from "shared-components/create-recognition-button/CreateRecognitionButton";
 const Wrapper = styled.div`
   border: 1px solid var(--grey);
@@ -22,19 +24,20 @@ const Wrapper = styled.div`
   overflow-y: ${({ filter }) => (filter ? "hidden" : null)};
 `;
 const Sidebar = styled.div`
-  height: 100vh;
+  height: 800px;
   position: absolute;
   padding-left: 20px;
   background-color: navy;
   opacity: 1;
   color: white;
   background: var(--white) 0% 0% no-repeat padding-box;
-  width: 400px;
+  border: none;
+  width: 480px;
   position: fixed;
   z-index: 1000;
   margin-right: 800px;
   margin-left: 441px;
-  margin-top: -78px;
+  margin-top: -98px;
   animation: slide-open 2s forwards;
 `;
 
@@ -64,14 +67,17 @@ const MobileWrapper = styled.div`
 `;
 
 const CreateRecognition = styled.div`
-  position: fixed;
-  margin-bottom: 0%;
+  position: absolute;
+  margin-top: 150%;
   margin-left: 45%;
 `;
 const RecognitionListComponent = ({
   recognitionList,
   giveHi5func,
+  handleClose,
+  errorMessage,
   sliderOn,
+  show,
   sliderOff,
   filter,
 }) => {
@@ -86,7 +92,17 @@ const RecognitionListComponent = ({
         {filter ? (
           <Sidebar>
             <h2>Sidebar</h2>
-            <Button id="close" onClick={sliderOff}>
+            <Button
+              id="close"
+              variant="outline-dark"
+              style={{
+                border: "none",
+                "margin-left": "325px",
+                "margin-top": "25px",
+              }}
+              className="mt-5"
+              onClick={sliderOff}
+            >
               &times;
             </Button>
             <FilterContainer />
@@ -108,6 +124,16 @@ const RecognitionListComponent = ({
             hi5Count={recognition.recognition_hi5s.length}
           />
         ))}
+        <Modal
+          show={show}
+          onHide={handleClose}
+          centered={true}
+          aria-labelledby="contained-modal-title-vcenter"
+        >
+          <Modal.Body closeButton className="text-center text-danger">
+            {errorMessage}
+          </Modal.Body>
+        </Modal>
         <div id="#1233" style={{ height: 1 }} className="text-center" />
       </Wrapper>
       <MobileWrapper
@@ -143,10 +169,10 @@ const RecognitionListComponent = ({
           />
         ))}
         <div id="#1233" style={{ height: 1 }} className="text-center" />
-        <CreateRecognition>
-          <CreateRecognitionButton />
-        </CreateRecognition>
       </MobileWrapper>
+      <CreateRecognition>
+        <CreateRecognitionButton />
+      </CreateRecognition>
     </div>
   );
 };

@@ -14,7 +14,10 @@ export const defaultState = {
     data: {},
     error: { code: undefined },
   },
-  error: null,
+  error: {
+    code: null,
+    message: null,
+  },
   limit: 3,
   offset: 0,
 };

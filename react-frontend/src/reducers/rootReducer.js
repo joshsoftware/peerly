@@ -13,6 +13,7 @@ import filterRecognitionReducer from "reducers/filterRecognitionReducer";
 import userProfileUpdateReducer from "reducers/userProfileUpdateReducer";
 import hi5StatusResponseReducer from "reducers/hi5StatusResponseReducer";
 import filterStatus from "reducers/filterStatus";
+import filterRecognitionErrorResponse from "reducers/filterRecognitionErrorResponse";
 
 export default combineReducers({
   appReducer,
@@ -28,4 +29,5 @@ export default combineReducers({
   userProfileUpdateReducer,
   hi5StatusResponseReducer,
   filterStatus,
+  filterRecognitionErrorResponse,
 });
