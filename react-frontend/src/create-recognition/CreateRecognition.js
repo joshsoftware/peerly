@@ -29,15 +29,7 @@ const WrapperForHeader = styled.section`
 const CardWrapper = styled(Card)`
   border-radius: 36px 36px 0px 0px;
   background: linear-gradient(var(--sage) 120px, var(--white) 0%);
-  margin-top: 3%;
-  margin-left: 35%;
-  margin-right: 10%;
-  height: 537px;
-  padding-bottom: 19%;
-  margin-left: 35%;
-  margin-right: 20%;
-  height: 537px;
-  margin-top: 100px;
+  height: 100%;
   position: fixed;
   width: 550px;
 `;
@@ -48,7 +40,6 @@ const MobileWrapper = styled(Card)`
   height: 100%;
   position: fixed;
   width: 100%;
-  margin-top: 35%;
   padding-bottom: 19%;
 `;
 
@@ -128,7 +119,7 @@ const CreateRecognition = ({
         <Col className="d-flex justify-content-around flex-row">
           <CoreValue coreValues={coreValues} setCoreValueId={setCoreValueId} />
         </Col>
-        <Col className="text-center ">
+        <Col className="text-center mt-5">
           {comment ? (
             <Form.Control
               as="textarea"

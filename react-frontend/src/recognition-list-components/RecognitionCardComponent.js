@@ -41,6 +41,7 @@ const RecognitionCardComponent = ({
   coreValue,
   coreValueImage,
   hi5Count,
+  showHi5List,
 }) => (
   <CardComponent>
     <Card.Body>
@@ -83,7 +84,12 @@ const RecognitionCardComponent = ({
       </div>
       <Card.Footer className="bg-white">
         <span className="font-weight-bold text-muted">+</span>
-        <span className="font-weight-bold text-dark">{hi5Count}</span>
+        <span /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+          className="font-weight-bold text-dark"
+          onClick={showHi5List}
+        >
+          {hi5Count}
+        </span>
       </Card.Footer>
     </Card.Body>
   </CardComponent>
@@ -101,6 +107,7 @@ RecognitionCardComponent.propTypes = {
   coreValue: PropTypes.string.isRequired,
   coreValueImage: PropTypes.string,
   hi5Count: PropTypes.number,
+  showHi5List: PropTypes.func,
 };
 
 RecognitionCardComponent.defaultProps = {

@@ -11,14 +11,9 @@ import { Spinner } from "core-components/spinner/SpinnerComponent.js";
 
 const CardComponent = styled(Card)`
   border-radius: 36px 36px 0px 0px;
-  margin-top: 3%;
-  margin-left: 30%;
-  padding-bottom: 19%;
-  height: 537px;
-  margin-top: 100px;
   align-items: center;
   position: fixed;
-  width: 550px;
+  height: 100%;
 `;
 
 const UserProfileComponent = ({
