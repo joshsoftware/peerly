@@ -7,8 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	ae "joshsoftware/peerly/apperrors"
 	"joshsoftware/peerly/config"
+
+	ae "joshsoftware/peerly/apperrors"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -109,56 +110,56 @@ func jwtAuthMiddleware(next http.Handler, deps Dependencies) http.Handler {
 		if len(authHeader) != totalFields {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Malformed Token"))
-		} else {
-
-			jwtToken := authHeader[1]
-			token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
-
-				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-					return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-				}
-
-				return []byte(config.JWTKey()), nil
-			})
-
-			if err != nil {
-				w.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-
-			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-				ctx := context.WithValue(r.Context(), "props", claims)
-				userID, err := strconv.Atoi(claims["sub"].(string))
-				if err != nil {
-					logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
-					return
-				}
-
-				orgID, err := strconv.Atoi(claims["org"].(string))
-				if err != nil {
-					logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
-					return
-				}
-
-				currentUser, err := deps.Store.GetUser(ctx, userID)
-				if err != nil {
-					logger.WithField("err", err.Error()).Error("Error while fetching User")
-					return
-				}
-
-				nextContext := context.WithValue(ctx, "user", token)
-				if currentUser.OrgID != orgID {
-					err = ae.ErrInvalidToken
-					logger.WithField("err", err.Error()).Error("Mismatch with user organization and current organization")
-					w.WriteHeader(http.StatusUnauthorized)
-					return
-				}
-
-				next.ServeHTTP(w, r.WithContext(nextContext))
-			} else {
-				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("Unauthorized"))
-			}
+			return
 		}
+		jwtToken := authHeader[1]
+		token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
+
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
+
+			return []byte(config.JWTKey()), nil
+		})
+
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok && !token.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte("Unauthorized"))
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), "props", claims)
+		userID, err := strconv.Atoi(claims["sub"].(string))
+		if err != nil {
+			logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
+			return
+		}
+
+		orgID, err := strconv.Atoi(claims["org"].(string))
+		if err != nil {
+			logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
+			return
+		}
+
+		currentUser, err := deps.Store.GetUser(ctx, userID)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching User")
+			return
+		}
+
+		nextContext := context.WithValue(ctx, "user", token)
+		if currentUser.OrgID != orgID {
+			err = ae.ErrInvalidToken
+			logger.WithField("err", err.Error()).Error("Mismatch with user organization and current organization")
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		next.ServeHTTP(w, r.WithContext(nextContext))
 	})
 }
