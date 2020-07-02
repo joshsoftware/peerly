@@ -13,6 +13,7 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	logger "github.com/sirupsen/logrus"
 )
 
 // OAuthUser - a struct that represents the "user" we'll get back from Google's /userinfo query
@@ -134,6 +135,18 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		}
 
 		// See if there's an existing user that matches the oAuth user
+		// Check the OAuth User's domain and see if it's already in our database
+		// TODO - We need a way to test this both programmatically and by hand.
+		// That necessitates a Google account associated w/ a domain that isn't Josh Software
+		org, err := deps.Store.GetOrganizationByDomainName(ctx, user.Domain)
+		if err != nil {
+			// Log error, push out a JSON response, and halt authentication
+			log.Error(ae.ErrDomainNotRegistered(user.Email), ("Domain: " + user.Domain + " Email " + user.Email), err)
+			ae.JSONError(rw, http.StatusForbidden, err)
+			return
+		}
+
+		// See if there's an existing user that matches the oAuth user
 		existingUser, err := deps.Store.GetUserByEmail(ctx, user.Email)
 		if err != nil && err != ae.ErrRecordNotFound {
 			log.Error(ae.ErrUnknown, "Unknown/unexpected error while looking for existing user "+user.Email, err)
@@ -142,16 +155,6 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 		}
 
 		if err == ae.ErrRecordNotFound {
-			// Check the OAuth User's domain and see if it's already in our database
-			// TODO - We need a way to test this both programmatically and by hand.
-			// That necessitates a Google account associated w/ a domain that isn't Josh Software
-			org, err := deps.Store.GetOrganizationByDomainName(ctx, user.Domain)
-			if err != nil {
-				// Log error, push out a JSON response, and halt authentication
-				log.Error(ae.ErrDomainNotRegistered(user.Email), ("Domain: " + user.Domain + " Email " + user.Email), err)
-				ae.JSONError(rw, http.StatusForbidden, err)
-				return
-			}
 
 			// Organization DOES exist in the database. Create the user.
 			existingUser, err = deps.Store.CreateNewUser(ctx, db.User{
@@ -168,7 +171,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 
 		// By the time we get here, we definitely have an existingUser object.
 		// Looks like a valid user authenticated by Google. User's org is in our orgs table. Issue a JWT.
-		authToken, err := newJWT(existingUser.ID)
+		authToken, err := newJWT(existingUser.ID, org.ID)
 		if err != nil {
 			log.Error(ae.ErrUnknown, "Unknown/unexpected error while creating JWT for "+existingUser.Email, err)
 			ae.JSONError(rw, http.StatusInternalServerError, err)
@@ -193,7 +196,7 @@ func handleAuth(deps Dependencies) http.HandlerFunc {
 // newJWT() - Creates and returns a new JSON Web Token to be sent to an API consumer on valid
 // authentication, so they can re-use it by sending it in the Authorization header on subsequent
 // requests.
-func newJWT(userID int) (newToken string, err error) {
+func newJWT(userID, orgID int) (newToken string, err error) {
 	signingKey := config.JWTKey()
 	if signingKey == nil {
 		log.Error(ae.ErrNoSigningKey, "Application error: No signing key configured", err)
@@ -201,11 +204,12 @@ func newJWT(userID int) (newToken string, err error) {
 	}
 
 	expiryTime := time.Now().Add(time.Duration(config.JWTExpiryDurationHours()) * time.Hour).Unix()
-	claims := &jwt.StandardClaims{
-		ExpiresAt: expiryTime,
-		Issuer:    "joshsoftware.com",
-		IssuedAt:  time.Now().Unix(),
-		Subject:   strconv.Itoa(userID),
+	claims := &jwt.MapClaims{
+		"exp": expiryTime,
+		"iss": "joshsoftware.com",
+		"iat": time.Now().Unix(),
+		"sub": strconv.Itoa(userID),
+		"org": strconv.Itoa(orgID),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -219,7 +223,12 @@ func newJWT(userID int) (newToken string, err error) {
 
 func handleLogout(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		parsedToken := req.Context().Value("user").(*jwt.Token)
+		parsedToken, ok := req.Context().Value("user").(*jwt.Token)
+		if !ok {
+			logger.Error("Error parsing JSON for token response")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		claims := parsedToken.Claims.(jwt.MapClaims)
 
 		userID, err := strconv.Atoi(claims["sub"].(string))
