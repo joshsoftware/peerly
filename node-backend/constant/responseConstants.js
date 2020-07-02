@@ -78,3 +78,5 @@ module.exports.NOT_REPEATED_HI5_CODE = "not-give-repeat-hi5";
 
 module.exports.NOT_REPEATED_HI5_MESSAGE =
   "Not allow give repeated hi5 for same recognition";
+
+module.exports.UNPROCESSABLE_ENTITY_CODE = "unprocessable-entity";

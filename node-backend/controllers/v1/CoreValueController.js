@@ -121,7 +121,7 @@ module.exports.findOne = async (req, res) => {
     .then(() => {
       CoreValue.findOne({ where: { org_id: org_id, id: id } })
         .then((data) => {
-          if (data.length != 0) {
+          if (data) {
             res.status(200).send({
               data: data,
             });
@@ -269,7 +269,7 @@ module.exports.getCoreValueById = async (req, res) => {
         ],
       })
         .then((data) => {
-          if (data.length != 0) {
+          if (data) {
             res.status(200).send({
               data: data,
             });

@@ -74,6 +74,12 @@ func InitRouter(deps Dependencies) (router *mux.Router) {
 	router.HandleFunc("/organizations", createOrganizationHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", deleteOrganizationHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
 	router.HandleFunc("/organizations/{id:[0-9]+}", updateOrganizationHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges", createBadgeHandler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
+	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges", listBadgesHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", updateBadgeHandler(deps)).Methods(http.MethodPut).Headers(versionHeader, v1)
+	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", showBadgeHandler(deps)).Methods(http.MethodGet).Headers(versionHeader, v1)
+	router.HandleFunc("/organizations/{organization_id:[0-9]+}/badges/{id:[0-9]+}", deleteBadgeHandler(deps)).Methods(http.MethodDelete).Headers(versionHeader, v1)
+
 
 	// Recognition routes
 	router.HandleFunc("/recognitions/{recognition_id:[0-9]+}/hi5", createRecognitionHi5Handler(deps)).Methods(http.MethodPost).Headers(versionHeader, v1)
