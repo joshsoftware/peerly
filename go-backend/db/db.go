@@ -11,6 +11,9 @@ type Storer interface {
 	CreateNewUser(context.Context, User) (User, error)
 	GetUserByEmail(context.Context, string) (User, error)
 	GetUserByID(context.Context, int) (User, error)
+	GetUserByOrganization(context.Context, int, int) (User, error)
+	GetUser(context.Context, int) (User, error)
+	UpdateUser(context.Context, User, int) (User, error)
 
 	// Blacklisted Tokens
 	CleanBlacklistedTokens() error
@@ -22,14 +25,17 @@ type Storer interface {
 	CreateOrganization(context.Context, Organization) (Organization, error)
 	DeleteOrganization(context.Context, int) error
 	UpdateOrganization(context.Context, Organization, int) (Organization, error)
+	GetOrganizationByDomainName(context.Context, string) (Organization, error)
+
+	// Recognition
 	CreateRecognition(context.Context, Recognition) (Recognition, error)
 	ShowRecognition(context.Context, int) (Recognition, error)
 	ListRecognitions(context.Context) ([]Recognition, error)
 	ListRecognitionsWithFilter(context.Context, map[string]int) ([]Recognition, error)
-	GetUser(context.Context, int) (User, error)
-	UpdateUser(context.Context, User, int) (User, error)
-	GetOrganizationByDomainName(context.Context, string) (Organization, error)
-	GetUserByOrganization(context.Context, int, int) (User, error)
+
+	// cron job to reset user's Hi5 data
+	ResetHi5QuotaBalanceJob() error
+	UpdateHi5QuotaRenewalFrequencyOfUsers(Organization) error
 
 	// Roles
 	GetRoleByID(context.Context, int) (Role, error)
@@ -42,7 +48,7 @@ type Storer interface {
 	DeleteCoreValue(context.Context, int64, int64) error
 	UpdateCoreValue(context.Context, int64, int64, CoreValue) (CoreValue, error)
 
-	//Recognition
+	//RecognitionHi5
 	CreateRecognitionHi5(context.Context, RecognitionHi5, int) error
 
 	//Reported Recognition
@@ -51,8 +57,8 @@ type Storer interface {
 	//Recognition Moderation
 	CreateRecognitionModeration(context.Context, int64, RecognitionModeration) (RecognitionModeration, error)
 	CreateBadge(context.Context, Badge) (Badge, error)
-	ListBadges(context.Context,int) ([]Badge, error)
+	ListBadges(context.Context, int) ([]Badge, error)
 	UpdateBadge(context.Context, Badge) (Badge, error)
 	ShowBadge(context.Context, Badge) (Badge, error)
-	DeleteBadge(context.Context, int,int) (error)
+	DeleteBadge(context.Context, int, int) error
 }

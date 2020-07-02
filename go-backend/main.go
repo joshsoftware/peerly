@@ -93,7 +93,6 @@ func startApp() (err error) {
 
 	// mux router
 	router := service.InitRouter(deps)
-
 	// init web server
 	server := negroni.Classic()
 	server.UseHandler(router)

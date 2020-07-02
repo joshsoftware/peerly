@@ -174,6 +174,15 @@ func (m *DBMockStore) UpdateUser(ctx context.Context, user User, id int) (update
 	args := m.Called(ctx, user, id)
 	return args.Get(0).(User), args.Error(1)
 }
+func (m *DBMockStore) GetUserByOrganization(ctx context.Context, id, orgID int) (user User, err error) {
+	args := m.Called(ctx, id, orgID)
+	return args.Get(0).(User), args.Error(1)
+}
+
+// ResetHi5QuotaBalanceJob - test mock
+func (m *DBMockStore) ResetHi5QuotaBalanceJob() (err error) {
+	return
+}
 
 func (m *DBMockStore) CreateRecognition(ctx context.Context, recognition Recognition) (createdRecognition Recognition, err error) {
 	args := m.Called(ctx)
