@@ -19,8 +19,6 @@ import { store } from "root/redux-store";
 
 const FilterRecognitionContainer = () => {
   const [coreValueId, setCoreValueId] = useState(null);
-  //const [givenById, setGivenById] = useState(null);
-  //const [givenForId, setGivenForId] = useState(null);
   const status = actionGenerator(CORE_VALUE_API);
   const filterStatus = actionGenerator(FILTER_STATUS);
   const filterReducerStatus = actionGenerator(FILTER_RECOGNITION);
@@ -30,6 +28,9 @@ const FilterRecognitionContainer = () => {
   const coreValueList = useSelector((state) => state.coreValueListReducer);
   const filterItems = useSelector((state) => state.filterRecognitionReducer);
   const usersList = useSelector((state) => state.userListReducer);
+  const [/*eslint-disable no-unused-vars*/ inputValue, setState] = useState(
+    null
+  );
 
   const usersApiStatus = actionGenrator(LIST_USERS_API);
   useEffect(() => {
@@ -47,6 +48,7 @@ const FilterRecognitionContainer = () => {
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
   }, [dispatch, status.success]);
+
   let users = [];
   usersList.list.map((user) =>
     users.push({
@@ -62,6 +64,25 @@ const FilterRecognitionContainer = () => {
       ),
     })
   );
+
+  const filterOptions = (inputValue) => {
+    return users.filter((i) =>
+      i.label.props.name.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+
+  const promiseOptions = (inputValue, callback) => {
+    setTimeout(() => {
+      callback(filterOptions(inputValue));
+    }, 1000);
+  };
+
+  const handleInputChange = (newValue) => {
+    const inputValue = newValue.replace(/\W/g, "");
+    setState({ inputValue });
+    return inputValue;
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     store.dispatch(
@@ -78,11 +99,10 @@ const FilterRecognitionContainer = () => {
     <FilterRecognition
       coreValues={coreValueList.list}
       setCoreValueId={setCoreValueId}
-      givenForList={users}
-      givenByList={users}
-      //  promiseGivenByOptions={setGivenById}
-      // promiseGivenForOptions={setGivenForId}
+      userList={users}
       onSubmit={onSubmit}
+      promiseOptions={promiseOptions}
+      handleInputChange={handleInputChange}
     />
   );
 };
