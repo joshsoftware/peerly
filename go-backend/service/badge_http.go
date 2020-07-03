@@ -30,6 +30,16 @@ func createBadgeHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
+		_, err = deps.Store.GetOrganization(req.Context(), org_id)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching organization with given id")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error while fetching organization with given id",
+				},
+			})
+			return
+		}
 		var badge db.Badge
 		err = json.NewDecoder(req.Body).Decode(&badge)
 		if err != nil {
@@ -93,6 +103,16 @@ func listBadgesHandler(deps Dependencies) http.HandlerFunc {
 			rw.Write([]byte("Error org_id key is missing"))
 			return
 		}
+		_, err = deps.Store.GetOrganization(req.Context(), org_id)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching organization with given id")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error while fetching organization with given id",
+				},
+			})
+			return
+		}
 
 		badges, err := deps.Store.ListBadges(req.Context(), org_id)
 		if err != nil {
@@ -122,7 +142,16 @@ func updateBadgeHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-
+		_, err = deps.Store.GetOrganization(req.Context(), org_id)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching organization with given id")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error while fetching organization with given id",
+				},
+			})
+			return
+		}
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
@@ -199,7 +228,16 @@ func showBadgeHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-
+		_, err = deps.Store.GetOrganization(req.Context(), org_id)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching organization with given id")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error while fetching organization with given id",
+				},
+			})
+			return
+		}
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")
@@ -244,7 +282,16 @@ func deleteBadgeHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
-
+		_, err = deps.Store.GetOrganization(req.Context(), org_id)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("Error while fetching organization with given id")
+			repsonse(rw, http.StatusBadRequest, errorResponse{
+				Error: messageObject{
+					Message: "Error while fetching organization with given id",
+				},
+			})
+			return
+		}
 		badge_id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			logger.WithField("err", err.Error()).Error("Error id key is missing")

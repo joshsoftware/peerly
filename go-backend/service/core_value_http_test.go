@@ -4,6 +4,7 @@ import (
 	"errors"
 	"joshsoftware/peerly/db"
 	"net/http"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -33,6 +34,21 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesSuccess() {
 		},
 		nil,
 	)
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
@@ -51,6 +67,21 @@ func (suite *CoreValueHandlerTestSuite) TestListCoreValuesWhenDBFailure() {
 	suite.dbMock.On("ListCoreValues", mock.Anything, mock.Anything).Return(
 		[]db.CoreValue{},
 		errors.New("error fetching core values"),
+	)
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
 	)
 
 	recorder := makeHTTPCall(
@@ -77,6 +108,21 @@ func (suite *CoreValueHandlerTestSuite) TestGetCoreValueSuccess() {
 		},
 		nil,
 	)
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
@@ -96,6 +142,21 @@ func (suite *CoreValueHandlerTestSuite) TestGetCoreValuesWhenDBFailure() {
 		db.CoreValue{},
 		errors.New("Error while getting core value"),
 	)
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 
 	recorder := makeHTTPCall(
 		http.MethodGet,
@@ -111,7 +172,21 @@ func (suite *CoreValueHandlerTestSuite) TestGetCoreValuesWhenDBFailure() {
 
 func (suite *CoreValueHandlerTestSuite) TestDeleteCoreValueSuccess() {
 	suite.dbMock.On("DeleteCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(nil)
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	recorder := makeHTTPCall(
 		http.MethodGet,
 		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
@@ -126,7 +201,21 @@ func (suite *CoreValueHandlerTestSuite) TestDeleteCoreValueSuccess() {
 
 func (suite *CoreValueHandlerTestSuite) TestDeleteCoreValueWhenDBFailure() {
 	suite.dbMock.On("DeleteCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("Error while deleting core value"))
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	recorder := makeHTTPCall(
 		http.MethodGet,
 		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
@@ -148,7 +237,21 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueSuccess() {
 		ParentID:     nil,
 		ThumbnailURL: nil,
 	}, nil)
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	body := `{
 		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
@@ -172,7 +275,21 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenParentCoreValueNo
 		db.CoreValue{},
 		errors.New("error fetching core value"),
 	)
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	body := `{
 		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others",
@@ -205,7 +322,21 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidParentCore
 		},
 		nil,
 	)
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	body := `{
 		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others",
@@ -227,7 +358,21 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidParentCore
 
 func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenDBFailure() {
 	suite.dbMock.On("CreateCoreValue", mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{}, errors.New("error creating core value"))
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	body := `{
 		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
@@ -251,7 +396,21 @@ func (suite *CoreValueHandlerTestSuite) TestCreateCoreValueWhenInvalidJSONFormat
 		"text": "Mentoring"
 		"description": "Investing time and effort to mentor others"
 	}`
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	recorder := makeHTTPCall(
 		http.MethodPost,
 		"/organisations/{organisation_id:[0-9]+}/core_values",
@@ -273,7 +432,21 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueSuccess() {
 		Description: "Description TEST",
 		ParentID:    nil,
 	}, nil)
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	body := `{
 		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
@@ -294,7 +467,21 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueSuccess() {
 
 func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenDBFailure() {
 	suite.dbMock.On("UpdateCoreValue", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(db.CoreValue{}, errors.New("error updating core value"))
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	body := `{
 		"text": "Mentoring",
 		"description": "Investing time and effort to mentor others"
@@ -318,7 +505,21 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidRequest() 
 		"text": "",
 		"description": ""
 	}`
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	recorder := makeHTTPCall(
 		http.MethodPut,
 		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
@@ -338,7 +539,21 @@ func (suite *CoreValueHandlerTestSuite) TestUpdateCoreValueWhenInvalidJSONFormat
 		"description": "Investing time and effort to mentor others"
 		"parent_id": 1
 	}`
-
+	suite.dbMock.On("GetOrganization", mock.Anything, mock.Anything).Return(
+		db.Organization{
+			ID:                       1,
+			Name:                     "test organization",
+			ContactEmail:             "test@gmail.com",
+			DomainName:               "www.testdomain.com",
+			SubscriptionStatus:       1,
+			SubscriptionValidUpto:    1588073442241,
+			Hi5Limit:                 5,
+			Hi5QuotaRenewalFrequency: "2",
+			Timezone:                 "IST",
+			CreatedAt:                time.Now().UTC(),
+		},
+		nil,
+	)
 	recorder := makeHTTPCall(
 		http.MethodPut,
 		"/organisations/{organisation_id:[0-9]+}/core_values/{id:[0-9]+}",
