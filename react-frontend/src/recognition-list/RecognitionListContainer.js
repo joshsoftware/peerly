@@ -105,6 +105,7 @@ const RecognnitionListContainer = () => {
     dispatch(actionObjectGenrator(filterErrorStatus.init));
     setShow(true);
   }*/
+  //console.log(recognitionList.list)
   return (
     <div>
       <RecognitionListComponent

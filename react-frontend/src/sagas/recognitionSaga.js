@@ -39,6 +39,7 @@ export function* getRecognitionList() {
       apiToken: token,
     });
     const responseObj = yield response.json();
+
     if (responseObj.data) {
       if (listReducer.list.length === 1) {
         yield put(
@@ -66,7 +67,7 @@ export function* getRecognitionList() {
 const getUpdateCountList = (id, listRecognition) => {
   listRecognition.map((recognition) => {
     if (recognition.id === id) {
-      recognition.recognition_hi5s.push({});
+      recognition.hi5_count++;
       return recognition;
     }
     return recognition;

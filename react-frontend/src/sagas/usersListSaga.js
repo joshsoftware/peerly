@@ -10,7 +10,6 @@ export function* usersList() {
   const token = yield select(getToken);
   const status = actionGenerator(LIST_USERS);
   const listReducer = yield select((state) => state.userListReducer);
-
   try {
     const response = yield call(getJson, {
       path: "/users",
@@ -18,27 +17,23 @@ export function* usersList() {
       paramsObj: {
         limit: listReducer.limit,
         offset: listReducer.offset,
+        starts_with: listReducer.starts_with
+          ? listReducer.starts_with
+          : undefined,
       },
     });
     const responseObj = yield response.json();
     if (responseObj.data) {
-      if (listReducer.list.length === 1) {
-        yield put(
-          actionObjectGenerator(status.success, {
-            list: responseObj.data,
-            offset: listReducer.offset + responseObj.data.length,
-          })
-        );
-      } else {
+      /*
         yield put(
           actionObjectGenerator(status.success, {
             list: listReducer.list.concat(responseObj.data),
             offset: listReducer.offset + responseObj.data.length,
           })
-        );
-      }
-
-      //yield put(actionObjectGenerator(status.success, responseObj.data));
+        );*/
+      yield put(
+        actionObjectGenerator(status.success, { list: responseObj.data })
+      );
     } else {
       yield put(actionObjectGenerator(status.failure, responseObj.error));
     }

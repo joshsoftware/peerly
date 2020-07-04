@@ -10,6 +10,7 @@ export const defaultState = {
     },
   ],
   error: null,
+  starts_with: null,
   limit: 10,
   offset: 0,
 };
@@ -23,11 +24,12 @@ export default (state = defaultState, action) => {
         list: [
           {
             id: null,
-            firs_name: null,
+            first_name: null,
             last_name: null,
             profile_image_url: null,
           },
         ],
+        starts_with: null,
         error: null,
         limit: 10,
         offset: 0,
@@ -35,7 +37,19 @@ export default (state = defaultState, action) => {
     case status.success:
       return {
         ...state,
-        list: action.payload.list,
+        list:
+          action.payload.list == undefined
+            ? [
+                {
+                  id: null,
+                  first_name: null,
+                  last_name: null,
+                  profile_image_url: null,
+                },
+              ]
+            : action.payload.list,
+        limit: action.payload.limit,
+        starts_with: action.payload.starts_with,
         offset: action.payload.offset,
       };
     case status.failure:

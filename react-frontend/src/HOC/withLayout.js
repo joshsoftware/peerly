@@ -16,9 +16,9 @@ const withLayout = (WrappedComponent, includeNavbar, includeSidebar) => (
         width: "100%",
       }}
     >
-      <Row>{includeNavbar && <TopNavbar />}</Row>
-      <Row className="mt-3 d-flex justify-content-center">
-        <Col md={3} className="">
+      <Row className="w-100 p-0 m-0">{includeNavbar && <TopNavbar />}</Row>
+      <Row className="mt-3 d-flex justify-content-center ">
+        <Col md={3} className="w-100">
           {includeSidebar && <Sidebar />}
         </Col>
         <Col md={7}>

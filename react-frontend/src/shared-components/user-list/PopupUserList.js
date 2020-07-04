@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Modal } from "core-components/modal/ModalComponent";
 import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 import { Form } from "core-components/form/FormComponent";
+import { Spinner } from "core-components/spinner/SpinnerComponent.js";
 
 const PopupUserList = ({
   show,
@@ -19,8 +20,20 @@ const PopupUserList = ({
         onHide={handleClose}
         centered={true}
         aria-labelledby="contained-modal-title-vcenter"
+        style={{
+          position: "fixed",
+          "margin-top": "0px",
+          overflow: "scroll",
+          "min-height": "100%",
+        }}
       >
-        <Modal.Header closeButton>
+        <Modal.Header
+          style={{
+            position: "absolute",
+            "margin-top": "0px",
+          }}
+          closeButton
+        >
           <Form.Control
             type="text"
             placeholder="enter name"
@@ -28,7 +41,48 @@ const PopupUserList = ({
             // defaultValue={firstName}
           />
         </Modal.Header>
-        <Modal.Body
+        {userList ? (
+          <Modal.Body
+            style={{
+              //position: "fixed",
+              "margin-top": "50px",
+              overflow: "scroll",
+              "min-height": "100vh",
+            }}
+          >
+            {userList.map((user, index) => (
+              <div key={index}>
+                <ProfileComponent
+                  src={user.profile_image_url}
+                  name={`${user.first_name} ${user.last_name}`}
+                  id={user.id}
+                  size={8}
+                  labelClass="ml-2"
+                  className="my-3"
+                  setUserId={setUserId}
+                />
+              </div>
+            ))}
+          </Modal.Body>
+        ) : (
+          <Spinner className="mt-5" animation="grow" variant="info" />
+        )}
+      </Modal>
+      <div id="#12345" style={{ height: 1 }} className="text-center" />
+    </>
+  );
+};
+
+PopupUserList.propTypes = {
+  show: PropTypes.bool,
+  handleClose: PropTypes.func,
+  userList: PropTypes.array,
+  setUserId: PropTypes.func,
+  searchBox: PropTypes.func,
+};
+
+export default PopupUserList;
+/**<Modal.Body
           style={{
             //position: "fixed",
             overflow: "scroll",
@@ -48,19 +102,4 @@ const PopupUserList = ({
               />
             </div>
           ))}
-        </Modal.Body>
-      </Modal>
-      <div id="#12345" style={{ height: 1 }} className="text-center" />
-    </>
-  );
-};
-
-PopupUserList.propTypes = {
-  show: PropTypes.bool,
-  handleClose: PropTypes.func,
-  userList: PropTypes.array,
-  setUserId: PropTypes.func,
-  searchBox: PropTypes.func,
-};
-
-export default PopupUserList;
+        </Modal.Body> */

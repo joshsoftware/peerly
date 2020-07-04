@@ -21,8 +21,6 @@ const Wrapper = styled.div`
 
 const Sidebar = styled.div`
   height: 100%;
-  position: absolute;
-  padding-left: 20px;
   background-color: navy;
   opacity: 1;
   color: white;
@@ -83,7 +81,7 @@ const RecognitionListComponent = ({
           text={recognition.text}
           coreValue={recognition.coreValue.text}
           coreValueImage={recognition.coreValue.thumbnail_url}
-          hi5Count={recognition.recognition_hi5s.length}
+          hi5Count={recognition.hi5_count}
           showHi5List={showHi5List}
         />
       ))}

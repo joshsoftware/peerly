@@ -7,7 +7,7 @@ export const defaultState = {
       coreValue: {},
       given_for_user: {},
       given_by_user: {},
-      recognition_hi5s: [null],
+      hi5_count: null,
     },
   ],
   hi5: {
@@ -34,7 +34,7 @@ export default (state = defaultState, action) => {
             coreValue: {},
             given_for_user: {},
             given_by_user: {},
-            recognition_hi5s: [],
+            hi5_count: null,
           },
         ],
         hi5: {
