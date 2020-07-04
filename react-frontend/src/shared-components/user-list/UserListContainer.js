@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import _ from "lodash";
 
 //import SessionTimeoutComponent from "shared-components/SessionTimeoutComponent";
 //import UnauthorisedErrorComponent from "shared-components/UnauthorisedErrorComponent";
@@ -8,6 +9,7 @@ import actionGenrator from "utils/actionGenerator";
 import {
   //GIVE_HI5_API,
   LIST_USERS_API,
+  LIST_USERS,
   //LIST_RECOGNITION_API,
   SHOW_MODAL,
 } from "constants/actionConstants";
@@ -21,7 +23,7 @@ const UserListContainer = () => {
   // const [showPopup, setShowPopup] = useState(false);
   // const [refresh, changeRefresh] = useState(0);
   const [searchTerm, setSearchTerm] = useState(null);
-  const [searchResults, setSearchResults] = useState([null]);
+  //const [searchResults, setSearchResults] = useState([null]);
   const showModal = actionGenrator(SHOW_MODAL);
   //const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -39,40 +41,51 @@ const UserListContainer = () => {
    };*/
   // const showErrorPopup = () => setShowPopup(true);
   let [user1Id, setUser1Id] = useState(null);
+  let [legthOfName, setLengthOfName] = useState(0);
   //const [show, setShow] = useState(false);
   const userList = useSelector((state) => state.userListReducer);
   const modalShow = useSelector((state) => state.modalShowReducer);
+  const [reload, setReload] = useState(false);
   const userListStatus = actionGenrator(LIST_USERS_API);
-  //  const status = actionGenrator(LIST_RECOGNITION_API);
-  const searchBox = (e) => {
-    setSearchTerm(e.target.value);
+  const userListReducerStatus = actionGenrator(LIST_USERS);
+
+  const callApi = () => {
+    setReload(true);
   };
-  const handleObserver = (entries) => {
-    if (entries[0].isIntersecting) {
-      dispatch(actionObjectGenrator(userListStatus.success));
+  //  const status = actionGenrator(LIST_RECOGNITION_API);
+  const [debouncedCallApi] = useState(() => _.debounce(callApi, 3000));
+  const searchBox = (e) => {
+    if (e.target.value.length % 3 == 0) {
+      debouncedCallApi();
+      setLengthOfName(e.target.value.length);
+      setSearchTerm(e.target.value);
     }
   };
+
   useEffect(() => {
-    if (userList.list[0].first_name) {
+    /*if (userList.list[0].first_name) {
       const results = userList.list.filter((person) =>
         person.first_name.toLowerCase().includes(searchTerm)
       );
       setSearchResults(results);
-    }
-    if (document.getElementById("#12345")) {
-      dispatch(actionObjectGenrator(userListStatus.success));
-      const options = {
-        root: document.getElementById("#12345"), // Page as root
-        rootMargin: "0px",
-        threshold: 0,
-      };
-      const observer = new IntersectionObserver(
-        handleObserver, //callback
-        options
+    }*/
+    if (reload) {
+      dispatch(
+        actionObjectGenrator(userListReducerStatus.success, {
+          starts_with: searchTerm,
+        })
       );
-      observer.observe(document.getElementById("#12345"));
+      dispatch(actionObjectGenrator(userListStatus.success));
+      setReload(false);
     }
-  }, [dispatch, userListStatus.success, searchTerm]);
+  }, [
+    dispatch,
+    userListStatus.success,
+    userListReducerStatus.success,
+    searchTerm,
+    legthOfName,
+    reload,
+  ]);
 
   //console.log(document.getElementById("#12345"));
   //console.log(searchResults);
@@ -81,7 +94,7 @@ const UserListContainer = () => {
     setUser1Id(null);
     history.push("/createREcognition");
   }
-  //console.log(userList.list[0].first_name)
+
   //console.log(searchResults[0])
   return (
     <PopupWindow
@@ -91,7 +104,7 @@ const UserListContainer = () => {
       // recognitionToName={profileName}
       sendData={sendData}
       listOfEmployee={userList.list}
-      userList={searchResults[0] === null ? userList.list : searchResults}
+      userList={userList.list}
       //userList={userList.list}
       setUserId={setUser1Id}
       searchBox={searchBox}
