@@ -21,6 +21,8 @@ const FilterRecognitionComponent = ({
   handleInputChange,
   onSubmit,
 }) => {
+  //console.log(promiseOptions)
+  // console.log(userList)
   return (
     <CardComponent className="text-center">
       <div className="d-flex justify-content-around flex-row text-dark">
@@ -53,7 +55,6 @@ const FilterRecognitionComponent = ({
           </Button>
         </div>
       </Form>
-      Send a message
     </CardComponent>
   );
 };
