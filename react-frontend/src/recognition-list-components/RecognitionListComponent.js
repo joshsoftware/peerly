@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FiFilter } from "react-icons/fi";
+
+import CreateRecognitionContainer from "shared-components/create-recognition-button/CreateRecognitionContainer";
 import { Button } from "core-components/button/ButtonComponent";
 import RecognitionCardComponent from "recognition-list-components/RecognitionCardComponent";
 import FilterContainer from "filterRecognition/FilterRecognitionContainer";
@@ -31,6 +33,13 @@ const Sidebar = styled.div`
   animation: slide-open 2s forwards;
 `;
 
+const Div = styled.div`
+  position: fixed;
+  z-index: 1000;
+  bottom: 0%;
+  width: 100%;
+`;
+
 const RecognitionListComponent = ({
   recognitionList,
   giveHi5func,
@@ -41,11 +50,15 @@ const RecognitionListComponent = ({
   sliderOff,
   filter,
   showHi5List,
+  showHi5ListPopup,
 }) => {
   const getDateFormate = (timestamp) =>
     new Date(timestamp * 1000).toDateString();
   return (
     <Wrapper filter={filter}>
+      <Div className="d-sm-block d-xs-block d-md-none">
+        <CreateRecognitionContainer />
+      </Div>
       <div className="d-flex justify-content-end mt-2 mr-2">
         <FiFilter onClick={sliderOn} />
       </div>
@@ -85,6 +98,7 @@ const RecognitionListComponent = ({
           showHi5List={showHi5List}
         />
       ))}
+      {showHi5ListPopup ? <></> : null}
       <Modal
         show={show}
         onHide={handleClose}
@@ -111,6 +125,7 @@ RecognitionListComponent.propTypes = {
   sliderOn: PropTypes.func,
   sliderOff: PropTypes.func,
   showHi5List: PropTypes.func,
+  showHi5ListPopup: PropTypes.bool,
 };
 
 export default React.memo(RecognitionListComponent);

@@ -29,8 +29,8 @@ const CardWrapper = styled(Card)`
   border-radius: 36px 36px 0px 0px;
   background: linear-gradient(var(--sage) 120px, var(--white) 0%);
   height: 100%;
-  position: fixed;
   width: 100%;
+  overflow: auto;
 `;
 
 const CreateRecognition = ({
@@ -49,48 +49,102 @@ const CreateRecognition = ({
   coreValueId,
 }) => {
   return (
-    <CardWrapper className="">
-      <WrapperForHeader>
-        <ProfileComponent
-          className="d-flex flex-column align-items-center mt-2"
-          size={10}
-          labelClass="ml-3"
-          src={recognitionToImage}
-          name={recognitionToName}
+    <div>
+      <CardWrapper
+        className="d-none d-md-block position-fixed"
+        style={{ width: "550px" }}
+      >
+        <WrapperForHeader>
+          <ProfileComponent
+            className="d-flex flex-column align-items-center mt-2"
+            size={10}
+            labelClass="ml-3"
+            src={recognitionToImage}
+            name={recognitionToName}
+          />
+          <HighFive />
+          <div className="justify-content-center"> Select Value </div>
+        </WrapperForHeader>
+        <Wrapper className="justify-content-center mt-3">
+          <div className="d-flex justify-content-around flex-row">
+            <CoreValue
+              coreValues={coreValues}
+              setCoreValueId={setCoreValueId}
+            />
+          </div>
+          <div className="text-center mt-5">
+            {comment ? (
+              <Form.Control
+                as="textarea"
+                rows="3"
+                onChange={(event) => {
+                  addCommentText(event);
+                }}
+              ></Form.Control>
+            ) : (
+              <Button onClick={onClickAddComment}> Add Comments </Button>
+            )}
+          </div>
+          <div className="text-center mt-3">
+            {coreValueId ? <Button onClick={handleShow}> Done </Button> : <></>}
+          </div>
+        </Wrapper>
+        <AddRecognition
+          show={show}
+          handleClose={handleClose}
+          recognitionToImage={recognitionToImage}
+          recognitionToName={recognitionToName}
+          commentText={commentText}
+          sendData={sendData}
         />
-        <HighFive />
-        <div className="justify-content-center"> Select Value </div>
-      </WrapperForHeader>
-      <Wrapper className="justify-content-center mt-3">
-        <div className="d-flex justify-content-around flex-row">
-          <CoreValue coreValues={coreValues} setCoreValueId={setCoreValueId} />
-        </div>
-        <div className="text-center mt-5">
-          {comment ? (
-            <Form.Control
-              as="textarea"
-              rows="3"
-              onChange={(event) => {
-                addCommentText(event);
-              }}
-            ></Form.Control>
-          ) : (
-            <Button onClick={onClickAddComment}> Add Comments </Button>
-          )}
-        </div>
-        <div className="text-center mt-3">
-          {coreValueId ? <Button onClick={handleShow}> Done </Button> : <></>}
-        </div>
-      </Wrapper>
-      <AddRecognition
-        show={show}
-        handleClose={handleClose}
-        recognitionToImage={recognitionToImage}
-        recognitionToName={recognitionToName}
-        commentText={commentText}
-        sendData={sendData}
-      />
-    </CardWrapper>
+      </CardWrapper>
+      <CardWrapper className="position-fixed d-md-none d-sm-block d-xs-block">
+        <WrapperForHeader>
+          <ProfileComponent
+            className="d-flex flex-column align-items-center mt-2"
+            size={10}
+            labelClass="ml-3"
+            src={recognitionToImage}
+            name={recognitionToName}
+          />
+          <HighFive />
+          <div className="justify-content-center"> Select Value </div>
+        </WrapperForHeader>
+        <Wrapper className="justify-content-center mt-3">
+          <div className="d-flex justify-content-around flex-row">
+            <CoreValue
+              coreValues={coreValues}
+              setCoreValueId={setCoreValueId}
+            />
+          </div>
+          <div className="text-center mt-5">
+            {comment ? (
+              <Form.Control
+                as="textarea"
+                rows="3"
+                onChange={(event) => {
+                  addCommentText(event);
+                }}
+              ></Form.Control>
+            ) : (
+              <Button onClick={onClickAddComment}> Add Comments </Button>
+            )}
+          </div>
+          <div className="text-center mt-3">
+            {coreValueId ? <Button onClick={handleShow}> Done </Button> : <></>}
+          </div>
+        </Wrapper>
+
+        <AddRecognition
+          show={show}
+          handleClose={handleClose}
+          recognitionToImage={recognitionToImage}
+          recognitionToName={recognitionToName}
+          commentText={commentText}
+          sendData={sendData}
+        />
+      </CardWrapper>
+    </div>
   );
 };
 
