@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Modal } from "core-components/modal/ModalComponent";
 import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 import { Form } from "core-components/form/FormComponent";
-import { Spinner } from "core-components/spinner/SpinnerComponent.js";
+//import { Spinner } from "core-components/spinner/SpinnerComponent.js";
 
 const PopupUserList = ({
   show,
@@ -12,6 +12,7 @@ const PopupUserList = ({
   userList,
   setUserId,
   searchBox,
+  errorMessage,
 }) => {
   return (
     <>
@@ -41,7 +42,18 @@ const PopupUserList = ({
             // defaultValue={firstName}
           />
         </Modal.Header>
-        {userList ? (
+        {errorMessage !== null ? (
+          <Modal.Body
+            style={{
+              //position: "fixed",
+              "margin-top": "50px",
+              overflow: "scroll",
+              "min-height": "100vh",
+            }}
+          >
+            {errorMessage}
+          </Modal.Body>
+        ) : (
           <Modal.Body
             style={{
               //position: "fixed",
@@ -64,8 +76,6 @@ const PopupUserList = ({
               </div>
             ))}
           </Modal.Body>
-        ) : (
-          <Spinner className="mt-5" animation="grow" variant="info" />
         )}
       </Modal>
       <div id="#12345" style={{ height: 1 }} className="text-center" />
@@ -79,6 +89,7 @@ PopupUserList.propTypes = {
   userList: PropTypes.array,
   setUserId: PropTypes.func,
   searchBox: PropTypes.func,
+  errorMessage: PropTypes.string,
 };
 
 export default PopupUserList;

@@ -53,3 +53,5 @@ export const FILTER_STATUS = "FILTER_STATUS";
 export const FILTER_ERROR_STATUS = "FILTER_ERROR_STATUS";
 
 export const SHOW_MODAL = "SHOW_MODAL";
+
+export const LIST_HI5_API = "LIST_HI5_API";
