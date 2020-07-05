@@ -10,7 +10,7 @@ import CreateRecognitionContainer from "shared-components/create-recognition-but
 const Wrapper = styled(Card)`
   border-radius: 36px 36px 0px 0px;
   height: 100%;
-  width: 20%;
+  width: 15%;
   background: linear-gradient(var(--sage) 15%, var(--white) 0%);
 `;
 

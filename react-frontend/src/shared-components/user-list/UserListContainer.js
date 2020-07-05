@@ -41,7 +41,8 @@ const UserListContainer = () => {
    };*/
   // const showErrorPopup = () => setShowPopup(true);
   let [user1Id, setUser1Id] = useState(null);
-  let [legthOfName, setLengthOfName] = useState(0);
+  //let [legthOfName, setLengthOfName] = useState(0);
+  let errorMessage = null;
   //const [show, setShow] = useState(false);
   const userList = useSelector((state) => state.userListReducer);
   const modalShow = useSelector((state) => state.modalShowReducer);
@@ -57,7 +58,7 @@ const UserListContainer = () => {
   const searchBox = (e) => {
     if (e.target.value.length % 3 == 0) {
       debouncedCallApi();
-      setLengthOfName(e.target.value.length);
+      //setLengthOfName(e.target.value.length);
       setSearchTerm(e.target.value);
     }
   };
@@ -83,7 +84,7 @@ const UserListContainer = () => {
     userListStatus.success,
     userListReducerStatus.success,
     searchTerm,
-    legthOfName,
+    //legthOfName,
     reload,
   ]);
 
@@ -95,13 +96,18 @@ const UserListContainer = () => {
     history.push("/createREcognition");
   }
 
-  //console.log(searchResults[0])
+  if (userList.list[0] === undefined) {
+    errorMessage = "user not found";
+  } else if (userList.list[0].id === null) {
+    errorMessage = "please enter name of user";
+  }
   return (
     <PopupWindow
       show={modalShow.show}
       handleClose={handleClose}
       // recognitionToImage={profileImage}
       // recognitionToName={profileName}
+      errorMessage={errorMessage}
       sendData={sendData}
       listOfEmployee={userList.list}
       userList={userList.list}
