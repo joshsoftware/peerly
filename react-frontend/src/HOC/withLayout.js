@@ -18,10 +18,8 @@ const withLayout = (WrappedComponent, includeNavbar, includeSidebar) => (
     >
       <Row className="w-100 p-0 m-0">{includeNavbar && <TopNavbar />}</Row>
       <Row className="mt-3 d-flex justify-content-center ">
-        <Col md={3} className="w-100">
-          {includeSidebar && <Sidebar />}
-        </Col>
-        <Col md={7}>
+        <Col md={3}>{includeSidebar && <Sidebar />}</Col>
+        <Col md={7} className="d-flex overflow-hidden">
           <WrappedComponent {...props} />
         </Col>
       </Row>
