@@ -5,18 +5,23 @@ import (
 	"net/http"
 	"strconv"
 
+	ae "joshsoftware/peerly/apperrors"
+	"joshsoftware/peerly/db"
+
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	logger "github.com/sirupsen/logrus"
-	ae "joshsoftware/peerly/apperrors"
-	"joshsoftware/peerly/db"
 )
 
 func createRecognitionModerationHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		parsedToken := req.Context().Value("user").(*jwt.Token)
+		parsedToken, ok := req.Context().Value("user").(*jwt.Token)
+		if !ok {
+			logger.Error("Error parsing JSON for token response")
+			rw.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		claims := parsedToken.Claims.(jwt.MapClaims)
-
 		userID, err := strconv.Atoi(claims["sub"].(string))
 		if err != nil {
 			logger.Error(ae.ErrJSONParseFail, "Error parsing JSON for token response", err)
