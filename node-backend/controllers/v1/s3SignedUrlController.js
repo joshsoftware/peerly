@@ -10,15 +10,15 @@ const logger = log4js.getLogger();
 
 module.exports.getSignedUrl = async (req, res) => {
   let contentType;
-  let file_extension;
+  let file_type;
   const authHeader = req.headers["authorization"];
   const decode = await jsonwebtoken.getData(authHeader);
   const schema = validateSchema.s3SignedUrl();
   let obj = qs.parse(req.query);
-  if (obj.file_extension == "jpg" || obj.file_extension == "jpeg") {
-    (file_extension = "jpeg"), (contentType = "img/jpeg");
-  } else if (obj.file_extension == "png") {
-    (file_extension = "png"), (contentType = "img/png");
+  if (obj.file_type == "jpg" || obj.file_type == "jpeg") {
+    (file_type = "jpeg"), (contentType = "img/jpeg");
+  } else if (obj.file_type == "png") {
+    (file_type = "png"), (contentType = "img/png");
   }
   let objectType;
   if (obj.type == "profile" || obj.type == "core_value") {
@@ -43,14 +43,14 @@ module.exports.getSignedUrl = async (req, res) => {
           presignedURL = await s3.getSignedUrl("putObject", {
             ContentType: contentType,
             Bucket: "" + process.env.BUCKET_NAME + "/profile",
-            Key: "" + decode.userId + "." + file_extension + "",
+            Key: "" + decode.userId + "." + file_type + "",
             Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
           });
         } else {
           presignedURL = await s3.getSignedUrl("putObject", {
             ContentType: contentType,
             Bucket: "" + process.env.BUCKET_NAME + "/core_values",
-            Key: "" + obj.core_value_id + "." + file_extension + "",
+            Key: "" + obj.core_value_id + "." + file_type + "",
             Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
           });
         }
