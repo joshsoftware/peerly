@@ -9,13 +9,25 @@ require("../../config/loggerConfig");
 const logger = log4js.getLogger();
 
 module.exports.getSignedUrl = async (req, res) => {
+  let contentType;
+  let file_extension;
   const authHeader = req.headers["authorization"];
   const decode = await jsonwebtoken.getData(authHeader);
   const schema = validateSchema.s3SignedUrl();
   let obj = qs.parse(req.query);
+  if (obj.file_extension == "jpg" || obj.file_extension == "jpeg") {
+    (file_extension = "jpeg"), (contentType = "img/jpeg");
+  } else if (obj.file_extension == "png") {
+    (file_extension = "png"), (contentType = "img/png");
+  }
+  let objectType;
   if (obj.type == "profile" || obj.type == "core_value") {
+    objectType = {
+      type: obj.type,
+    };
+
     schema
-      .validate(obj, { abortEarly: false })
+      .validate(objectType, { abortEarly: false })
       .then(async () => {
         const credentials = {
           accessKeyId: process.env.S3_BUCKET_ACCESS_KEY,
@@ -26,12 +38,22 @@ module.exports.getSignedUrl = async (req, res) => {
           region: process.env.REGION,
         });
         const s3 = new AWS.S3();
-        const presignedURL = await s3.getSignedUrl("putObject", {
-          ContentType: process.env.S3_BUCKET_CONTENT_TYPE,
-          Bucket: "" + process.env.BUCKET_NAME + "/" + obj.type + "",
-          Key: "" + decode.userId + "." + process.env.IMAGE_EXTENSION + "",
-          Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
-        });
+        let presignedURL;
+        if (obj.type == "profile") {
+          presignedURL = await s3.getSignedUrl("putObject", {
+            ContentType: contentType,
+            Bucket: "" + process.env.BUCKET_NAME + "/profile",
+            Key: "" + decode.userId + "." + file_extension + "",
+            Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
+          });
+        } else {
+          presignedURL = await s3.getSignedUrl("putObject", {
+            ContentType: contentType,
+            Bucket: "" + process.env.BUCKET_NAME + "/core_values",
+            Key: "" + obj.core_value_id + "." + file_extension + "",
+            Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
+          });
+        }
         res.status(200).send({
           data: {
             s3_signed_url: presignedURL,
@@ -56,7 +78,7 @@ module.exports.getSignedUrl = async (req, res) => {
     res.status(400).send({
       error: {
         code: "invalid_data",
-        message: "Please provide valid form data",
+        message: "should be please provide valid data for file upload",
         fields: {
           fields: "query params must be either profile or core value",
         },
