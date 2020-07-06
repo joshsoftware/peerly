@@ -42,58 +42,62 @@ const RecognitionCardComponent = ({
   coreValueImage,
   hi5Count,
   showHi5List,
-}) => (
-  <CardComponent>
-    <Card.Body>
-      <Row>
-        <Col sm="12" md="7">
-          <RecognitionCardHeaderComponent
-            givenAt={givenAt}
-            givenForName={givenForName}
-            coreValue={coreValue}
-            givenForImage={givenForImage}
-          />
-          <CoreValueImage
-            src={coreValueImage}
-            alt="Core value"
-            className="d-sm-block d-xs-block d-md-none mt-2"
-          />
-          <RecognitionTextComponent
-            givenByImage={givenByImage}
-            givenByName={givenByName}
-            text={text}
-          />
-        </Col>
-        <Col className="d-none d-md-block text-center">
-          <div>
+}) => {
+  return (
+    <CardComponent>
+      <Card.Body>
+        <Row>
+          <Col sm="12" md="7">
+            <RecognitionCardHeaderComponent
+              givenAt={givenAt}
+              givenForName={givenForName}
+              coreValue={coreValue}
+              givenForImage={givenForImage}
+            />
             <CoreValueImage
               src={coreValueImage}
               alt="Core value"
-              className="mt-2"
+              className="d-sm-block d-xs-block d-md-none mt-2"
             />
-          </div>
-        </Col>
-      </Row>
-      <div /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
-        onClick={(e) => {
-          e.preventDefault();
-          giveHi5func(recognitionId);
-        }}
-      >
-        <HighFive />
-      </div>
-      <Card.Footer className="bg-white">
-        <span className="font-weight-bold text-muted">+</span>
-        <span /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
-          className="font-weight-bold text-dark"
-          onClick={showHi5List}
+            <RecognitionTextComponent
+              givenByImage={givenByImage}
+              givenByName={givenByName}
+              text={text}
+            />
+          </Col>
+          <Col className="d-none d-md-block text-center">
+            <div>
+              <CoreValueImage
+                src={coreValueImage}
+                alt="Core value"
+                className="mt-2"
+              />
+            </div>
+          </Col>
+        </Row>
+        <div /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+          onClick={(e) => {
+            e.preventDefault();
+            giveHi5func(recognitionId);
+          }}
         >
-          {hi5Count}
-        </span>
-      </Card.Footer>
-    </Card.Body>
-  </CardComponent>
-);
+          <HighFive />
+        </div>
+        <Card.Footer className="bg-white">
+          <span className="font-weight-bold text-muted">+</span>
+          <span /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+            className="font-weight-bold text-dark"
+            onClick={() => {
+              showHi5List(recognitionId);
+            }}
+          >
+            {hi5Count}
+          </span>
+        </Card.Footer>
+      </Card.Body>
+    </CardComponent>
+  );
+};
 
 RecognitionCardComponent.propTypes = {
   recognitionId: PropTypes.number.isRequired,

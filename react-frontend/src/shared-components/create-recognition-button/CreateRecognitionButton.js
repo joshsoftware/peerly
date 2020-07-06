@@ -12,6 +12,7 @@ const WrapperCircle = styled.div`
   border-radius: 50%;
   width: 60px;
   height: 60px;
+  padding-top: 2%;
   position: relative;
 `;
 

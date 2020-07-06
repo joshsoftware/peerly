@@ -4,12 +4,7 @@ import styled from "styled-components";
 
 import { Form } from "core-components/form/FormComponent";
 import { Button } from "core-components/button/ButtonComponent";
-import ImageComponent from "core-components/image/ImageComponent";
-
-const ProfileImage = styled.div`
-  width: 12vh;
-  height: 12vh;
-`;
+import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
 const MenuButton = styled(Button)`
   color: var(--black);
@@ -30,13 +25,12 @@ const RecognitionCardHeaderComponent = ({
         <MenuButton>...</MenuButton>
       </div>
       <div className="d-flex flex-row">
-        <ProfileImage>
-          <ImageComponent
-            src={givenForImage}
-            roundedCircle={true}
-            alt="Profile"
-          />
-        </ProfileImage>
+        <ProfileComponent
+          src={givenForImage}
+          roundedCircle={true}
+          alt="Profile"
+          size={12}
+        />
         <div className="text-start ml-2">
           <Form.Label className="font-weight-bold ">{givenForName}</Form.Label>
           <div>

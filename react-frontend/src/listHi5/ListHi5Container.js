@@ -1,75 +1,27 @@
-/*import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import _ from "lodash";
 
 import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
-import {
-  //GIVE_HI5_API,
-  LIST_USERS_API,
-  LIST_USERS,
-  //LIST_RECOGNITION_API,
-  SHOW_MODAL,
-} from "constants/actionConstants";
-import PopupWindow from "shared-components/user-list/PopupUserList";
-import { useHistory } from "react-router-dom";
+import { LIST_HI5_POPUP } from "constants/actionConstants";
+import ListHi5Popup from "listHi5/ListHi5Popup";
 
 const ListHi5Container = () => {
-  let history = useHistory();
-  const [searchTerm, setSearchTerm] = useState(null);
-  const showModal = actionGenrator(SHOW_MODAL);
+  const showModal = actionGenrator(LIST_HI5_POPUP);
+  const show = useSelector((state) => state.listHi5Popup);
   const handleClose = () => {
     dispatch(actionObjectGenrator(showModal.init));
   };
-  const sendData = () => {
-    //TODO
-  };
   const dispatch = useDispatch();
-  let [user1Id, setUser1Id] = useState(null);
-  let [legthOfName, setLengthOfName] = useState(0);
-  let errorMessage= null;
-  //const [show, setShow] = useState(false);
-  const userList = useSelector((state) => state.userListReducer);
-  const modalShow = useSelector((state) => state.modalShowReducer);
-  const [reload, setReload] = useState(false);
-  const userListStatus = actionGenrator(LIST_USERS_API);
-  const userListReducerStatus = actionGenrator(LIST_USERS);
-
-  const callApi = () => {
-    setReload(true);
-  };
-  //  const status = actionGenrator(LIST_RECOGNITION_API);
-  const [debouncedCallApi] = useState(() => _.debounce(callApi, 3000));
-  const searchBox = (e) => {
-    if (e.target.value.length % 3 == 0) {
-      debouncedCallApi();
-      setLengthOfName(e.target.value.length);
-      setSearchTerm(e.target.value);
-    }
-  };
-
-  useEffect(() => {
-   
-  }, [
-   
-  ]);
-
-  
+  const listHi5 = useSelector((state) => state.recognitionHi5List);
   return (
-    <PopupWindow
-      show={modalShow.show}
+    <ListHi5Popup
+      show={show.show}
       handleClose={handleClose}
-      // recognitionToImage={profileImage}
-      // recognitionToName={profileName}
-      errorMessage={errorMessage}
-      sendData={sendData}
-      listOfEmployee={userList.list}
-      userList={userList.list}
-      //userList={userList.list}
-      setUserId={setUser1Id}
-      searchBox={searchBox}
-    ></PopupWindow>
+      userList={listHi5.data}
+      errorMessage={null}
+    />
   );
 };
 
-export default ListHi5Container;*/
+export default ListHi5Container;

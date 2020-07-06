@@ -60,7 +60,6 @@ const UserProfileContainer = () => {
     setFirstName(event.target.formFirstName.value);
     setLastName(event.target.formLastName.value);
     setDisplayName(event.target.formDisplayName.value);
-    dispatch(actionObjectGenrator(getSignedUrl.success));
     if (!file) {
       const actionStatus = actionGenerator(USER_PROFILE_POST_API);
       const addRecognition = {
@@ -73,6 +72,8 @@ const UserProfileContainer = () => {
         addRecognition
       );
       store.dispatch(dispatchObject);
+    } else {
+      dispatch(actionObjectGenrator(getSignedUrl.success, file.name));
     }
   };
 

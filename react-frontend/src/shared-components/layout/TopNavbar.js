@@ -38,17 +38,12 @@ function TopNavbar({
       <NavbarWrapper>
         <Container fluid className="flex-column">
           <Row className="w-100 justify-content-center">
-            <Col md="8" sm="12">
+            <Col md="12" sm="12">
               <Row>
-                <Col xs="8" className="text-center">
+                <Col md="8" className="text-center">
                   <Navbar.Brand>Peerly</Navbar.Brand>
                 </Col>
-                <Col xs="2" className="text-right">
-                  <Nav.Link href="/" onClick={onClickLogout}>
-                    logout
-                  </Nav.Link>
-                </Col>
-                <Col xs="2" className="text-right">
+                <Col md="" className="text-right">
                   <Navbar.Text>
                     <span className="d-sm-block d-none align-self-center">
                       {"This week's"}
@@ -60,6 +55,11 @@ function TopNavbar({
                     </NotificationWrapper>
                     <HighFiveIcon />
                   </Navbar.Text>
+                </Col>
+                <Col className="text-right">
+                  <Nav.Link href="/" onClick={onClickLogout}>
+                    logout
+                  </Nav.Link>
                 </Col>
               </Row>
             </Col>

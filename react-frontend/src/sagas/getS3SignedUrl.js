@@ -11,13 +11,14 @@ import {
 } from "constants/actionConstants";
 import actionObjectGenerator from "actions/actionObjectGenerator";
 
-export function* gets3signedUrl() {
+export function* gets3signedUrl(action) {
+  let file_extension = action.payload.split(".").pop();
   const actionStatus = actionGenerator(S3_SIGNED_URL);
   const getToken = (state) => state.loginReducer.data.token;
   const token = yield select(getToken);
   try {
     const response = yield call(getJson, {
-      path: "/s3_signed_url?type=profile",
+      path: "/s3_signed_url?type=profile&file_extension=" + file_extension + "",
       apiToken: token,
     });
     const responseObj = yield response.json();

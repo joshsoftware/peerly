@@ -15,6 +15,8 @@ import hi5StatusResponseReducer from "reducers/hi5StatusResponseReducer";
 import filterStatus from "reducers/filterStatus";
 import filterRecognitionErrorResponse from "reducers/filterRecognitionErrorResponse";
 import modalShowReducer from "reducers/modalShowReducer";
+import recognitionHi5List from "reducers/recognitionHi5List";
+import listHi5Popup from "reducers/ListHi5Popup";
 
 export default combineReducers({
   appReducer,
@@ -32,4 +34,6 @@ export default combineReducers({
   filterStatus,
   filterRecognitionErrorResponse,
   modalShowReducer,
+  recognitionHi5List,
+  listHi5Popup,
 });
