@@ -1,6 +1,7 @@
 const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
 const moment = require("moment");
 const log4js = require("log4js");
+const Sequelize = require("sequelize");
 
 const utility = require("../../utils/utility");
 const db = require("../../models/sequelize");
@@ -17,8 +18,23 @@ module.exports.findUsersByOrg = async (req, res) => {
   let userData = await jwtToken.getData(authHeader);
   const schema = validateSchema.findUsersByOrg();
   let obj = qs.parse(req.query);
+  let whereClauseObject = {
+    org_id: userData.orgId,
+  };
+  if (obj.starts_with) {
+    whereClauseObject = {
+      org_id: userData.orgId,
+      [Sequelize.Op.or]: {
+        first_name: {
+          [Sequelize.Op.iLike]: obj.starts_with + "%",
+        },
+        last_name: {
+          [Sequelize.Op.iLike]: obj.starts_with + "%",
+        },
+      },
+    };
+  }
   let limitOffsetObj = await utility.getLimitAndOffset(obj);
-
   schema
     .validate(obj, { abortEarly: false })
     .then(async () => {
@@ -27,22 +43,20 @@ module.exports.findUsersByOrg = async (req, res) => {
           "SuperAdmin",
         ]);
         if (!superAdminAuth) {
-          {
-            logger.error("find user by orrganisaiton access denied");
-            logger.info("user id: " + userData.userId);
-            logger.info("=========================================");
-            res
-              .status(403)
-              .send(
-                utility.getErrorResponseObject(
-                  resConstants.ACCESS_DENIED_CODE,
-                  resConstants.ACCESS_DENIED_MESSAGE
-                )
-              );
-          }
+          logger.error("find users by organisaiton access denied");
+          logger.info("user id: " + userData.userId);
+          logger.info("=========================================");
+          res
+            .status(403)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.ACCESS_DENIED_CODE,
+                resConstants.ACCESS_DENIED_MESSAGE
+              )
+            );
         } else {
           Users.findAll({
-            where: { org_id: obj.org_id },
+            where: whereClauseObject,
             attributes: { exclude: ["soft_delete"] },
             order: [["id", "ASC"]],
             limit: limitOffsetObj.limit,
@@ -69,8 +83,9 @@ module.exports.findUsersByOrg = async (req, res) => {
             });
         }
       } else {
+        whereClauseObject.role_id = 3;
         Users.findAll({
-          where: { org_id: userData.orgId, role_id: 3 },
+          where: whereClauseObject,
           attributes: { exclude: ["soft_delete"] },
           order: [["id", "ASC"]],
           limit: limitOffsetObj.limit,
