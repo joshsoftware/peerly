@@ -6,8 +6,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"joshsoftware/peerly/aws"
 	"joshsoftware/peerly/config"
 	"joshsoftware/peerly/db"
+
 	"joshsoftware/peerly/service"
 	"joshsoftware/peerly/tasks"
 	"os"
@@ -75,9 +77,15 @@ func startApp() (err error) {
 		logger.WithField("err", err.Error()).Error("Database init failed")
 		return
 	}
+	awsstore, err := aws.Init()
+	if err != nil {
+		logger.WithField("err", err.Error()).Error("AWS service init failed")
+		return
+	}
 
 	deps := service.Dependencies{
-		Store: store,
+		Store:    store,
+		AWSStore: awsstore,
 	}
 
 	// Start up all the background tasks Peerly depends upon
@@ -85,7 +93,6 @@ func startApp() (err error) {
 
 	// mux router
 	router := service.InitRouter(deps)
-
 	// init web server
 	server := negroni.Classic()
 	server.UseHandler(router)
