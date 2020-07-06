@@ -341,18 +341,24 @@ module.exports.getHi5s = async (req, res) => {
   idSchema
     .validate({ id: req.params.recognition_id }, { abortEarly: false })
     .then(() => {
-      db.sequelize
-        .query(
-          `SELECT "user"."id" AS "user_id", "user"."display_name" AS "display_name",
-        "user"."profile_image_url" AS "profile_image_url"
-        FROM "recognition_hi5" LEFT OUTER JOIN "users" AS "user"
-        ON "recognition_hi5"."given_by" = "user"."id" 
-        WHERE "recognition_hi5"."recognition_id" = ${req.params.recognition_id} 
-        LIMIT ${limitOffsetObj.limit} 
-        OFFSET ${limitOffsetObj.offset}`
-        )
+      RecognitionHi5.findAll({
+        where: { recognition_id: req.params.recognition_id },
+        attributes: [],
+        include: [
+          {
+            model: db.users,
+            attributes: [
+              ["id", "user_id"],
+              "display_name",
+              "profile_image_url",
+            ],
+          },
+        ],
+        limit: limitOffsetObj.limit,
+        offset: limitOffsetObj.offset,
+      })
         .then((data) => {
-          if (data[0].length == 0 /*eslint-disable-line no-eq-null*/) {
+          if (data.length == 0 /*eslint-disable-line no-eq-null*/) {
             logger.error("Error executing find all recognition hi5s");
             logger.info("user id: " + userData.userId);
             logger.error(
@@ -369,8 +375,10 @@ module.exports.getHi5s = async (req, res) => {
                 )
               );
           } else {
+            let info = [];
+            data.map((obj) => info.push(obj.dataValues.user.dataValues));
             res.status(200).send({
-              data: data[0],
+              data: info,
             });
           }
         })
