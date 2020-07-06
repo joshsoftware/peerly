@@ -125,7 +125,6 @@ module.exports.getProfile = async (req, res) => {
         include: [
           {
             model: db.recognition_hi5,
-            as: "hi5Count",
           },
         ],
       },
@@ -173,7 +172,6 @@ module.exports.getProfileById = async (req, res) => {
             include: [
               {
                 model: db.recognition_hi5,
-                as: "hi5Count",
               },
             ],
           },
@@ -438,7 +436,7 @@ module.exports.deleteUser = async (req, res) => {
 
 const modifyProfile = (data) => {
   let hi5_count = 0;
-  data.given_for_user.map((r) => (hi5_count += r.hi5Count.length));
+  data.given_for_user.map((r) => (hi5_count += r.recognition_hi5s.length));
   delete data.dataValues.given_for_user;
   data.dataValues.hi5_count = hi5_count;
   return data;

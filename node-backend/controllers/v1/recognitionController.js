@@ -39,19 +39,6 @@ module.exports.findOne = async (req, res) => {
           },
           {
             model: db.recognition_hi5,
-            attributes: ["id"],
-            include: [
-              {
-                attributes: [
-                  "id",
-                  "first_name",
-                  "last_name",
-                  "profile_image_url",
-                ],
-                model: db.users,
-                as: "given_by_user",
-              },
-            ],
           },
         ],
       })
@@ -70,6 +57,7 @@ module.exports.findOne = async (req, res) => {
                 )
               );
           } else {
+            data = addCount(data);
             res.status(200).send({
               data: data,
             });
@@ -138,7 +126,7 @@ module.exports.findAll = async (req, res) => {
     .validate(filterData, { abortEarly: false })
     .then(() => {
       Recognitions.findAll({
-        attributes: ["id", "text"],
+        attributes: ["id", "text", "given_at"],
         include: [
           {
             model: db.users,
@@ -160,19 +148,6 @@ module.exports.findAll = async (req, res) => {
           },
           {
             model: db.recognition_hi5,
-            attributes: ["id"],
-            include: [
-              {
-                attributes: [
-                  "id",
-                  "first_name",
-                  "last_name",
-                  "profile_image_url",
-                ],
-                model: db.users,
-                as: "given_by_user",
-              },
-            ],
           },
         ],
         offset: paginationData.offset,
@@ -182,6 +157,7 @@ module.exports.findAll = async (req, res) => {
         .then((info) => {
           let data = info[0];
           if (data != undefined) {
+            info = info.map((data) => addCount(data));
             res.status(200).send({
               data: info,
             });
@@ -355,4 +331,81 @@ module.exports.giveHi5 = async (req, res) => {
         ),
       });
     });
+};
+
+module.exports.getHi5s = async (req, res) => {
+  const userData = await jwtValidate.getData(req.headers["authorization"]);
+  const idSchema = validationSchema.getByIdSchema();
+  let obj = qs.parse(req.query);
+  let limitOffsetObj = await utility.getLimitAndOffset(obj);
+  idSchema
+    .validate({ id: req.params.recognition_id }, { abortEarly: false })
+    .then(() => {
+      db.sequelize
+        .query(
+          `SELECT "user"."id" AS "user_id", "user"."display_name" AS "display_name",
+        "user"."profile_image_url" AS "profile_image_url"
+        FROM "recognition_hi5" LEFT OUTER JOIN "users" AS "user"
+        ON "recognition_hi5"."given_by" = "user"."id" 
+        WHERE "recognition_hi5"."recognition_id" = ${req.params.recognition_id} 
+        LIMIT ${limitOffsetObj.limit} 
+        OFFSET ${limitOffsetObj.offset}`
+        )
+        .then((data) => {
+          if (data[0].length == 0 /*eslint-disable-line no-eq-null*/) {
+            logger.error("Error executing find all recognition hi5s");
+            logger.info("user id: " + userData.userId);
+            logger.error(
+              resConstants.RECOGNreq.params
+                .recognition_idITION_NOT_FOUND_MESSAGE
+            );
+            logger.info("=========================================");
+            res
+              .status(404)
+              .send(
+                utility.getErrorResponseObject(
+                  resConstants.RECOGNITION_NOT_FOUND_CODE,
+                  resConstants.RECOGNITION_NOT_FOUND_MESSAGE
+                )
+              );
+          } else {
+            res.status(200).send({
+              data: data[0],
+            });
+          }
+        })
+        .catch(() => {
+          logger.error("Error executing find all in recognition hi5s");
+          logger.info("user id: " + userData.userId);
+          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
+          logger.info("=========================================");
+          res
+            .status(500)
+            .send(
+              utility.getErrorResponseObject(
+                resConstants.INTRENAL_SERVER_ERROR_CODE,
+                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
+              )
+            );
+        });
+    })
+    .catch((err) => {
+      logger.error("validation error");
+      logger.error(JSON.stringify(err));
+      logger.info("=========================================");
+      res.status(400).send({
+        error: utility.getFormattedErrorObj(
+          resConstants.INVALID_RECOGNITION_CODE,
+          resConstants.INVALID_RECOGNITION_MESSAGE,
+          err.errors
+        ),
+      });
+    });
+};
+
+const addCount = (data) => {
+  let hi5_count = data.recognition_hi5s.length;
+  delete data.dataValues.recognition_hi5s;
+  data.dataValues.hi5_count = hi5_count;
+  return data;
 };

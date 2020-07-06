@@ -40,7 +40,6 @@ module.exports = (sequelize, Sequelize) => {
     });
     Recognition_hi5.belongsTo(models.users, {
       foreignKey: "given_by",
-      as: "given_by_user",
     });
   };
   Recognition_hi5.beforeCreate(async (giveHi5) => {
