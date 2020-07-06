@@ -1,6 +1,7 @@
 const moment = require("moment"); //eslint-disable-line node/no-extraneous-require
 const qs = require("qs"); //eslint-disable-line node/no-extraneous-require
 const log4js = require("log4js");
+const Sequelize = require("sequelize");
 
 const db = require("../../models/sequelize");
 const jwtValidate = require("../../jwtTokenValidation/jwtValidation");
@@ -105,9 +106,12 @@ const getFilterData = (data) => {
 
 const createWhereClause = ({ orgId }, filterId) => {
   if (filterId) {
+    filterId = filterId.replace("[", "");
+    filterId = filterId.replace("]", "");
+    let data = filterId.split(",");
     return {
       org_id: orgId,
-      id: filterId,
+      id: { [Sequelize.Op.in]: data },
     };
   } else {
     return {
@@ -237,8 +241,8 @@ module.exports.create = async (req, res) => {
               .status(422)
               .send(
                 utility.getErrorResponseObject(
-                  resConstants.EMPTY_HI5_BALANCE_CODE,
-                  resConstants.EMPTY_HI5_BALANCE_MESSAGE
+                  resConstants.UNPROCESSABLE_ENTITY_CODE,
+                  resConstants.HI5_BALANCE_LIMIT_MESSAGE
                 )
               );
           } else {

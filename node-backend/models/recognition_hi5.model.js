@@ -1,3 +1,4 @@
+const responseConstant = require("../constant/responseConstants");
 module.exports = (sequelize, Sequelize) => {
   let model;
   const Recognition_hi5 = sequelize.define(
@@ -48,18 +49,28 @@ module.exports = (sequelize, Sequelize) => {
       attributes: ["hi5_quota_balance"],
     });
     if (data.dataValues.hi5_quota_balance == 0)
-      throw { status: 422, message: "hi5 quota limit is empty" };
+      throw {
+        status: 422,
+        message: responseConstant.HI5_BALANCE_LIMIT_MESSAGE,
+      };
     //validate recognition id
     data = await model.recognitions.findOne({
       where: { id: giveHi5.recognition_id },
     });
     if (!data)
-      throw { status: 404, message: "Recognition not found for specified id" };
+      throw {
+        status: 404,
+        message: responseConstant.RECOGNITION_NOT_FOUND_MESSAGE,
+      };
     //check  give hi5 to self
     data = await model.recognitions.findOne({
       where: { id: giveHi5.recognition_id, given_for: giveHi5.given_by },
     });
-    if (data) throw { status: 422, message: "not alow give hi5 to self" };
+    if (data)
+      throw {
+        status: 422,
+        message: responseConstant.NOT_SELF_GIVE_HI5_MESSAGE,
+      };
     //check give double hi5
     data = await model.recognition_hi5.findOne({
       where: {
@@ -67,7 +78,11 @@ module.exports = (sequelize, Sequelize) => {
         given_by: giveHi5.given_by,
       },
     });
-    if (data) throw { status: 422, message: "double entry not alow" };
+    if (data)
+      throw {
+        status: 422,
+        message: responseConstant.NOT_REPEATED_HI5_MESSAGE,
+      };
   });
   Recognition_hi5.afterCreate(async (giveHi5) => {
     await model.users.decrement(
