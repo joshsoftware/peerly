@@ -10,7 +10,6 @@ import styled from "styled-components";
 
 const CardComponent = styled(Card)`
   border: none;
-  margin-right: 85px;
 `;
 
 const FilterRecognitionComponent = ({
@@ -28,9 +27,8 @@ const FilterRecognitionComponent = ({
       <div className="d-flex justify-content-around flex-row text-dark">
         <CoreValues coreValues={coreValues} setCoreValueId={setCoreValueId} />
       </div>
-      <Form className="p-2" onSubmit={onSubmit} data-testid="filterform">
+      <Form className="p-2 mt-5" onSubmit={onSubmit} data-testid="filterform">
         <Form.Group controlId="filterGivenFor">
-          <Form.Label>Given For</Form.Label>
           <AsyncSelect
             defaultOptions={userList}
             loadOptions={promiseOptions}
@@ -40,7 +38,6 @@ const FilterRecognitionComponent = ({
           />
         </Form.Group>
         <Form.Group controlId="filterGivenBy">
-          <Form.Label>Given By</Form.Label>
           <AsyncSelect
             defaultOptions={userList}
             loadOptions={promiseOptions}
