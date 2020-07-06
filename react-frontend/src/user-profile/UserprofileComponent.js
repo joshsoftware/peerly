@@ -94,7 +94,7 @@ const UserProfileComponent = ({
       {spinner ? (
         <>
           <Spinner className="mt-5" animation="grow" variant="info"></Spinner>
-          <span className="mt-5">Updating...</span>
+          <span className="mt-3">Updating...</span>
         </>
       ) : null}
     </CardComponent>

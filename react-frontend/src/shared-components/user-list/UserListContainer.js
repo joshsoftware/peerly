@@ -19,12 +19,13 @@ import { useHistory } from "react-router-dom";
 
 const UserListContainer = () => {
   let history = useHistory();
+  const showModal = actionGenrator(SHOW_MODAL);
   // const [showError, setShowError] = useState(0);
   // const [showPopup, setShowPopup] = useState(false);
   // const [refresh, changeRefresh] = useState(0);
   const [searchTerm, setSearchTerm] = useState(null);
   //const [searchResults, setSearchResults] = useState([null]);
-  const showModal = actionGenrator(SHOW_MODAL);
+  //const showModal = actionGenrator(SHOW_MODAL);
   //const [show, setShow] = useState(false);
   const handleClose = () => {
     dispatch(actionObjectGenrator(showModal.init));
@@ -54,7 +55,7 @@ const UserListContainer = () => {
     setReload(true);
   };
   //  const status = actionGenrator(LIST_RECOGNITION_API);
-  const [debouncedCallApi] = useState(() => _.debounce(callApi, 3000));
+  const [debouncedCallApi] = useState(() => _.debounce(callApi, 1000));
   const searchBox = (e) => {
     if (e.target.value.length % 3 == 0) {
       debouncedCallApi();
@@ -93,7 +94,8 @@ const UserListContainer = () => {
   if (user1Id) {
     localStorage.setItem("userId", user1Id);
     setUser1Id(null);
-    history.push("/createREcognition");
+    dispatch(actionObjectGenrator(showModal.init));
+    history.push("/createRecognition");
   }
 
   if (userList.list[0] === undefined) {

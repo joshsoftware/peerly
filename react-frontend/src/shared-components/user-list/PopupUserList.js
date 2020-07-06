@@ -47,8 +47,6 @@ const PopupUserList = ({
             style={{
               //position: "fixed",
               "margin-top": "50px",
-              overflow: "scroll",
-              "min-height": "100vh",
             }}
           >
             {errorMessage}
@@ -58,8 +56,6 @@ const PopupUserList = ({
             style={{
               //position: "fixed",
               "margin-top": "50px",
-              overflow: "scroll",
-              "min-height": "100vh",
             }}
           >
             {userList.map((user, index) => (
@@ -78,7 +74,6 @@ const PopupUserList = ({
           </Modal.Body>
         )}
       </Modal>
-      <div id="#12345" style={{ height: 1 }} className="text-center" />
     </>
   );
 };

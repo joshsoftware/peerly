@@ -12,7 +12,8 @@ import {
   USER_PROFILE_API,
   GIVE_HI5_POST_RESPONSE,
   FILTER_STATUS,
-  //FILTER_ERROR_STATUS,
+  LIST_HI5_POPUP,
+  LIST_HI5_API,
 } from "constants/actionConstants";
 import RecognitionListComponent from "recognition-list-components/RecognitionListComponent";
 
@@ -33,16 +34,21 @@ const RecognnitionListContainer = () => {
     (state) => state.hi5StatusResponseReducer
   );
   const filterStatus = useSelector((state) => state.filterStatus);
+  const filterErrorStatus = useSelector(
+    (state) => state.filterRecognitionErrorResponse
+  );
 
   const filterReducerStatus = actionGenrator(FILTER_STATUS);
-  //const filterErrorStatus = actionGenrator(FILTER_ERROR_STATUS);
+  //const filterErrorStatusResponse = actionGenrator(FILTER_ERROR_STATUS);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_RECOGNITION_API);
   const hi5Status = actionGenrator(GIVE_HI5_API);
   const hi5StatusResponse = actionGenrator(GIVE_HI5_POST_RESPONSE);
   const [refresh, changeRefresh] = useState(0);
   const [show, setShow] = useState(false);
-  const [showHi5ListPopup, setShowHi5ListPopup] = useState(false);
+  let filterError = false;
+  const [showHi5ListPopup, setShowHi5ListPopup] = useState(null);
+  const showModal = actionGenrator(LIST_HI5_POPUP);
   if (filterStatus.status == "applied") {
     sliderOff();
     store.dispatch(actionObjectGenrator(filterReducerStatus.init));
@@ -56,12 +62,19 @@ const RecognnitionListContainer = () => {
       dispatch(actionObjectGenrator(status.success));
     }
   };
+
+  const handleObserverMobile = (entries) => {
+    if (entries[0].isIntersecting) {
+      dispatch(actionObjectGenrator(status.success));
+    }
+  };
   //console.log(filterRecognition);
 
   useEffect(() => {
     if (refresh === 0) {
       dispatch(actionObjectGenrator(status.success));
     }
+
     const options = {
       root: document.getElementById("1233"), // Page as root
       rootMargin: "0px",
@@ -72,14 +85,40 @@ const RecognnitionListContainer = () => {
       options
     );
     observer.observe(document.getElementById("#1233"));
+
+    const optionsMobile = {
+      root: document.getElementById("1235"), // Page as root
+      rootMargin: "0px",
+      threshold: 0,
+    };
+    const observerMobile = new IntersectionObserver(
+      handleObserverMobile, //callback
+      optionsMobile
+    );
+    observerMobile.observe(document.getElementById("#1235"));
   }, [dispatch, status.success, refresh, show]);
 
+  /**
+    const optionsMobile = {
+      root: document.getElementById("1233") , // Page as root
+      rootMargin: "0px",
+      threshold: 0,
+    };
+    const observerMobile = new IntersectionObserver(
+      handleObserverMobile, //callback
+      optionsMobile
+    );
+    observerMobile.observe(document.getElementById("#1233")); */
   if (hi5StatusResponseReducer.status === 201) {
     dispatch(actionObjectGenrator(userProfileStatus.success));
     dispatch(actionObjectGenrator(hi5StatusResponse.init));
   }
 
-  const showHi5List = () => {
+  const showHi5List = (data) => {
+    localStorage.setItem("recognitionHi5Id", data);
+    dispatch(actionObjectGenrator(showModal.success, { show: true }));
+    const status = actionGenrator(LIST_HI5_API);
+    dispatch(actionObjectGenrator(status.success));
     setShowHi5ListPopup(true);
   };
 
@@ -105,7 +144,12 @@ const RecognnitionListContainer = () => {
     dispatch(actionObjectGenrator(filterErrorStatus.init));
     setShow(true);
   }*/
-  //console.log(recognitionList.list)
+  // console.log(filterErrorStatus);
+
+  if (filterErrorStatus.error.code === "recognition-not-found") {
+    filterError = true;
+    //dispatch(actionObjectGenrator(filterErrorStatusResponse.init));
+  }
   return (
     <div>
       <RecognitionListComponent
@@ -119,6 +163,8 @@ const RecognnitionListContainer = () => {
         sliderOff={sliderOff}
         showHi5List={showHi5List}
         showHi5ListPopup={showHi5ListPopup}
+        filterErrorMessage={filterErrorStatus.error.message}
+        filterError={filterError}
       />
     </div>
   );
