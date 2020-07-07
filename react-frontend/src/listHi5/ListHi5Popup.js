@@ -4,7 +4,13 @@ import PropTypes from "prop-types";
 import { Modal } from "core-components/modal/ModalComponent";
 import ProfileComponent from "shared-components/profile-component/ProfileComponent";
 
-const ListHi5Popup = ({ show, handleClose, userList, errorMessage }) => {
+const ListHi5Popup = ({
+  show,
+  handleClose,
+  userList,
+  errorMessage,
+  handleScroll,
+}) => {
   return (
     <>
       <Modal
@@ -16,7 +22,14 @@ const ListHi5Popup = ({ show, handleClose, userList, errorMessage }) => {
         {errorMessage !== null ? (
           <Modal.Body>{errorMessage}</Modal.Body>
         ) : (
-          <Modal.Body>
+          <Modal.Body
+            style={{
+              "max-height": "90vh",
+              overflow: "scroll",
+              "overflow-x": "hidden",
+            }}
+            onScroll={handleScroll}
+          >
             {userList.map((user, index) => (
               <div key={index}>
                 <ProfileComponent
@@ -29,10 +42,10 @@ const ListHi5Popup = ({ show, handleClose, userList, errorMessage }) => {
                 />
               </div>
             ))}
+            <div id="#123456" style={{ height: 1 }} className="text-center" />
           </Modal.Body>
         )}
       </Modal>
-      <div id="#12345" style={{ height: 1 }} className="text-center" />
     </>
   );
 };
@@ -44,6 +57,7 @@ ListHi5Popup.propTypes = {
   setUserId: PropTypes.func,
   searchBox: PropTypes.func,
   errorMessage: PropTypes.string,
+  handleScroll: PropTypes.bool,
 };
 
 export default ListHi5Popup;
