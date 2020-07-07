@@ -44,7 +44,7 @@ module.exports.CORE_VALUE_NOT_FOUND_IN_ORGANISATION_MESSAGE =
   "Core value not found with specified organisation";
 
 module.exports.USER_NOT_FOUND_IN_ORGANISATION_MESSAGE =
-  "Core value not found with specified organisation";
+  "User not found with specified organisation";
 
 module.exports.RECOGNITION_NOT_FOUND_CODE = "recognition-not-found";
 
@@ -54,9 +54,7 @@ module.exports.RECOGNITION_NOT_FOUND_MESSAGE =
 module.exports.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE =
   "Recognition with specified organisation is not found";
 
-module.exports.EMPTY_HI5_BALANCE_CODE = "empty-hi5-balance";
-
-module.exports.EMPTY_HI5_BALANCE_MESSAGE = "User hi5 balance is empty";
+module.exports.HI5_BALANCE_LIMIT_MESSAGE = "Your Hi5 quota limit is over";
 
 module.exports.INVALID_REPORTED_RECOGNITION_CODE =
   "invalid reported recognition";
@@ -73,3 +71,13 @@ module.exports.INVALID_BADGES_MESSAGE = "Invalid badges data";
 module.exports.INVALID_TOKEN_CODE = "invalid_token";
 
 module.exports.INVALID_TOKEN_MESSAGE = "Invalid token data";
+
+module.exports.NOT_REPEATED_HI5_MESSAGE =
+  "Sorry, You can't give hi-5 to same recognition more than once";
+
+module.exports.NOT_SELF_GIVE_HI5_MESSAGE = "Sorry, You can't give hi-5 to self";
+
+module.exports.UNPROCESSABLE_ENTITY_CODE = "unprocessable-entity";
+
+module.exports.RECOGNITIONS_NOT_FOUND_IN_FILTER =
+  "Recognitions with specified filter not matched";

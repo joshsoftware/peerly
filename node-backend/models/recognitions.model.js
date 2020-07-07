@@ -1,4 +1,6 @@
+const responseConstant = require("../constant/responseConstants");
 module.exports = (sequelize, Sequelize) => {
+  let model;
   const Recognitions = sequelize.define(
     "recognitions",
     {
@@ -36,18 +38,42 @@ module.exports = (sequelize, Sequelize) => {
     }
   );
   Recognitions.associate = (models) => {
+    model = models;
     Recognitions.belongsTo(models.users, {
       foreignKey: "given_for",
       as: "given_for_user",
     });
-    Recognitions.belongsTo(models.core_values, { foreignKey: "core_value_id" });
+    Recognitions.belongsTo(models.core_values, {
+      foreignKey: "core_value_id",
+      as: "coreValue",
+    });
     Recognitions.belongsTo(models.users, {
       foreignKey: "given_by",
       as: "given_by_user",
+      hooks: true,
     });
     Recognitions.hasMany(models.recognition_hi5, {
       foreignKey: "recognition_id",
     });
   };
+  Recognitions.beforeCreate(async (recognition) => {
+    //check hi5 limit
+    let data = await model.users.findByPk(recognition.given_by, {
+      attributes: ["hi5_quota_balance"],
+    });
+    if (data.dataValues.hi5_quota_balance == 0)
+      throw {
+        status: 422,
+        message: responseConstant.HI5_BALANCE_LIMIT_MESSAGE,
+      };
+  });
+  Recognitions.afterCreate(async (recognition) => {
+    let giveHi5 = {
+      recognition_id: recognition.dataValues.id,
+      given_by: recognition.dataValues.given_by,
+      given_at: recognition.dataValues.given_at,
+    };
+    await model.recognition_hi5.create(giveHi5);
+  });
   return Recognitions;
 };

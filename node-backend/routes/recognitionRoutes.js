@@ -45,6 +45,18 @@ recRouter.get("/recognitions/:id", authorizedRole, async (req, res) => {
   eval(controller).findOne(req, res);
 });
 
+recRouter.get(
+  "/recognitions/:recognition_id/hi5",
+  authorizedRole,
+  async (req, res) => {
+    let controller = await utility.getVersionedController(
+      req.headers,
+      "recognitionController"
+    );
+    eval(controller).getHi5s(req, res);
+  }
+);
+
 recRouter.get("/recognitions/", authorizedRole, async (req, res) => {
   let controller = await utility.getVersionedController(
     req.headers,
