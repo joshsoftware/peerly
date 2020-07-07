@@ -91,7 +91,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                   <img
                     alt="Profile"
                     class="img-fluid rounded-circle"
-                    src="https://i.picsum.photos/id/2/200/200.jpg"
+                    src="/assets/images/profile.png"
                   />
                 </div>
                 <div
@@ -153,7 +153,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 <img
                   alt="Profile"
                   class="c7 img-fluid rounded-circle"
-                  src="https://i.picsum.photos/id/2/200/200.jpg"
+                  src="/assets/images/profile.png"
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                   <img
                     alt="Profile"
                     class="img-fluid rounded-circle"
-                    src="https://i.picsum.photos/id/2/200/200.jpg"
+                    src="/assets/images/profile.png"
                   />
                 </div>
                 <div
@@ -287,7 +287,7 @@ exports[`Recognition list Component test should equal snapshot 1`] = `
                 <img
                   alt="Profile"
                   class="c7 img-fluid rounded-circle"
-                  src="https://i.picsum.photos/id/2/200/200.jpg"
+                  src="/assets/images/profile.png"
                 />
               </div>
             </div>

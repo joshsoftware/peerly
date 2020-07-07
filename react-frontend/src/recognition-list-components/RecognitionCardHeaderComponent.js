@@ -53,7 +53,7 @@ RecognitionCardHeaderComponent.propTypes = {
 };
 
 RecognitionCardHeaderComponent.defaultProps = {
-  givenForImage: "https://i.picsum.photos/id/2/200/200.jpg",
+  givenForImage: "/assets/images/profile.png",
 };
 
 export default React.memo(RecognitionCardHeaderComponent);
