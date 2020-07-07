@@ -417,3 +417,5 @@ const addCount = (data) => {
   data.dataValues.hi5_count = hi5_count;
   return data;
 };
+
+module.exports = { getFilterData, createWhereClause };

@@ -44,10 +44,18 @@ data.badges = {
 };
 
 data.header = {
-  host: "127.0.0.1:41253",
-  authorization: faker.lorem.words(2),
+  host: null,
+  authorization: null,
   accept: "application/vnd.peerly.v1",
-  connection: "close",
+  connection: null,
+};
+
+data.filterData = {
+  core_value_id: faker.random.number(),
+  given_for: faker.random.number(),
+  given_by: faker.random.number(),
+  limit: faker.random.number(),
+  offset: faker.random.number(),
 };
 
 module.exports = data;
