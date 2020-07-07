@@ -11,7 +11,7 @@ import ProfileComponent from "shared-components/profile-component/ProfileCompone
 const NotificationWrapper = styled.div`
   position: relative;
   top: -8px;
-  right: 28px;
+  right: 22px;
 `;
 
 const NavbarWrapper = styled(Navbar)`
@@ -32,6 +32,7 @@ function TopNavbar({
   collectedHi5,
   setUserId,
   id,
+  createRecognitionRoute,
 }) {
   return (
     <div className="w-100">
@@ -40,21 +41,23 @@ function TopNavbar({
           <Row className="w-100 justify-content-center">
             <Col md="12" sm="12">
               <Row>
-                <Col md="8" className="text-center">
+                {createRecognitionRoute ? null : (
+                  <Col className="text-center">
+                    <Navbar.Text>
+                      <span className="d-sm-block d-none align-self-center">
+                        {"This week's"}
+                      </span>
+                    </Navbar.Text>
+                    <Navbar.Text>
+                      <NotificationWrapper>
+                        <NotificationBadgeComponent count={count} />
+                      </NotificationWrapper>
+                      <HighFiveIcon />
+                    </Navbar.Text>
+                  </Col>
+                )}
+                <Col className="text-center">
                   <Navbar.Brand>Peerly</Navbar.Brand>
-                </Col>
-                <Col md="" className="text-right">
-                  <Navbar.Text>
-                    <span className="d-sm-block d-none align-self-center">
-                      {"This week's"}
-                    </span>
-                  </Navbar.Text>
-                  <Navbar.Text>
-                    <NotificationWrapper>
-                      <NotificationBadgeComponent count={count} />
-                    </NotificationWrapper>
-                    <HighFiveIcon />
-                  </Navbar.Text>
                 </Col>
                 <Col className="text-right">
                   <Nav.Link href="/" onClick={onClickLogout}>
@@ -67,19 +70,21 @@ function TopNavbar({
         </Container>
       </NavbarWrapper>
       <div className="d-md-none d-sm-block d-xs-block">
-        <div className="d-flex justify-content-around bg-light grey py-2">
-          <ProfileComponent
-            src={profileImage}
-            name={profileName}
-            setUserId={setUserId}
-            id={id}
-            size={10}
-            labelClass="ml-1"
-          />
-          <span className="align-self-center font-weight-bold">
-            Collected {collectedHi5}
-          </span>
-        </div>
+        {createRecognitionRoute ? null : (
+          <div className="d-flex justify-content-around bg-light grey py-2">
+            <ProfileComponent
+              src={profileImage}
+              name={profileName}
+              setUserId={setUserId}
+              id={id}
+              size={10}
+              labelClass="ml-1"
+            />
+            <span className="align-self-center font-weight-bold">
+              Collected {collectedHi5}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -93,6 +98,7 @@ TopNavbar.propTypes = {
   collectedHi5: PropTypes.number.isRequired,
   setUserId: PropTypes.func,
   id: PropTypes.number,
+  createRecognitionRoute: PropTypes.bool,
 };
 
 export default TopNavbar;
