@@ -27,9 +27,6 @@ const RecognnitionListContainer = () => {
   };
   const userProfileStatus = actionGenrator(USER_PROFILE_API);
   const recognitionList = useSelector((state) => state.listRecognitionReducer);
-  /*const filterRecognition = useSelector(
-    (state) => state.filterRecognitionErrorResponse
-  );*/
   const hi5StatusResponseReducer = useSelector(
     (state) => state.hi5StatusResponseReducer
   );
@@ -39,7 +36,6 @@ const RecognnitionListContainer = () => {
   );
 
   const filterReducerStatus = actionGenrator(FILTER_STATUS);
-  //const filterErrorStatusResponse = actionGenrator(FILTER_ERROR_STATUS);
   const dispatch = useDispatch();
   const status = actionGenrator(LIST_RECOGNITION_API);
   const hi5Status = actionGenrator(GIVE_HI5_API);
@@ -68,7 +64,6 @@ const RecognnitionListContainer = () => {
       dispatch(actionObjectGenrator(status.success));
     }
   };
-  //console.log(filterRecognition);
 
   useEffect(() => {
     if (refresh === 0) {
@@ -98,17 +93,6 @@ const RecognnitionListContainer = () => {
     observerMobile.observe(document.getElementById("#1235"));
   }, [dispatch, status.success, refresh, show]);
 
-  /**
-    const optionsMobile = {
-      root: document.getElementById("1233") , // Page as root
-      rootMargin: "0px",
-      threshold: 0,
-    };
-    const observerMobile = new IntersectionObserver(
-      handleObserverMobile, //callback
-      optionsMobile
-    );
-    observerMobile.observe(document.getElementById("#1233")); */
   if (hi5StatusResponseReducer.status === 201) {
     dispatch(actionObjectGenrator(userProfileStatus.success));
     dispatch(actionObjectGenrator(hi5StatusResponse.init));
@@ -138,17 +122,12 @@ const RecognnitionListContainer = () => {
     return <UnauthorisedErrorComponent />;
   } else if (recognitionList.hi5.error.code !== undefined && show == false) {
     setShow(true);
-  } /*else if () {
-    console.log("in true")
-  } if (Object.keys(recognitionList.list[0].coreValue).length == 0 && filterRecognition.error.code == "recognition-not-found") {
-    dispatch(actionObjectGenrator(filterErrorStatus.init));
-    setShow(true);
-  }*/
-  // console.log(filterErrorStatus);
-
-  if (filterErrorStatus.error.code === "recognition-not-found") {
+  }
+  if (
+    filterErrorStatus.error.code === "recognition-not-found" &&
+    recognitionList.list[0].id === undefined
+  ) {
     filterError = true;
-    //dispatch(actionObjectGenrator(filterErrorStatusResponse.init));
   }
   return (
     <div>

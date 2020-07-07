@@ -27,27 +27,12 @@ const FilterRecognitionContainer = () => {
   const listRecognition = actionGenerator(LIST_RECOGNITION);
   const dispatch = useDispatch();
   const coreValueList = useSelector((state) => state.coreValueListReducer);
-  const filterItems = useSelector((state) => state.filterRecognitionReducer);
   const usersList = useSelector((state) => state.userListReducer);
-  // const [/*eslint-disable no-unused-vars*/ inputValue, setState] = useState(
-  //  null
-  //);
+
   const [reload, setReload] = useState(false);
   const userListReducerStatus = actionGenrator(LIST_USERS);
   const [searchTerm, setSearchTerm] = useState(null);
   const usersApiStatus = actionGenrator(LIST_USERS_API);
-
-  useEffect(() => {
-    //  dispatch(actionObjectGenrator(usersApiStatus.success));
-  }, [dispatch, usersApiStatus.success]);
-  if (
-    filterItems.filterData.core_value_id ||
-    filterItems.filterData.given_for ||
-    filterItems.filterData.given_by
-  ) {
-    store.dispatch(actionObjectGenrator(filterRecognitionAPI.success));
-    store.dispatch(actionObjectGenrator(listRecognition.init));
-  }
 
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
@@ -84,9 +69,6 @@ const FilterRecognitionContainer = () => {
       ),
     })
   );
-  // const callApi = () => { return setReload(true) };
-  //  const status = actionGenrator(LIST_RECOGNITION_API);
-  //const [debouncedCallApi] = useState(() => _.debounce(callApi, 3000));
 
   const filterOptions = (inputValue) => {
     return users.filter((i) =>
@@ -95,26 +77,12 @@ const FilterRecognitionContainer = () => {
   };
 
   const promiseOptions = (inputValue, callback) => {
-    //if () {
-    // debouncedCallApi();
     setSearchTerm(inputValue);
     setReload(true);
-    //console.log(users);
     setTimeout(() => {
       callback(filterOptions(inputValue));
     }, 1000);
-    // }
   };
-  /*
-    const handleInputChange = (newValue) => {
-      console.log(newValue.length);
-      if (newValue.length % 3 == 0) {
-        console.log("in if")
-        const inputValue = newValue.replace(/\W/g, "");
-        setState({ inputValue });
-        return inputValue;
-      }
-    };*/
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -126,6 +94,8 @@ const FilterRecognitionContainer = () => {
       })
     );
     dispatch(actionObjectGenrator(filterStatus.success, { status: "applied" }));
+    store.dispatch(actionObjectGenrator(filterRecognitionAPI.success));
+    store.dispatch(actionObjectGenrator(listRecognition.init));
   };
 
   return (
@@ -135,7 +105,6 @@ const FilterRecognitionContainer = () => {
       userList={users}
       onSubmit={onSubmit}
       promiseOptions={promiseOptions}
-      //handleInputChange={handleInputChange}
     />
   );
 };

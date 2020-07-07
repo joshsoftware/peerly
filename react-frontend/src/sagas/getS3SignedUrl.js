@@ -18,7 +18,7 @@ export function* gets3signedUrl(action) {
   const token = yield select(getToken);
   try {
     const response = yield call(getJson, {
-      path: "/s3_signed_url?type=profile&file_extension=" + file_extension + "",
+      path: "/s3_signed_url?type=profile&file_type=" + file_extension + "",
       apiToken: token,
     });
     const responseObj = yield response.json();

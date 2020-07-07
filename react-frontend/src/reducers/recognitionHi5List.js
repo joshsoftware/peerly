@@ -40,6 +40,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         data: action.payload.data,
+        offset: action.payload.offset,
       };
     case status.failure:
       return { ...state, error: action.payload };

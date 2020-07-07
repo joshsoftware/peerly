@@ -15,13 +15,10 @@ const CardComponent = styled(Card)`
 const FilterRecognitionComponent = ({
   coreValues,
   setCoreValueId,
-  userList,
   promiseOptions,
   handleInputChange,
   onSubmit,
 }) => {
-  //console.log(promiseOptions)
-  // console.log(userList)
   return (
     <CardComponent className="text-center">
       <div className="d-flex justify-content-around flex-row text-dark">
@@ -30,7 +27,6 @@ const FilterRecognitionComponent = ({
       <Form className="p-2 mt-5" onSubmit={onSubmit} data-testid="filterform">
         <Form.Group controlId="filterGivenFor">
           <AsyncSelect
-            defaultOptions={userList}
             loadOptions={promiseOptions}
             name="given_for"
             placeholder="select given for"
@@ -39,7 +35,6 @@ const FilterRecognitionComponent = ({
         </Form.Group>
         <Form.Group controlId="filterGivenBy">
           <AsyncSelect
-            defaultOptions={userList}
             loadOptions={promiseOptions}
             name="given_by"
             placeholder="select given by"
