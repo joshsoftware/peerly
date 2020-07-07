@@ -56,6 +56,9 @@ const PopupUserList = ({
             style={{
               //position: "fixed",
               "margin-top": "50px",
+              "max-height": "80vh",
+              overflow: "scroll",
+              "overflow-x": "hidden",
             }}
           >
             {userList.map((user, index) => (
@@ -88,24 +91,3 @@ PopupUserList.propTypes = {
 };
 
 export default PopupUserList;
-/**<Modal.Body
-          style={{
-            //position: "fixed",
-            overflow: "scroll",
-            height: "600px",
-          }}
-        >
-          {userList.map((user, index) => (
-            <div key={index}>
-              <ProfileComponent
-                src={user.profile_image_url}
-                name={`${user.first_name} ${user.last_name}`}
-                id={user.id}
-                size={8}
-                labelClass="ml-2"
-                className="my-3"
-                setUserId={setUserId}
-              />
-            </div>
-          ))}
-        </Modal.Body> */
