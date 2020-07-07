@@ -1,3 +1,4 @@
+const responseConstant = require("../constant/responseConstants");
 module.exports = (sequelize, Sequelize) => {
   let model;
   const Recognitions = sequelize.define(
@@ -56,11 +57,15 @@ module.exports = (sequelize, Sequelize) => {
     });
   };
   Recognitions.beforeCreate(async (recognition) => {
+    //check hi5 limit
     let data = await model.users.findByPk(recognition.given_by, {
       attributes: ["hi5_quota_balance"],
     });
     if (data.dataValues.hi5_quota_balance == 0)
-      throw { status: 422, message: "your hi5 limit is empty" };
+      throw {
+        status: 422,
+        message: responseConstant.HI5_BALANCE_LIMIT_MESSAGE,
+      };
   });
   Recognitions.afterCreate(async (recognition) => {
     let giveHi5 = {

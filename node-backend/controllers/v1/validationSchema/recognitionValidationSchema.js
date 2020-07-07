@@ -27,9 +27,9 @@ module.exports.getByIdSchema = () => {
 
 module.exports.getFilterSchema = () => {
   return yup.object().shape({
-    core_value_id: yup.array().typeError({ core_value_id: "should be array" }),
-    given_for: yup.array().typeError({ given_for: "should be array" }),
-    given_by: yup.array().typeError({ given_by: "should be array" }),
+    core_value_id: yup.string(),
+    given_for: yup.string(),
+    given_by: yup.string(),
     limit: yup
       .number()
       .nullable()

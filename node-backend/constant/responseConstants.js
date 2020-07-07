@@ -75,7 +75,9 @@ module.exports.INVALID_TOKEN_MESSAGE = "Invalid token data";
 module.exports.NOT_REPEATED_HI5_MESSAGE =
   "Sorry, You can't give hi-5 to same recognition more than once";
 
-module.exports.NOT_SELF_GIVE_HI5_MESSAGE =
-  "Sorry, You can't give hi-5 to same recognition more than once";
+module.exports.NOT_SELF_GIVE_HI5_MESSAGE = "Sorry, You can't give hi-5 to self";
 
 module.exports.UNPROCESSABLE_ENTITY_CODE = "unprocessable-entity";
+
+module.exports.RECOGNITIONS_NOT_FOUND_IN_FILTER =
+  "Recognitions with specified filter not matched";

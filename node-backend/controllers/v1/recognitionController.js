@@ -106,8 +106,6 @@ const getFilterData = (data) => {
 
 const createWhereClause = ({ orgId }, filterId) => {
   if (filterId) {
-    filterId = filterId.replace("[", "");
-    filterId = filterId.replace("]", "");
     let data = filterId.split(",");
     return {
       org_id: orgId,
@@ -168,16 +166,14 @@ module.exports.findAll = async (req, res) => {
           } else {
             logger.error("Error executing getHi5Count");
             logger.info("user id: " + tokenData.userId);
-            logger.error(
-              resConstants.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
-            );
+            logger.error(resConstants.RECOGNITIONS_NOT_FOUND_IN_FILTER);
             logger.info("=========================================");
             res
               .status(404)
               .send(
                 utility.getErrorResponseObject(
                   resConstants.RECOGNITION_NOT_FOUND_CODE,
-                  resConstants.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE
+                  resConstants.RECOGNITIONS_NOT_FOUND_IN_FILTER
                 )
               );
           }
