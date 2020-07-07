@@ -10,10 +10,20 @@ import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
 import { USER_PROFILE_API } from "constants/actionConstants";
 import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const TopNavbarContainer = () => {
   let history = useHistory();
   const [userId, setUserId] = useState(null);
+  let createRecognitionRoute = false;
+  let location = useLocation();
+  if (
+    location.pathname == "/createRecognition" ||
+    location.pathname == "/profile"
+  ) {
+    createRecognitionRoute = true;
+  }
+
   let hi5_count = 0;
   const userProfile = useSelector((state) => state.userProfileReducer);
   const dispatch = useDispatch();
@@ -42,6 +52,7 @@ const TopNavbarContainer = () => {
       collectedHi5={userProfile.data.hi5_count}
       setUserId={setUserId}
       id={1}
+      createRecognitionRoute={createRecognitionRoute}
     />
   );
 };
