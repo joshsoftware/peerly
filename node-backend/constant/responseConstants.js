@@ -54,7 +54,7 @@ module.exports.RECOGNITION_NOT_FOUND_MESSAGE =
 module.exports.RECOGNITION_NOT_FOUND_IN_ORGANISATION_MESSAGE =
   "Recognition with specified organisation is not found";
 
-module.exports.HI5_BALANCE_LIMIT_MESSAGE = "Your Hi5 quota limit reached";
+module.exports.HI5_BALANCE_LIMIT_MESSAGE = "Your Hi5 quota limit is over";
 
 module.exports.INVALID_REPORTED_RECOGNITION_CODE =
   "invalid reported recognition";
