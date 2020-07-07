@@ -58,7 +58,6 @@ const CreateRecognitionContainer = () => {
   const dispatch = useDispatch();
   const status = actionGenrator(CORE_VALUE_API);
   const recognitionToStatus = actionGenrator(RECOGNIZE_TO_API);
-
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
     dispatch(
@@ -80,7 +79,6 @@ const CreateRecognitionContainer = () => {
     dispatch(actionObjectGenrator(addRecognitionStatus.init));
     history.push("/listOfRecognition");
   }
-  //console.log(recognitionTo.data.profile_image_url);
 
   return (
     <CreateRecognition

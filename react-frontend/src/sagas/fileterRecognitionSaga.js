@@ -23,7 +23,7 @@ export function* getRecognitionFilterList() {
       path: "/recognitions",
       paramsObj: {
         limit: listReducer.limit,
-        offset: listReducer.offset,
+        offset: 0,
         core_value_id: filterRecognition.filterData.core_value_id
           ? filterRecognition.filterData.core_value_id
           : undefined,
@@ -41,7 +41,6 @@ export function* getRecognitionFilterList() {
       yield put(
         actionObjectGenerator(status.success, {
           list: responseObj.data,
-          offset: listReducer.offset + responseObj.data.length,
         })
       );
     } else {
