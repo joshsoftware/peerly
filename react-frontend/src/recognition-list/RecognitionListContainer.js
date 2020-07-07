@@ -68,7 +68,6 @@ const RecognnitionListContainer = () => {
       dispatch(actionObjectGenrator(status.success));
     }
   };
-  //console.log(filterRecognition);
 
   useEffect(() => {
     if (refresh === 0) {
