@@ -18,8 +18,8 @@ set :term_mode, :pretty
 set :node_version, 'v12.16.2'
 
 if server == 'staging'
-  set :domain, 'ec2-18-216-79-5.us-east-2.compute.amazonaws.com'
-  set :deploy_to, '/www/peerly-nodejs-backend'
+  set :domain, '13.235.96.194'
+  set :deploy_to, '/home/ubuntu/peerly-nodejs-backend'
 end
 
 # Optional settings:
@@ -32,8 +32,8 @@ end
 # run `mina -d` to see all folders and files already included in `shared_dirs` and `shared_files`
 # set :shared_dirs, fetch(:shared_dirs, []).push('public/assets')
 # set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
-set :shared_dirs, fetch(:shared_dirs, []).push('node-backend/node_modules')
-set :shared_files, fetch(:shared_files, []).push('node-backend/.env')
+set :shared_dirs, fetch(:shared_dirs, []).push('node_modules')
+set :shared_files, fetch(:shared_files, []).push('.env')
 
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
@@ -96,8 +96,8 @@ task :setup do
   unless file_exists
     command %{ echo "NVM installation not found!" }
 
-    # invoke :'nvm:install_nvm'
-    # invoke :'nvm:install_node'
+    invoke :'nvm:install_nvm'
+    invoke :'nvm:install_node'
   end
 
   invoke :'nvm:load'
@@ -115,12 +115,13 @@ task :deploy => :remote_environment do
     # instance of your project.
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
-    command %{cd node-backend && npm install}
+    command %{rm -rf react-frontend && rm -rf go-backend}
+    command %{mv node-backend/* . && npm install}
     invoke :'deploy:cleanup'
 
     on :launch do
       invoke :'nvm:load'
-      command %{pm2 restart server}
+      command %{sudo pm2 restart server}
       command %{echo '#{fetch(:branch)}' > #{fetch(:current_path)}/node-backend/branch_deployed.txt}
     end
   end
