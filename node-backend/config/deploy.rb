@@ -121,7 +121,8 @@ task :deploy => :remote_environment do
 
     on :launch do
       invoke :'nvm:load'
-      command %{sudo pm2 restart server}
+      command %{sudo pm2 stop all}
+      command %{sudo pm2 start server.js}
       command %{echo '#{fetch(:branch)}' > #{fetch(:current_path)}/node-backend/branch_deployed.txt}
     end
   end
