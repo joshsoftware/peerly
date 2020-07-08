@@ -29,7 +29,7 @@ const LeftPanelContainer = () => {
   }
   return (
     <LeftfPanel
-      profileImage={userProfile.data.profile_image_url}
+      profileImage={userProfile.data.profile_image_url || '/assets/images/profile.png'}
       profileName={userProfile.data.display_name}
       collectedHi5={userProfile.data.hi5_count}
       setUserId={setUserId}
