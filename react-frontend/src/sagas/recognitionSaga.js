@@ -42,13 +42,15 @@ export function* getRecognitionList() {
 
     if (responseObj.data) {
       if (responseObj.data.length === 0) {
-        yield put(
-          actionObjectGenerator(status.success, {
-            status: response.status,
-            list: [],
-            offset: 0,
-          })
-        );
+        if (listReducer.list[0].id === null) {
+          yield put(
+            actionObjectGenerator(status.success, {
+              status: response.status,
+              list: [],
+              offset: 0,
+            })
+          );
+        }
       } else if (listReducer.list.length === 1) {
         yield put(
           actionObjectGenerator(status.success, {
