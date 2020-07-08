@@ -43,6 +43,7 @@ const RecognnitionListContainer = () => {
   const [refresh, changeRefresh] = useState(0);
   const [show, setShow] = useState(false);
   let filterError = false;
+  let errorMessage;
   const [showHi5ListPopup, setShowHi5ListPopup] = useState(null);
   const showModal = actionGenrator(LIST_HI5_POPUP);
   if (filterStatus.status == "applied") {
@@ -123,11 +124,16 @@ const RecognnitionListContainer = () => {
   } else if (recognitionList.hi5.error.code !== undefined && show == false) {
     setShow(true);
   }
+
   if (
     filterErrorStatus.error.code === "recognition-not-found" &&
-    recognitionList.list[0].id === undefined
+    recognitionList.list[0].id === null
   ) {
     filterError = true;
+    errorMessage = filterErrorStatus.error.message;
+  }
+  if (recognitionList.list.length === 0 && recognitionList.status === 200) {
+    errorMessage = "recognition list is empty";
   }
   return (
     <div>
@@ -142,7 +148,7 @@ const RecognnitionListContainer = () => {
         sliderOff={sliderOff}
         showHi5List={showHi5List}
         showHi5ListPopup={showHi5ListPopup}
-        filterErrorMessage={filterErrorStatus.error.message}
+        filterErrorMessage={errorMessage}
         filterError={filterError}
       />
     </div>
