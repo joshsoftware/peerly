@@ -10,6 +10,7 @@ const { createToken } = require("./jwtTokenGenration");
 let orgId;
 let roleId = 3;
 let userId;
+let givenFor;
 let coreValueId;
 let recognitionId;
 let token;
@@ -18,27 +19,24 @@ let user = { ...data.user };
 let coreValue = { ...data.coreValue };
 let recognition = { ...data.recognition };
 describe(/*eslint-disable-line no-undef*/ "test case for recognition moderation", function () {
-  /*eslint-disable-line no-undef*/ before((done) => {
-    db.organizations.create(organizations).then((res) => {
-      orgId = res.id;
-      user.org_id = orgId;
-      user.role_id = roleId;
-      db.users.create(user).then((res) => {
-        userId = res.id;
-        coreValue.org_id = orgId;
-        db.core_values.create(coreValue).then((res) => {
-          coreValueId = res.id;
-          recognition.core_value_id = coreValueId;
-          recognition.given_by = userId;
-          recognition.given_for = userId;
-          db.recognitions.create(recognition).then((res) => {
-            recognitionId = res.id;
-            token = createToken(roleId, orgId, userId);
-            done();
-          });
-        });
-      });
-    });
+  /*eslint-disable-line no-undef*/ before(async () => {
+    const orgResponse = await db.organizations.create(organizations);
+    orgId = orgResponse.id;
+    user.org_id = orgId;
+    user.role_id = roleId;
+    let userResponse = await db.users.create(user);
+    userId = userResponse.id;
+    userResponse = await db.users.create(user);
+    givenFor = userResponse.id;
+    coreValue.org_id = orgId;
+    const coreValueResponse = await db.core_values.create(coreValue);
+    coreValueId = coreValueResponse.id;
+    recognition.core_value_id = coreValueId;
+    recognition.given_by = userId;
+    recognition.given_for = givenFor;
+    const recognitionResponse = await db.recognitions.create(recognition);
+    recognitionId = recognitionResponse.id;
+    token = createToken(roleId, orgId, userId);
   });
 
   /*eslint-disable-line no-undef*/ after(async () => {
