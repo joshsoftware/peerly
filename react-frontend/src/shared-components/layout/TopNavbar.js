@@ -93,9 +93,9 @@ function TopNavbar({
 TopNavbar.propTypes = {
   onClickLogout: PropTypes.func,
   count: PropTypes.number,
-  profileImage: PropTypes.string.isRequired,
-  profileName: PropTypes.string.isRequired,
-  collectedHi5: PropTypes.number.isRequired,
+  profileImage: PropTypes.string,
+  profileName: PropTypes.string,
+  collectedHi5: PropTypes.number,
   setUserId: PropTypes.func,
   id: PropTypes.number,
   createRecognitionRoute: PropTypes.bool,

@@ -25,6 +25,8 @@ const UserListContainer = () => {
   const dispatch = useDispatch();
 
   let [user1Id, setUser1Id] = useState(null);
+  let [userProfileImage, setUserProfileImage] = useState(null);
+  let [userProfileName, setUserProfileName] = useState(null);
   let errorMessage = null;
 
   const userProfile = useSelector((state) => state.userProfileReducer);
@@ -68,6 +70,8 @@ const UserListContainer = () => {
   ]);
   if (user1Id) {
     localStorage.setItem("userId", user1Id);
+    localStorage.setItem("recognitionToImage", userProfileImage);
+    localStorage.setItem("recognitionToName", userProfileName);
     setUser1Id(null);
     dispatch(actionObjectGenrator(showModal.init));
     history.push("/createRecognition");
@@ -90,6 +94,8 @@ const UserListContainer = () => {
       userList={updateduserList}
       setUserId={setUser1Id}
       searchBox={searchBox}
+      setUserProfileImage={setUserProfileImage}
+      setUserProfileName={setUserProfileName}
     ></PopupWindow>
   );
 };
