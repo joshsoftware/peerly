@@ -74,26 +74,16 @@ CreateRecognitionButton.defaultProps = {
 };
 
 CreateRecognitionButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  imageUrl: PropTypes.string.isRequired,
   theme: PropTypes.oneOf(["dark", "light"]),
   fontSize: PropTypes.string,
-  listOfEmployee: PropTypes.array,
   hi5ImageForButton: PropTypes.string.isRequired,
-  profileImage: PropTypes.string.isRequired,
-  profileName: PropTypes.string.isRequired,
-  collectedHi5: PropTypes.number.isRequired,
   errorMessage: PropTypes.string,
   showError: PropTypes.string,
   handleCloseError: PropTypes.func,
   handleShowError: PropTypes.func,
   showPopup: PropTypes.func,
   hi5_quota_balance: PropTypes.number,
-  setUserId: PropTypes.func,
-  id: PropTypes.number,
-  userList: PropTypes.array,
-  setUser1Id: PropTypes.func,
-  handleShow: PropTypes.bool,
+  handleShow: PropTypes.func,
 };
 
 export default React.memo(CreateRecognitionButton);
