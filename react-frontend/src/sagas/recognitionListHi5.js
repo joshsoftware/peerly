@@ -21,7 +21,6 @@ export function* getRecognitionHi5List() {
       },
       apiToken: token,
     });
-
     const responseObj = yield response.json();
     if (responseObj.data) {
       if (listReducer.data.length === 1) {
