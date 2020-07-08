@@ -13,6 +13,7 @@ require("../../config/loggerConfig");
 const logger = log4js.getLogger();
 const Recognitions = db.recognitions;
 const RecognitionHi5 = db.recognition_hi5;
+let filterFlag = false;
 
 module.exports.findOne = async (req, res) => {
   const userData = await jwtValidate.getData(req.headers["authorization"]);
@@ -93,7 +94,7 @@ module.exports.findOne = async (req, res) => {
     });
 };
 
-const getFilterData = (data) => {
+const getFilterData = (module.exports.getFilterData = (data) => {
   let filterData = {
     core_value_id: data.core_value_id,
     given_for: data.given_for,
@@ -102,11 +103,15 @@ const getFilterData = (data) => {
     offset: data.offset || null,
   };
   return filterData;
-};
+});
 
-const createWhereClause = ({ orgId }, filterId) => {
+const createWhereClause = (module.exports.createWhereClause = (
+  { orgId },
+  filterId
+) => {
   if (filterId) {
     let data = filterId.split(",");
+    filterFlag = true;
     return {
       org_id: orgId,
       id: { [Sequelize.Op.in]: data },
@@ -116,7 +121,7 @@ const createWhereClause = ({ orgId }, filterId) => {
       org_id: orgId,
     };
   }
-};
+});
 
 module.exports.findAll = async (req, res) => {
   const tokenData = await jwtValidate.getData(req.headers["authorization"]);
@@ -157,13 +162,7 @@ module.exports.findAll = async (req, res) => {
         order: [["id", "DESC"]],
       })
         .then((info) => {
-          let data = info[0];
-          if (data != undefined) {
-            info = info.map((data) => addCount(data));
-            res.status(200).send({
-              data: info,
-            });
-          } else {
+          if (info.length == 0 && filterFlag) {
             logger.error("Error executing getHi5Count");
             logger.info("user id: " + tokenData.userId);
             logger.error(resConstants.RECOGNITIONS_NOT_FOUND_IN_FILTER);
@@ -176,6 +175,11 @@ module.exports.findAll = async (req, res) => {
                   resConstants.RECOGNITIONS_NOT_FOUND_IN_FILTER
                 )
               );
+          } else {
+            info = info.map((data) => addCount(data));
+            res.status(200).send({
+              data: info,
+            });
           }
         })
         .catch(() => {
@@ -417,5 +421,3 @@ const addCount = (data) => {
   data.dataValues.hi5_count = hi5_count;
   return data;
 };
-
-module.exports = { getFilterData, createWhereClause };
