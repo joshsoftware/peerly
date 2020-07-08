@@ -133,6 +133,7 @@ const RecognnitionListContainer = () => {
     errorMessage = filterErrorStatus.error.message;
   }
   if (recognitionList.list.length === 0 && recognitionList.status === 200) {
+    filterError = true;
     errorMessage = "recognition list is empty";
   }
   return (
