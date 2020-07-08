@@ -2,11 +2,30 @@ import actionGenerator from "utils/actionGenerator";
 import { LIST_RECOGNITION, GIVE_HI5 } from "constants/actionConstants";
 
 export const defaultState = {
+  status: null,
   list: [
     {
-      coreValue: {},
-      given_for_user: {},
-      given_by_user: {},
+      id: null,
+      text: null,
+      given_at: null,
+      given_for_user: {
+        id: null,
+        first_name: null,
+        last_name: null,
+        profile_image_url: null,
+      },
+      given_by_user: {
+        id: null,
+        first_name: null,
+        last_name: null,
+        profile_image_url: null,
+      },
+      coreValue: {
+        id: null,
+        text: null,
+        description: null,
+        thumbnail_url: null,
+      },
       hi5_count: null,
     },
   ],
@@ -29,11 +48,30 @@ export default (state = defaultState, action) => {
   switch (action.type) {
     case status.init:
       return {
+        status: null,
         list: [
           {
-            coreValue: {},
-            given_for_user: {},
-            given_by_user: {},
+            id: null,
+            text: null,
+            given_at: null,
+            given_for_user: {
+              id: null,
+              first_name: null,
+              last_name: null,
+              profile_image_url: null,
+            },
+            given_by_user: {
+              id: null,
+              first_name: null,
+              last_name: null,
+              profile_image_url: null,
+            },
+            coreValue: {
+              id: null,
+              text: null,
+              description: null,
+              thumbnail_url: null,
+            },
             hi5_count: null,
           },
         ],
@@ -48,6 +86,7 @@ export default (state = defaultState, action) => {
     case status.success:
       return {
         ...state,
+        status: action.payload.status,
         list: action.payload.list,
         offset: action.payload.offset,
       };
