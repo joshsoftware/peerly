@@ -41,7 +41,15 @@ export function* getRecognitionList() {
     const responseObj = yield response.json();
 
     if (responseObj.data) {
-      if (listReducer.list.length === 1) {
+      if (responseObj.data.length === 0) {
+        yield put(
+          actionObjectGenerator(status.success, {
+            status: response.status,
+            list: [],
+            offset: 0,
+          })
+        );
+      } else if (listReducer.list.length === 1) {
         yield put(
           actionObjectGenerator(status.success, {
             list: responseObj.data,

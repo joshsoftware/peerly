@@ -7,7 +7,6 @@ import actionObjectGenrator from "actions/listRecognitionAction";
 import actionGenrator from "utils/actionGenerator";
 import {
   CORE_VALUE_API,
-  RECOGNIZE_TO_API,
   ADD_RECOGNITION_API,
   LIST_RECOGNITION,
   ADD_RECOGNITION,
@@ -57,16 +56,9 @@ const CreateRecognitionContainer = () => {
   const handleShow = () => setShow(true);
   const dispatch = useDispatch();
   const status = actionGenrator(CORE_VALUE_API);
-  const recognitionToStatus = actionGenrator(RECOGNIZE_TO_API);
   useEffect(() => {
     dispatch(actionObjectGenrator(status.success));
-    dispatch(
-      actionObjectGenrator(
-        recognitionToStatus.success,
-        localStorage.getItem("userId")
-      )
-    );
-  }, [dispatch, status.success, recognitionToStatus.success]);
+  }, [dispatch, status.success]);
 
   if (createRecognitionStatus.error === "invalid_token") {
     return <SessionTimeoutComponent />;
@@ -94,8 +86,8 @@ const CreateRecognitionContainer = () => {
       handleShow={handleShow}
       onClickAddComment={onClickAddComment}
       addCommentText={addCommentText}
-      recognitionToImage={recognitionTo.data.profile_image_url}
-      recognitionToName={`${recognitionTo.data.first_name} ${recognitionTo.data.last_name}`}
+      recognitionToImage={localStorage.getItem("recognitionToImage")}
+      recognitionToName={localStorage.getItem("recognitionToName")}
       sendData={sendData}
       coreValueId={coreValueId}
     />

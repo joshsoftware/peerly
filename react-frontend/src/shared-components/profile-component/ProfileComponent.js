@@ -20,10 +20,13 @@ const ProfileComponent = ({
   id,
   setUserId,
   shadow,
+  setUserProfileImage,
+  setUserProfileName,
 }) => {
   const onClick = () => {
-    // console.log(id)
     setUserId(id);
+    setUserProfileImage(src);
+    setUserProfileName(name);
   };
   return (
     <div /* eslint-disable-line  jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
@@ -51,6 +54,12 @@ ProfileComponent.defaultProps = {
   setUserId: () => {
     /*TODO*/
   },
+  setUserProfileImage: () => {
+    /*TODO*/
+  },
+  setUserProfileName: () => {
+    /*TODO*/
+  },
 };
 
 ProfileComponent.propTypes = {
@@ -62,6 +71,8 @@ ProfileComponent.propTypes = {
   id: PropTypes.number,
   setUserId: PropTypes.func,
   shadow: PropTypes.bool,
+  setUserProfileImage: PropTypes.func,
+  setUserProfileName: PropTypes.func,
 };
 
 export default React.memo(ProfileComponent);
