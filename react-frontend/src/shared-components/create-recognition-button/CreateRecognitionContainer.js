@@ -11,7 +11,6 @@ import {
 import CreateRecognitionButton from "shared-components/create-recognition-button/CreateRecognitionButton";
 
 const LeftPanelContainer = () => {
-  const [showError, setShowError] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const dispatch = useDispatch();
   const hi5Status = actionGenrator(GIVE_HI5_API);
@@ -34,11 +33,9 @@ const LeftPanelContainer = () => {
   return (
     <CreateRecognitionButton
       errorMessage="You have Empty Hi5 quota balance"
-      showError={showError}
       handleCloseError={handleCloseError}
       handleShowError={showErrorPopup}
       showPopup={showPopup}
-      setShowError={setShowError}
       handleShow={handleShow}
       hi5_quota_balance={userProfile.data.hi5_quota_balance}
     />
