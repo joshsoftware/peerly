@@ -13,6 +13,8 @@ const PopupUserList = ({
   setUserId,
   searchBox,
   errorMessage,
+  setUserProfileImage,
+  setUserProfileName,
 }) => {
   return (
     <>
@@ -71,6 +73,8 @@ const PopupUserList = ({
                   labelClass="ml-2"
                   className="my-3"
                   setUserId={setUserId}
+                  setUserProfileImage={setUserProfileImage}
+                  setUserProfileName={setUserProfileName}
                 />
               </div>
             ))}
@@ -88,6 +92,8 @@ PopupUserList.propTypes = {
   setUserId: PropTypes.func,
   searchBox: PropTypes.func,
   errorMessage: PropTypes.string,
+  setUserProfileImage: PropTypes.func,
+  setUserProfileName: PropTypes.func,
 };
 
 export default PopupUserList;
