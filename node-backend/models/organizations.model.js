@@ -47,5 +47,10 @@ module.exports = (sequelize, Sequelize) => {
       updatedAt: false,
     }
   );
+  Organizations.associate = (models) => {
+    Organizations.hasMany(models.users, {
+      foreignKey: "org_id",
+    });
+  };
   return Organizations;
 };
