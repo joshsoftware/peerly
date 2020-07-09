@@ -19,7 +19,6 @@ import CreateRecognition from "create-recognition/CreateRecognition";
 
 const CreateRecognitionContainer = () => {
   const coreValueList = useSelector((state) => state.coreValueListReducer);
-  const recognitionTo = useSelector((state) => state.RecognizeToReducer);
   const userProfile = useSelector((state) => state.userProfileReducer);
   const createRecognitionStatus = useSelector(
     (state) => state.addRecognitionReducer
@@ -42,7 +41,7 @@ const CreateRecognitionContainer = () => {
     const addRecognition = {
       core_value_id: coreValueId,
       text: commentText,
-      given_for: recognitionTo.data.id,
+      given_for: localStorage.getItem("userId"),
       given_by: userProfile.data.id,
     };
 
