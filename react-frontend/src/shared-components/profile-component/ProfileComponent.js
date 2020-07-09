@@ -8,7 +8,7 @@ import ImageComponent from "core-components/image/ImageComponent";
 const ProfileImage = styled(ImageComponent)`
   height: ${({ size }) => `${size}vh`};
   width: ${({ size }) => `${size}vh`};
-  box-shadow: ${({ shadow }) => (shadow ? "0px 3px 6px #00000029" : "")};
+  box-shadow: ${({ shadow }) => (shadow ? "0px 3px 6px #00000029" : undefined)};
 `;
 
 const ProfileComponent = ({
@@ -37,7 +37,7 @@ const ProfileComponent = ({
         size={size}
         src={src}
         roundedCircle={true}
-        shadow={shadow}
+        shadow={shadow ? 1 : 0}
         alt="Profile"
       />
       <Form.Label className={`font-weight-bold ${labelClass}`}>

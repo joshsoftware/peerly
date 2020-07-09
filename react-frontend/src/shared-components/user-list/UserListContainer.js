@@ -43,7 +43,7 @@ const UserListContainer = () => {
 
   const [debouncedCallApi] = useState(() => _.debounce(callApi, 1000));
   const searchBox = (e) => {
-    if (e.target.value.length % 3 == 0) {
+    if (e.target.value.length % 3 === 0) {
       debouncedCallApi();
       setSearchTerm(e.target.value);
     }
@@ -87,7 +87,7 @@ const UserListContainer = () => {
   }
   return (
     <PopupWindow
-      show={modalShow.show}
+      show={modalShow.show.show}
       handleClose={handleClose}
       errorMessage={errorMessage}
       listOfEmployee={userList.list}

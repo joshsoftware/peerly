@@ -18,8 +18,8 @@ const TopNavbarContainer = () => {
   let createRecognitionRoute = false;
   let location = useLocation();
   if (
-    location.pathname == "/createRecognition" ||
-    location.pathname == "/profile"
+    location.pathname === "/createRecognition" ||
+    location.pathname === "/profile"
   ) {
     createRecognitionRoute = true;
   }

@@ -11,7 +11,7 @@ const withLayout = (WrappedComponent, includeNavbar, includeSidebar) => (
   return (
     <div
       style={{
-        "background-color": "var(--grey)",
+        backgroundColor: "var(--grey)",
         height: "100vh",
         width: "100%",
       }}

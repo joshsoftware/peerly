@@ -76,12 +76,12 @@ CreateRecognitionButton.defaultProps = {
 CreateRecognitionButton.propTypes = {
   theme: PropTypes.oneOf(["dark", "light"]),
   fontSize: PropTypes.string,
-  hi5ImageForButton: PropTypes.string.isRequired,
+  hi5ImageForButton: PropTypes.string,
   errorMessage: PropTypes.string,
   showError: PropTypes.string,
   handleCloseError: PropTypes.func,
   handleShowError: PropTypes.func,
-  showPopup: PropTypes.func,
+  showPopup: PropTypes.bool,
   hi5_quota_balance: PropTypes.number,
   handleShow: PropTypes.func,
 };
