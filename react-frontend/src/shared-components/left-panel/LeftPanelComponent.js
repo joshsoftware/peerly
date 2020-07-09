@@ -49,10 +49,9 @@ const LeftPanelComponent = ({
 
 LeftPanelComponent.propTypes = {
   listOfEmployee: PropTypes.array,
-  hi5ImageForButton: PropTypes.string.isRequired,
-  profileImage: PropTypes.string.isRequired,
-  profileName: PropTypes.string.isRequired,
-  collectedHi5: PropTypes.number.isRequired,
+  profileImage: PropTypes.string,
+  profileName: PropTypes.string,
+  collectedHi5: PropTypes.number,
   errorMessage: PropTypes.string,
   showError: PropTypes.string,
   handleCloseError: PropTypes.func,
