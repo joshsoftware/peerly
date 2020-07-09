@@ -38,7 +38,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         list:
-          action.payload.list == undefined
+          action.payload.list === undefined
             ? [
                 {
                   id: null,
