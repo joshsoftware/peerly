@@ -25,15 +25,15 @@ const PopupUserList = ({
         aria-labelledby="contained-modal-title-vcenter"
         style={{
           position: "fixed",
-          "margin-top": "0px",
+          marginTop: "0px",
           overflow: "scroll",
-          "min-height": "100%",
+          minHeight: "100%",
         }}
       >
         <Modal.Header
           style={{
             position: "absolute",
-            "margin-top": "0px",
+            marginTop: "0px",
           }}
           closeButton
         >
@@ -41,14 +41,12 @@ const PopupUserList = ({
             type="text"
             placeholder="enter name"
             onChange={searchBox}
-            // defaultValue={firstName}
           />
         </Modal.Header>
         {errorMessage !== null ? (
           <Modal.Body
             style={{
-              //position: "fixed",
-              "margin-top": "50px",
+              marginTop: "50px",
             }}
           >
             {errorMessage}
@@ -56,9 +54,8 @@ const PopupUserList = ({
         ) : (
           <Modal.Body
             style={{
-              //position: "fixed",
-              "margin-top": "50px",
-              "max-height": "80vh",
+              marginTop: "50px",
+              maxHeight: "80vh",
               overflow: "scroll",
               "overflow-x": "hidden",
             }}
