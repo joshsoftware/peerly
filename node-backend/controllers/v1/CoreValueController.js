@@ -258,7 +258,7 @@ module.exports.getCoreValueById = async (req, res) => {
     .validate({ id }, { abortEarly: false })
     .then(() => {
       CoreValue.findOne({
-        where: { id: id },
+        where: { id: id, org_id: userData.orgId },
         attributes: [
           "id",
           "description",
@@ -328,6 +328,7 @@ module.exports.getCoreValues = async (req, res) => {
       "org_id",
       "thumbnail_url",
     ],
+    where: { org_id: userData.orgId },
   })
     .then((info) => {
       res.status(200).send({
