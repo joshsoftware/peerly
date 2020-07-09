@@ -46,7 +46,7 @@ const RecognnitionListContainer = () => {
   let errorMessage;
   const [showHi5ListPopup, setShowHi5ListPopup] = useState(null);
   const showModal = actionGenrator(LIST_HI5_POPUP);
-  if (filterStatus.status == "applied") {
+  if (filterStatus.status === "applied") {
     sliderOff();
     store.dispatch(actionObjectGenrator(filterReducerStatus.init));
   }
@@ -121,7 +121,7 @@ const RecognnitionListContainer = () => {
     return <SessionTimeoutComponent />;
   } else if (recognitionList.error === "access_denied") {
     return <UnauthorisedErrorComponent />;
-  } else if (recognitionList.hi5.error.code !== undefined && show == false) {
+  } else if (recognitionList.hi5.error.code !== undefined && show === false) {
     setShow(true);
   }
 
