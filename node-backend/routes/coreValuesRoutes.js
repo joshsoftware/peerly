@@ -27,7 +27,7 @@ async function authorizedRole(req, res, next) {
 
 //for create core value
 coreValueRouter.post(
-  "/organisations/:organisation_id/core_values",
+  "/organisations/core_values",
   authorizedRole,
   async (req, res) => {
     let controller = await utility.getVersionedController(
@@ -37,33 +37,10 @@ coreValueRouter.post(
     /*eslint-disable no-eval*/ eval(controller).create(req, res);
   }
 );
-//for get all core values
-coreValueRouter.get(
-  "/organisations/:organisation_id/core_values",
-  authorizedRole,
-  async (req, res) => {
-    let controller = await utility.getVersionedController(
-      req.headers,
-      "CorevalueController"
-    );
-    eval(controller).findAll(req, res);
-  }
-);
-//for get core value by id
-coreValueRouter.get(
-  "/organisations/:organisation_id/core_values/:id",
-  authorizedRole,
-  async (req, res) => {
-    let controller = await utility.getVersionedController(
-      req.headers,
-      "CorevalueController"
-    );
-    eval(controller).findOne(req, res);
-  }
-);
+
 //for update core value
 coreValueRouter.put(
-  "/organisations/:organisation_id/core_values/:id",
+  "/organisations/core_values/:id",
   authorizedRole,
   async (req, res) => {
     let controller = await utility.getVersionedController(
