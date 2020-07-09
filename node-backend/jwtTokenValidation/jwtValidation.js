@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const log4js = require("log4js");
+const moment = require("moment");
 
 const db = require("../models/sequelize");
 const utility = require("../utils/utility");
@@ -70,4 +71,25 @@ module.exports.getData = (authHeader) => {
     orgId: decode["https://peerly.com"].orgId,
   };
   return tokenData;
+};
+
+module.exports.createToken = (roleId, orgId, userId, orgName) => {
+  let token = jwt.sign(
+    {
+      iss: "node.peerly.com",
+      sub: userId,
+      aud: "peerly.com",
+      nbf: moment.utc().unix(),
+      "https://peerly.com": {
+        roleId: roleId,
+        orgId: orgId,
+        orgName: orgName,
+      },
+    },
+    process.env.JWT_SECRET_KEY, //eslint-disable-line  no-undef
+    {
+      expiresIn: process.env.JWT_EXPIRE_TIME, //eslint-disable-line  no-undef
+    }
+  );
+  return token;
 };
