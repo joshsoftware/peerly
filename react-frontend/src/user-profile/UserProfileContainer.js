@@ -32,7 +32,7 @@ const UserProfileContainer = () => {
   );
   const dispatch = useDispatch();
 
-  if (updateUserStatus.status == 200) {
+  if (updateUserStatus.status === 200) {
     const actionStatus = actionGenerator(USER_PROFILE_UPDATE_RESPONSE);
     history.push("/listOfRecognition");
     dispatch(actionObjectGenrator(actionStatus.init));
