@@ -90,6 +90,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         id = res.body.data.id;
         delete res.body.data.id;
         delete res.body.data.org_id;
+        delete coreValue.thumbnail_url;
         res.body.data.should.be.eql(coreValue);
         done();
       });

@@ -103,6 +103,7 @@ module.exports.update = async (req, res) => {
       })
         .then(([rowsUpdate, [updatedCoreValue]]) => {
           if (rowsUpdate == 1) {
+            delete updatedCoreValue.dataValues.thumbnail_url;
             res.status(200).send({
               data: updatedCoreValue,
             });
