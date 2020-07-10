@@ -26,30 +26,22 @@ async function authorizedRole(req, res, next) {
 }
 
 //for create core value
-coreValueRouter.post(
-  "/organisations/core_values",
-  authorizedRole,
-  async (req, res) => {
-    let controller = await utility.getVersionedController(
-      req.headers,
-      "CorevalueController"
-    );
-    /*eslint-disable no-eval*/ eval(controller).create(req, res);
-  }
-);
+coreValueRouter.post("/core_values", authorizedRole, async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "CorevalueController"
+  );
+  /*eslint-disable no-eval*/ eval(controller).create(req, res);
+});
 
 //for update core value
-coreValueRouter.put(
-  "/organisations/core_values/:id",
-  authorizedRole,
-  async (req, res) => {
-    let controller = await utility.getVersionedController(
-      req.headers,
-      "CorevalueController"
-    );
-    eval(controller).update(req, res);
-  }
-);
+coreValueRouter.put("/core_values/:id", authorizedRole, async (req, res) => {
+  let controller = await utility.getVersionedController(
+    req.headers,
+    "CorevalueController"
+  );
+  eval(controller).update(req, res);
+});
 
 coreValueRouter.get("/core_values", async (req, res) => {
   let controller = await utility.getVersionedController(

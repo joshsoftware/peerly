@@ -30,10 +30,11 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   });
 
   it(/*eslint-disable-line no-undef*/ "post request for create core value with right Contents,url", function (done) {
+    let postCoreValue = { ...coreValue };
     chai
       .request(app)
-      .post(`/organisations/core_values`)
-      .send(coreValue)
+      .post(`/core_values`)
+      .send(postCoreValue)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
       .end(function (err /*eslint-disable-line no-undef*/, res) {
@@ -42,7 +43,8 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
         id = res.body.data.id;
         delete res.body.data.id;
         delete res.body.data.org_id;
-        res.body.data.should.be.eql(coreValue);
+        delete postCoreValue.thumbnail_url;
+        res.body.data.should.be.eql(postCoreValue);
         done();
       });
   });
@@ -77,7 +79,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   it(/*eslint-disable-line no-undef*/ "put request for updated core value with write content and url", function (done) {
     chai
       .request(app)
-      .put(`/organisations/core_values/${id}`)
+      .put(`/core_values/${id}`)
       .send(coreValue)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -96,7 +98,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   it(/*eslint-disable-line no-undef*/ "post request for create core value with wrong url", function (done) {
     chai
       .request(app)
-      .post(`/organisations/core_value`)
+      .post(`/core_value`)
       .send(coreValue)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -109,7 +111,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
   it(/*eslint-disable-line no-undef*/ "put request for update core value with Invalid Id", function (done) {
     chai
       .request(app)
-      .put(`/organisations/core_values/7000`)
+      .put(`/core_values/7000`)
       .send(coreValue)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -124,7 +126,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
     coreValue.thumbnail_url = "mail.google.com";
     chai
       .request(app)
-      .post("/organisations/core_values")
+      .post("/core_values")
       .send(coreValue)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")
@@ -139,7 +141,7 @@ describe(/*eslint-disable-line no-undef*/ "test case for Core Value", function (
     coreValue.thumbnail_url = "mail.google.com";
     chai
       .request(app)
-      .put("/organisations/core_values/2")
+      .put("/core_values/2")
       .send(coreValue)
       .set("Authorization", "Bearer " + token)
       .set("Accept", "application/vnd.peerly.v1")

@@ -35,6 +35,7 @@ module.exports.create = async (req, res) => {
       // Save coreValue in the database
       CoreValue.create(coreValue)
         .then((data) => {
+          delete data.dataValues.thumbnail_url;
           res.status(201).send({
             data: data,
           });
