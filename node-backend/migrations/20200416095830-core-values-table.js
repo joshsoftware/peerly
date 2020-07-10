@@ -32,7 +32,7 @@ module.exports = {
         },
         parent_core_value_id: {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          allowNull: true,
         },
       },
       {

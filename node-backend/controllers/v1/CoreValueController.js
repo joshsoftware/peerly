@@ -17,7 +17,7 @@ module.exports.create = async (req, res) => {
   // Create a core value object
 
   const coreValue = {
-    org_id: req.params.organisation_id,
+    org_id: userData.orgId,
     text: req.body.text,
     description: req.body.description,
     parent_core_value_id: req.body.parent_core_value_id,
@@ -35,6 +35,7 @@ module.exports.create = async (req, res) => {
       // Save coreValue in the database
       CoreValue.create(coreValue)
         .then((data) => {
+          delete data.dataValues.thumbnail_url;
           res.status(201).send({
             data: data,
           });
@@ -67,113 +68,12 @@ module.exports.create = async (req, res) => {
       });
     });
 };
-//get all core values
-module.exports.findAll = async (req, res) => {
-  let userData = await jwtToken.getData(req.headers["authorization"]);
-  const org_id = req.params.organisation_id;
-  const idSchema = validationSchema.findAllSchema();
-  idSchema
-    .validate({ org_id }, { abortEarly: false })
-    .then(() => {
-      CoreValue.findAll({ where: { org_id: req.params.organisation_id } })
-        .then((data) => {
-          res.status(200).send({
-            data: data,
-          });
-        })
-        .catch(() => {
-          logger.error("executing findAll core value");
-          logger.info("user id:" + userData.userId);
-          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
-          logger.info("=========================================");
-          res
-            .status(500)
-            .send(
-              utility.getErrorResponseObject(
-                resConstants.INTRENAL_SERVER_ERROR_CODE,
-                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
-              )
-            );
-        });
-    })
-    .catch((err) => {
-      logger.error("validation error");
-      logger.error(JSON.stringify(err));
-      logger.info("=========================================");
-      res.status(400).send({
-        error: utility.getFormattedErrorObj(
-          resConstants.INVALID_CORE_VALUE_CODE,
-          resConstants.INVALID_CORE_VALUE_MESSAGE,
-          err.errors
-        ),
-      });
-    });
-};
-
-//get core value with id
-module.exports.findOne = async (req, res) => {
-  let userData = await jwtToken.getData(req.headers["authorization"]);
-  const id = req.params.id;
-  const org_id = req.params.organisation_id;
-  const idSchema = validationSchema.findOneSchema();
-  idSchema
-    .validate({ id, org_id }, { abortEarly: false })
-    .then(() => {
-      CoreValue.findOne({ where: { org_id: org_id, id: id } })
-        .then((data) => {
-          if (data) {
-            res.status(200).send({
-              data: data,
-            });
-          } else {
-            logger.error("executing findOne core value");
-            logger.info("user id:" + userData.userId);
-            logger.error(resConstants.CORE_VALUE_NOT_FOUND_MESSAGE);
-            logger.info("=========================================");
-            res
-              .status(404)
-              .send(
-                utility.getErrorResponseObject(
-                  resConstants.CORE_VALUE_NOT_FOUND_CODE,
-                  resConstants.CORE_VALUE_NOT_FOUND_MESSAGE
-                )
-              );
-          }
-        })
-        .catch(() => {
-          logger.error("executing findOne core value");
-          logger.info("user id:" + userData.userId);
-          logger.error(resConstants.INTRENAL_SERVER_ERROR_MESSAGE);
-          logger.info("=========================================");
-          res
-            .status(500)
-            .send(
-              utility.getErrorResponseObject(
-                resConstants.INTRENAL_SERVER_ERROR_CODE,
-                resConstants.INTRENAL_SERVER_ERROR_MESSAGE
-              )
-            );
-        });
-    })
-    .catch((err) => {
-      logger.error("validation error");
-      logger.error(JSON.stringify(err));
-      logger.info("=========================================");
-      res.status(400).send({
-        error: utility.getFormattedErrorObj(
-          resConstants.INVALID_CORE_VALUE_CODE,
-          resConstants.INVALID_CORE_VALUE_MESSAGE,
-          err.errors
-        ),
-      });
-    });
-};
 
 //update core value with id
 module.exports.update = async (req, res) => {
   let userData = await jwtToken.getData(req.headers["authorization"]);
   const id = req.params.id;
-  const org_id = req.params.organisation_id;
+  const org_id = userData.orgId;
   const text = req.body.text;
   const description = req.body.description;
   const thumbnail_url = req.body.thumbnail_url;
@@ -203,6 +103,7 @@ module.exports.update = async (req, res) => {
       })
         .then(([rowsUpdate, [updatedCoreValue]]) => {
           if (rowsUpdate == 1) {
+            delete updatedCoreValue.dataValues.thumbnail_url;
             res.status(200).send({
               data: updatedCoreValue,
             });
@@ -258,7 +159,7 @@ module.exports.getCoreValueById = async (req, res) => {
     .validate({ id }, { abortEarly: false })
     .then(() => {
       CoreValue.findOne({
-        where: { id: id },
+        where: { id: id, org_id: userData.orgId },
         attributes: [
           "id",
           "description",
@@ -328,6 +229,7 @@ module.exports.getCoreValues = async (req, res) => {
       "org_id",
       "thumbnail_url",
     ],
+    where: { org_id: userData.orgId },
   })
     .then((info) => {
       res.status(200).send({
