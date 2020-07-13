@@ -30,6 +30,11 @@
 5. run command 'npx sequelize-cli db:migrate' for migrating all tables.
 6. run command 'npx sequelize-cli db:seed:all' for seeding data into users, roles, core_values and organisations table.
 
+## Prerequisites for running server:
+1. create google client_id, secret_key from google+ API and provide it through environment variables.(This is required for authentication of user by google login).
+2. create S3 bucket and provide access_key, secret_key, bucket_name through environment variables.(This is required for uploading image)
+3. provide port number and other environment variables by refering .env.sample file.
+
 ## Steps to run the test server:
 1. run npm test (This will start test server on speified port)
 
