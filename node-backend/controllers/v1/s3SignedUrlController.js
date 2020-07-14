@@ -9,114 +9,64 @@ require("../../config/loggerConfig");
 const logger = log4js.getLogger();
 
 module.exports.getSignedUrl = async (req, res) => {
-  let contentType;
-  let file_type;
   const authHeader = req.headers["authorization"];
   const decode = await jsonwebtoken.getData(authHeader);
-  const schema = validateSchema.s3SignedUrl();
   let obj = qs.parse(req.query);
-  if (obj.file_type == "jpg" || obj.file_type == "jpeg") {
-    (file_type = "jpeg"), (contentType = "img/jpeg");
-  } else if (obj.file_type == "png") {
-    (file_type = "png"), (contentType = "img/png");
-  }
-  let objectType;
+
   if (obj.type == "profile" || obj.type == "core_value") {
-    objectType = {
-      type: obj.type,
+    const credentials = {
+      accessKeyId: process.env.S3_BUCKET_ACCESS_KEY,
+      secretAccessKey: process.env.S3_BUCKET_SECRET_KEY,
     };
-    schema
-      .validate(objectType, { abortEarly: false })
-      .then(() => {
-        const credentials = {
-          accessKeyId: process.env.S3_BUCKET_ACCESS_KEY,
-          secretAccessKey: process.env.S3_BUCKET_SECRET_KEY,
-        };
-        AWS.config.update({
-          credentials: credentials,
-          region: process.env.REGION,
-        });
-        const s3 = new AWS.S3();
-        let presignedURL;
-        if (obj.type == "profile") {
-          const profileValidation = validateSchema.profileFileType();
-          const profileObject = {
-            file_type: obj.file_type,
-          };
-          profileValidation
-            .validate(profileObject, { abortEarly: false })
-            .then(async () => {
-              presignedURL = await s3.getSignedUrl("putObject", {
-                ContentType: contentType,
-                Bucket: "" + process.env.BUCKET_NAME + "/profile",
-                Key: "" + decode.userId + "." + file_type + "",
-                Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
-              });
-              res.status(200).send({
-                data: {
-                  s3_signed_url: presignedURL,
-                },
-              });
-            })
-            .catch((err) => {
-              logger.error("validation error");
-              logger.error(JSON.stringify(err));
-              logger.error("=========================================");
-              res.status(400).send({
-                error: utility.getFormattedErrorObj(
-                  "invalid code",
-                  "invalid data ",
-                  err.errors
-                ),
-              });
-            });
-        } else {
-          const coreValueValidation = validateSchema.coreValueFileType();
-          const coreValueObject = {
-            file_type: obj.file_type,
-            core_value_id: obj.core_value_id,
-          };
-          coreValueValidation
-            .validate(coreValueObject, { abortEarly: false })
-            .then(async () => {
-              presignedURL = await s3.getSignedUrl("putObject", {
-                ContentType: contentType,
-                Bucket: "" + process.env.BUCKET_NAME + "/core_values",
-                Key: "" + obj.core_value_id + "." + file_type + "",
-                Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
-              });
-              res.status(200).send({
-                data: {
-                  s3_signed_url: presignedURL,
-                },
-              });
-            })
-            .catch((err) => {
-              logger.error("validation error");
-              logger.error(JSON.stringify(err));
-              logger.error("=========================================");
-              res.status(400).send({
-                error: utility.getFormattedErrorObj(
-                  "invalid code",
-                  "invalid data ",
-                  err.errors
-                ),
-              });
-            });
-        }
-      })
-      .catch((err) => {
-        logger.error("validation error");
-        logger.error(JSON.stringify(err));
-        logger.error("=========================================");
-        res.status(400).send({
-          error: utility.getFormattedErrorObj(
-            "invalid code",
-            "invalid data ",
-            err.errors
-          ),
-        });
+    AWS.config.update({
+      credentials: credentials,
+      region: process.env.REGION,
+    });
+    const s3 = new AWS.S3();
+    let presignedURL;
+    if (obj.type == "profile") {
+      presignedURL = await s3.getSignedUrl("putObject", {
+        Bucket: "" + process.env.BUCKET_NAME + "/profile",
+        Key: "" + decode.userId + "",
+        Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
       });
+      res.status(200).send({
+        data: {
+          s3_signed_url: presignedURL,
+        },
+      });
+    } else {
+      const coreValueValidation = validateSchema.coreValueFileType();
+      const coreValueObject = {
+        core_value_id: obj.core_value_id,
+      };
+      coreValueValidation
+        .validate(coreValueObject, { abortEarly: false })
+        .then(async () => {
+          presignedURL = await s3.getSignedUrl("putObject", {
+            Bucket: "" + process.env.BUCKET_NAME + "/core_values",
+            Key: "" + obj.core_value_id + "",
+            Expires: parseInt(process.env.S3_OBJECT_EXPIRE_TIME),
+          });
+          res.status(200).send({
+            data: {
+              s3_signed_url: presignedURL,
+            },
+          });
+        })
+        .catch((err) => {
+          logger.error("validation error");
+          logger.error(JSON.stringify(err));
+          logger.error("=========================================");
+          res.status(400).send({
+            error: utility.getFormattedErrorObj(
+              "invalid code",
+              "invalid data ",
+              err.errors
+            ),
+          });
+        });
+    }
   } else {
     logger.error("validation error");
     logger.error("=========================================");
