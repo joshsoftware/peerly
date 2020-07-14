@@ -69,11 +69,11 @@ module.exports.getSignedUrl = async (req, res) => {
     }
   } else {
     logger.error("validation error");
-    logger.info("=========================================");
+    logger.error("=========================================");
     res.status(400).send({
       error: {
         code: "invalid_data",
-        message: "should be please provide valid data for file upload",
+        message: "please provide valid data for file upload",
         fields: {
           fields: "query params must be either profile or core value",
         },
