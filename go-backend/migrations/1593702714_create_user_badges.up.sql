@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS user_badges(
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  badge_id BIGINT, 
+  user_id BIGINT,
+  obtained_at  TIMESTAMP DEFAULT (NOW() AT TIME ZONE 'UTC'));

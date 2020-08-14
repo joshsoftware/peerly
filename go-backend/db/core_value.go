@@ -21,7 +21,7 @@ const (
 // CoreValue - struct representing a core value object
 type CoreValue struct {
 	ID           int64     `db:"id" json:"id"`
-	OrgID        int64     `db:"org_id" json:"org_id"`
+	OrgID        int       `db:"org_id" json:"org_id"`
 	Text         string    `db:"text" json:"text"`
 	Description  string    `db:"description" json:"description"`
 	ParentID     *int64    `db:"parent_id" json:"parent_id"`
@@ -30,7 +30,7 @@ type CoreValue struct {
 	UpdatedAt    time.Time `db:"updated_at" json:"-"`
 }
 
-func validateParentCoreValue(ctx context.Context, storer Storer, organisationID, coreValueID int64) (ok bool) {
+func validateParentCoreValue(ctx context.Context, storer Storer, organisationID int, coreValueID int64) (ok bool) {
 	coreValue, err := storer.GetCoreValue(ctx, organisationID, coreValueID)
 	if err != nil {
 		logger.WithField("err", err.Error()).Error("Parent core value id not present")
@@ -46,7 +46,7 @@ func validateParentCoreValue(ctx context.Context, storer Storer, organisationID,
 }
 
 // Validate - ensures the core value object has all the info it needs
-func (coreValue CoreValue) Validate(ctx context.Context, storer Storer, organisationID int64) (valid bool, errFields map[string]string) {
+func (coreValue CoreValue) Validate(ctx context.Context, storer Storer, organisationID int) (valid bool, errFields map[string]string) {
 	errFields = make(map[string]string)
 
 	if coreValue.Text == "" {
@@ -67,7 +67,7 @@ func (coreValue CoreValue) Validate(ctx context.Context, storer Storer, organisa
 	return
 }
 
-func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (coreValues []CoreValue, err error) {
+func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int) (coreValues []CoreValue, err error) {
 	coreValues = make([]CoreValue, 0)
 	err = s.db.SelectContext(
 		ctx,
@@ -87,7 +87,7 @@ func (s *pgStore) ListCoreValues(ctx context.Context, organisationID int64) (cor
 	return
 }
 
-func (s *pgStore) GetCoreValue(ctx context.Context, organisationID, coreValueID int64) (coreValue CoreValue, err error) {
+func (s *pgStore) GetCoreValue(ctx context.Context, organisationID int, coreValueID int64) (coreValue CoreValue, err error) {
 	err = s.db.GetContext(
 		ctx,
 		&coreValue,
@@ -107,7 +107,7 @@ func (s *pgStore) GetCoreValue(ctx context.Context, organisationID, coreValueID 
 	return
 }
 
-func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, coreValue CoreValue) (resp CoreValue, err error) {
+func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int, coreValue CoreValue) (resp CoreValue, err error) {
 	now := time.Now()
 	err = s.db.GetContext(
 		ctx,
@@ -133,7 +133,7 @@ func (s *pgStore) CreateCoreValue(ctx context.Context, organisationID int64, cor
 	return
 }
 
-func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValueID int64) (err error) {
+func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID int, coreValueID int64) (err error) {
 	_, err = s.db.ExecContext(
 		ctx,
 		deleteSubCoreValueQuery,
@@ -167,7 +167,7 @@ func (s *pgStore) DeleteCoreValue(ctx context.Context, organisationID, coreValue
 	return
 }
 
-func (s *pgStore) UpdateCoreValue(ctx context.Context, organisationID, coreValueID int64, coreValue CoreValue) (resp CoreValue, err error) {
+func (s *pgStore) UpdateCoreValue(ctx context.Context, organisationID int, coreValueID int64, coreValue CoreValue) (resp CoreValue, err error) {
 	now := time.Now()
 	err = s.db.GetContext(
 		ctx,

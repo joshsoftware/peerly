@@ -18,31 +18,24 @@ import (
 // @Failure 400 {object}
 func getUserByEmailHandler(deps Dependencies) http.HandlerFunc {
 	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		tmp, ok := req.URL.Query()["email"]
-		if !ok || len(tmp[0]) < 1 {
-			rw.WriteHeader(http.StatusBadRequest)
-			// log.Error(errNoAuthCode, "No 'email' URL parameter provided", req.URL.String())
-			return
-		}
-		email := tmp[0]
+		vars := mux.Vars(req)
+		email := vars["email"]
 		user, err := deps.Store.GetUserByEmail(req.Context(), email)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
-			// TODO: Log error message, send to http client as json
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Internal server error",
+				},
+			})
 			return
 		}
 
 		// TODO: Check if user is a blank/nil object, and if so, return a 404
 		// and a JSON response body saying the user wasn't found
 
-		respBytes, err := json.Marshal(user)
-		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
-			// TODO: Log error marshalling json and create json response to send to http client
-			return
-		}
-		rw.Header().Add("Content-Type", "application/json")
-		rw.Write(respBytes)
+		repsonse(rw, http.StatusOK, successResponse{Data: user})
+
 		return
 	})
 }
@@ -174,9 +167,6 @@ func updateUserHandler(deps Dependencies) http.HandlerFunc {
 			logger.WithField("err", err.Error()).Error("Error while updating user's profile")
 			return
 		}
-		// rw.WriteHeader(http.StatusOK)
-		// rw.Write(respBytes)
-		// rw.Header().Add("Content-Type", "application/json")
 		repsonse(rw, http.StatusOK, successResponse{Data: updatedUser})
 
 		return
