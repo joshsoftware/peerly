@@ -1,0 +1,364 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Recognition list Component test should equal snapshot 1`] = `
+<DocumentFragment>
+  .c3 {
+  width: 12vh;
+}
+
+.c2 {
+  color: var(--black);
+  background-color: var(--white);
+  font-weight: bold;
+  border: none;
+}
+
+.c5 {
+  border: 1px solid var(--grey);
+  border-radius: 11px;
+  opacity: 1;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.c6 {
+  width: auto;
+  margin-left: 10%;
+}
+
+.c7 {
+  width: 7vh;
+  margin-right: 5%;
+}
+
+.c4 {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.c8 {
+  position: absolute;
+  bottom: 50px;
+}
+
+.c1 {
+  border-radius: 20px;
+  margin: 20px 20px;
+  box-shadow: 0px 5px 20px var(--box-shadow-color);
+  opacity: 1;
+  background: var(--white) 0% 0% no-repeat padding-box;
+}
+
+.c0 {
+  border: 1px solid var(--grey);
+  background: var(--white) 0% 0% no-repeat padding-box;
+  border-radius: 36px;
+  opacity: 1;
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1 card"
+    >
+      <div
+        class="card-body"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-md-7 col-sm-12"
+          >
+            <div>
+              <div
+                class="d-flex justify-content-end"
+              >
+                <button
+                  class="c2 btn btn-primary"
+                  type="button"
+                >
+                  ...
+                </button>
+              </div>
+              <div
+                class="d-flex flex-row"
+              >
+                <div
+                  class="c3"
+                >
+                  <img
+                    alt="Profile"
+                    class="img-fluid rounded-circle"
+                    src="https://i.picsum.photos/id/2/200/200.jpg"
+                  />
+                </div>
+                <div
+                  class="text-start ml-2"
+                >
+                  <label
+                    class="font-weight-bold  form-label"
+                  >
+                    avinash mane
+                  </label>
+                  <div>
+                    <label
+                      class="form-label"
+                    >
+                       got a high five for
+                    </label>
+                    <label
+                      class="ml-1 font-weight-bold form-label"
+                    >
+                      core value text
+                    </label>
+                  </div>
+                  <label
+                    class="text-muted form-label"
+                  >
+                    Sat Feb 14 2009
+                  </label>
+                </div>
+              </div>
+            </div>
+            <img
+              alt="Core value"
+              class="c4 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
+              src="https://i.picsum.photos/id/654/300/200.jpg"
+            />
+            <div>
+              <fieldset
+                class="c5"
+              >
+                <legend
+                  class="c6"
+                >
+                  “
+                </legend>
+                <label
+                  class="px-2 pb-2 pt-0 form-label"
+                >
+                  i give high five to avinash for writing block on react strap document
+                </label>
+              </fieldset>
+              <div
+                class="d-flex justify-content-end w-100"
+              >
+                <label
+                  class="font-weight-bold text-dark form-label"
+                >
+                  onkar hasabe
+                </label>
+                <img
+                  alt="Profile"
+                  class="c7 img-fluid rounded-circle"
+                  src="https://i.picsum.photos/id/2/200/200.jpg"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-none d-md-block text-center col"
+          >
+            <div>
+              <img
+                alt="Core value"
+                class="c4 mt-2 img-fluid"
+                src="https://i.picsum.photos/id/654/300/200.jpg"
+              />
+            </div>
+            <svg
+              class="mt-4"
+              color="red"
+              fill="currentColor"
+              height="50px"
+              stroke="currentColor"
+              stroke-width="0"
+              style="color: red;"
+              viewBox="0 0 16 16"
+              width="50px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <img
+          alt="High five recognition"
+          class="c8 img-fluid"
+          src="/assets/images//high-five.png"
+        />
+        <div
+          class="bg-white card-footer"
+        >
+          <span
+            class="font-weight-bold text-muted"
+          >
+            +
+          </span>
+          <span
+            class="font-weight-bold text-dark"
+          >
+            1
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c1 card"
+    >
+      <div
+        class="card-body"
+      >
+        <div
+          class="row"
+        >
+          <div
+            class="col-md-7 col-sm-12"
+          >
+            <div>
+              <div
+                class="d-flex justify-content-end"
+              >
+                <button
+                  class="c2 btn btn-primary"
+                  type="button"
+                >
+                  ...
+                </button>
+              </div>
+              <div
+                class="d-flex flex-row"
+              >
+                <div
+                  class="c3"
+                >
+                  <img
+                    alt="Profile"
+                    class="img-fluid rounded-circle"
+                    src="https://i.picsum.photos/id/2/200/200.jpg"
+                  />
+                </div>
+                <div
+                  class="text-start ml-2"
+                >
+                  <label
+                    class="font-weight-bold  form-label"
+                  >
+                    avinash mane
+                  </label>
+                  <div>
+                    <label
+                      class="form-label"
+                    >
+                       got a high five for
+                    </label>
+                    <label
+                      class="ml-1 font-weight-bold form-label"
+                    >
+                      core value text
+                    </label>
+                  </div>
+                  <label
+                    class="text-muted form-label"
+                  >
+                    Sat Feb 14 2009
+                  </label>
+                </div>
+              </div>
+            </div>
+            <img
+              alt="Core value"
+              class="c4 d-sm-block d-xs-block d-md-none mt-2 img-fluid"
+              src="https://i.picsum.photos/id/654/300/200.jpg"
+            />
+            <div>
+              <fieldset
+                class="c5"
+              >
+                <legend
+                  class="c6"
+                >
+                  “
+                </legend>
+                <label
+                  class="px-2 pb-2 pt-0 form-label"
+                >
+                  give high five to avinash writing block on react strap document
+                </label>
+              </fieldset>
+              <div
+                class="d-flex justify-content-end w-100"
+              >
+                <label
+                  class="font-weight-bold text-dark form-label"
+                >
+                  onkar hasabe
+                </label>
+                <img
+                  alt="Profile"
+                  class="c7 img-fluid rounded-circle"
+                  src="https://i.picsum.photos/id/2/200/200.jpg"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-none d-md-block text-center col"
+          >
+            <div>
+              <img
+                alt="Core value"
+                class="c4 mt-2 img-fluid"
+                src="https://i.picsum.photos/id/654/300/200.jpg"
+              />
+            </div>
+            <svg
+              class="mt-4"
+              color="red"
+              fill="currentColor"
+              height="50px"
+              stroke="currentColor"
+              stroke-width="0"
+              style="color: red;"
+              viewBox="0 0 16 16"
+              width="50px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </div>
+        <img
+          alt="High five recognition"
+          class="c8 img-fluid"
+          src="/assets/images//high-five.png"
+        />
+        <div
+          class="bg-white card-footer"
+        >
+          <span
+            class="font-weight-bold text-muted"
+          >
+            +
+          </span>
+          <span
+            class="font-weight-bold text-dark"
+          >
+            1
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
