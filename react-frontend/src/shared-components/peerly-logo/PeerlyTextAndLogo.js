@@ -5,19 +5,15 @@ import PeerlyLogo from "shared-components/peerly-logo/PeerlyLogo";
 import PeerlyTextComponent from "shared-components/peerly-logo/PeerlyTextComponent";
 
 const PeerlyTextAndLogo = ({ theme, fontSize }) => (
-  <>
-    <div data-testid="peerlyLogoComponent">
-      <PeerlyLogo theme={theme} fontSize={fontSize} />
-    </div>
-    <div className="text-center">
-      <PeerlyTextComponent theme={theme} fontSize={fontSize} />
-    </div>
-  </>
+  <div className="text-center">
+    <PeerlyLogo theme={theme} fontSize={fontSize} />
+    <PeerlyTextComponent theme={theme} fontSize={fontSize} />
+  </div>
 );
 
 PeerlyTextAndLogo.defaultProps = {
   theme: "dark",
-  fontSize: "48px",
+  fontSize: "30px",
 };
 
 PeerlyTextAndLogo.propTypes = {

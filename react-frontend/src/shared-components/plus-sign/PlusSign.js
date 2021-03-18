@@ -22,7 +22,7 @@ const PlusSign = ({ theme, cross, fontSize }) => (
 
 PlusSign.defaultProps = {
   theme: "dark",
-  fontSize: "48px",
+  fontSize: "36px",
   cross: false,
 };
 

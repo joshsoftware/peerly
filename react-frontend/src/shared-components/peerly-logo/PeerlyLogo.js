@@ -7,8 +7,8 @@ import PlusSign from "shared-components/plus-sign/PlusSign";
 const Logo = styled.div`
   text-align: center;
   margin-top: 15px;
-  width: 83px;
-  height: 83px;
+  width: 50px;
+  height: 50px;
   border: 3px solid
     ${({ theme }) => (theme === "dark" ? "var(--white)" : "var(--atomic)")};
   background-color: ${({ theme }) =>
@@ -24,7 +24,7 @@ const PeerlyLogo = ({ theme, fontSize }) => (
 
 PeerlyLogo.defaultProps = {
   theme: "dark",
-  fontSize: "48px",
+  fontSize: "30px",
 };
 
 PeerlyLogo.propTypes = {

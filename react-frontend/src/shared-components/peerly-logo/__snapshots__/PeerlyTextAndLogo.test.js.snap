@@ -13,8 +13,8 @@ exports[`should equal to Peerly text 1`] = `
 .c0 {
   text-align: center;
   margin-top: 15px;
-  width: 83px;
-  height: 83px;
+  width: 50px;
+  height: 50px;
   border: 3px solid var(--white);
   background-color: var(--atomic);
   -webkit-transform: rotate(45deg);
@@ -22,8 +22,14 @@ exports[`should equal to Peerly text 1`] = `
   transform: rotate(45deg);
 }
 
+.c2 {
+  color: var(--white);
+  background-color: var(--atomic);
+  font-size: 48px;
+}
+
 <div
-    data-testid="peerlyLogoComponent"
+    class="text-center"
   >
     <div
       class="c0 mx-auto"
@@ -37,18 +43,8 @@ exports[`should equal to Peerly text 1`] = `
         +
       </div>
     </div>
-  </div>
-  .c0 {
-  color: var(--white);
-  background-color: var(--atomic);
-  font-size: 48px;
-}
-
-<div
-    class="text-center"
-  >
     <div
-      class="c0"
+      class="c2"
       data-testid="PeerlyTextComponents"
       font-size="48px"
     >
