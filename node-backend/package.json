@@ -42,7 +42,7 @@
     "faker": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
-    "log4js": "^6.3.0",
+    "log4js": "^6.4.0",
     "moment": "^2.24.0",
     "node-cron": "^2.0.3",
     "passport": "^0.4.1",
