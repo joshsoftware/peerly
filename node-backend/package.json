@@ -43,7 +43,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "log4js": "^6.3.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-cron": "^2.0.3",
     "passport": "^0.4.1",
     "passport-google-token": "^0.1.2",
