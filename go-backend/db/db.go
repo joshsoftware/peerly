@@ -42,11 +42,11 @@ type Storer interface {
 	GetRoleByName(context.Context, string) (Role, error)
 
 	// Core values
-	ListCoreValues(context.Context, int64) ([]CoreValue, error)
-	GetCoreValue(context.Context, int64, int64) (CoreValue, error)
-	CreateCoreValue(context.Context, int64, CoreValue) (CoreValue, error)
-	DeleteCoreValue(context.Context, int64, int64) error
-	UpdateCoreValue(context.Context, int64, int64, CoreValue) (CoreValue, error)
+	ListCoreValues(context.Context, int) ([]CoreValue, error)
+	GetCoreValue(context.Context, int, int64) (CoreValue, error)
+	CreateCoreValue(context.Context, int, CoreValue) (CoreValue, error)
+	DeleteCoreValue(context.Context, int, int64) error
+	UpdateCoreValue(context.Context, int, int64, CoreValue) (CoreValue, error)
 
 	//RecognitionHi5
 	CreateRecognitionHi5(context.Context, RecognitionHi5, int) error

@@ -91,6 +91,16 @@ func createRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			})
 			return
 		}
+		_, err = deps.Store.GetUserByOrganization(req.Context(), recognition.GivenFor, organizationID)
+		if err != nil {
+			logger.WithField("err", err.Error()).Error("User is not belongs to given organization")
+			repsonse(rw, http.StatusInternalServerError, errorResponse{
+				Error: messageObject{
+					Message: "Error while validating user with given organization",
+				},
+			})
+			return
+		}
 
 		ok, errFields := recognition.ValidateRecognition()
 		if !ok {
@@ -142,15 +152,8 @@ func getRecognitionHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		respBytes, err := json.Marshal(recognition)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling recognition data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+		repsonse(rw, http.StatusOK, successResponse{Data: recognition})
 
-		rw.Header().Add("Content-Type", "application/json")
-		rw.Write(respBytes)
 	})
 }
 
@@ -179,14 +182,7 @@ func listRecognitionsHandler(deps Dependencies) http.HandlerFunc {
 			return
 		}
 
-		respBytes, err := json.Marshal(recognitions)
-		if err != nil {
-			logger.WithField("err", err.Error()).Error("Error marshaling recognition data")
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
+		repsonse(rw, http.StatusOK, successResponse{Data: recognitions})
 
-		rw.Header().Add("Content-Type", "application/json")
-		rw.Write(respBytes)
 	})
 }

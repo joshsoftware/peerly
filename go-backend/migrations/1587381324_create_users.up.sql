@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users (
   id BIGSERIAL NOT NULL PRIMARY KEY,
-  org_id BIGINT, -- TODO: Foreign Key over to Organizations table when that's done
+  org_id BIGINT REFERENCES organizations(id), -- TODO: Foreign Key over to Organizations table when that's done
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   display_name VARCHAR(30) DEFAULT NULL,
